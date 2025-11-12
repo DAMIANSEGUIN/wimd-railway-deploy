@@ -4070,14 +4070,22 @@ async function askCoach(prompt) {
       }
 
       // Step-specific validation (only for first prompt of step 1)
-      if (step.step === 1 && promptIndex === 0) {
-        // Step 1, prompt 1 - need at least 2 sentences
-        const sentences = answer.split(/[.!?]+/).filter(s => s.trim().length > 0);
-        if (sentences.length < 2) {
-          alert('Please provide at least 2 sentences describing your situation.');
-          return false;
+  if (step.step === 1 && promptIndex === 0) {
+    // Step 1, prompt 1 - need at least 2 sentences
+    const sentences = answer.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    if (sentences.length < 2) {
+      if (!isLastPrompt) {
+        const proceed = confirm('This intro question works best with a bit more detail. Continue anyway?');
+        if (proceed) {
+          return true;
         }
+      } else {
+        alert('Please provide at least 2 sentences describing your situation.');
       }
+      textarea.focus();
+      return false;
+    }
+  }
 
       // Step 5, prompt 1 - need at least 5 solutions
       if (step.step === 5 && promptIndex === 0) {

@@ -4079,7 +4079,15 @@
         // Step 1, prompt 1 - need at least 2 sentences
         const sentences = answer.split(/[.!?]+/).filter(s => s.trim().length > 0);
         if (sentences.length < 2) {
-          alert('Please provide at least 2 sentences describing your situation.');
+          if (!isLastPrompt) {
+            const proceed = confirm('This intro question works best with a bit more detail. Continue anyway?');
+            if (proceed) {
+              return true;
+            }
+          } else {
+            alert('Please provide at least 2 sentences describing your situation.');
+          }
+          textarea.focus();
           return false;
         }
       }
