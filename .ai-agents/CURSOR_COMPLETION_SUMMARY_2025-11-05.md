@@ -15,6 +15,9 @@
   - Non-final prompts no longer block “Next Prompt” when answers are short; users can review all questions before drafting full responses.
   - `validateCurrentStep` now offers a confirmation dialogue when skipping early prompts; final prompts retain full validation.
   - Deployed via Netlify (Deploy ID `6914a9eeb1531804b7605f91`).
+- Step 1 prompt relax (commit `4186578`)
+  - Initial “Problem Identification” prompt now follows the same confirmation flow—users can continue after acknowledging the hint instead of being forced to write two sentences immediately.
+  - Deployed via Netlify (Deploy ID `6914b1ce0ae52f0ac2302dc7`).
 - Console verification
   - `scripts/capture_console.mjs` (2025-11-12 15:21Z) shows prompts loading + coach response with session continuity.
   - PS101 prompts now load: “Loaded 607 career coaching prompts + 8 PS101 framework questions”.

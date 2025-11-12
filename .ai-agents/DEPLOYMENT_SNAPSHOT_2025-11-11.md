@@ -16,6 +16,9 @@
   - Commit `a2fffa3028d779b19ed6814dad02aeb20842ff58` (“ux: allow browsing PS101 prompts before answering”) deployed via Netlify `6914a9eeb1531804b7605f91`.  
   - Non-final PS101 prompts now allow “Next prompt” even when answers are short (user can preview all questions). Last prompts still enforce minimum detail before advancing to the next step.  
   - `validateCurrentStep()` now offers a confirmation dialog when skipping early prompts. Console capture (2025-11-12 15:39Z) confirms prompts load successfully after deploy.
+- **2025-11-12 Update — PS101 intro prompt optional**  
+  - Commit `4186578a0c6b4522030fb5c8586dc798e1f99741` (“ux: allow skipping PS101 intro prompt with confirm”) deployed via Netlify `6914b1ce0ae52f0ac2302dc7`.  
+  - Step 1 prompt 1 now shows a confirmation instead of hard-blocking when the answer has fewer than two sentences; users can continue browsing prompts without writing paragraphs first.
 
 - **Frontend (Netlify)**  
   - Deploy ID `691219f373c0da2b0ac61b6f` (built from commit `c9900f3` and subsequent UI hardening) is live.  
