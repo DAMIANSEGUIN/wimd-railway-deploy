@@ -110,7 +110,7 @@ HEALTH_DEBUG_ENABLED = os.getenv("HEALTH_DEBUG", "").lower() in {"1", "true", "y
 SERVICE_READY = threading.Event()
 
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(8 * 1024 * 1024)))
-DEFAULT_METRICS = {"clarity": 65, "action": 42, "momentum": 33}
+DEFAULT_METRICS = {"clarity": 0, "action": 0, "momentum": 0}
 JOB_LIBRARY = [
     {
         "job_id": "delta-strategist",

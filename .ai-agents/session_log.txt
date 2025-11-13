@@ -10,3 +10,11 @@
 [2025-11-07T14:34:06Z] Session start: Claude-Code (Sonnet 4.5)
 [2025-11-09T19:45:14Z] Session start: Claude-Code (Sonnet 4.5)
 [2025-11-10T15:51:18Z] Session start: Claude_Code - Post-deployment verification following Codex sendMsg fix
+[2025-11-12T18:00:26Z] Session start: Codex (GPT-5)
+[2025-11-12T18:01:02Z] Executed ./scripts/verify_critical_features.sh — warnings noted for API_BASE and production authentication reachability
+[2025-11-12T18:01:08Z] Executed ./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh — spec hash 7795ae25
+[2025-11-13T13:37:36Z] Session start: Codex (GPT-5)
+[2025-11-13T13:37:44Z] Executed ./scripts/verify_critical_features.sh — warning: production auth reachability
+[2025-11-13T13:37:53Z] Executed ./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh — spec hash 7795ae25
+[2025-11-13T18:45:58Z] Re-ran ./scripts/verify_critical_features.sh after UI sync — prod auth warning persists (expected until deploy)
+[2025-11-13T18:46:05Z] Ran ./scripts/verify_mosaic_ui.sh against prod — line count 4213 vs local 4316, BUILD_ID matches

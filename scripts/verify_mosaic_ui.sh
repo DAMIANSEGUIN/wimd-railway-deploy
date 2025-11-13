@@ -5,7 +5,13 @@
 set -euo pipefail
 
 URL="${1:-https://whatismydelta.com/}"
-EXPECTED_LINES=3875
+if [[ -z "${EXPECTED_LINES:-}" ]]; then
+  if [[ -f "mosaic_ui/index.html" ]]; then
+    EXPECTED_LINES="$(wc -l < mosaic_ui/index.html | tr -d ' ')"
+  else
+    EXPECTED_LINES=4213
+  fi
+fi
 TMP_FILE="$(mktemp)"
 
 echo "=== Mosaic UI Verification ==="

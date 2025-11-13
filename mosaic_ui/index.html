@@ -1,5 +1,4 @@
 <!doctype html>
-<!-- DEPLOY_MARKER_START: mosaic_ui/index.html | Commit: c689b50+ | Timestamp: 2025-11-07T16:30:00Z -->
 <meta charset="utf-8">
 <title>What Is My Delta — Find Your Next Career Move</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -58,16 +57,16 @@
   .msg.you{color:var(--hair)}
   .msg.bot{color:var(--muted)}
   .msg.loading{color:var(--muted);opacity:0.6;animation:pulse 1.5s ease-in-out infinite}
-  .chat footer{padding:8px 10px;border-top:1px solid var(--line);display:flex;gap:6px}
-  .chat input{flex:1;border:1px solid var(--line);padding:6px 8px;font:inherit;border-radius:2px}
-  .chat input:focus{border-color:#0ea5e9;outline:none}
-  .chat button{border:1px solid var(--line);padding:6px 8px;background:#fff;cursor:pointer;border-radius:2px;transition:background 0.2s ease}
-  .chat button:hover{background:#f8f8f8}
-  .auth-floating{position:fixed;bottom:28px;right:28px;padding:12px 16px;background:var(--hair);color:#fff;border:none;border-radius:24px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 12px 28px rgba(6,33,88,0.25);cursor:pointer;display:none;z-index:1500;transition:transform 0.2s ease, box-shadow 0.2s ease}
-  .auth-floating:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(6,33,88,0.3)}
-  @media(max-width:680px){
-    .auth-floating{bottom:18px;right:18px;font-size:11px;padding:10px 14px}
-  }
+.chat footer{padding:8px 10px;border-top:1px solid var(--line);display:flex;gap:6px}
+.chat input{flex:1;border:1px solid var(--line);padding:6px 8px;font:inherit;border-radius:2px}
+.chat input:focus{border-color:#0ea5e9;outline:none}
+.chat button{border:1px solid var(--line);padding:6px 8px;background:#fff;cursor:pointer;border-radius:2px;transition:background 0.2s ease}
+.chat button:hover{background:#f8f8f8}
+.auth-floating{position:fixed;bottom:28px;right:28px;padding:12px 16px;background:var(--hair);color:#fff;border:none;border-radius:24px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 12px 28px rgba(6,33,88,0.25);cursor:pointer;display:none;z-index:1500;transition:transform 0.2s ease, box-shadow 0.2s ease}
+.auth-floating:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(6,33,88,0.3)}
+@media(max-width:680px){
+  .auth-floating{bottom:18px;right:18px;font-size:11px;padding:10px 14px}
+}
 
   .modal{position:fixed;inset:0;background:rgba(255,255,255,.95);display:none;align-items:center;justify-content:center;z-index:2000;backdrop-filter:blur(4px)}
   .modal .panel{background:#fff;border:1px solid var(--line);padding:20px;min-width:280px;max-width:92vw;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.1)}
@@ -243,7 +242,13 @@
   .ps101-input{margin-bottom:24px}
   .step-textarea{width:100%;min-height:120px;padding:12px;border:1px solid var(--line);border-radius:4px;font:inherit;font-size:13px;line-height:1.6;resize:vertical;transition:all 0.2s ease}
   .step-textarea:focus{outline:none;border-color:var(--hair);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-  .char-count{margin-top:8px;font-size:11px;color:var(--muted);text-align:right}
+.metrics-note{grid-column:1/-1;font-size:11px;color:var(--muted);margin-top:12px;text-align:right}
+.metrics.has-data .metrics-note{display:none}
+.char-count{margin-top:8px;font-size:11px;color:var(--muted);text-align:right;transition:color .2s ease}
+.char-count .char-min{margin-left:6px;font-style:italic;color:inherit}
+.char-count .char-min:empty{display:none}
+.char-count.needs-detail{color:#d63638}
+.char-count.near-limit{color:#a15c0f}
   
   .ps101-nav{display:flex;justify-content:space-between;margin-top:32px;gap:16px}
   .nav-btn{min-width:120px;padding:10px 20px;font-size:13px}
@@ -287,7 +292,7 @@
     <a href="javascript:void(0)" onclick="scrollToSection('about')">about</a>
     <a href="javascript:void(0)" onclick="scrollToSection('modules')" title="Modules">modules</a>
     <a href="javascript:void(0)" onclick="scrollToSection('resources')" title="Help & Resources">resources</a>
-    <a id="openUpload" href="javascript:void(0)" title="Upload a resume, image, or audio">upload</a>
+    <a id="openUpload" data-action="open-upload" class="open-upload-link" href="javascript:void(0)" title="Upload a resume, image, or audio">upload</a>
     <a id="openChat" href="javascript:void(0)" title="Get help">help</a>
     <span class="status working" id="apiStatus">ready</span>
   </nav>
@@ -422,10 +427,11 @@
 
   <div class="rule"></div>
 
-  <section class="metrics" aria-label="Metrics">
-    <div class="card"><div class="k">Clarity</div><div class="v" id="mClarity">75%</div></div>
-    <div class="card"><div class="k">Action</div><div class="v" id="mAction">45%</div></div>
-    <div class="card"><div class="k">Momentum</div><div class="v" id="mMomentum">32%</div></div>
+  <section class="metrics" id="metricsSection" aria-label="Metrics">
+    <div class="card"><div class="k">Clarity</div><div class="v" id="mClarity">—</div></div>
+    <div class="card"><div class="k">Action</div><div class="v" id="mAction">—</div></div>
+    <div class="card"><div class="k">Momentum</div><div class="v" id="mMomentum">—</div></div>
+    <div class="metrics-note" id="metricsNote">Complete Step 1 to unlock metrics.</div>
   </section>
 
   <section id="modules" class="island" aria-label="Modules">
@@ -479,12 +485,13 @@
       <textarea class="small" placeholder="your experiences, accomplishments, what you want to emphasize…" id="t_resume" aria-label="Resume notes"></textarea>
       <div class="module-actions">
         <a href="javascript:void(0)" data-prompt="help me write about this experience clearly">improve my resume</a>
+        <a href="javascript:void(0)" class="open-upload-link" data-action="open-upload" title="Upload an existing resume to refine">upload resume</a>
       </div>
     </div>
     
     <div class="module" id="dashboard">
       <h3><a href="javascript:void(0)" onclick="scrollToSection('dashboard')" title="open Dashboard">Delta — Dashboard</a></h3>
-      <ul><li>Clarity graph</li><li>Action trend</li><li>Next steps</li></ul>
+      <ul><li>Clarity score</li><li>Action trend</li><li>Next steps</li></ul>
       <textarea class="small" placeholder="next step (one thing to do)…" id="t_dashboard" aria-label="Dashboard notes"></textarea>
       <div class="module-actions">
         <a href="javascript:void(0)" data-prompt="suggest 1 next step from my notes">suggest next step</a>
@@ -585,6 +592,7 @@
       ></textarea>
       <div class="char-count" id="char-count" aria-live="polite">
         <span id="char-current">0</span> / <span id="char-max">500</span>
+        <span id="char-min" class="char-min"></span>
       </div>
     </div>
 
@@ -803,23 +811,23 @@
         <ul>
           <li><a href="javascript:void(0)" onclick="scrollToSection('guide')">Complete User Guide</a></li>
           <li><a href="javascript:void(0)" onclick="scrollToSection('examples')">Example Questions & Answers</a></li>
-          <li><a href="javascript:void(0)" onclick="alert('Career change tips: Focus on transferable skills, network actively, and take small steps toward your goal.')">Career Change Tips</a></li>
+          <li><a href="https://www.themuse.com/advice/how-to-change-careers" target="_blank" rel="noopener">Career Change Tips</a></li>
         </ul>
       </div>
       <div>
         <h4>Job Search</h4>
         <ul>
-          <li><a href="javascript:void(0)" onclick="alert('Job boards: LinkedIn, Indeed, industry-specific sites like AngelList (tech), Idealist (nonprofits)')">Best Job Boards by Industry</a></li>
-          <li><a href="javascript:void(0)" onclick="alert('Networking: Reach out with genuine interest, offer value first, follow up consistently')">Networking Templates</a></li>
-          <li><a href="javascript:void(0)" onclick="alert('Interview prep: Research the company, prepare STAR method examples, ask thoughtful questions')">Interview Preparation</a></li>
+          <li><a href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener">LinkedIn Jobs</a> · <a href="https://www.indeed.com/" target="_blank" rel="noopener">Indeed</a> · <a href="https://wellfound.com/jobs" target="_blank" rel="noopener">Wellfound (startups)</a> · <a href="https://www.idealist.org/en/jobs" target="_blank" rel="noopener">Idealist (non-profits)</a></li>
+          <li><a href="https://docs.google.com/document/d/1NY0xLCR6w3eHTZkW81jqKf-I7qVYdltBC0b-TnUR0Hg/edit?usp=sharing" target="_blank" rel="noopener">Networking Email Templates (Copy)</a></li>
+          <li><a href="https://careersidekick.com/star-interview-method/" target="_blank" rel="noopener">Interview Preparation (STAR Method)</a></li>
         </ul>
       </div>
       <div>
         <h4>Resume & Applications</h4>
         <ul>
-          <li><a href="javascript:void(0)" onclick="alert('Resume format: Clean layout, quantified achievements, ATS-friendly keywords')">Resume Templates</a></li>
-          <li><a href="javascript:void(0)" onclick="alert('Cover letter: Address hiring manager by name, connect your experience to their needs, show enthusiasm')">Cover Letter Examples</a></li>
-          <li><a href="javascript:void(0)" onclick="alert('Portfolio: Show your best work, include process/thinking, make it easy to navigate')">Portfolio Guidelines</a></li>
+          <li><a href="https://www.jobhero.com/resume-templates" target="_blank" rel="noopener">Resume Templates</a></li>
+          <li><a href="https://cultivatedculture.com/cover-letter-examples/" target="_blank" rel="noopener">Cover Letter Examples</a></li>
+          <li><a href="https://www.notion.so/blog/how-to-build-a-portfolio" target="_blank" rel="noopener">Portfolio Guidelines</a></li>
         </ul>
       </div>
     </div>
@@ -1114,7 +1122,7 @@
   console.log('[IIFE] Starting execution');
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-  const API_BASE = 'https://what-is-my-delta-site-production.up.railway.app';
+  const API_BASE = '';  // Use Netlify proxies; absolute base resolved via ensureConfig()
   
   // Authentication variables
   const SESSION_KEY = 'delta_session_id';
@@ -1182,13 +1190,13 @@
     }
   }
   
-  // Smart prompt matching
-  const MATCH_THRESHOLD = 3;
+// Smart prompt matching
+const MATCH_THRESHOLD = 3;
 
-  function findBestMatch(userInput) {
-    if (!careerPrompts.length) return null;
-    
-    const input = userInput.toLowerCase();
+function findBestMatch(userInput) {
+  if (!careerPrompts.length) return null;
+  
+  const input = userInput.toLowerCase();
     let bestMatch = null;
     let highestScore = 0;
     
@@ -1205,22 +1213,22 @@
       });
       
       // Exact phrase matching (higher weight)
-      if (prompt.prompt.toLowerCase().includes(input)) {
-        score += 10;
-      }
-      
-      if (score > highestScore) {
-        highestScore = score;
-        bestMatch = { ...prompt, score };
-      }
-    });
-    
-    if (!bestMatch) {
-      return null;
+    if (prompt.prompt.toLowerCase().includes(input)) {
+      score += 10;
     }
-
-    return bestMatch.score > 0 ? bestMatch : null;
+    
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = { ...prompt, score };
+    }
+  });
+  
+  if (!bestMatch) {
+    return null;
   }
+
+  return bestMatch.score > 0 ? bestMatch : null;
+}
 
   // Safe footer year update with null-guard
   const yearEl = $('#y');
@@ -1232,7 +1240,7 @@
   // API Status Check with improved error handling
   async function checkAPI() {
     try {
-      const response = await fetch(`${API_BASE}/health`, { 
+      const response = await fetch(`${API_BASE}/health`, {
         method: 'GET',
         timeout: 5000 
       });
@@ -1256,32 +1264,32 @@
   // API check and chat listeners moved to initApp Phase 2.5
   // (prevents DOM access before elements exist)
 
-  // Chat element references - will be set in initApp
-  let chat = document.getElementById('chat');
-  let chatLog = document.getElementById('chatLog');
-  let sendMsg = document.getElementById('sendMsg');
-  let chatInput = document.getElementById('chatInput');
+// Chat element references - will be set in initApp
+let chat = document.getElementById('chat');
+let chatLog = document.getElementById('chatLog');
+let sendMsg = document.getElementById('sendMsg');
+let chatInput = document.getElementById('chatInput');
 
-  const ensureChatRefs = () => {
-    chat = chat || document.getElementById('chat');
-    chatLog = chatLog || document.getElementById('chatLog');
-    sendMsg = sendMsg || document.getElementById('sendMsg');
-    chatInput = chatInput || document.getElementById('chatInput');
-  };
+const ensureChatRefs = () => {
+  chat = chat || document.getElementById('chat');
+  chatLog = chatLog || document.getElementById('chatLog');
+  sendMsg = sendMsg || document.getElementById('sendMsg');
+  chatInput = chatInput || document.getElementById('chatInput');
+};
 
-  const chatGuard = (context, requireInput = false) => {
-    ensureChatRefs();
-    const ready = chat && chatLog && (!requireInput || chatInput);
-    if (ready) {
-      return true;
-    }
-    console.warn(`[CHAT] ${context} called before chat widgets ready`, {
-      chatReady: !!chat,
-      chatLogReady: !!chatLog,
-      chatInputReady: !!chatInput
-    });
-    return false;
-  };
+const chatGuard = (context, requireInput = false) => {
+  ensureChatRefs();
+  const ready = chat && chatLog && (!requireInput || chatInput);
+  if (ready) {
+    return true;
+  }
+  console.warn(`[CHAT] ${context} called before chat widgets ready`, {
+    chatReady: !!chat,
+    chatLogReady: !!chatLog,
+    chatInputReady: !!chatInput
+  });
+  return false;
+};
 
   function addMsg(txt, who = 'you') {
     if (!chatGuard('addMsg')) {
@@ -1299,28 +1307,28 @@
     }
   }
 
-  async function askCoach(prompt) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
-    try {
-      const payload = { prompt: prompt.trim() };
-      const data = await callJson('/wimd', {
-        method: 'POST',
-        body: payload,
-        signal: controller.signal
-      });
-      const message = data?.result?.message ?? data?.result ?? data?.message ?? '';
-      return typeof message === 'string' ? message.trim() : '';
-    } catch (error) {
-      if (error.name === 'AbortError') {
-        return 'request timed out - please try again';
-      }
-      console.error('Coach API error:', error);
-      return `connection issue (${error.message || 'unknown error'})`;
-    } finally {
-      clearTimeout(timeoutId);
+async function askCoach(prompt) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+  try {
+    const payload = { prompt: prompt.trim() };
+    const data = await callJson('/wimd', {
+      method: 'POST',
+      body: payload,
+      signal: controller.signal
+    });
+    const message = data?.result?.message ?? data?.result ?? data?.message ?? '';
+    return typeof message === 'string' ? message.trim() : '';
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      return 'request timed out - please try again';
     }
+    console.error('Coach API error:', error);
+    return `connection issue (${error.message || 'unknown error'})`;
+  } finally {
+    clearTimeout(timeoutId);
   }
+}
 
   async function send() {
     if (!chatGuard('send', true)) {
@@ -1339,19 +1347,19 @@
     chatLog.appendChild(loadingDiv);
     chatLog.scrollTop = chatLog.scrollHeight;
     
-    try {
-      const response = await askCoach(v);
-      const answer = (response || '').trim();
-      loadingDiv.remove();
-      if (answer) {
-        addMsg(answer, 'bot');
-      } else {
-        addMsg('no response from coach yet — please try asking in a different way.', 'bot');
-      }
-    } catch (error) {
-      loadingDiv.remove();
-      addMsg('connection issue - please try again', 'bot');
+  try {
+    const response = await askCoach(v);
+    loadingDiv.remove();
+    const answer = (response || '').trim();
+    if (answer) {
+      addMsg(answer, 'bot');
+    } else {
+      addMsg('no response from coach yet — please try asking in a different way.', 'bot');
     }
+  } catch (error) {
+    loadingDiv.remove();
+    addMsg('connection issue - please try again', 'bot');
+  }
     
     softRoute(v);
   }
@@ -1395,36 +1403,36 @@
     chatLog.scrollTop = chatLog.scrollHeight;
     
     // Try local CSV prompts first (607 career coaching responses)
-    const match = findBestMatch(v);
-    const hasStrongMatch = match && match.score >= MATCH_THRESHOLD;
-    if (hasStrongMatch) {
-      console.log('[COACH] Using knowledge base match', {
-        score: match.score,
-        prompt: match.prompt?.slice(0, 80) || ''
-      });
-      addMsg(match.completion, 'bot');
-      loadingDiv.textContent = 'bringing in fresh insights...';
-    }
+  const match = findBestMatch(v);
+  const hasStrongMatch = match && match.score >= MATCH_THRESHOLD;
+  if (hasStrongMatch) {
+    console.log('[COACH] Using knowledge base match', {
+      score: match.score,
+      prompt: match.prompt?.slice(0, 80) || ''
+    });
+    addMsg(match.completion, 'bot');
+    loadingDiv.textContent = 'bringing in fresh insights...';
+  }
 
-    try {
-      const response = await askCoach(v);
-      loadingDiv.remove();
-      const answer = (response || '').trim();
-      if (answer) {
-        addMsg(answer, 'bot');
-      } else {
-        if (!hasStrongMatch) {
-          addMsg('no response from coach yet — please try asking in a different way.', 'bot');
-        }
-      }
-    } catch (error) {
-      loadingDiv.remove();
+  try {
+    const response = await askCoach(v);
+    loadingDiv.remove();
+    const answer = (response || '').trim();
+    if (answer) {
+      addMsg(answer, 'bot');
+    } else {
       if (!hasStrongMatch) {
-        addMsg('I understand you\'re looking for guidance. Could you try rephrasing your question? I work best with specific situations like "I feel stuck in my career" or "I don\'t know what I want to do."', 'bot');
-      } else {
-        addMsg('having trouble reaching the live coach — I\'ll keep listening for now.', 'bot');
+        addMsg('no response from coach yet — please try asking in a different way.', 'bot');
       }
     }
+  } catch (error) {
+    loadingDiv.remove();
+    if (!hasStrongMatch) {
+      addMsg('I understand you\'re looking for guidance. Could you try rephrasing your question? I work best with specific situations like "I feel stuck in my career" or "I don\'t know what I want to do."', 'bot');
+    } else {
+      addMsg('having trouble reaching the live coach — I\'ll keep listening for now.', 'bot');
+    }
+  }
     
     softRoute(v);
   }
@@ -1438,10 +1446,12 @@
   const filePick = $('#filePick');
   const uploadStatus = $('#uploadStatus');
 
-  $('#openUpload').addEventListener('click', e => {
-    e.preventDefault();
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+  document.querySelectorAll('[data-action=\"open-upload\"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    });
   });
 
   $('#closeUpload').addEventListener('click', closeUploadModal);
@@ -1594,15 +1604,67 @@
     $('#saveNotice').style.display = 'flex';
   }
 
+  const METRIC_TARGETS = [
+    { id: 'mClarity', key: 'clarity' },
+    { id: 'mAction', key: 'action' },
+    { id: 'mMomentum', key: 'momentum' }
+  ];
+
+  function formatMetricValue(value) {
+    if (value === null || value === undefined) {
+      return { display: '—', stored: '' };
+    }
+    const cleaned = typeof value === 'string' ? parseFloat(value.replace('%', '').trim()) : Number(value);
+    if (!Number.isFinite(cleaned)) {
+      return { display: '—', stored: '' };
+    }
+    const clamped = Math.max(0, Math.min(100, Math.round(cleaned)));
+    if (clamped === 0) {
+      return { display: '—', stored: '' };
+    }
+    return { display: `${clamped}%`, stored: String(clamped) };
+  }
+
+  function renderMetrics(metrics) {
+    let anyValue = false;
+    METRIC_TARGETS.forEach(({ id, key }) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const { display, stored } = formatMetricValue(metrics ? metrics[key] : undefined);
+      el.textContent = display;
+      if (stored) {
+        el.dataset.value = stored;
+        anyValue = true;
+      } else {
+        delete el.dataset.value;
+      }
+    });
+
+    const metricsSection = document.getElementById('metricsSection');
+    const metricsNote = document.getElementById('metricsNote');
+    if (metricsSection) {
+      metricsSection.classList.toggle('has-data', anyValue);
+    }
+    if (metricsNote) {
+      metricsNote.style.display = anyValue ? 'none' : '';
+    }
+  }
+
+  renderMetrics(null);
+
   function collect() {
+    const metricValue = (id) => {
+      const el = document.getElementById(id);
+      return el?.dataset.value || '';
+    };
     return {
       version: '2.0',
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       metrics: {
-        clarity: $('#mClarity').textContent,
-        action: $('#mAction').textContent,
-        momentum: $('#mMomentum').textContent
+        clarity: metricValue('mClarity'),
+        action: metricValue('mAction'),
+        momentum: metricValue('mMomentum')
       },
       notes: {
         ps101: $('#t_ps101').value,
@@ -1630,9 +1692,9 @@
 
   function apply(data) {
     if (data?.metrics) {
-      $('#mClarity').textContent = data.metrics.clarity || '75%';
-      $('#mAction').textContent = data.metrics.action || '45%';
-      $('#mMomentum').textContent = data.metrics.momentum || '32%';
+      renderMetrics(data.metrics);
+    } else {
+      renderMetrics(null);
     }
     if (data?.notes) {
       $('#t_ps101').value = data.notes.ps101 || '';
@@ -1895,6 +1957,9 @@
       throw new Error(message);
     }
     if(data && data.session_id) setSession(data.session_id);
+    if(data && data.metrics) {
+      renderMetrics(data.metrics);
+    }
     return data || {};
   }
 
@@ -2076,7 +2141,6 @@
 
   // Consolidated application initializer
   function initApp() {
-    // DEPLOY_MARKER: initApp function definition | Line ~2017
     try {
       console.log('[INIT] Starting application initialization...');
 
@@ -2132,20 +2196,20 @@
         }
       }, 30000);
 
-      // Chat System Setup
-      chat = $('#chat'); // Set module-level variable
-      chatInput = $('#chatInput'); // Set module-level variable
-      chatLog = $('#chatLog'); // Set module-level variable
-      sendMsg = $('#sendMsg'); // Set module-level variable
-      ensureCoachStripRefs();
-      console.log('[INIT] Phase 2.5 chat readiness', {
-        chatReady: !!chat,
-        chatLogReady: !!chatLog,
-        chatInputReady: !!chatInput,
-        sendMsgReady: !!sendMsg,
-        coachAskReady: !!coachAskEl,
-        coachSendReady: !!coachSendEl
-      });
+  // Chat System Setup
+  chat = $('#chat'); // Set module-level variable
+  chatInput = $('#chatInput'); // Set module-level variable
+  chatLog = $('#chatLog'); // Set module-level variable
+  sendMsg = $('#sendMsg'); // Set module-level variable
+  ensureCoachStripRefs();
+  console.log('[INIT] Phase 2.5 chat readiness', {
+    chatReady: !!chat,
+    chatLogReady: !!chatLog,
+    chatInputReady: !!chatInput,
+    sendMsgReady: !!sendMsg,
+    coachAskReady: !!coachAskEl,
+    coachSendReady: !!coachSendEl
+  });
       const openChatBtn = $('#openChat');
       const closeChatBtn = $('#closeChat');
 
@@ -2164,24 +2228,24 @@
       }
 
       // Close chat on Escape key
-      document.addEventListener('keydown', e => {
-        if (chat && e.key === 'Escape' && chat.style.display === 'block') {
-          chat.style.display = 'none';
-        }
-      });
+  document.addEventListener('keydown', e => {
+    if (chat && e.key === 'Escape' && chat.style.display === 'block') {
+      chat.style.display = 'none';
+    }
+  });
 
-      // First-visit gentle nudge with improved UX (runs after chat wiring)
-      const SEEN = 'delta_seen_intro_v2';
-      if (chat && chatLog && !localStorage.getItem(SEEN)) {
-        setTimeout(() => {
-          if (!chatGuard('first-visit nudge')) {
-            return;
-          }
-          chat.style.display = 'block';
-          addMsg('hi — want to start with some key questions or explore on your own?', 'bot');
-          localStorage.setItem(SEEN, '1');
-        }, 1000);
+  // First-visit gentle nudge with improved UX (runs after chat wiring)
+  const SEEN = 'delta_seen_intro_v2';
+  if (chat && chatLog && !localStorage.getItem(SEEN)) {
+    setTimeout(() => {
+      if (!chatGuard('first-visit nudge')) {
+        return;
       }
+      chat.style.display = 'block';
+      addMsg('hi — want to start with some key questions or explore on your own?', 'bot');
+      localStorage.setItem(SEEN, '1');
+    }, 1000);
+  }
 
       // Setup send message handlers
       if (sendMsg) {
@@ -2383,6 +2447,7 @@
             coachAskEl.placeholder = 'type a question or try: help me get started';
           };
         }
+      }
       } else if (voiceBtn) {
         voiceBtn.style.display = 'none';
       }
@@ -2498,7 +2563,11 @@
       textarea.addEventListener('input', (e) => {
         const step = PS101State.getCurrentStep();
         if (step) {
-          updateCharCount(e.target.value.length, step.maxChars);
+          updateCharCount(
+            e.target.value.length,
+            step?.minChars || 0,
+            step?.maxChars || 0
+          );
           PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, e.target.value);
           // Trigger validation update for button state
           const promptIndex = PS101State.currentPromptIndex || 0;
@@ -2893,9 +2962,13 @@
   // Authentication event handlers
   ensureConfig().then(()=>{
     if(sessionId){
-      callJson('/wimd/metrics').catch(()=>{});
+      callJson('/wimd/metrics').catch(()=>{ renderMetrics(null); });
+    } else {
+      renderMetrics(null);
     }
-  }).catch(()=>{});
+  }).catch(()=>{
+    renderMetrics(null);
+  });
 
   const loginForm = $('#loginForm');
   if(loginForm){
@@ -3217,6 +3290,17 @@
         maxChars: 1000
       }
     ];
+
+    const PROMPT_HINTS = {
+      1: [
+        'Aim for at least two sentences describing what feels stuck right now. Example: "I\'m trying to pivot into product roles but I feel lost about where to begin. I\'m worried that my current skills don\'t translate."',
+        'Describe why this matters to you. For instance: "It matters because I want more creative ownership and to feel proud of my work."',
+        'Try a single-sentence problem statement such as: "I want to transition to product management within six months but lack a clear plan."',
+        'Paint a picture of success—one or two sentences about what life looks like when this is solved.',
+        'Spell out the gap between today and that desired state. Mention what\'s missing.',
+        'Add a quick note on how solving this ties to your bigger goals or values.'
+      ]
+    };
 
     // State Object (v2 - multi-prompt + experiments)
     const PS101State = {
@@ -3561,20 +3645,47 @@
     }
 
     // Update character count
-    function updateCharCount(current, max) {
+    function updateCharCount(current, minRequired = 0, max = 0) {
       const currentEl = document.getElementById('char-current');
       const maxEl = document.getElementById('char-max');
+      const minEl = document.getElementById('char-min');
       const charCount = document.getElementById('char-count');
       
       if (currentEl) currentEl.textContent = current;
       if (maxEl) maxEl.textContent = max;
-      
-      if (charCount) {
-        if (current > max * 0.9) {
-          charCount.style.color = '#d63638';
+
+      if (minEl) {
+        if (minRequired) {
+          minEl.textContent = `(min ${minRequired})`;
+          minEl.style.display = '';
         } else {
-          charCount.style.color = 'var(--muted)';
+          minEl.textContent = '';
+          minEl.style.display = 'none';
         }
+      }
+
+      if (charCount) {
+        const needsDetail = minRequired > 0 && current < minRequired;
+        const nearLimit = !needsDetail && max > 0 && current > max * 0.9;
+
+        charCount.classList.toggle('needs-detail', needsDetail);
+        charCount.classList.toggle('near-limit', nearLimit);
+        if (!needsDetail && !nearLimit) {
+          charCount.style.color = '';
+        } else {
+          charCount.style.color = '';
+        }
+
+        let ariaStatus;
+        if (needsDetail) {
+          ariaStatus = `Need at least ${minRequired} characters. Currently at ${current}.`;
+        } else if (minRequired) {
+          ariaStatus = `Characters ${current} of ${max}. Minimum required ${minRequired}.`;
+        } else {
+          ariaStatus = `Characters ${current} of ${max}.`;
+        }
+        charCount.setAttribute('aria-label', ariaStatus);
+        charCount.setAttribute('title', ariaStatus);
       }
     }
 
@@ -3612,18 +3723,14 @@
           if (isValid && [6, 7, 8, 9].includes(currentStep)) {
             const activeExp = PS101State.getActiveExperiment();
             if (currentStep === 6 && activeExp) {
-              // Step 6: need hypothesis, success metric, and duration
               isValid = activeExp.hypothesis && activeExp.successMetric && 
                        (activeExp.duration?.start || activeExp.duration?.review);
             } else if (currentStep === 7 && activeExp) {
-              // Step 7: need at least one obstacle with strategy
               isValid = activeExp.obstacles && activeExp.obstacles.length > 0 &&
                        activeExp.obstacles.some(o => o.label && o.strategy);
             } else if (currentStep === 8 && activeExp) {
-              // Step 8: need at least 3 actions
               isValid = activeExp.actions && activeExp.actions.length >= 3;
             } else if (currentStep === 9 && activeExp) {
-              // Step 9: need reflection outcome and learning
               isValid = activeExp.reflection && 
                        activeExp.reflection.outcome && activeExp.reflection.learning &&
                        activeExp.reflection.confidence?.after;
@@ -3741,8 +3848,12 @@
       const hintText = document.getElementById('hint-text');
       const coachingHint = document.getElementById('coaching-hint');
       if (hintText) {
-        // We don't have hints in the new structure, but could add contextual ones later
-        hintText.textContent = 'Take your time to reflect on this question.';
+        const stepHints = PROMPT_HINTS[state.currentStep] || [];
+        const specificHint = stepHints[promptIndex];
+        const minimumDetail = step.minChars || 30;
+        hintText.textContent = specificHint
+          ? `${specificHint} Aim for about ${minimumDetail} characters so the Next Prompt button can unlock.`
+          : `Take your time to reflect on this question. Aim for about ${minimumDetail} characters so the Next Prompt button can unlock.`;
       }
       if (coachingHint) {
         coachingHint.style.display = 'block'; // Keep visible for now
@@ -3755,7 +3866,11 @@
         textarea.value = answer;
         textarea.placeholder = `Type your response to: ${currentPrompt.substring(0, 50)}...`;
         textarea.setAttribute('maxlength', step.maxChars);
-        updateCharCount(answer.length, step.maxChars);
+        updateCharCount(
+          answer.length,
+          step?.minChars || 0,
+          step?.maxChars || 0
+        );
         textarea.focus();
       }
 
@@ -4075,22 +4190,22 @@
       }
 
       // Step-specific validation (only for first prompt of step 1)
-      if (step.step === 1 && promptIndex === 0) {
-        // Step 1, prompt 1 - need at least 2 sentences
-        const sentences = answer.split(/[.!?]+/).filter(s => s.trim().length > 0);
-        if (sentences.length < 2) {
-          if (!isLastPrompt) {
-            const proceed = confirm('This intro question works best with a bit more detail. Continue anyway?');
-            if (proceed) {
-              return true;
-            }
-          } else {
-            alert('Please provide at least 2 sentences describing your situation.');
-          }
-          textarea.focus();
-          return false;
+  if (step.step === 1 && promptIndex === 0) {
+    // Step 1, prompt 1 - need at least 2 sentences
+    const sentences = answer.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    if (sentences.length < 2) {
+      if (!isLastPrompt) {
+        const proceed = confirm('This intro question works best with a bit more detail. Continue anyway?');
+        if (proceed) {
+          return true;
         }
+      } else {
+        alert('Please provide at least 2 sentences describing your situation.');
       }
+      textarea.focus();
+      return false;
+    }
+  }
 
       // Step 5, prompt 1 - need at least 5 solutions
       if (step.step === 5 && promptIndex === 0) {
@@ -4207,7 +4322,6 @@
     }
 
 })();
-// DEPLOY_MARKER: IIFE closes | Line ~4018
 
 </script>
 <!-- BUILD_ID:5cf9088cd271e2ae767620496b2d3802aa10eb2a|SHA:7795ae25 -->
