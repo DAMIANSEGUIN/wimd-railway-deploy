@@ -23,3 +23,6 @@
 [2025-11-13T19:35:34Z] verify_critical_features.sh post-deploy — local checks pass, prod auth warning persists (false-positive)
 [2025-11-13T20:00:47Z] Implemented chat chime (AudioContext) triggered on bot replies; pointer/keydown unlocks playback.
 [2025-11-13T20:01:02Z] verify_mosaic_ui.sh (pre-deploy chime build) — expected 4389 vs live 4327 (pending redeploy).
+[2025-11-13T20:03:38Z] Deployed chat chime build via scripts/deploy_now_zsh.sh (Netlify prod).
+[2025-11-13T20:03:56Z] verify_mosaic_ui.sh (post-chime deploy) — expected 4389, live 4389, BUILD_ID matched.
+[2025-11-13T20:04:06Z] verify_critical_features.sh — local checks ok; prod auth curl warning persists (false-positive).

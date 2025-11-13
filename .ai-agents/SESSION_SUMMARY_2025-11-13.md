@@ -15,7 +15,7 @@
 ## Verification Notes
 - `./scripts/verify_critical_features.sh` — ✅ local checks; ⚠️ curl-based prod auth test still prints warning (manual curl count 19, so treat as false-positive until script is hardened).
 - `./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh` — ✅ hash `7795ae25`.
-- `./scripts/verify_mosaic_ui.sh https://whatismydelta.com/` — ✅ post-deploy match at 4327 lines; current local build is 4389 until the chime update ships.
+- `./scripts/verify_mosaic_ui.sh https://whatismydelta.com/` — ✅ post-chime deploy match at 4389 lines; BUILD_ID comment unchanged.
 
 ## Follow-up Required
 1. Deploy the refreshed `mosaic_ui` to Netlify so live HTML matches repo (resolves line-count warning).

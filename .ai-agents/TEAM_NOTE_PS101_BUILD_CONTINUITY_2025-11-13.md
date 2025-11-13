@@ -15,7 +15,6 @@
 
 ## Outstanding / Needs Follow-up
 - **verify_critical_features warning:** Script still prints the production auth warning because the embedded curl occasionally returns `0`. Live HTML does include `authModal` (manual curl count = 19); consider adjusting the script to treat `PROD_AUTH` strings >0 even if pipefail triggers.
-- **Deploy refreshed UI:** Latest local build (4389 lines) carries the chat chime and extra UX refinements; rerun `scripts/deploy_now_zsh.sh` after verification to publish the update.
 - **Manual QA:** No new end-to-end login / password-reset validation was executed this session. Keep the checklist item open before sign-off.
 
 ## Suggested Next Actions
