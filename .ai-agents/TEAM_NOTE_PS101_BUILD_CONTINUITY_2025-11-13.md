@@ -9,7 +9,7 @@
 - Hardened PS101 metrics gating — metrics cards stay blank until data arrives, note hides once real values load, and backend defaults were zeroed (`api/index.py`, `backend/api/index.py`) so stale percentages no longer appear.
 - Updated `scripts/verify_mosaic_ui.sh` to use the local canonical line count (default fallback `4213` → now from `mosaic_ui/index.html`) so the verification script reflects current UI footprints.
 - Logged all verification runs in `.ai-agents/session_log.txt` and noted handoff acknowledgement in `.ai-agents/handoff_log.txt`.
-- Ran `scripts/deploy_now_zsh.sh` to push commit `d72b609` and deploy Netlify production (`https://whatismydelta.com` now serving 4327-line build, BUILD_ID `5cf9088c…|SHA:7795ae25`).
+- Ran `scripts/deploy_now_zsh.sh` to push commit `3eb075f` + follow-up `63e05f4`; Netlify production (`https://whatismydelta.com`) now serves the chime-enabled 4390-line build with BUILD_ID `5cf9088c…|SHA:7795ae25`.
 - Post-deploy verification: `verify_mosaic_ui.sh` passes, `verify_critical_features.sh` still warns on prod auth due to intermittent curl zero-match (manual `curl` confirms markup present).
 - Added lightweight Web Audio chime that plays on coach/bot responses (unlocked on first user interaction) so agents hear confirmation cues again.
 
