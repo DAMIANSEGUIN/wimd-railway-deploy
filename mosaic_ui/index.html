@@ -1453,6 +1453,7 @@ async function askCoach(prompt) {
     if (!chatGuard('sendStrip')) {
       return;
     }
+    await enableChime();
     chat.style.display = 'block';
     addMsg(v, 'you');
     coachAskEl.value = '';
