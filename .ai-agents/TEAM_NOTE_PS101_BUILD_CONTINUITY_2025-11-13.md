@@ -11,9 +11,11 @@
 - Logged all verification runs in `.ai-agents/session_log.txt` and noted handoff acknowledgement in `.ai-agents/handoff_log.txt`.
 - Ran `scripts/deploy_now_zsh.sh` to push commit `d72b609` and deploy Netlify production (`https://whatismydelta.com` now serving 4327-line build, BUILD_ID `5cf9088c…|SHA:7795ae25`).
 - Post-deploy verification: `verify_mosaic_ui.sh` passes, `verify_critical_features.sh` still warns on prod auth due to intermittent curl zero-match (manual `curl` confirms markup present).
+- Added lightweight Web Audio chime that plays on coach/bot responses (unlocked on first user interaction) so agents hear confirmation cues again.
 
 ## Outstanding / Needs Follow-up
 - **verify_critical_features warning:** Script still prints the production auth warning because the embedded curl occasionally returns `0`. Live HTML does include `authModal` (manual curl count = 19); consider adjusting the script to treat `PROD_AUTH` strings >0 even if pipefail triggers.
+- **Deploy refreshed UI:** Latest local build (4389 lines) carries the chat chime and extra UX refinements; rerun `scripts/deploy_now_zsh.sh` after verification to publish the update.
 - **Manual QA:** No new end-to-end login / password-reset validation was executed this session. Keep the checklist item open before sign-off.
 
 ## Suggested Next Actions

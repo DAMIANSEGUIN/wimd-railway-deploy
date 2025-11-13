@@ -10,11 +10,12 @@
 - Improved `scripts/verify_mosaic_ui.sh` to derive the expected line count from `mosaic_ui/index.html` (fallback 4213) and re-ran against production.
 - Captured prod verification outputs; documented findings and next steps in `TEAM_NOTE_PS101_BUILD_CONTINUITY_2025-11-13.md`.
 - Deployed commit `d72b609` to Netlify via `scripts/deploy_now_zsh.sh`; production now serves the synchronized 4327-line build and matching BUILD_ID.
+- Restored audible confirmation by wiring a Web Audio chime to coach/bot replies (auto-enabled after the first user interaction).
 
 ## Verification Notes
 - `./scripts/verify_critical_features.sh` — ✅ local checks; ⚠️ curl-based prod auth test still prints warning (manual curl count 19, so treat as false-positive until script is hardened).
 - `./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh` — ✅ hash `7795ae25`.
-- `./scripts/verify_mosaic_ui.sh https://whatismydelta.com/` — ✅ expected 4327, saw 4327; BUILD_ID comment matches canonical.
+- `./scripts/verify_mosaic_ui.sh https://whatismydelta.com/` — ✅ post-deploy match at 4327 lines; current local build is 4389 until the chime update ships.
 
 ## Follow-up Required
 1. Deploy the refreshed `mosaic_ui` to Netlify so live HTML matches repo (resolves line-count warning).

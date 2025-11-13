@@ -1291,6 +1291,66 @@ const chatGuard = (context, requireInput = false) => {
   return false;
 };
 
+  const chimeState = {
+    ctx: null,
+    enabled: false,
+    lastPlayed: 0
+  };
+
+  function ensureChimeContext() {
+    const AudioCtor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtor) return null;
+    if (!chimeState.ctx) {
+      try {
+        chimeState.ctx = new AudioCtor();
+      } catch (err) {
+        console.warn('[CHIME] Failed to create AudioContext', err);
+        chimeState.ctx = null;
+        return null;
+      }
+    }
+    return chimeState.ctx;
+  }
+
+  async function enableChime() {
+    const ctx = ensureChimeContext();
+    if (!ctx) return;
+    try {
+      if (ctx.state === 'suspended') {
+        await ctx.resume();
+      }
+      chimeState.enabled = true;
+    } catch (err) {
+      console.warn('[CHIME] Unable to enable chime playback', err);
+    }
+  }
+
+  function playChime() {
+    if (!chimeState.enabled) return;
+    const ctx = ensureChimeContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    if (now - chimeState.lastPlayed < 0.3) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.07, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.3);
+    chimeState.lastPlayed = now;
+  }
+
+  ['pointerdown', 'keydown'].forEach(evt => {
+    document.addEventListener(evt, () => {
+      enableChime();
+    }, { once: true, passive: true });
+  });
+
   function addMsg(txt, who = 'you') {
     if (!chatGuard('addMsg')) {
       return;
@@ -1304,6 +1364,7 @@ const chatGuard = (context, requireInput = false) => {
     // Announce new messages to screen readers
     if (who === 'bot') {
       div.setAttribute('aria-live', 'polite');
+      playChime();
     }
   }
 
@@ -1337,6 +1398,7 @@ async function askCoach(prompt) {
     const v = chatInput.value.trim();
     if (!v) return;
     
+    await enableChime();
     addMsg(v, 'you');
     chatInput.value = '';
     

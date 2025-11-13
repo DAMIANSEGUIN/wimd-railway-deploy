@@ -21,3 +21,5 @@
 [2025-11-13T19:35:12Z] Deployed via scripts/deploy_now_zsh.sh (Netlify prod).
 [2025-11-13T19:35:28Z] verify_mosaic_ui.sh (prod) — line count 4327, BUILD_ID matched after deploy
 [2025-11-13T19:35:34Z] verify_critical_features.sh post-deploy — local checks pass, prod auth warning persists (false-positive)
+[2025-11-13T20:00:47Z] Implemented chat chime (AudioContext) triggered on bot replies; pointer/keydown unlocks playback.
+[2025-11-13T20:01:02Z] verify_mosaic_ui.sh (pre-deploy chime build) — expected 4389 vs live 4327 (pending redeploy).
