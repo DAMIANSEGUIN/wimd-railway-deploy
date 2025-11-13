@@ -2574,21 +2574,8 @@ async function askCoach(prompt) {
     // Textarea input (auto-save + char count)
     const textarea = document.getElementById('step-answer');
     if (textarea) {
-      textarea.addEventListener('input', (e) => {
-        const step = PS101State.getCurrentStep();
-        if (step) {
-          updateCharCount(
-            e.target.value.length,
-            step?.minChars || 0,
-            step?.maxChars || 0
-          );
-          PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, e.target.value);
-          // Trigger validation update for button state
-          const promptIndex = PS101State.currentPromptIndex || 0;
-          const totalPrompts = step.prompts ? step.prompts.length : 1;
-          updateNavButtons(PS101State.currentStep, promptIndex, totalPrompts);
-        }
-      });
+      textarea.removeEventListener('input', handleStepAnswerInput);
+      textarea.addEventListener('input', handleStepAnswerInput);
     }
 
     // Completion screen buttons
@@ -3750,10 +3737,24 @@ async function askCoach(prompt) {
                        activeExp.reflection.confidence?.after;
             }
           }
-        }
+    }
 
-        nextBtn.disabled = !isValid;
-      }
+    nextBtn.disabled = !isValid;
+  }
+}
+
+    function handleStepAnswerInput(e) {
+      const step = PS101State.getCurrentStep();
+      if (!step) return;
+      updateCharCount(
+        e.target.value.length,
+        step?.minChars || 0,
+        step?.maxChars || 0
+      );
+      PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, e.target.value);
+      const promptIndex = PS101State.currentPromptIndex || 0;
+      const totalPrompts = step.prompts ? step.prompts.length : 1;
+      updateNavButtons(PS101State.currentStep, promptIndex, totalPrompts);
     }
 
     // Render previous answers
@@ -3885,6 +3886,8 @@ async function askCoach(prompt) {
           step?.minChars || 0,
           step?.maxChars || 0
         );
+        textarea.removeEventListener('input', handleStepAnswerInput);
+        textarea.addEventListener('input', handleStepAnswerInput);
         textarea.focus();
       }
 
