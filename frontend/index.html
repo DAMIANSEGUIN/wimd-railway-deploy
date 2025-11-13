@@ -1192,56 +1192,42 @@
   
 // Smart prompt matching
 const MATCH_THRESHOLD = 3;
-const STOP_WORDS = new Set([
-  'i','me','my','mine','myself','am','is','are','was','were','be','been','being',
-  'the','a','an','and','or','but','if','then','than','that','this','these','those',
-  'for','from','with','about','into','onto','over','under','between','among','of',
-  'at','by','on','in','out','up','down','off','to','as','it','its','they','them',
-  'their','theirs','we','us','our','ours','you','your','yours','do','does','did',
-  'done','so','not','no','yes','can','could','should','would','will','just',
-  'get','gets','getting','got','how','make','makes','making','take','takes','taking',
-  'feel','feels','feeling','really','also','still','ever','even','again'
-]);
-
-function tokenize(text) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, ' ')
-    .split(/\s+/)
-    .filter(word => word && word.length > 2 && !STOP_WORDS.has(word));
-}
 
 function findBestMatch(userInput) {
   if (!careerPrompts.length) return null;
-
-  const inputTokens = tokenize(userInput);
-  if (!inputTokens.length) return null;
-  const inputSet = new Set(inputTokens);
-
-  let bestMatch = null;
-  let highestScore = 0;
-
-  careerPrompts.forEach(prompt => {
-    const promptTokens = tokenize(prompt.prompt);
-    if (!promptTokens.length) return;
-    const promptSet = new Set(promptTokens);
-
-    let overlap = 0;
-    inputSet.forEach(token => {
-      if (promptSet.has(token)) overlap += 1;
-    });
-
-    if (overlap > highestScore) {
-      highestScore = overlap;
-      bestMatch = { ...prompt, score: overlap };
+  
+  const input = userInput.toLowerCase();
+    let bestMatch = null;
+    let highestScore = 0;
+    
+    careerPrompts.forEach(prompt => {
+      let score = 0;
+      const promptWords = prompt.prompt.toLowerCase().split(' ');
+      const inputWords = input.split(' ');
+      
+      // Keyword matching
+      inputWords.forEach(word => {
+        if (promptWords.some(pw => pw.includes(word) || word.includes(pw))) {
+          score += 1;
+        }
+      });
+      
+      // Exact phrase matching (higher weight)
+    if (prompt.prompt.toLowerCase().includes(input)) {
+      score += 10;
+    }
+    
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = { ...prompt, score };
     }
   });
-
-  if (!bestMatch || highestScore < MATCH_THRESHOLD) {
+  
+  if (!bestMatch) {
     return null;
   }
 
-  return bestMatch;
+  return bestMatch.score > 0 ? bestMatch : null;
 }
 
   // Safe footer year update with null-guard
@@ -2574,8 +2560,21 @@ async function askCoach(prompt) {
     // Textarea input (auto-save + char count)
     const textarea = document.getElementById('step-answer');
     if (textarea) {
-      textarea.removeEventListener('input', handleStepAnswerInput);
-      textarea.addEventListener('input', handleStepAnswerInput);
+      textarea.addEventListener('input', (e) => {
+        const step = PS101State.getCurrentStep();
+        if (step) {
+          updateCharCount(
+            e.target.value.length,
+            step?.minChars || 0,
+            step?.maxChars || 0
+          );
+          PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, e.target.value);
+          // Trigger validation update for button state
+          const promptIndex = PS101State.currentPromptIndex || 0;
+          const totalPrompts = step.prompts ? step.prompts.length : 1;
+          updateNavButtons(PS101State.currentStep, promptIndex, totalPrompts);
+        }
+      });
     }
 
     // Completion screen buttons
@@ -3737,24 +3736,10 @@ async function askCoach(prompt) {
                        activeExp.reflection.confidence?.after;
             }
           }
-    }
+        }
 
-    nextBtn.disabled = !isValid;
-  }
-}
-
-    function handleStepAnswerInput(e) {
-      const step = PS101State.getCurrentStep();
-      if (!step) return;
-      updateCharCount(
-        e.target.value.length,
-        step?.minChars || 0,
-        step?.maxChars || 0
-      );
-      PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, e.target.value);
-      const promptIndex = PS101State.currentPromptIndex || 0;
-      const totalPrompts = step.prompts ? step.prompts.length : 1;
-      updateNavButtons(PS101State.currentStep, promptIndex, totalPrompts);
+        nextBtn.disabled = !isValid;
+      }
     }
 
     // Render previous answers
@@ -3886,8 +3871,6 @@ async function askCoach(prompt) {
           step?.minChars || 0,
           step?.maxChars || 0
         );
-        textarea.removeEventListener('input', handleStepAnswerInput);
-        textarea.addEventListener('input', handleStepAnswerInput);
         textarea.focus();
       }
 

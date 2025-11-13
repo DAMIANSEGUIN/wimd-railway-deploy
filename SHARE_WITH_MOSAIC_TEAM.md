@@ -6,6 +6,8 @@
 **Status**: ✅ READY FOR PRODUCTION IMPLEMENTATION  
 **Implementation SSE**: Detail-oriented technical delivery  
 
+> **Update 2025-11-13:** Production guardrails are now documented in `docs/MOSAIC_PRODUCTION_GUARDRAIL_PROTOCOL.md`. Please read and acknowledge before requesting any deploy or rollback; Codex is the acting release manager until a human owner is appointed.
+
 ## 📋 COMPREHENSIVE IMPLEMENTATION PACKAGE
 
 ### **📁 DOCUMENTATION FILES READY**
