@@ -9,13 +9,13 @@
 - Hardened PS101 metrics gating — metrics cards stay blank until data arrives, note hides once real values load, and backend defaults were zeroed (`api/index.py`, `backend/api/index.py`) so stale percentages no longer appear.
 - Updated `scripts/verify_mosaic_ui.sh` to use the local canonical line count (default fallback `4213` → now from `mosaic_ui/index.html`) so the verification script reflects current UI footprints.
 - Logged all verification runs in `.ai-agents/session_log.txt` and noted handoff acknowledgement in `.ai-agents/handoff_log.txt`.
-- Ran `scripts/deploy_now_zsh.sh` to push commit `3eb075f` + follow-up `63e05f4`; Netlify production (`https://whatismydelta.com`) currently serves BUILD_ID `5cf9088c…|SHA:7795ae25` (pre-prompt-match fix).
+- Ran `scripts/deploy_now_zsh.sh` (latest: commit `2ccb88c`) so Netlify production (`https://whatismydelta.com`) now serves the chime-free 4341-line build with BUILD_ID `5cf9088c…|SHA:7795ae25`.
 - Post-deploy verification: `verify_mosaic_ui.sh` passes, `verify_critical_features.sh` still warns on prod auth due to intermittent curl zero-match (manual `curl` confirms markup present).
 - Removed the temporary Web Audio chime hook from the UI (no product audio cues) and tightened knowledge-base matching (stop words + overlap threshold) to avoid irrelevant third-person responses.
 
 ## Outstanding / Needs Follow-up
 - **verify_critical_features warning:** Script still prints the production auth warning because the embedded curl occasionally returns `0`. Live HTML does include `authModal` (manual curl count = 19); consider adjusting the script to treat `PROD_AUTH` strings >0 even if pipefail triggers.
-- **Prompt-match fix deployment:** Local build (4341 lines) includes the improved knowledge-base filter and chime removal; redeploy via `scripts/deploy_now_zsh.sh` + verification to align production.
+- **Prompt-match fix verification:** Production matches the new 4341-line build; keep an eye on knowledge-base behaviour and update `.verification_audit.log` if additional tuning is needed.
 - **Manual QA:** No new end-to-end login / password-reset validation was executed this session. Keep the checklist item open before sign-off.
 
 ## Suggested Next Actions
