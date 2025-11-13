@@ -1192,42 +1192,56 @@
   
 // Smart prompt matching
 const MATCH_THRESHOLD = 3;
+const STOP_WORDS = new Set([
+  'i','me','my','mine','myself','am','is','are','was','were','be','been','being',
+  'the','a','an','and','or','but','if','then','than','that','this','these','those',
+  'for','from','with','about','into','onto','over','under','between','among','of',
+  'at','by','on','in','out','up','down','off','to','as','it','its','they','them',
+  'their','theirs','we','us','our','ours','you','your','yours','do','does','did',
+  'done','so','not','no','yes','can','could','should','would','will','just',
+  'get','gets','getting','got','how','make','makes','making','take','takes','taking',
+  'feel','feels','feeling','really','also','still','ever','even','again'
+]);
+
+function tokenize(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(word => word && word.length > 2 && !STOP_WORDS.has(word));
+}
 
 function findBestMatch(userInput) {
   if (!careerPrompts.length) return null;
-  
-  const input = userInput.toLowerCase();
-    let bestMatch = null;
-    let highestScore = 0;
-    
-    careerPrompts.forEach(prompt => {
-      let score = 0;
-      const promptWords = prompt.prompt.toLowerCase().split(' ');
-      const inputWords = input.split(' ');
-      
-      // Keyword matching
-      inputWords.forEach(word => {
-        if (promptWords.some(pw => pw.includes(word) || word.includes(pw))) {
-          score += 1;
-        }
-      });
-      
-      // Exact phrase matching (higher weight)
-    if (prompt.prompt.toLowerCase().includes(input)) {
-      score += 10;
-    }
-    
-    if (score > highestScore) {
-      highestScore = score;
-      bestMatch = { ...prompt, score };
+
+  const inputTokens = tokenize(userInput);
+  if (!inputTokens.length) return null;
+  const inputSet = new Set(inputTokens);
+
+  let bestMatch = null;
+  let highestScore = 0;
+
+  careerPrompts.forEach(prompt => {
+    const promptTokens = tokenize(prompt.prompt);
+    if (!promptTokens.length) return;
+    const promptSet = new Set(promptTokens);
+
+    let overlap = 0;
+    inputSet.forEach(token => {
+      if (promptSet.has(token)) overlap += 1;
+    });
+
+    if (overlap > highestScore) {
+      highestScore = overlap;
+      bestMatch = { ...prompt, score: overlap };
     }
   });
-  
-  if (!bestMatch) {
+
+  if (!bestMatch || highestScore < MATCH_THRESHOLD) {
     return null;
   }
 
-  return bestMatch.score > 0 ? bestMatch : null;
+  return bestMatch;
 }
 
   // Safe footer year update with null-guard
@@ -1291,66 +1305,6 @@ const chatGuard = (context, requireInput = false) => {
   return false;
 };
 
-  const chimeState = {
-    ctx: null,
-    enabled: false,
-    lastPlayed: 0
-  };
-
-  function ensureChimeContext() {
-    const AudioCtor = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtor) return null;
-    if (!chimeState.ctx) {
-      try {
-        chimeState.ctx = new AudioCtor();
-      } catch (err) {
-        console.warn('[CHIME] Failed to create AudioContext', err);
-        chimeState.ctx = null;
-        return null;
-      }
-    }
-    return chimeState.ctx;
-  }
-
-  async function enableChime() {
-    const ctx = ensureChimeContext();
-    if (!ctx) return;
-    try {
-      if (ctx.state === 'suspended') {
-        await ctx.resume();
-      }
-      chimeState.enabled = true;
-    } catch (err) {
-      console.warn('[CHIME] Unable to enable chime playback', err);
-    }
-  }
-
-  function playChime() {
-    if (!chimeState.enabled) return;
-    const ctx = ensureChimeContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-    if (now - chimeState.lastPlayed < 0.3) return;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, now);
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.07, now + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.3);
-    chimeState.lastPlayed = now;
-  }
-
-  ['pointerdown', 'keydown'].forEach(evt => {
-    document.addEventListener(evt, () => {
-      enableChime();
-    }, { once: true, passive: true });
-  });
-
   function addMsg(txt, who = 'you') {
     if (!chatGuard('addMsg')) {
       return;
@@ -1364,7 +1318,6 @@ const chatGuard = (context, requireInput = false) => {
     // Announce new messages to screen readers
     if (who === 'bot') {
       div.setAttribute('aria-live', 'polite');
-      playChime();
     }
   }
 
@@ -1398,7 +1351,6 @@ async function askCoach(prompt) {
     const v = chatInput.value.trim();
     if (!v) return;
     
-    await enableChime();
     addMsg(v, 'you');
     chatInput.value = '';
     
@@ -1453,7 +1405,6 @@ async function askCoach(prompt) {
     if (!chatGuard('sendStrip')) {
       return;
     }
-    await enableChime();
     chat.style.display = 'block';
     addMsg(v, 'you');
     coachAskEl.value = '';

@@ -28,3 +28,4 @@
 [2025-11-13T20:04:06Z] verify_critical_features.sh — local checks ok; prod auth curl warning persists (false-positive).
 [2025-11-13T20:10:06Z] verify_mosaic_ui.sh (pre-sendStrip deploy) — expected 4390 vs live 4389 (pending redeploy).
 [2025-11-13T20:12:15Z] verify_mosaic_ui.sh (post-sendStrip deploy) — expected 4390, live 4390, BUILD_ID matched.
+[2025-11-13T20:59:38Z] verify_mosaic_ui.sh (post-chime removal pre-deploy) — expected 4341 vs live 4390.
