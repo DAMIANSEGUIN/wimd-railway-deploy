@@ -77,8 +77,8 @@ echo ""
 {
   echo "[$TIMESTAMP] deploy_gate PASS actor=$USER_ID"
   echo "  automated=pass"
-  for prompt in "${PROMPTS[@]}"; do
-    response="${RESPONSES[$prompt]}"
+for prompt in "${PROMPTS[@]}"; do
+    response="${RESPONSES[$prompt]-n/a}"
     echo "  ${prompt} => ${response}"
   done
 } >> "$LOG_FILE"
