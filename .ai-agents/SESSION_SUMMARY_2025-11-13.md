@@ -11,11 +11,12 @@
 - Captured prod verification outputs; documented findings and next steps in `TEAM_NOTE_PS101_BUILD_CONTINUITY_2025-11-13.md`.
 - Deployed commit `d72b609` to Netlify via `scripts/deploy_now_zsh.sh`; production now serves the synchronized 4327-line build and matching BUILD_ID.
 - Tightened the knowledge-base fallback (stop words + overlap threshold) to avoid irrelevant third-person answers; removed the temporary Web Audio chime so Mosaic stays silent.
+- Rebound PS101 textarea handlers on every render so the live character counter and Next-button validation stay in sync.
 
 ## Verification Notes
 - `./scripts/verify_critical_features.sh` — ✅ local checks; ⚠️ curl-based prod auth test still prints warning (manual curl count 19, so treat as false-positive until script is hardened).
 - `./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh` — ✅ hash `7795ae25`.
-- `./scripts/verify_mosaic_ui.sh https://whatismydelta.com/` — ✅ production now matches the 4341-line build post-redeploy; BUILD_ID comment unchanged.
+- `./scripts/verify_mosaic_ui.sh https://whatismydelta.com/` — ✅ production now matches the 4344-line build post-redeploy; BUILD_ID comment unchanged.
 
 ## Follow-up Required
 1. Deploy the refreshed `mosaic_ui` to Netlify so live HTML matches repo (resolves line-count warning).
