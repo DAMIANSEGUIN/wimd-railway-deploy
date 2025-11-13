@@ -9,10 +9,11 @@
 - Hardened PS101 metrics gating — metrics cards stay blank until data arrives, note hides once real values load, and backend defaults were zeroed (`api/index.py`, `backend/api/index.py`) so stale percentages no longer appear.
 - Updated `scripts/verify_mosaic_ui.sh` to use the local canonical line count (default fallback `4213` → now from `mosaic_ui/index.html`) so the verification script reflects current UI footprints.
 - Logged all verification runs in `.ai-agents/session_log.txt` and noted handoff acknowledgement in `.ai-agents/handoff_log.txt`.
+- Ran `scripts/deploy_now_zsh.sh` to push commit `d72b609` and deploy Netlify production (`https://whatismydelta.com` now serving 4327-line build, BUILD_ID `5cf9088c…|SHA:7795ae25`).
+- Post-deploy verification: `verify_mosaic_ui.sh` passes, `verify_critical_features.sh` still warns on prod auth due to intermittent curl zero-match (manual `curl` confirms markup present).
 
 ## Outstanding / Needs Follow-up
-- **Production drift:** Netlify is still serving the older 4213-line build; run the usual deploy flow (`scripts/apply_trial_patch.sh`, `scripts/deploy_now_zsh.sh`, `scripts/verify_mosaic_ui.sh`) to publish the synchronized UI (4316 lines). Until then the verification script will continue flagging the line-count mismatch.
-- **verify_critical_features warning:** The prod auth modal test intermittently fails due to stale HTML. After redeploy, rerun `./scripts/verify_critical_features.sh` to confirm the warning clears.
+- **verify_critical_features warning:** Script still prints the production auth warning because the embedded curl occasionally returns `0`. Live HTML does include `authModal` (manual curl count = 19); consider adjusting the script to treat `PROD_AUTH` strings >0 even if pipefail triggers.
 - **Manual QA:** No new end-to-end login / password-reset validation was executed this session. Keep the checklist item open before sign-off.
 
 ## Suggested Next Actions

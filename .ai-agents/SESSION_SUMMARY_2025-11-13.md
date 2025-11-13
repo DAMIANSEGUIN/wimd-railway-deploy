@@ -9,11 +9,12 @@
 - Normalized backend defaults (`api/index.py`, `backend/api/index.py`) so metrics no longer pre-fill with 65/42/33.
 - Improved `scripts/verify_mosaic_ui.sh` to derive the expected line count from `mosaic_ui/index.html` (fallback 4213) and re-ran against production.
 - Captured prod verification outputs; documented findings and next steps in `TEAM_NOTE_PS101_BUILD_CONTINUITY_2025-11-13.md`.
+- Deployed commit `d72b609` to Netlify via `scripts/deploy_now_zsh.sh`; production now serves the synchronized 4327-line build and matching BUILD_ID.
 
 ## Verification Notes
-- `./scripts/verify_critical_features.sh` — ✅ auth markup + PS101 state detected locally, ⚠️ prod auth fetch still warns (site serving older HTML).
+- `./scripts/verify_critical_features.sh` — ✅ local checks; ⚠️ curl-based prod auth test still prints warning (manual curl count 19, so treat as false-positive until script is hardened).
 - `./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh` — ✅ hash `7795ae25`.
-- `./scripts/verify_mosaic_ui.sh https://whatismydelta.com/` — ⚠️ expected 4316, saw 4213 (live site one deploy behind); BUILD_ID comment matches canonical.
+- `./scripts/verify_mosaic_ui.sh https://whatismydelta.com/` — ✅ expected 4327, saw 4327; BUILD_ID comment matches canonical.
 
 ## Follow-up Required
 1. Deploy the refreshed `mosaic_ui` to Netlify so live HTML matches repo (resolves line-count warning).

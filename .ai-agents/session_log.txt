@@ -18,3 +18,6 @@
 [2025-11-13T13:37:53Z] Executed ./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh — spec hash 7795ae25
 [2025-11-13T18:45:58Z] Re-ran ./scripts/verify_critical_features.sh after UI sync — prod auth warning persists (expected until deploy)
 [2025-11-13T18:46:05Z] Ran ./scripts/verify_mosaic_ui.sh against prod — line count 4213 vs local 4316, BUILD_ID matches
+[2025-11-13T19:35:12Z] Deployed via scripts/deploy_now_zsh.sh (Netlify prod).
+[2025-11-13T19:35:28Z] verify_mosaic_ui.sh (prod) — line count 4327, BUILD_ID matched after deploy
+[2025-11-13T19:35:34Z] verify_critical_features.sh post-deploy — local checks pass, prod auth warning persists (false-positive)
