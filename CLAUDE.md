@@ -26,11 +26,16 @@
 
 ## Deployment Commands (MANDATORY - Use Wrapper Scripts)
 
-**❌ DO NOT use raw commands:**
-- `git push railway-origin main`
-- `netlify deploy --prod`
+**Git Operations:**
+```bash
+# Push to origin with verification (REQUIRED before deploy)
+./scripts/push.sh origin main
 
-**✅ ALWAYS use wrapper scripts:**
+# Emergency bypass (logged to audit)
+SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
+```
+
+**Deployment:**
 ```bash
 # Deploy frontend with verification
 ./scripts/deploy.sh netlify
@@ -40,13 +45,17 @@
 
 # Deploy both frontend + backend
 ./scripts/deploy.sh all
-
-# Push with automated verification
-./scripts/push.sh railway-origin main
-
-# Emergency bypass (logged to audit)
-SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh railway-origin main
 ```
+
+**❌ DO NOT use raw commands:**
+- `git push origin main` (use wrapper script)
+- `netlify deploy --prod` (use wrapper script)
+- `railway up` (use wrapper script)
+
+**Legacy Remotes (NOT REQUIRED):**
+- `railway-origin` (git@github.com:DAMIANSEGUIN/what-is-my-delta-site.git) - Historical mirror, no write access
+- Railway deployment uses CLI/API, not git push
+- See deploy_logs/2025-11-18_ps101-qa-mode.md for clarification
 
 **Why wrapper scripts are required:**
 - Automated pre-deployment verification
@@ -54,6 +63,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh railway-origin m
 - Post-deployment verification
 - GitHub Actions verification with manual escalation on failure
 - Prevents false positive deployments
+- Documentation audit enforcement
 
 ## API Endpoints
 - Health: `/health`, `/health/comprehensive`, `/health/recover`, `/health/prompts`, `/health/rag`, `/health/experiments`

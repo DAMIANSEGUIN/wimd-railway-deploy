@@ -138,11 +138,12 @@ Current critical features confirmed:
 6. ✅ Create handoff manifest before ending session if requested
 7. ✅ Confirm the PS101 manifest/footer alignment before approving a review or initiating a deploy; log any intentional variances in `.verification_audit.log`.
 8. ✅ Update all impacted documentation (notes, checklists, manifests) before declaring a task complete; summarize changes in the relevant handoff or audit log.
-9. ✅ **NEVER use raw `git push` or `netlify deploy` commands - use wrapper scripts:**
-   - Use `./scripts/push.sh railway-origin main` instead of `git push railway-origin main`
+9. ✅ **NEVER use raw `git push` or deployment commands - use wrapper scripts:**
+   - Use `./scripts/push.sh origin main` instead of `git push origin main`
    - Use `./scripts/deploy.sh netlify` instead of `netlify deploy --prod`
    - Use `./scripts/deploy.sh railway` to deploy backend
    - Use `./scripts/deploy.sh all` to deploy both frontend and backend
+   - **Note:** `railway-origin` remote is legacy (no write access) - NOT required for deployment
 10. ✅ **NEVER declare issues "fixed" or "resolved" without USER CONFIRMATION:**
    - Git commits saying "fix" ≠ issue is resolved
    - Code changes ≠ feature working
