@@ -1119,7 +1119,9 @@
   const SESSION_KEY = 'delta_session_id';
   const USER_DATA_KEY = 'delta_user_data';
   const TRIAL_START_KEY = 'delta_trial_start';
-  const TRIAL_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+  const QA_TOGGLE_KEY = 'ps101_force_trial';
+  const FORCE_TRIAL = localStorage.getItem(QA_TOGGLE_KEY) === 'true';
+  const TRIAL_DURATION = FORCE_TRIAL ? Number.MAX_SAFE_INTEGER : 5 * 60 * 1000; // default 5 minutes
   let sessionId = localStorage.getItem(SESSION_KEY) || '';
   let apiBase = '';
   let configPromise = null;
@@ -1128,6 +1130,14 @@
   let trialStartTime = localStorage.getItem(TRIAL_START_KEY);
   let userData = JSON.parse(localStorage.getItem(USER_DATA_KEY) || '{}');
   let autoSaveInterval = null;
+
+  if (FORCE_TRIAL && !trialStartTime) {
+    trialStartTime = Date.now().toString();
+    localStorage.setItem(TRIAL_START_KEY, trialStartTime);
+    console.log('[INIT] QA trial override active - start timestamp injected');
+  } else if (FORCE_TRIAL) {
+    console.log('[INIT] QA trial override active - existing timestamp honored');
+  }
   
   if(sessionId) {
     document.body.dataset.session = sessionId;
@@ -2013,6 +2023,7 @@ async function askCoach(prompt) {
   }
 
   function scheduleTrialExpiry(){
+    if (FORCE_TRIAL) return;
     if(isAuthenticated || !trialStartTime) return;
     const elapsed = Date.now() - parseInt(trialStartTime, 10);
     const remaining = TRIAL_DURATION - elapsed;
@@ -2032,6 +2043,7 @@ async function askCoach(prompt) {
   }
 
   function checkTrialExpired(){
+    if (FORCE_TRIAL) return;
     if(isAuthenticated) return;
     const elapsed = Date.now() - parseInt(trialStartTime);
     if(elapsed >= TRIAL_DURATION){
@@ -2040,6 +2052,7 @@ async function askCoach(prompt) {
   }
 
   function showSignUpPrompt(){
+    if (FORCE_TRIAL) return;
     const authModal = $('#authModal');
     if(authModal){
       authModal.style.display = 'block';
@@ -2492,20 +2505,7 @@ async function askCoach(prompt) {
     });
 
     // Textarea input (auto-save + char count)
-    const textarea = document.getElementById('step-answer');
-    if (textarea) {
-      textarea.addEventListener('input', (e) => {
-        const step = PS101State.getCurrentStep();
-        if (step) {
-          updateCharCount(e.target.value.length, step.maxChars);
-          PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, e.target.value);
-          // Trigger validation update for button state
-          const promptIndex = PS101State.currentPromptIndex || 0;
-          const totalPrompts = step.prompts ? step.prompts.length : 1;
-          updateNavButtons(PS101State.currentStep, promptIndex, totalPrompts);
-        }
-      });
-    }
+    bindPS101TextareaInput();
 
     // Completion screen buttons
     const downloadBtn = document.getElementById('download-summary');
@@ -2815,11 +2815,13 @@ async function askCoach(prompt) {
     if (reflectionConfidence) reflectionConfidence.addEventListener('change', () => saveReflection());
     if (reflectionNextMove) reflectionNextMove.addEventListener('change', () => saveReflection());
 
-    // Initial render - only show screens if user has progress or completed
+    // Initial render - show completion/current step if there is progress, otherwise show welcome
     if (PS101State.completed) {
       renderCompletionScreen();
     } else if (PS101State.steps && Object.keys(PS101State.steps).length > 0) {
       renderCurrentStep();
+    } else {
+      renderWelcomeScreen();
     }
   }
 
@@ -3559,7 +3561,7 @@ async function askCoach(prompt) {
       }
     }
 
-    // Update character count
+  // Update character count
     function updateCharCount(current, max) {
       const currentEl = document.getElementById('char-current');
       const maxEl = document.getElementById('char-max');
@@ -3575,6 +3577,33 @@ async function askCoach(prompt) {
           charCount.style.color = 'var(--muted)';
         }
       }
+    }
+
+    function handlePS101TextareaInput(event) {
+      const textarea = event?.target;
+      if (!textarea) return;
+
+      const step = PS101State.getCurrentStep();
+      if (!step) return;
+
+      const value = textarea.value || '';
+      const currentStep = PS101State.currentStep;
+      const promptIndex = PS101State.currentPromptIndex || 0;
+      const totalPrompts = step.prompts ? step.prompts.length : 1;
+
+      updateCharCount(value.length, step.maxChars);
+      PS101State.setAnswer(currentStep, promptIndex, value);
+      updateNavButtons(currentStep, promptIndex, totalPrompts);
+    }
+
+    function bindPS101TextareaInput() {
+      const textarea = document.getElementById('step-answer');
+      if (!textarea) return;
+
+      textarea.removeEventListener('input', handlePS101TextareaInput);
+      textarea.removeEventListener('keyup', handlePS101TextareaInput);
+      textarea.addEventListener('input', handlePS101TextareaInput);
+      textarea.addEventListener('keyup', handlePS101TextareaInput);
     }
 
     // Update navigation buttons
@@ -3753,6 +3782,7 @@ async function askCoach(prompt) {
         updateCharCount(answer.length, step.maxChars);
         textarea.focus();
       }
+      bindPS101TextareaInput();
 
       // Show/hide experiment components for Steps 6-9
       const expComponents = document.getElementById('experiment-components');

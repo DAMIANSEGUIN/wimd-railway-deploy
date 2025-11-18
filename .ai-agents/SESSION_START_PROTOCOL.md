@@ -99,6 +99,15 @@ ls -1t .ai-agents/STAGE*.md .ai-agents/TEAM_NOTE_*.md 2>/dev/null | head
 - Re-read any document updated since your last session (compare timestamps or `git diff --stat HEAD@{1}`).
 - Update the relevant Stage file with an acknowledgment line (e.g., `Cursor Acknowledged: ✅`) before moving on.
 
+**Check system status documents:**
+```bash
+cat .ai-agents/CODEXCAPTURE_STATUS.md  # CodexCapture extension status
+```
+- Review current state of CodexCapture extension (updated 2025-11-17)
+- Capture location: `~/Downloads/CodexAgentCaptures/`
+- Repair script: `bash ~/scripts/codexcapturerepair.sh`
+- Use Command+Shift+Y to trigger captures
+
 ## Step 5: Declare Readiness
 
 **Only after completing steps 1-4, declare:**

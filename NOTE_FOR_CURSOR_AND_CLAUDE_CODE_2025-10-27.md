@@ -39,6 +39,18 @@ Codex can rerun the full audit checklist once those confirmations are complete o
 
 ---
 
+## PS101 QA Mode – 2025-11-17
+
+Browser-based testing no longer requires babysitting the 5-minute trial timer:
+
+- Run `node scripts/reset_ps101_trial.mjs` to enable QA mode, clear the old trial timestamp, and reload the live site with an “infinite” trial. The script accepts `--off` to disable the override and `--no-reset` to keep the current timestamp. Add `--url <env>` to target staging URLs.
+- The frontend now reads `localStorage.ps101_force_trial`; when it’s set to `"true"` the trial never expires (see `frontend/index.html` & `mosaic_ui/index.html`). This is local-only and safe to leave enabled on dev machines.
+- Manual fallback: execute `localStorage.setItem('ps101_force_trial','true')` and `localStorage.removeItem('ps101_trial_start')` in DevTools, then refresh.
+
+Remember to disable the override (`node scripts/reset_ps101_trial.mjs --off`) before doing any real end-to-end auth checks so production-like behavior is restored.
+
+---
+
 ## Note to Claude_Code – 2025-11-03
 
 Codex went ahead with the enforcement roll-out while you were offline:
