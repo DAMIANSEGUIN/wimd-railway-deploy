@@ -36,6 +36,8 @@ mosaic_ui/assets/
 mosaic_ui/data/
 mosaic_ui/src/
 .netlify_fake_home/
+.ai-agents/evidence/
+evidence/
 
 # Generated artifacts (created automatically by hooks)
 .ai-agents/handoff_*.json
