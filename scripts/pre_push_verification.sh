@@ -62,17 +62,17 @@ else
 fi
 echo ""
 
-# Step 2: Verify critical features locally
-echo "Step 2: Critical features verification..."
-if [ -f "./scripts/verify_critical_features.sh" ]; then
-  if ! ./scripts/verify_critical_features.sh; then
-    echo "❌ Critical features verification failed"
+# Step 2: Run consolidated deployment verification
+echo "Step 2: Deployment verification..."
+if [ -f "./scripts/verify_deployment.sh" ]; then
+  if ! ./scripts/verify_deployment.sh; then
+    echo "❌ Deployment verification failed"
     ERRORS=$((ERRORS + 1))
   else
-    echo "✅ Critical features verified"
+    echo "✅ Deployment verification passed"
   fi
 else
-  echo "❌ verify_critical_features.sh not found"
+  echo "❌ verify_deployment.sh not found"
   ERRORS=$((ERRORS + 1))
 fi
 echo ""

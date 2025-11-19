@@ -27,6 +27,6 @@ cat <<EOF
   "tasks_in_progress": [
     "See git status and recent commits for current work"
   ],
-  "notes": "Next agent: Run ./scripts/verify_critical_features.sh before proceeding"
+  "notes": "Next agent: Run ./scripts/verify_deployment.sh before proceeding"
 }
 EOF

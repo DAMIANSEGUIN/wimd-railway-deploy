@@ -52,7 +52,7 @@ Reference: `docs/ARCHITECTURAL_DECISIONS.md`
 ## 4. Verification & Testing Stack
 | Stage | Script / Artefact | Purpose |
 | --- | --- | --- |
-| **Critical Feature Gate** | `scripts/verify_critical_features.sh` | Confirms auth UI, PS101 flow, API_BASE configuration, and production heartbeat before any work proceeds. |
+| **Critical Feature Gate** | `scripts/verify_deployment.sh` | Confirms auth UI, PS101 flow, API_BASE configuration, and production heartbeat before any work proceeds. |
 | **Pre-Push Guard** | `scripts/pre_push_verification.sh` | Wraps sanity checks, content validation, and git-tree hygiene. Invoked automatically by tracked pre-push hook. |
 | **Deployment Verification** | `scripts/verify_live_deployment.sh` | Validates live Netlify deployment (line counts, title, auth, PS101). Used post-deploy and during automation. |
 | **Manual Checklist** | `DEPLOYMENT_CHECKLIST.md` | Human-friendly checklist with common failure modes, wrapper command usage, and rollback notes. |
@@ -100,7 +100,7 @@ Implemented on 2025-11-03 (Claude_Code with Cursor review), documented in `DEPLO
 | Auth merge execution | `docs/AUTH_MERGE_EXECUTION_2025-11-03.md` | `docs/AUTH_MERGE_EXECUTION_2025-11-03.md` |
 | Urgent handoff narrative | `URGENT_TEAM_HANDOFF.md` | `URGENT_TEAM_HANDOFF.md` |
 | Incident retrospectives | `docs/incidents/2025-11-03_AUTH_LOSS_RECOVERY.md`, `docs/incidents/2025-11-03_SPEC_VERIFICATION.md`, `docs/incidents/2025-11-03_VERSION_ANALYSIS.md` | See paths |
-| Verification scripts | `scripts/verify_critical_features.sh`, `scripts/pre_push_verification.sh`, `scripts/verify_live_deployment.sh` | Under `scripts/` |
+| Verification scripts | `scripts/verify_deployment.sh`, `scripts/pre_push_verification.sh`, `scripts/verify_live_deployment.sh` | Under `scripts/` |
 
 **Packaging for External Share**
 ```bash
@@ -117,7 +117,7 @@ tar -czf dist/WIMD_PS101_Architecture_Pack_2025-11-03.tgz \
   URGENT_TEAM_HANDOFF.md \
   docs/incidents/2025-11-03_AUTH_LOSS_RECOVERY.md \
   docs/incidents/2025-11-03_SPEC_VERIFICATION.md \
-  scripts/verify_critical_features.sh \
+  scripts/verify_deployment.sh \
   scripts/pre_push_verification.sh \
   scripts/verify_live_deployment.sh
 ```

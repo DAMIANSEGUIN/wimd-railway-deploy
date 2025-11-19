@@ -148,7 +148,7 @@ Multiple DOMContentLoaded handlers (4 total) were creating race conditions and e
   - Added single consolidated handler: `document.addEventListener('DOMContentLoaded', initApp, { once: true })` (line 3965)
 
 ### Verification
-- ✅ `./scripts/verify_critical_features.sh` - All critical features verified
+- ✅ `./scripts/verify_deployment.sh` - All critical features verified
 - ✅ Authentication UI present (34 occurrences)
 - ✅ PS101 flow present (176 references)
 - ✅ No linter errors

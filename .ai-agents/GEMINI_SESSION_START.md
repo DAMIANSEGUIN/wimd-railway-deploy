@@ -1,0 +1,1 @@
+GeminiStart: Please read `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/GEMINI_SESSION_PROMPT.md` (which points to the canonical workflow) and then the current session file `.ai-agents/GEMINI_SESSION_20251118_110500.md`; use those docs as the launch context for every command in this session.

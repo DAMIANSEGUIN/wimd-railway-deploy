@@ -1114,7 +1114,7 @@
   console.log('[IIFE] Starting execution');
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-  const API_BASE = 'https://what-is-my-delta-site-production.up.railway.app';
+  const API_BASE = '/wimd';
   
   // Authentication variables
   const SESSION_KEY = 'delta_session_id';
@@ -2448,6 +2448,16 @@
   }
 
   // PS101 Event Listeners Setup (extracted for clarity)
+  function bindPS101TextareaInput() {
+    const textarea = document.getElementById('step-answer');
+    if (!textarea) return;
+
+    textarea.removeEventListener('input', handlePS101TextareaInput);
+    textarea.removeEventListener('keyup', handlePS101TextareaInput);
+    textarea.addEventListener('input', handlePS101TextareaInput);
+    textarea.addEventListener('keyup', handlePS101TextareaInput);
+  }
+
   function initPS101EventListeners() {
     // Welcome screen buttons
     const startBtn = document.getElementById('start-ps101');
@@ -3595,16 +3605,6 @@
       updateCharCount(value.length, step.maxChars);
       PS101State.setAnswer(currentStep, promptIndex, value);
       updateNavButtons(currentStep, promptIndex, totalPrompts);
-    }
-
-    function bindPS101TextareaInput() {
-      const textarea = document.getElementById('step-answer');
-      if (!textarea) return;
-
-      textarea.removeEventListener('input', handlePS101TextareaInput);
-      textarea.removeEventListener('keyup', handlePS101TextareaInput);
-      textarea.addEventListener('input', handlePS101TextareaInput);
-      textarea.addEventListener('keyup', handlePS101TextareaInput);
     }
 
     // Update navigation buttons

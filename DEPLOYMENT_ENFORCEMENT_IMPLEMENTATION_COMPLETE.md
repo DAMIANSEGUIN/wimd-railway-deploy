@@ -89,7 +89,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="Production down" git push railway-origin m
 
 **Checks performed:**
 1. Pre-deployment sanity (calls existing `predeploy_sanity.sh`)
-2. Critical features (calls existing `verify_critical_features.sh`)
+2. Critical features (calls existing `verify_deployment.sh`)
 3. Git working tree clean
 4. Content validation (line count, auth, PS101)
 
@@ -233,7 +233,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="Production down" git push railway-origin m
 - [ ] Pre-push hook doesn't break pre-commit hook
 - [ ] Pre-push hook doesn't break post-commit hook (GDrive sync)
 - [ ] Verification script calls existing `predeploy_sanity.sh`
-- [ ] Verification script calls existing `verify_critical_features.sh`
+- [ ] Verification script calls existing `verify_deployment.sh`
 - [ ] Deploy script calls existing `deploy_frontend_netlify.sh`
 
 **Verify emergency scenarios:**

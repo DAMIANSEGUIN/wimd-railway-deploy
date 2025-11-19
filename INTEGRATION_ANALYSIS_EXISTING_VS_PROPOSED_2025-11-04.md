@@ -80,7 +80,7 @@ After each code change, run checkpoints IN ORDER:
 
 ---
 
-### 3. verify_critical_features.sh
+### 3. verify_deployment.sh
 **Current Function:**
 - Comprehensive feature presence check
 - Tests: Auth modal, PS101 state, chat, navigation
@@ -91,7 +91,7 @@ After each code change, run checkpoints IN ORDER:
 - Critical features check = Final acceptance test
 
 **Gap Identified:**
-❌ Proposal Stage 6 says "Acceptance criteria met?" but doesn't specify running verify_critical_features.sh
+❌ Proposal Stage 6 says "Acceptance criteria met?" but doesn't specify running verify_deployment.sh
 ❌ Risk of manual "looks good" instead of automated verification
 
 **Fix Required:**
@@ -102,7 +102,7 @@ After each code change, run checkpoints IN ORDER:
 
 1. **Feature Verification:**
    ```bash
-   ./scripts/verify_critical_features.sh
+   ./scripts/verify_deployment.sh
    ```
    Must return exit 0, all features present.
 
@@ -516,7 +516,7 @@ To align proposed framework with existing systems:
 - [ ] Add Stage 0: SESSION_START_PROTOCOL execution
 - [ ] Stage 5: Reference existing pre_push_verification.sh
 - [ ] Stage 5: Add PS101 BUILD_ID injection step
-- [ ] Stage 6: Mandate verify_critical_features.sh
+- [ ] Stage 6: Mandate verify_deployment.sh
 - [ ] Stage 6: Specify all docs per Operating Rule #8
 - [ ] Clarify rollback decision tree in Stage 5
 - [ ] Add token tracking mechanism with logging

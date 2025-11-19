@@ -194,7 +194,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - **Session Start Protocol:** `SESSION_START_PROTOCOL.md` - Mandatory checklist for every AI agent
 - **Handoff Protocol:** `HANDOFF_PROTOCOL.md` - Agent-to-agent transition procedures
 - **AI Agent Prompt:** `AI_AGENT_PROMPT.md` - Copy/paste onboarding for new agents
-- **Verification Script:** `scripts/verify_critical_features.sh` - Automated feature checks
+- **Verification Script:** `scripts/verify_deployment.sh` - Automated feature checks
 - **Pre-commit Hooks:** `.git/hooks/pre-commit` - Blocks feature removal
 
 ### 📖 For Implementation Team
@@ -271,7 +271,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 
 1. **Run Verification Script:**
    ```bash
-   ./scripts/verify_critical_features.sh
+   ./scripts/verify_deployment.sh
    ```
 
 2. **Test Backend Health:**

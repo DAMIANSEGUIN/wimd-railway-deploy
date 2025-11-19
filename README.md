@@ -41,13 +41,13 @@ The script auto-loads APP_URL from wimd_config.sh (asks once, then saves), runs 
 
 **Before ANY code changes:**
 ```bash
-./scripts/verify_critical_features.sh
+./scripts/verify_deployment.sh
 ```
 
 **After ANY deployment:**
 ```bash
 # 1. Verify features
-./scripts/verify_critical_features.sh
+./scripts/verify_deployment.sh
 
 # 2. Check backend health
 curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
@@ -60,7 +60,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensiv
 
 ### Contingency System
 - **Pre-commit hooks:** Block feature removal (`.git/hooks/pre-commit`)
-- **Verification scripts:** Automated checks (`scripts/verify_critical_features.sh`)
+- **Verification scripts:** Automated checks (`scripts/verify_deployment.sh`)
 - **Handoff protocol:** Agent transition procedures (`.ai-agents/HANDOFF_PROTOCOL.md`)
 - **Session start:** Mandatory verification (`.ai-agents/SESSION_START_PROTOCOL.md`)
 

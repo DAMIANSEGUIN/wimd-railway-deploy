@@ -10,7 +10,7 @@ Before any troubleshooting stage:
 
 1. Execute `.ai-agents/SESSION_START_PROTOCOL.md` completely.  
 2. Log compliance in `.ai-agents/session_log.txt`.  
-3. Run `./scripts/verify_critical_features.sh` and confirm PS101 continuity via `./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh`.  
+3. Run `./scripts/verify_deployment.sh` and confirm PS101 continuity via `./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh`.  
 4. If any check fails, stop and resolve prior to Stage 1.
 
 Only proceed when Stage 0 is complete. This preserves the enforced startup protocol and replaces the implicit assumption in the original proposal.
@@ -97,7 +97,7 @@ Codex acknowledges checkpoint results; failures trigger a fix-forward loop withi
 Automated verification sequence:
 
 ```bash
-./scripts/verify_critical_features.sh
+./scripts/verify_deployment.sh
 ./scripts/verify_live_deployment.sh https://whatismydelta.com/
 ./scripts/regression_tests.sh    # placeholder until implemented
 ```

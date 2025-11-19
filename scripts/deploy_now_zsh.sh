@@ -35,13 +35,12 @@ NETLIFY_SITE_ID="bb594f69-4d23-4817-b7de-dadb8b4db874" NETLIFY_DEPLOY_DIR="mosai
 
 # Post-deploy verification
 echo ""
-echo "🔎 Running live deployment verification..."
-if ! ./scripts/verify_live_deployment.sh; then
+echo "🔎 Running deployment verification..."
+if ! ./scripts/verify_deployment.sh; then
   echo ""
-  echo "❌ Live verification failed. Investigate immediately."
+  echo "❌ Deployment verification failed. Investigate immediately."
   exit 1
 fi
 
 echo ""
 echo "✅ Deploy complete!"
-

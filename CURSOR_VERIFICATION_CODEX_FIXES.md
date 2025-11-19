@@ -199,7 +199,7 @@ git config core.hooksPath  # Should show: .githooks
 
 ### Existing Scripts
 - ✅ `predeploy_sanity.sh`: Called by verification (line 16 in pre_push_verification.sh)
-- ✅ `verify_critical_features.sh`: Called by verification (line 29 in pre_push_verification.sh)
+- ✅ `verify_deployment.sh`: Called by verification (line 29 in pre_push_verification.sh)
 - ✅ `deploy_frontend_netlify.sh`: Called by deploy.sh (integrated)
 
 ### Documentation Consistency

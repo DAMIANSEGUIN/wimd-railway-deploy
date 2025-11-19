@@ -22,7 +22,7 @@ This plan formalizes how we capture, verify, and distribute production builds so
 ## 3. Session Protocol Updates
 Agents must:
 1. Read the latest entry in `deploy_logs/` at session start and a note the active prod tag in their kickoff message.
-2. Confirm a current site backup exists before modifying code. If absent, run `scripts/archive_current_site.sh` (to be implemented) to produce `/backups/site-backup_<timestamp>.zip`, then log the filename.
+2. Confirm a current site backup exists before modifying code. If absent, run the **manual snapshot** procedure (below) to produce `/backups/site-backup_<timestamp>.zip`, then log the filename. Until `scripts/archive_current_site.sh` ships, the manual flow is required.
 3. Record backup + release status in `.verification_audit.log` via the deployment gate.
 
 ## 4. Deploy Gate & Verification
@@ -34,10 +34,16 @@ Agents must:
 - Manual confirmations require visual evidence (browser walkthrough for auth/chat/PS101).
 
 ## 5. Daily Backups
-- Schedule (manual until automated): once per day, create a full-site snapshot `backups/site-backup_<timestamp>.zip` containing:
+- Schedule (manual until automated): once per day, create a full-site snapshot `backups/site-backup_<timestamp>.zip` by running:
+  ```bash
+  TS=$(date -u +%Y%m%d_%H%M%SZ)
+  zip -r backups/site-backup_${TS}.zip mosaic_ui frontend backend scripts docs .ai-agents
+  ```
+  - Add/remove folders if the repo structure changes, but capture the entire working tree plus automation scripts.
+- Each snapshot must include:
   - `mosaic_ui/`, `frontend/`, API/backend sources.
   - Deployment scripts/configs, docs, package manifests.
-  - Any critical environment templates.
+  - Any critical environment templates or evidence directories.
 - Mirror the backup bundle to external storage (e.g., Google Drive) once drive-sync automation is ready.
 
 ## 6. Follow-up Tasks
@@ -48,9 +54,9 @@ Agents must:
 
 ---
 
-**Current Baseline (2025-11-14):**
-- Active production tag: `prod-2025-11-12` @ commit `132c85012b230e2924363e4877c4aa2014191834`.
-- Release log: `deploy_logs/2025-11-14_prod-2025-11-12.md`.
-- Artefacts: `backups/prod-2025-11-12.zip`, `backups/site-backup_20251114_195930Z.zip`.
+**Current Baseline (2025-11-18):**
+- Latest deploy log: `deploy_logs/2025-11-18_ps101-qa-mode.md` (PS101 QA Mode + CodexCapture docs).
+- Production tag recorded: `prod-2025-11-18` @ commit `31d099cc21a03d221bfb66381a0b8e4445b04efc` (ensure tag exists before reusing).
+- Site snapshot: `backups/site-backup_20251118_033032Z.zip`.
 
 Agents must follow this plan until superseded by the designated release manager. Deviations require written approval and an updated release log entry.

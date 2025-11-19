@@ -354,6 +354,38 @@ Both repositories are owned by `DAMIANSEGUIN`, but:
 **Backup:** `site-backup_20251118_022416Z.zip`
 **Status:** Clean working tree, verification passed, ready to deploy (pending process clarification)
 
+## Latest Session Kickoff Evidence (2025-11-18T??Z)
+
+- `./scripts/verify_critical_features.sh`
+  - Auth/UI check: Authentication UI + PS101 flow present after scan.
+  - Warnings: `API_BASE may not be using relative paths` and `Production site may be missing authentication (or unreachable)` remain for further investigation.
+  - Summary: All critical features verified despite warnings; proceed with caution and capture more evidence.
+- `./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh`
+  - SPEC_SHA verified: `7795ae25` (matches deploy log).
+  - Output saved for traceability.
+
+## Current Troubleshooting Snapshot (2025-11-18T11:10Z)
+
+- `./scripts/verify_critical_features.sh`
+  - Re-run after session start. Authentication UI and PS101 flow reports remain ✅ yet warnings persist.
+  - Warning detail: `API_BASE may not be using relative paths`; production site auth probe warns “may be missing authentication (or unreachable)”.
+  - Evidence: frontends use `/wimd`, but `mosaic_ui/src/init.js` still hardcodes `https://what-is-my-delta-site-production.up.railway.app`. (Lines 1-83 in `mosaic_ui/src/init.js` specify the absolute API_BASE and first health request.)
+  - Recommendation: verify the build still references the absolute URL; capture any runtime network call showing `API_BASE` hitting the absolute host in the browser after the warning surfaces.
+  - Document any console/network evidence in this note or new URGENT file; include line references from `frontend/index.html` and `mosaic_ui/index.html` showing relative declarations versus `mosaic_ui/src/init.js` absolute declarations.
+
+## Remaining Questions
+
+- Does the prod auth warning stem from the relative vs absolute API_BASE mismatch, or is the deployed site legitimately missing the DOM-hooks that `verify_critical_features.sh` checks? Capture DOM/network evidence from the live site (Netlify URL) to confirm authentication UI is loading.
+
+## Latest Unified Verification (2025-11-18T13:50Z)
+
+- `./scripts/verify_deployment.sh`
+  - ✅ Local checks pass (auth UI, PS101 flow, API_BASE).
+  - ❌ Live site unreachable: `curl` triggered a critical error (site down or blocked from this environment).
+  - ✔ `curl -I https://whatismydelta.com` (2025-11-18T13:57Z) fails with `curl: (6) Could not resolve host: whatismydelta.com`; the DNS lookup for the Netlify host is blocked from this environment.
+  - ❌ Live HTML scan lacked `authModal` and `PS101State` (false negatives because the page could not be fetched).
+  - Conclusion: Script still reports 2 critical errors due to live site accessibility; rerun once Netlify is reachable or mirror the environment.
+
 ---
 
 **END OF URGENT ESCALATION**
@@ -364,4 +396,3 @@ Both repositories are owned by `DAMIANSEGUIN`, but:
 3. Authentication resolution (if needed)
 4. Approval to update documentation
 5. Go/no-go for current deployment
-
