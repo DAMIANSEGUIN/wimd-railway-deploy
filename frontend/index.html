@@ -2000,8 +2000,11 @@ async function askCoach(prompt) {
     console.log('[LOGOUT] Session ID:', oldSessionId);
     sessionStorage.setItem('LOGGING_OUT', '1');
     console.log('[LOGOUT] Set LOGGING_OUT flag in sessionStorage');
-    localStorage.clear();
-    console.log('[LOGOUT] Cleared localStorage');
+    // localStorage.clear(); // This is too destructive.
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(USER_DATA_KEY);
+    localStorage.removeItem(TRIAL_START_KEY);
+    console.log('[LOGOUT] Cleared session-specific keys from localStorage');
     try {
       await callJson('/auth/logout', {
         method: 'POST',

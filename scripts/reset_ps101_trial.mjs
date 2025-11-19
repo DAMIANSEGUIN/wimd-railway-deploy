@@ -46,6 +46,8 @@ async function run() {
       }
     }, { enable, resetTrial, QA_FLAG, TRIAL_KEY });
 
+    await page.waitForTimeout(1000); // Add a 1-second delay for persistence.
+
     if (enable) {
       log('QA mode flag ENABLED (ps101_force_trial=true)');
     } else {
