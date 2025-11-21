@@ -2,8 +2,34 @@
 
 **MANDATORY: Every AI agent MUST run this at session start**
 
-> Codex Reset Protocol → When invoked, re-run Steps 1–5 below.  
+> Codex Reset Protocol → When invoked, re-run Steps 1–5 below.
 > Restate Present State → Desired Outcome, and re-log the session.
+
+---
+
+## 🚨 CRITICAL ALERT (2025-11-21 5:00 PM)
+
+**Phase 1 Modularization ROLLED BACK - UI was broken**
+
+**What happened:**
+- Phase 1 modules (state.js, api.js, main.js) extracted successfully
+- BUT integration with IIFE was incomplete
+- Deployed anyway → broke UI (no login, chat non-functional)
+- ROLLED BACK with `git revert 1c6c013`
+
+**Current Status:**
+- ✅ Website working again (rollback complete)
+- ✅ Phase 1 work saved in branch `phase1-incomplete`
+- ⚠️ **DO NOT deploy Phase 1 code until Phase 2 integration is complete**
+
+**Required Reading Before ANY modularization work:**
+1. `.ai-agents/CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md` - Full breakdown
+2. `~/Desktop/WHAT_HAPPENED.txt` - User-facing summary
+3. Branch `phase1-incomplete` has the extracted modules (incomplete)
+
+**Lesson:** Never deploy extraction without integration. Phase 1+2 must be done together.
+
+---
 
 ## Step 1: Identify Yourself (FIRST MESSAGE)
 
