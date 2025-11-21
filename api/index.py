@@ -155,6 +155,8 @@ def _build_cors_origins() -> List[str]:
         "https://whatismydelta.com",
         "https://www.whatismydelta.com",
         "https://resonant-crostata-90b706.netlify.app",
+        "http://localhost:8000",  # Local development testing
+        "http://127.0.0.1:8000",  # Local development testing
     ]
 
 
