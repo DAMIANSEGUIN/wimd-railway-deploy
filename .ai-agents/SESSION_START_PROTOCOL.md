@@ -5,45 +5,6 @@
 > Codex Reset Protocol → When invoked, re-run Steps 1–5 below.  
 > Restate Present State → Desired Outcome, and re-log the session.
 
-> **Current production references (2025-11-18T03:05Z):**  
-> • Latest release log: `deploy_logs/2025-11-18_ps101-qa-mode.md` (PS101 QA Mode deploy)  
-> • New production tag recorded: `prod-2025-11-18` @ commit `31d099cc21a03d221bfb66381a0b8e4445b04efc` (push pending—verify in git before tagging again)  
-> • Latest site snapshot: `backups/site-backup_20251118_033032Z.zip`
-
-## Agent Roles & Responsibilities
-
-**ACTIVE TEAM (as of 2025-11-20):**
-
-### Codex Terminal (CIT) - Troubleshooting Specialist
-- **Model:** Haiku 4.5 (claude-haiku-4-5-20251001)
-- **Primary Focus:** Active debugging, evidence capture, hands-on fixes
-- **Strengths:** Fast diagnostic iterations, real-time problem resolution
-- **Handoff:** Pass to Claude Code CLI for post-incident documentation
-
-### Claude Code CLI - Systems Engineer + Documentation Steward + Phase 1 Executor
-- **Model:** Sonnet 4.5 (claude-sonnet-4-5-20250929)
-- **Primary Focus:** Infrastructure verification, documentation quality, post-deploy audits
-- **ACTIVE TASK (2025-11-20):** Phase 1 Modularization Implementation
-- **Status:** See `.ai-agents/CLAUDE_CODE_PHASE1_STATUS_2025-11-20.md` for current progress
-- **Strengths:** Natural language summarization, cross-document consistency, complex refactoring
-- **Handoff:** Pass to CIT for active troubleshooting incidents
-
-### Codex in Cursor (CIC) - Lead Developer + Planning
-- **Primary Focus:** Implementation planning, code review, feasibility assessment
-- **Strengths:** Feature development, technical execution, architectural mapping
-- **Coordination:** Orchestrates agent workflows
-- **Recent Output:** Created `MODULARIZATION_FUNCTION_MAPPING_2025-11-20.md` for Phase 1
-
-### Gemini 0.16.0 - Architect (Command Execution Restored)
-- **Status:** Upgraded from 0.1.x (broken) to 0.16.0 (working)
-- **Capability:** Can now execute shell commands and file operations
-- **Role:** Planning, architectural decisions, consistency review
-- **Current:** Observing Phase 1 implementation, providing feedback on risks
-
-**Reference:** See `.ai-agents/TEAM_HANDOFF_UPDATED_GEMINI_RESTORED_2025-11-20.md` for full rationale
-
----
-
 ## Step 1: Identify Yourself (FIRST MESSAGE)
 
 ```
@@ -60,16 +21,13 @@ Running session start protocol...
 ./scripts/verify_critical_features.sh
 ```
 
-**Expected output (current known-good run):**
+**Expected output:**
 ```
 ✅ Authentication UI present
 ✅ PS101 flow present
-⚠️  WARNING: API_BASE may not be using relative paths
-⚠️  WARNING: Production site may be missing authentication (or unreachable)
+✅ API_BASE configured correctly
 ✅ All critical features verified
 ```
-
-> ⚠️ **Heads-up:** Until API_BASE is converted to a relative path and the production auth probe is fully automated, the script intentionally emits the two warnings shown above. Treat them as informational as long as the script exits with status `0`. If the script exits non-zero or emits additional warnings/errors, stop and escalate.
 
 **If verification FAILS:**
 - ❌ STOP immediately
@@ -94,10 +52,10 @@ Running session start protocol...
 **Look for handoff manifest:**
 
 ```bash
-HANDOFF=$(ls -t .ai-agents/handoff_*.json 2>/dev/null | head -1)
+ls -t .ai-agents/handoff_*.json | head -1
 ```
 
-**If handoff file exists (`HANDOFF` non-empty):**
+**If handoff file exists:**
 - Read the handoff manifest
 - Verify outgoing agent completed checklist
 - Acknowledge all critical features listed
@@ -108,24 +66,6 @@ HANDOFF=$(ls -t .ai-agents/handoff_*.json 2>/dev/null | head -1)
   ```bash
   echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Session start: [AGENT_NAME]" >> .ai-agents/session_log.txt
   ```
-- Review the newest file in `deploy_logs/` (e.g., run `ls -t deploy_logs/*.md | head -1`) and note the active `prod-YYYY-MM-DD` tag recorded there.
-- Verify a current backup exists before you touch files:
-  - Look for `/backups/site-backup_<today>.zip`. `<today>` uses UTC date (e.g., 20251118).
-  - If none exists, create one manually following the steps in `docs/COMMAND_CENTER_BACKUP_PLAN.md` Section 5:
-    ```bash
-    TS=$(date -u +%Y%m%d_%H%M%SZ)
-    zip -r backups/site-backup_${TS}.zip mosaic_ui frontend backend scripts docs .ai-agents
-    ```
-    (Adjust folders as needed; goal is a full working-tree snapshot.)
-  - Log the backup filename/path in your first session message.
-
-**ACTIVE TASK CHECK (2025-11-20):**
-- **If resuming Claude Code Phase 1 Modularization:**
-  - Read `.ai-agents/CLAUDE_CODE_PHASE1_STATUS_2025-11-20.md` FIRST
-  - This contains current progress, completed tasks, and exact next steps
-  - Contains source code line references for remaining extractions
-  - Documents decisions made regarding Gemini's concerns
-- **If starting new task:** Proceed with normal handoff protocol above
 
 ## Step 4: Review Recent Activity
 
@@ -149,15 +89,6 @@ ls -1t .ai-agents/STAGE*.md .ai-agents/TEAM_NOTE_*.md 2>/dev/null | head
 ```
 - Re-read any document updated since your last session (compare timestamps or `git diff --stat HEAD@{1}`).
 - Update the relevant Stage file with an acknowledgment line (e.g., `Cursor Acknowledged: ✅`) before moving on.
-
-**Check system status documents:**
-```bash
-cat .ai-agents/CODEXCAPTURE_STATUS.md  # CodexCapture extension status
-```
-- Review current state of CodexCapture extension (updated 2025-11-17)
-- Capture location: `~/Downloads/CodexAgentCaptures/`
-- Repair script: `bash ~/scripts/codexcapturerepair.sh`
-- Use Command+Shift+Y to trigger captures
 
 ## Step 5: Declare Readiness
 
@@ -185,24 +116,15 @@ Current critical features confirmed:
 2. ✅ Never remove authentication without explicit approval
 3. ✅ Never replace files without checking for feature loss
 4. ✅ Follow pre-commit hooks (never use --no-verify without approval)
-5. ✅ Run `DEPLOYMENT_AUDIT_CHECKLIST.md` after deploys
+5. ✅ Run DEPLOYMENT_VERIFICATION_CHECKLIST.md after deploys
 6. ✅ Create handoff manifest before ending session if requested
 7. ✅ Confirm the PS101 manifest/footer alignment before approving a review or initiating a deploy; log any intentional variances in `.verification_audit.log`.
 8. ✅ Update all impacted documentation (notes, checklists, manifests) before declaring a task complete; summarize changes in the relevant handoff or audit log.
-9. ✅ **NEVER use raw `git push` or deployment commands - use wrapper scripts:**
-   - Use `./scripts/push.sh origin main` instead of `git push origin main`
+9. ✅ **NEVER use raw `git push` or `netlify deploy` commands - use wrapper scripts:**
+   - Use `./scripts/push.sh railway-origin main` instead of `git push railway-origin main`
    - Use `./scripts/deploy.sh netlify` instead of `netlify deploy --prod`
    - Use `./scripts/deploy.sh railway` to deploy backend
    - Use `./scripts/deploy.sh all` to deploy both frontend and backend
-   - **Note:** `railway-origin` remote is legacy (no write access) - NOT required for deployment
-10. ✅ **NEVER declare issues "fixed" or "resolved" without USER CONFIRMATION:**
-   - Git commits saying "fix" ≠ issue is resolved
-   - Code changes ≠ feature working
-   - No errors in logs ≠ user-facing feature working
-   - **ONLY the human operator can confirm features work in production**
-   - Before archiving investigation files, get explicit user approval
-   - Before closing issues, wait for user testing confirmation
-   - **Rule:** "Fixed" means user verified, not AI assumed
 
 **If I fail to follow these rules:**
 - Pre-commit hook will BLOCK the commit

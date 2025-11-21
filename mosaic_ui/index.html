@@ -1117,16 +1117,9 @@
   </div>
 </noscript>
 
-<!-- Phase 1 Modularization: Load extracted modules -->
-<script type="module" src="./js/main.js"></script>
-
 <script>
 (function(){
   console.log('[IIFE] Starting execution');
-
-  // Phase 1 Modularization: Wait for modules to load, then bridge to IIFE
-  // The modules export to window.__WIMD_MODULES__ for IIFE access
-  // This allows gradual migration without breaking existing code
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const API_BASE = '';  // Use Netlify proxies; absolute base resolved via ensureConfig()
