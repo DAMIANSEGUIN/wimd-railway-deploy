@@ -1,11 +1,15 @@
 # **CLAUDE CODE - Senior Debugger README**
-# **CLAUDE CODE - Senior Debugger README**
 
-## **🚨 CURRENT ISSUES – Domain API 404 & Claude API Key Not Detected**
+## **⚠️ THIS FILE IS OUTDATED - READ AI_START_HERE.txt INSTEAD**
 
-**Status**: Backend healthy at Railway origin; public domain still serves Netlify 404; Claude API key not accessible in app
-**Architecture**: Mosaic Platform deployed on Railway + Netlify; backend reachable only via Railway origin; environment variable loading suspect
-**Impact**: Production UI hits Netlify 404 for API routes and Claude-powered flows remain disabled until env loading is fixed
+**Last Updated:** 2025-09-29 (STALE - do not trust)
+**Current Status File:** `AI_START_HERE.txt` in project root
+**Latest Incident:** Phase 1 Modularization Rollback (Nov 21, 2025)
+
+---
+
+## **ARCHIVED ISSUES FROM SEPTEMBER 2025**
+**(These were resolved or superseded by later events)**
 
 **Current Issue State**:
 - **Railway Health**: `https://what-is-my-delta-site-production.up.railway.app/health` → ✅ `{"ok": true}` (verified 2025-09-29)
