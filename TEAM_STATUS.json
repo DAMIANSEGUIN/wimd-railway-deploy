@@ -61,7 +61,7 @@
     {
       "task": "P3.1",
       "title": "Classify uncommitted files",
-      "assigned": "Codex",
+      "assigned": "Claude Code",
       "description": "Decide what to commit vs ignore from ~50 uncommitted files"
     }
   ],
