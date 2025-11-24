@@ -147,9 +147,9 @@ Answers would have revealed: This is 2-phase work, can't deploy phase 1 alone.
    - Update CURRENT_WORK.json with result
 
 5. HANDOFF (Ending agent)
-   - Run ./scripts/session_end.sh
-   - Answer 5 questions
-   - Create CURRENT_WORK.json for next session
+   - Run ./scripts/commit_work.sh
+   - Answer 3 questions (task/status/blockers)
+   - Updates TEAM_STATUS.json for next agent
 ```
 
 ---
@@ -383,8 +383,8 @@ Are tasks independent? (different files)
 ### After Deploy / Session End
 
 ```
-□ session_end.sh run?
-□ CURRENT_WORK.json updated?
+□ commit_work.sh run?
+□ TEAM_STATUS.json updated?
 □ Commit message clear?
 □ Next agent knows what to do?
 ```
@@ -444,11 +444,11 @@ Are tasks independent? (different files)
 4. What's success criteria?
 ```
 
-### When Ending Session
+### When Completing Task
 ```bash
-./scripts/session_end.sh
-# Answer 5 questions
-# Update CURRENT_WORK.json
+./scripts/commit_work.sh
+# Answer 3 questions (task/status/blockers)
+# Updates TEAM_STATUS.json
 # Commit and push
 ```
 

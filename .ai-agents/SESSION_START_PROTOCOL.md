@@ -140,10 +140,10 @@ If user says "EMERGENCY OVERRIDE: [reason]", I may bypass verification ONCE, but
 
 ## Session End Protocol
 
-**When ending your session, run this ONE command:**
+**When you complete your assigned task, run this ONE command:**
 
 ```bash
-./scripts/session_end.sh
+./scripts/commit_work.sh
 ```
 
 **This script will:**

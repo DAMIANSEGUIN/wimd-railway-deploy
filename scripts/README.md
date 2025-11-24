@@ -16,10 +16,10 @@
 
 ### Session End (MANDATORY)
 ```bash
-./scripts/session_end.sh
+./scripts/commit_work.sh
 ```
 
-**Run this when ending your session.** It will:
+**Run this when you complete your assigned task.** It will:
 - Show what you changed
 - Create a descriptive commit message
 - Check production health for next agent
@@ -58,9 +58,9 @@
 ./scripts/status.sh
 ```
 
-**Ending a session:**
+**Completing a task:**
 ```bash
-./scripts/session_end.sh
+./scripts/commit_work.sh
 ```
 
 **Before deploying:**
@@ -87,9 +87,9 @@ The new session management system (as of 2025-11-24) replaces the old multi-file
    - Detects warnings (rollbacks, incomplete features, etc.)
    - Provides clear "what to do next" guidance
 
-2. **`session_end.sh`** - Standardized session handoff
+2. **`commit_work.sh`** - Standardized task completion
    - Creates structured commit messages
-   - Records session summary
+   - Updates TEAM_STATUS.json
    - Checks production health for next agent
    - Includes warnings in commit message
    - Makes git history more useful
@@ -113,8 +113,9 @@ The new session management system (as of 2025-11-24) replaces the old multi-file
 
 All AI session documentation is now in:
 - `/scripts/status.sh` - Session start (single source of truth)
-- `/scripts/session_end.sh` - Session end (structured handoff)
+- `/scripts/commit_work.sh` - Task completion (structured handoff)
 - `/.ai-agents/SESSION_START_PROTOCOL.md` - Full protocol documentation
+- `/.ai-agents/AGENT_PROTOCOL.md` - Agent behavior rules
 - `/AI_START_HERE.txt` - Quick start for new AI agents
 
 Legacy documentation (for reference only):
@@ -128,7 +129,7 @@ Legacy documentation (for reference only):
 
 **Script not executable:**
 ```bash
-chmod +x scripts/status.sh scripts/session_end.sh
+chmod +x scripts/status.sh scripts/commit_work.sh
 ```
 
 **Script not found:**

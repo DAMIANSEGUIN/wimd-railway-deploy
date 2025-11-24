@@ -70,7 +70,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 if [ ! -f "TEAM_STATUS.json" ]; then
     echo -e "   ${RED}❌ TEAM_STATUS.json not found${NC}"
-    echo "   Run: ./scripts/session_end.sh to create it"
+    echo "   Run: ./scripts/commit_work.sh to create it"
     echo ""
 else
     # Active work
@@ -132,7 +132,7 @@ echo "🎯 WHAT TO DO NEXT"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 if [ ! -f "TEAM_STATUS.json" ]; then
-    echo "   1. Create TEAM_STATUS.json (run session_end.sh)"
+    echo "   1. Create TEAM_STATUS.json (run commit_work.sh)"
     echo "   2. Read: AI_TEAM_METHODOLOGY.md"
 else
     # Check if anything is blocked (needs user)
@@ -160,7 +160,7 @@ else
         echo ""
         echo "   To start work:"
         echo "      1. Work on your assigned task"
-        echo "      2. When done: ./scripts/session_end.sh"
+        echo "      2. When done: ./scripts/commit_work.sh"
     else
         echo "   ✅ All tasks complete or in progress"
         echo "   Check with user for next priority"
