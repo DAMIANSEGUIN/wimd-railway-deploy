@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-11-17T16:14:08Z",
+  "commit": "849a4e6b0aaafdd4c9ee26fa8909cfa637398156",
+  "commit_message": "GUARD RAILS: Backup enforcement + session continuity automation",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251117_161318Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "849a4e6: GUARD RAILS: Backup enforcement + session continuity automation",
+      "18c8488: ENFORCE: Require bypass reason + migrate hooks to version control",
+      "6f787b7: docs: log offsite mirror completion",
+      "f6ddec6: docs: record Nov 14 deploy artefacts and session pointers",
+      "0da8694: PS101 Mosaic: trial-mode init, guardrails doc, verify script, base/publish=mosaic_ui"
+    ],
+    "modified_files": [
+      ".githooks/post-commit",
+      ".githooks/pre-commit",
+      "scripts/create_site_backup.sh",
+      "scripts/pre_push_verification.sh"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251117_161318Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}

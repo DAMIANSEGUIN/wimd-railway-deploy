@@ -1,203 +1,107 @@
 ═══════════════════════════════════════════════════════════════════
-AI AGENT: READ THIS FILE FIRST
+AI AGENT: RUN THIS COMMAND FIRST (NEW SYSTEM - 2025-11-24)
 ═══════════════════════════════════════════════════════════════════
 
-You are starting work on: WIMD Railway Deploy - Mosaic Platform
-Current directory: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+./scripts/status.sh
+
+That's it. This ONE command will tell you everything you need to know:
+• Production health (live check)
+• What's deployed
+• Latest instructions (auto-finds most recent file)
+• Active warnings
+• Exactly what to do next
 
 ───────────────────────────────────────────────────────────────────
-LATEST STATUS (Updated: 2025-11-23)
+WHY THIS NEW SYSTEM?
 ───────────────────────────────────────────────────────────────────
 
-CRITICAL EVENT: Phase 1 Modularization Rollback (Nov 21, 2025)
+The old multi-file documentation system wasn't working because:
+❌ Too many files with dates (which one is current?)
+❌ Long docs that AI agents skim and miss key info
+❌ Static information that gets stale within hours
+❌ No single source of truth
 
-WHAT HAPPENED:
-• Phase 1 code extracted modules (state.js, api.js, main.js)
-• Deployed without integration → broke UI completely
-• Emergency rollback executed at 5:00 PM Nov 21
-• All work saved in branch "phase1-incomplete"
-
-CURRENT STATE:
-✓ Website: WORKING (rollback successful)
-✓ Backend: https://what-is-my-delta-site-production.up.railway.app/health
-✓ Frontend: https://whatismydelta.com
-✓ Database: PostgreSQL on Railway
-✓ All critical features: VERIFIED
-
-DO NOT DEPLOY:
-✗ Phase 1 modularization code (branch: phase1-incomplete)
-✗ Any code without running verification first
-✗ Changes that remove authentication
+NEW SYSTEM (as of 2025-11-24):
+✅ ONE command: ./scripts/status.sh
+✅ Always up-to-date (reads live system)
+✅ Auto-finds latest instructions
+✅ Clear, actionable output
+✅ Can't be missed or misinterpreted
 
 ───────────────────────────────────────────────────────────────────
-WHAT TO READ NEXT
+QUICK START (3 STEPS)
 ───────────────────────────────────────────────────────────────────
 
-FOR DETAILED INCIDENT INFO:
-1. .ai-agents/FINAL_STATUS_2025-11-21_EVENING.md (complete timeline)
-2. .ai-agents/CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md (technical details)
+1. Run the status script:
+   ./scripts/status.sh
 
-FOR ARCHITECTURE:
-3. CLAUDE.md (system architecture, deployment status)
-4. TROUBLESHOOTING_CHECKLIST.md (pre-flight checks)
+2. Read the instruction file it shows you (if any)
 
-FOR DEPLOYMENT:
-5. .ai-agents/SESSION_START_PROTOCOL.md (mandatory verification steps)
+3. Follow the "WHAT TO DO NEXT" section in the output
 
-───────────────────────────────────────────────────────────────────
-BEFORE DOING ANYTHING
-───────────────────────────────────────────────────────────────────
-
-RUN THIS VERIFICATION:
-./scripts/verify_critical_features.sh
-
-EXPECTED OUTPUT:
-✓ Authentication UI present
-✓ PS101 flow present
-✓ API_BASE configured correctly
-✓ All critical features verified
-
-IF VERIFICATION FAILS: STOP and alert user before proceeding
+That's it. Don't read any other files unless status.sh specifically
+tells you to.
 
 ───────────────────────────────────────────────────────────────────
-QUICK COMMANDS
+FOR DETAILED PROTOCOL
 ───────────────────────────────────────────────────────────────────
 
-Check recent activity:
-git log -10 --oneline
+See: .ai-agents/SESSION_START_PROTOCOL.md
 
-Test backend health:
-curl https://what-is-my-delta-site-production.up.railway.app/health
-
-Test domain:
-curl https://whatismydelta.com/health
-
-Find latest status files:
-ls -lt .ai-agents/*.md | head -10
+But honestly, just run ./scripts/status.sh - it's all you need.
 
 ───────────────────────────────────────────────────────────────────
-KEY FACTS
+PROJECT QUICK FACTS (For Reference)
 ───────────────────────────────────────────────────────────────────
 
-PROJECT: Career transition platform (Mosaic/WhatIsMyDelta)
-BACKEND: FastAPI on Railway (PostgreSQL database)
-FRONTEND: Vanilla JavaScript on Netlify
-DOMAIN: https://whatismydelta.com (Netlify proxies API to Railway)
+Project: WIMD Railway Deploy - Mosaic Platform
+Directory: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+Production: https://whatismydelta.com
+Backend: https://what-is-my-delta-site-production.up.railway.app
 
-ENVIRONMENT VARIABLES (Railway):
-• OPENAI_API_KEY (set ✓)
-• CLAUDE_API_KEY (set ✓)
-• DATABASE_URL (PostgreSQL connection)
-• PUBLIC_SITE_ORIGIN=https://whatismydelta.com
-• PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.railway.app
+Frontend: Netlify (Vanilla JS)
+Backend: Railway (FastAPI + PostgreSQL)
+Domain: whatismydelta.com
 
 ───────────────────────────────────────────────────────────────────
-DEPLOYMENT RULES
+AGENT ROLES (Auto-assigned by Tool)
 ───────────────────────────────────────────────────────────────────
 
-NEVER:
-✗ Use raw "git push" → use ./scripts/push.sh instead
-✗ Use raw "netlify deploy" → use ./scripts/deploy.sh instead
-✗ Skip verification script before deployment
-✗ Remove authentication code without approval
-✗ Deploy incomplete features
+• Gemini/ChatGPT (terminal) → Senior Software Engineer & Planning Lead
+• Codex (Cursor) → Local Implementation Engineer
+• Claude Code → Infrastructure & Deployment Engineer
 
-ALWAYS:
-✓ Run ./scripts/verify_critical_features.sh BEFORE deploy
-✓ Update this file (AI_START_HERE.txt) after major events
-✓ Test locally before pushing to production
-✓ Use wrapper scripts for deployment
+All agents follow same protocol: Run ./scripts/status.sh first
 
 ───────────────────────────────────────────────────────────────────
-IF YOU GET STUCK
+IF ./scripts/status.sh DOESN'T EXIST
 ───────────────────────────────────────────────────────────────────
 
-Can't find a file?
-→ Ask user: "Which file should I read for [topic]?"
+This means you're in an older version of the repo. Create it:
 
-Conflicting information?
-→ This file (AI_START_HERE.txt) is the source of truth
-→ If something contradicts this, ask user to clarify
+1. Read this thread for the implementation
+2. Create scripts/status.sh with the full script
+3. Make it executable: chmod +x scripts/status.sh
+4. Run it: ./scripts/status.sh
 
-Need more context?
-→ Read CLAUDE.md for architecture overview
-→ Read .ai-agents/FINAL_STATUS_2025-11-21_EVENING.md for latest incident
-
-System seems broken?
-→ STOP immediately
-→ Alert user: "Verification failed - need help before proceeding"
+Or ask the user to pull the latest version.
 
 ───────────────────────────────────────────────────────────────────
-SUCCESS CHECKLIST
+DEPLOYMENT RULES (NEVER FORGET THESE)
 ───────────────────────────────────────────────────────────────────
 
-You have full context when you can answer:
+✅ ALWAYS use wrapper scripts:
+   ./scripts/deploy.sh netlify  (NOT: netlify deploy --prod)
+   ./scripts/deploy.sh railway  (NOT: git push railway-origin main)
 
-□ What was the most recent critical event?
-  → Phase 1 rollback on Nov 21, 2025
+✅ ALWAYS verify before deploy:
+   ./scripts/verify_critical_features.sh
 
-□ What's the current system status?
-  → STABLE - website working after rollback
-
-□ What should NOT be deployed?
-  → Phase 1 modularization code (incomplete)
-
-□ Where is the backend?
-  → https://what-is-my-delta-site-production.up.railway.app
-
-□ What verification must run before deployment?
-  → ./scripts/verify_critical_features.sh
-
-If you can answer all 5: ✓ You're ready to work
+❌ NEVER use raw commands:
+   git push railway-origin main ← NO
+   netlify deploy --prod ← NO
 
 ───────────────────────────────────────────────────────────────────
-UPDATE THIS FILE
+LAST UPDATED: 2025-11-24 by Claude Code
+SYSTEM VERSION: 2.0 (status.sh based)
 ───────────────────────────────────────────────────────────────────
-
-When to update AI_START_HERE.txt:
-
-IMMEDIATELY AFTER:
-• Production outage or downtime
-• Emergency rollback
-• Critical feature added/removed
-• Major incident
-
-SCHEDULED:
-• When file is >3 days old
-• At start of new work sprint
-• After user says "update the start file"
-
-How to update:
-1. Change "Updated: YYYY-MM-23" date at top
-2. Update "LATEST STATUS" section
-3. Update "CURRENT STATE" bullets
-4. Add new warnings if needed
-5. Commit: git commit -m "Update AI_START_HERE.txt - [reason]"
-
-───────────────────────────────────────────────────────────────────
-FILE LOCATIONS REFERENCE
-───────────────────────────────────────────────────────────────────
-
-THIS FILE:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/AI_START_HERE.txt
-
-PROJECT ROOT:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/
-
-ARCHITECTURE DOCS:
-• CLAUDE.md (main overview)
-• TROUBLESHOOTING_CHECKLIST.md (debugging)
-• SELF_DIAGNOSTIC_FRAMEWORK.md (error handling)
-
-INCIDENT REPORTS:
-• .ai-agents/FINAL_STATUS_2025-11-21_EVENING.md
-• .ai-agents/CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md
-
-VERIFICATION:
-• scripts/verify_critical_features.sh
-• scripts/show_latest_context.sh
-
-═══════════════════════════════════════════════════════════════════
-LAST UPDATED: 2025-11-23 by Claude Code
-NEXT REVIEW: 2025-11-26 (or after next major event)
-═══════════════════════════════════════════════════════════════════

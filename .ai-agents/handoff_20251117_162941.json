@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-11-17T16:29:41Z",
+  "commit": "798a934e0d7c88debc83022b19f57fdbdc7ab273",
+  "commit_message": "PROTOCOL: Add Rule 10 - Never declare issues fixed without user confirmation",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251117_161318Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "798a934: PROTOCOL: Add Rule 10 - Never declare issues fixed without user confirmation",
+      "0b1347e: CHORE: Ignore generated artifacts (handoffs + backups)",
+      "849a4e6: GUARD RAILS: Backup enforcement + session continuity automation",
+      "18c8488: ENFORCE: Require bypass reason + migrate hooks to version control",
+      "6f787b7: docs: log offsite mirror completion"
+    ],
+    "modified_files": [
+      ".ai-agents/SESSION_START_PROTOCOL.md"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251117_161318Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}

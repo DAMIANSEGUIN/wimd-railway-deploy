@@ -1,0 +1,81 @@
+════════════════════════════════════════════════════════════════
+📋 GEMINI: START HERE - Project Context Loading
+════════════════════════════════════════════════════════════════
+
+HOW YOU FOUND THIS FILE:
+Your user told you to read this file located at:
+/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/COPY_PASTE_FOR_GEMINI.txt
+
+Since you can't execute bash scripts directly, here's what to read:
+
+STEP 1: Read the overview file
+Read file: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/START_HERE.md
+
+This gives you:
+• Latest critical event with date
+• Current system status (what's working/broken)
+• Links to all relevant documentation
+• Critical warnings about what NOT to do
+
+STEP 2: Read the protocol
+Read file: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md
+
+This tells you:
+• Required verification steps
+• Operating rules
+• Emergency procedures
+
+STEP 3: Find latest status files
+List files in directory: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/
+
+Look for files matching these patterns (most recent = most relevant):
+• FINAL_STATUS_YYYY-MM-DD_*.md
+• CRITICAL_ISSUE_*_YYYY-MM-DD.md
+• SESSION_SUMMARY_YYYY-MM-DD.md
+
+Read the MOST RECENT file from each pattern.
+
+STEP 4: Check for handoff
+List files: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/handoff_*.json
+
+If any exist, read the MOST RECENT one (highest timestamp).
+
+STEP 5: Verify recent activity
+Ask user to run: git log -10 --oneline
+This shows what happened recently.
+
+════════════════════════════════════════════════════════════════
+✅ After reading these files, you'll have full context
+════════════════════════════════════════════════════════════════
+
+QUICK REFERENCE:
+
+Project Directory:
+/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+
+Key Files to Read:
+1. .ai-agents/START_HERE.md (always read FIRST)
+2. .ai-agents/SESSION_START_PROTOCOL.md (mandatory checklist)
+3. CLAUDE.md (architecture overview)
+4. TROUBLESHOOTING_CHECKLIST.md (if debugging)
+
+CRITICAL WARNINGS (as of last update):
+• DO NOT deploy Phase 1 modularization code (incomplete)
+• Always verify before deployment: ./scripts/verify_critical_features.sh
+• Never remove authentication without explicit approval
+• Use wrapper scripts, not raw git push/netlify deploy
+
+System Status:
+• Railway backend: https://what-is-my-delta-site-production.up.railway.app
+• Domain: https://whatismydelta.com
+• Frontend: Netlify (proxies to Railway for API)
+
+If you need to run verification:
+Ask user to run: ./scripts/verify_critical_features.sh
+
+════════════════════════════════════════════════════════════════
+TROUBLESHOOTING:
+• Can't find file? Ask user to list directory contents
+• Conflicting info? Newest dated file wins
+• Confused? Ask: "Should I read [specific file]?"
+════════════════════════════════════════════════════════════════

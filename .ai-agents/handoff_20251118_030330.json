@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-11-18T03:03:30Z",
+  "commit": "31d099cc21a03d221bfb66381a0b8e4445b04efc",
+  "commit_message": "URGENT: Document deployment process ambiguity - blocked by authentication",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251118_022416Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "31d099c: URGENT: Document deployment process ambiguity - blocked by authentication",
+      "93da324: Add evidence folders to .gitignore",
+      "6f65acb: Add CodexCapture documentation + PS101 QA Mode",
+      "798a934: PROTOCOL: Add Rule 10 - Never declare issues fixed without user confirmation",
+      "0b1347e: CHORE: Ignore generated artifacts (handoffs + backups)"
+    ],
+    "modified_files": [
+      ".ai-agents/URGENT_DEPLOYMENT_PROCESS_AMBIGUITY_2025-11-18.md",
+      "URGENT_FOR_CODEX_DEPLOYMENT_BLOCKED.md"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251118_022416Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}

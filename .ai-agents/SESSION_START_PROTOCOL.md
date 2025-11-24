@@ -2,36 +2,30 @@
 
 **MANDATORY: Every AI agent MUST run this at session start**
 
-> Codex Reset Protocol → When invoked, re-run Steps 1–5 below.
-> Restate Present State → Desired Outcome, and re-log the session.
+---
+
+## 🎯 THE ONE COMMAND YOU MUST RUN FIRST
+
+**DO THIS NOW - BEFORE ANYTHING ELSE:**
+
+```bash
+./scripts/status.sh
+```
+
+**This single command will tell you:**
+- ✅ Current production health (live check)
+- ✅ What's deployed (git status)
+- ✅ Latest instructions (auto-finds most recent file)
+- ✅ Active warnings and blockers
+- ✅ Exactly what to do next
+
+**After running status.sh, follow the "WHAT TO DO NEXT" section in its output.**
 
 ---
 
-## 🚨 CRITICAL ALERT (2025-11-21 5:00 PM)
+## Step-by-Step Protocol (Simplified)
 
-**Phase 1 Modularization ROLLED BACK - UI was broken**
-
-**What happened:**
-- Phase 1 modules (state.js, api.js, main.js) extracted successfully
-- BUT integration with IIFE was incomplete
-- Deployed anyway → broke UI (no login, chat non-functional)
-- ROLLED BACK with `git revert 1c6c013`
-
-**Current Status:**
-- ✅ Website working again (rollback complete)
-- ✅ Phase 1 work saved in branch `phase1-incomplete`
-- ⚠️ **DO NOT deploy Phase 1 code until Phase 2 integration is complete**
-
-**Required Reading Before ANY modularization work:**
-1. `.ai-agents/CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md` - Full breakdown
-2. `~/Desktop/WHAT_HAPPENED.txt` - User-facing summary
-3. Branch `phase1-incomplete` has the extracted modules (incomplete)
-
-**Lesson:** Never deploy extraction without integration. Phase 1+2 must be done together.
-
----
-
-## Step 1: Identify Yourself (FIRST MESSAGE)
+### Step 1: Identify Yourself & Run Status
 
 ```
 I am [AGENT_NAME] starting session at [TIMESTAMP]
@@ -39,178 +33,143 @@ I am [AGENT_NAME] starting session at [TIMESTAMP]
 Running session start protocol...
 ```
 
-## Step 2: Run Critical Feature Verification
+Then immediately run:
+```bash
+./scripts/status.sh
+```
 
-**BEFORE reading any other files or taking any actions:**
+### Step 2: Follow Status Script Output
+
+The status script will tell you:
+
+1. **If production is unhealthy** → STOP and fix that first
+2. **If there's a recent instruction file** → Read it and follow it
+3. **If no clear instructions** → Ask user what to work on
+
+### Step 3: Verify Critical Features (If Making Changes)
+
+Before making ANY code changes or deployments:
 
 ```bash
 ./scripts/verify_critical_features.sh
 ```
 
-**Expected output:**
-```
-✅ Authentication UI present
-✅ PS101 flow present
-✅ API_BASE configured correctly
-✅ All critical features verified
-```
-
 **If verification FAILS:**
 - ❌ STOP immediately
-- Do NOT proceed with any tasks
-- Report to human: "Critical feature missing - verification failed"
-- Wait for human to resolve before proceeding
+- Report to user: "Critical feature missing - verification failed"
+- Wait for user to resolve
 
-## Step 2b: Confirm PS101 Continuity Kit Alignment
+---
 
-**Mandatory for Cursor and Claude_Code before continuing:**
-
-1. Review the quick-start in `Mosaic/PS101_Continuity_Kit/README_NOTE_FOR_BUILD_TEAM.md` so the current manifest expectations are top of mind.
-2. Run the hash check to confirm the working tree matches the canonical spec bundle:
-   ```bash
-   ./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh
-   ```
-3. If the script reports drift, stop immediately, document the variance, and escalate for resolution before making further changes.
-4. When preparing a deploy or reviewing a handoff, ensure the footer `BUILD_ID` rendered in the UI matches the value defined by `inject_build_id.js` and recorded in `manifest.can.json`.
-
-## Step 3: Check for Handoff
-
-**Look for handoff manifest:**
-
-```bash
-ls -t .ai-agents/handoff_*.json | head -1
-```
-
-**If handoff file exists:**
-- Read the handoff manifest
-- Verify outgoing agent completed checklist
-- Acknowledge all critical features listed
-- Log handoff receipt in `.ai-agents/handoff_log.txt`
-
-**If NO handoff file (fresh session):**
-- Create session start marker:
-  ```bash
-  echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Session start: [AGENT_NAME]" >> .ai-agents/session_log.txt
-  ```
-
-## Step 4: Review Recent Activity
-
-**Check last 5 commits:**
-```bash
-git log -5 --oneline
-```
-
-**Check for urgent files:**
-```bash
-ls -1 URGENT_* FOR_*_AGENT*.md 2>/dev/null
-```
-
-**If urgent files exist:**
-- Read them BEFORE proceeding with other tasks
-- These files contain critical information from previous sessions
-
-**Scan shared Stage/Team notes:**
-```bash
-ls -1t .ai-agents/STAGE*.md .ai-agents/TEAM_NOTE_*.md 2>/dev/null | head
-```
-- Re-read any document updated since your last session (compare timestamps or `git diff --stat HEAD@{1}`).
-- Update the relevant Stage file with an acknowledgment line (e.g., `Cursor Acknowledged: ✅`) before moving on.
-
-## Step 5: Declare Readiness
-
-**Only after completing steps 1-4, declare:**
-
-```
-✅ Session start protocol complete
-✅ Critical features verified
-✅ [Handoff received / Fresh session]
-✅ Recent activity reviewed
-
-Ready to proceed with tasks.
-
-Current critical features confirmed:
-- Authentication: [PRESENT/MISSING]
-- PS101 v2: [PRESENT/MISSING]
-- API Integration: [CONFIGURED/NEEDS-ATTENTION]
-```
-
-## Step 6: Operating Rules
+## Operating Rules (Always Follow These)
 
 **Throughout this session, I will:**
 
-1. ✅ Run `./scripts/verify_critical_features.sh` BEFORE any deployment
-2. ✅ Never remove authentication without explicit approval
-3. ✅ Never replace files without checking for feature loss
-4. ✅ Follow pre-commit hooks (never use --no-verify without approval)
-5. ✅ Run DEPLOYMENT_VERIFICATION_CHECKLIST.md after deploys
-6. ✅ Create handoff manifest before ending session if requested
-7. ✅ Confirm the PS101 manifest/footer alignment before approving a review or initiating a deploy; log any intentional variances in `.verification_audit.log`.
-8. ✅ Update all impacted documentation (notes, checklists, manifests) before declaring a task complete; summarize changes in the relevant handoff or audit log.
-9. ✅ **NEVER use raw `git push` or `netlify deploy` commands - use wrapper scripts:**
+1. ✅ Run `./scripts/status.sh` at session start (MANDATORY)
+2. ✅ Run `./scripts/verify_critical_features.sh` BEFORE any deployment
+3. ✅ Never remove authentication without explicit approval
+4. ✅ Never replace files without checking for feature loss
+5. ✅ **NEVER use raw `git push` or `netlify deploy` commands - use wrapper scripts:**
    - Use `./scripts/push.sh railway-origin main` instead of `git push railway-origin main`
    - Use `./scripts/deploy.sh netlify` instead of `netlify deploy --prod`
    - Use `./scripts/deploy.sh railway` to deploy backend
    - Use `./scripts/deploy.sh all` to deploy both frontend and backend
 
-**If I fail to follow these rules:**
-- Pre-commit hook will BLOCK the commit
-- Human will be notified of violation
-- Session may be terminated and handed off to another agent
-
-## Emergency Override
-
-**Only use with explicit human approval:**
-
-If human says "EMERGENCY OVERRIDE: [reason]", I may bypass verification ONCE, but must:
-1. Document override reason in commit message
-2. Add tag: [EMERGENCY-OVERRIDE]
-3. Run full verification immediately after override action
-4. Create recovery plan if verification fails
-
-## Session End Protocol
-
-**Before ending session (if requested):**
-
-```bash
-./scripts/create_handoff_manifest.sh > .ai-agents/handoff_$(date +%Y%m%d_%H%M%S).json
-```
-
-**Declare session end:**
-```
-Session ending. Handoff manifest created.
-Next agent should read: .ai-agents/handoff_[TIMESTAMP].json
-```
+**If production is unhealthy:**
+- ❌ DO NOT make any changes
+- ❌ DO NOT deploy anything
+- ✅ Focus on diagnosis and recovery only
 
 ---
 
 ## Quick Reference Card
 
-**Session Start Checklist:**
+**Session Start (DO THIS EVERY TIME):**
 ```
-□ Identify self
-□ Run ./scripts/verify_critical_features.sh
-□ Run PS101 continuity hash check
-□ Check for handoff manifest
-□ Review recent commits
-□ Read urgent files
-□ Declare readiness
-□ Begin work
+□ Run ./scripts/status.sh
+□ Read the instruction file it shows (if any)
+□ Follow the "WHAT TO DO NEXT" section
+□ If unclear, ask user
 ```
 
-**Before Every Deploy:**
+**Before Every Deployment:**
 ```
 □ Run ./scripts/verify_critical_features.sh
-□ Confirm manifest.can.json + footer BUILD_ID alignment
-□ Verify no critical features removed
-□ Follow deployment checklist
+□ Use wrapper scripts (./scripts/deploy.sh)
 □ Monitor post-deploy for 5 minutes
-□ Update documentation + audit log entries
 ```
 
-**Before Session End:**
+**If Things Go Wrong:**
 ```
-□ Run ./scripts/create_handoff_manifest.sh
-□ Commit or document WIP
-□ Create handoff file
-□ Log session end
+□ Run ./scripts/status.sh to check current state
+□ Check production health first
+□ Look for recent rollback/revert in git log
+□ Read incident files in .ai-agents/
 ```
+
+---
+
+## Emergency Override
+
+**Only use with explicit user approval:**
+
+If user says "EMERGENCY OVERRIDE: [reason]", I may bypass verification ONCE, but must:
+1. Document override reason in commit message
+2. Add tag: [EMERGENCY-OVERRIDE]
+3. Run full verification immediately after override action
+4. Create recovery plan if verification fails
+
+---
+
+## Why This New System Exists
+
+**Previous system problems:**
+- ❌ Too many documentation files (which one is current?)
+- ❌ Files with dates in names (confusing timeline)
+- ❌ Long protocols AI agents skip/skim
+- ❌ Static info that gets stale
+
+**New system benefits:**
+- ✅ ONE command: `./scripts/status.sh`
+- ✅ Always current (reads live system)
+- ✅ Auto-finds latest instructions
+- ✅ Clear output (can't be misinterpreted)
+- ✅ Works for all AI agents (Gemini, ChatGPT, Claude Code, Cursor)
+
+---
+
+## Session End Protocol
+
+**When ending your session, run this ONE command:**
+
+```bash
+./scripts/session_end.sh
+```
+
+**This script will:**
+- ✅ Show what you changed this session
+- ✅ Create a descriptive commit message
+- ✅ Check production health for the next agent
+- ✅ Add warnings if any exist
+- ✅ Guide you through committing and pushing
+
+**Manual alternative (if script doesn't work):**
+1. Commit changes: `git add -A && git commit -m "Session: [summary]"`
+2. Run status check: `./scripts/status.sh`
+3. Push if appropriate: `git push origin main`
+
+---
+
+## Legacy Information (For Reference Only)
+
+The following files contain historical context but are **NOT** required reading at session start:
+
+- `AI_START_HERE.txt` - Static overview (may be outdated)
+- `.ai-agents/START_HERE.md` - Previous protocol (deprecated)
+- Dated files in `.ai-agents/` - Historical incident reports
+
+**Instead:** Just run `./scripts/status.sh` - it will find and show the most recent relevant files automatically.
+
+---
+
+**END OF SESSION START PROTOCOL**

@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-11-18T02:40:59Z",
+  "commit": "93da324ecc83098c4261fe09de6e7ddb0940a7ce",
+  "commit_message": "Add evidence folders to .gitignore",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251118_022416Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "93da324: Add evidence folders to .gitignore",
+      "6f65acb: Add CodexCapture documentation + PS101 QA Mode",
+      "798a934: PROTOCOL: Add Rule 10 - Never declare issues fixed without user confirmation",
+      "0b1347e: CHORE: Ignore generated artifacts (handoffs + backups)",
+      "849a4e6: GUARD RAILS: Backup enforcement + session continuity automation"
+    ],
+    "modified_files": [
+      ".gitignore"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251118_022416Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}

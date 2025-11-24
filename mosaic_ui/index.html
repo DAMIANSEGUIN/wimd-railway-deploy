@@ -2151,6 +2151,30 @@ async function askCoach(prompt) {
     }
   }
 
+  // Phase 1 modularization feature flag
+  // See .ai-agents/CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md
+  const USE_MODULES = false;
+
+  async function initPhase1ModulesIfEnabled() {
+    if (!USE_MODULES) {
+      return null;
+    }
+
+    const modules = window.__WIMD_MODULES__;
+    if (!modules || typeof modules.initModules !== 'function') {
+      console.warn('[PHASE1] Modules not available, falling back to legacy initApp only');
+      return null;
+    }
+
+    try {
+      console.log('[PHASE1] Calling window.__WIMD_MODULES__.initModules()');
+      return await modules.initModules();
+    } catch (error) {
+      console.error('[PHASE1] Module initialization failed, continuing with legacy initApp:', error);
+      return null;
+    }
+  }
+
   console.log('[IIFE] About to define initApp');
 
   // Consolidated application initializer
@@ -3105,9 +3129,13 @@ async function askCoach(prompt) {
 
   console.log('[INIT SETUP] initApp is defined, setting up initialization...');
 
-  const safeInitApp = () => {
+  const safeInitApp = async () => {
     try {
       console.log('[INIT TRIGGER] Starting initialization');
+
+      // Phase 1 modularization hook (no-op until USE_MODULES is true and modules are loaded)
+      await initPhase1ModulesIfEnabled();
+
       initApp();
     } catch (error) {
       console.error('[INIT ERROR] Failed to initialize app:', error);

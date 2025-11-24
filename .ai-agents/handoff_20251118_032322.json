@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-11-18T03:23:22Z",
+  "commit": "302bc98c65dcd0dafd452cdf7a12cec27e41ec7a",
+  "commit_message": "DOCS: Post-deploy audit - update deployment process to match reality",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251118_022416Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "302bc98: DOCS: Post-deploy audit - update deployment process to match reality",
+      "31d099c: URGENT: Document deployment process ambiguity - blocked by authentication",
+      "93da324: Add evidence folders to .gitignore",
+      "6f65acb: Add CodexCapture documentation + PS101 QA Mode",
+      "798a934: PROTOCOL: Add Rule 10 - Never declare issues fixed without user confirmation"
+    ],
+    "modified_files": [
+      ".ai-agents/DEPLOYMENT_AUDIT_CHECKLIST.md",
+      ".ai-agents/SESSION_START_PROTOCOL.md",
+      "CLAUDE.md",
+      "deploy_logs/2025-11-18_ps101-qa-mode.md"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251118_022416Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}

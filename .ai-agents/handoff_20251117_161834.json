@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-11-17T16:18:34Z",
+  "commit": "0b1347ea2f8db5c0f287fee2584559163d4b4d8d",
+  "commit_message": "CHORE: Ignore generated artifacts (handoffs + backups)",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251117_161318Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "0b1347e: CHORE: Ignore generated artifacts (handoffs + backups)",
+      "849a4e6: GUARD RAILS: Backup enforcement + session continuity automation",
+      "18c8488: ENFORCE: Require bypass reason + migrate hooks to version control",
+      "6f787b7: docs: log offsite mirror completion",
+      "f6ddec6: docs: record Nov 14 deploy artefacts and session pointers"
+    ],
+    "modified_files": [
+      ".gitignore"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251117_161318Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}

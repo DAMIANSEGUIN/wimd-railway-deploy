@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-11-19T01:14:02Z",
+  "commit": "5caa7e7d58779d3e38619c419b5e982f61091949",
+  "commit_message": "docs: Add Claude handoff note",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251118_033032Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "5caa7e7: docs: Add Claude handoff note",
+      "476efb4: feat: Prepare for deployment by committing recent agent notes, documentation, and script updates",
+      "d88b0ee: HANDOFF: Final session handoff to Codex",
+      "daf197c: SESSION END: Complete summary for 2025-11-18 session",
+      "f659c01: Add CodexCapture access guide for Codex"
+    ],
+    "modified_files": [
+      ".ai-agents/HANDOFF_CLAUDE_CODE_2025-11-18T20-00Z.md"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251118_033032Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}
