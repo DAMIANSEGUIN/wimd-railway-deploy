@@ -86,15 +86,17 @@ read -r WARNINGS_INPUT
 
 SESSION_SUMMARY="$TASK_TITLE"
 
-# Check production health
+# Check production health (disable exit-on-error temporarily)
 echo ""
 echo "Checking production health..."
 PROD_STATUS="unknown"
+set +e  # Disable exit on error for health check
 if curl -s -m 5 https://whatismydelta.com/health 2>/dev/null | grep -q '"ok":true'; then
     PROD_STATUS="healthy"
 else
     PROD_STATUS="unhealthy"
 fi
+set -e  # Re-enable exit on error
 
 # Build warnings array
 WARNINGS_ARRAY="[]"
