@@ -17,6 +17,7 @@
 - ✅ What's deployed (git status)
 - ✅ Latest instructions (auto-finds most recent file)
 - ✅ Active warnings and blockers
+- ✅ Your assigned task from TEAM_STATUS.json
 - ✅ Exactly what to do next
 
 **After running status.sh, follow the "WHAT TO DO NEXT" section in its output.**
@@ -87,8 +88,10 @@ Before making ANY code changes or deployments:
 **Session Start (DO THIS EVERY TIME):**
 ```
 □ Run ./scripts/status.sh
+□ Check TEAM_STATUS.json for your assigned task
 □ Read the instruction file it shows (if any)
 □ Follow the "WHAT TO DO NEXT" section
+□ Read .ai-agents/AGENT_PROTOCOL.md for mandatory behavior rules
 □ If unclear, ask user
 ```
 
@@ -162,11 +165,13 @@ If user says "EMERGENCY OVERRIDE: [reason]", I may bypass verification ONCE, but
 
 ## Legacy Information (For Reference Only)
 
-The following files contain historical context but are **NOT** required reading at session start:
+The following files contain historical context but are **NOT** required reading at session start. These patterns have been replaced by the TEAM_STATUS.json system and commit_work.sh.
 
 - `AI_START_HERE.txt` - Static overview (may be outdated)
 - `.ai-agents/START_HERE.md` - Previous protocol (deprecated)
 - Dated files in `.ai-agents/` - Historical incident reports
+- `CURRENT_WORK.json` - Replaced by TEAM_STATUS.json
+- `session_end.sh` - Renamed to commit_work.sh
 
 **Instead:** Just run `./scripts/status.sh` - it will find and show the most recent relevant files automatically.
 

@@ -29,17 +29,21 @@ NEW SYSTEM (as of 2025-11-24):
 ✅ Can't be missed or misinterpreted
 
 ───────────────────────────────────────────────────────────────────
-QUICK START (3 STEPS)
+QUICK START (4 STEPS)
 ───────────────────────────────────────────────────────────────────
 
 1. Run the status script:
    ./scripts/status.sh
 
-2. Read the instruction file it shows you (if any)
+2. Check TEAM_STATUS.json for your assigned task and read its description.
 
-3. Follow the "WHAT TO DO NEXT" section in the output
+3. Follow the "WHAT TO DO NEXT" section in the status.sh output.
 
-That's it. Don't read any other files unless status.sh specifically
+4. When your task is complete, run:
+   ./scripts/commit_work.sh
+
+Always remember to read .ai-agents/AGENT_PROTOCOL.md for mandatory behavior rules.
+Don't read any other files unless status.sh or your task description specifically
 tells you to.
 
 ───────────────────────────────────────────────────────────────────
