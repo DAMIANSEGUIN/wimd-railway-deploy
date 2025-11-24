@@ -6,6 +6,7 @@
       "agent": "Gemini",
       "branch": "main",
       "started": "2025-11-24T19:15:00Z",
+      "description": "Update all session/handoff docs to reference new system. Files to review: AI_START_HERE.txt, .ai-agents/SESSION_START_PROTOCOL.md, .ai-agents/HANDOFF_PROTOCOL.md. Ensure they point to status.sh (session start) and commit_work.sh (task complete), not old session_end.sh or CURRENT_WORK.json. Add deprecation notices to old patterns. Don't delete - mark as superseded. Success: 4-7 files updated, no conflicting instructions.",
       "blockers": []
     }
   ],

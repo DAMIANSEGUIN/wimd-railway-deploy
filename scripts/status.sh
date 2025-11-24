@@ -77,7 +77,7 @@ else
     ACTIVE_COUNT=$(jq '.active | length' TEAM_STATUS.json)
     if [ "$ACTIVE_COUNT" -gt 0 ]; then
         echo -e "   ${BLUE}Active Work:${NC}"
-        jq -r '.active[] | "      • \(.task) (\(.agent)) - started \(.started)"' TEAM_STATUS.json
+        jq -r '.active[] | "      • \(.task): \(.title) (\(.agent))\n        \(.description)"' TEAM_STATUS.json
     else
         echo "   No active work"
     fi
