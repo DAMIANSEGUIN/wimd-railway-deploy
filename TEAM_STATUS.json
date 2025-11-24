@@ -1,16 +1,13 @@
 {
-  "active": [
+  "active": [],
+  "done_today": [
     {
       "task": "P0.2",
       "title": "Documentation consolidation",
       "agent": "Gemini",
-      "branch": "main",
-      "started": "2025-11-24T19:15:00Z",
-      "description": "Update all session/handoff docs to reference new system. Files to review: AI_START_HERE.txt, .ai-agents/SESSION_START_PROTOCOL.md, .ai-agents/HANDOFF_PROTOCOL.md. Ensure they point to status.sh (session start) and commit_work.sh (task complete), not old session_end.sh or CURRENT_WORK.json. Add deprecation notices to old patterns. Don't delete - mark as superseded. Success: 4-7 files updated, no conflicting instructions.",
-      "blockers": []
-    }
-  ],
-  "done_today": [
+      "commit": "68e02e5",
+      "completed": "2025-11-24T21:45:00Z"
+    },
     {
       "task": "P0.1",
       "title": "Validate session_end.sh",
@@ -76,5 +73,5 @@
     "Phase 1 branch incomplete - do not deploy",
     "Health check may show false negative in restricted networks"
   ],
-  "last_updated": "2025-11-24T20:30:46Z"
+  "last_updated": "2025-11-24T21:45:00Z"
 }
