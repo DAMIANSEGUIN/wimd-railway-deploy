@@ -1,6 +1,6 @@
 #!/bin/bash
 # session_end.sh - Run this at the end of every AI agent session
-# Creates a status commit message for the next agent
+# Updates TEAM_STATUS.json and creates commit
 
 set -e
 
@@ -23,7 +23,7 @@ echo "📊 Session Summary"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Detect agent type from environment or ask
+# Detect agent type
 AGENT_NAME="${AI_AGENT_NAME:-Unknown}"
 if [ "$AGENT_NAME" = "Unknown" ]; then
     echo "Which AI agent are you? (claude-code/gemini/cursor/chatgpt)"
@@ -59,183 +59,152 @@ if [ "$UNCOMMITTED" -gt 20 ]; then
 fi
 echo ""
 
-# Ask structured questions for handoff
+# Ask questions
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📝 HANDOFF QUESTIONS (for next agent)"
+echo "📝 HANDOFF QUESTIONS"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-echo "1. What were you working on? (one line)"
-read -r TASK_TITLE
+echo "1. What task were you working on? (e.g., P0.2, bug-fix-auth, feature-search)"
+read -r TASK_ID
 
 echo ""
-echo "2. What did you complete? (comma separated, or 'nothing yet')"
-read -r COMPLETED
+echo "2. Status: (done/blocked/in-progress)"
+read -r STATUS
 
 echo ""
-echo "3. What's still left to do? (comma separated, or 'all done')"
-read -r TODO
+BLOCKERS=""
+if [ "$STATUS" = "blocked" ]; then
+    echo "3. What's blocking you? (one line)"
+    read -r BLOCKERS
+fi
 
-echo ""
-echo "4. What should the next agent do FIRST? (one concrete action)"
-read -r NEXT_ACTION
-
-echo ""
-echo "5. Any blockers or warnings? (comma separated, or 'none')"
-read -r WARNINGS_INPUT
-
-SESSION_SUMMARY="$TASK_TITLE"
-
-# Check production health (disable exit-on-error temporarily)
+# Check production health
 echo ""
 echo "Checking production health..."
-PROD_STATUS="unknown"
-set +e  # Disable exit on error for health check
-if curl -s -m 5 https://whatismydelta.com/health 2>/dev/null | grep -q '"ok":true'; then
-    PROD_STATUS="healthy"
-else
+PROD_STATUS="healthy"
+set +e
+if ! curl -s -m 5 https://whatismydelta.com/health 2>/dev/null | grep -q '"ok":true'; then
     PROD_STATUS="unhealthy"
 fi
-set -e  # Re-enable exit on error
+set -e
 
-# Build warnings array
-WARNINGS_ARRAY="[]"
-if git log -5 --oneline | grep -qi "revert\|rollback"; then
-    WARNINGS_ARRAY=$(echo "$WARNINGS_ARRAY" | jq '. += ["Recent rollback in git history"]')
-fi
-if git branch -a | grep -q "phase1-incomplete"; then
-    WARNINGS_ARRAY=$(echo "$WARNINGS_ARRAY" | jq '. += ["Phase 1 branch incomplete - do not deploy"]')
-fi
-if [ "$PROD_STATUS" = "unhealthy" ]; then
-    WARNINGS_ARRAY=$(echo "$WARNINGS_ARRAY" | jq '. += ["Production health check FAILED"]')
-fi
-if [ "$WARNINGS_INPUT" != "none" ] && [ -n "$WARNINGS_INPUT" ]; then
-    # Add user-provided warnings
-    IFS=',' read -ra USER_WARNS <<< "$WARNINGS_INPUT"
-    for warn in "${USER_WARNS[@]}"; do
-        WARNINGS_ARRAY=$(echo "$WARNINGS_ARRAY" | jq --arg w "$(echo "$warn" | xargs)" '. += [$w]')
-    done
-fi
+# Update TEAM_STATUS.json
+echo ""
+echo "Updating TEAM_STATUS.json..."
 
-# Build completed/todo arrays
-COMPLETED_ARRAY="[]"
-if [ "$COMPLETED" != "nothing yet" ] && [ -n "$COMPLETED" ]; then
-    IFS=',' read -ra ITEMS <<< "$COMPLETED"
-    for item in "${ITEMS[@]}"; do
-        COMPLETED_ARRAY=$(echo "$COMPLETED_ARRAY" | jq --arg i "$(echo "$item" | xargs)" '. += [$i]')
-    done
-fi
+TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+COMMIT_HASH=$(git log -1 --pretty=format:'%h' 2>/dev/null || echo "none")
+CURRENT_BRANCH=$(git branch --show-current)
 
-TODO_ARRAY="[]"
-if [ "$TODO" != "all done" ] && [ -n "$TODO" ]; then
-    IFS=',' read -ra ITEMS <<< "$TODO"
-    for item in "${ITEMS[@]}"; do
-        TODO_ARRAY=$(echo "$TODO_ARRAY" | jq --arg i "$(echo "$item" | xargs)" '. += [$i]')
-    done
-fi
-
-# Create CURRENT_WORK.json
-cat > CURRENT_WORK.json <<EOF
+# Read current TEAM_STATUS.json
+if [ ! -f "TEAM_STATUS.json" ]; then
+    echo "⚠️  TEAM_STATUS.json not found, creating new one"
+    cat > TEAM_STATUS.json <<EOF
 {
-  "last_updated": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "agent": "$AGENT_NAME",
-  "task": {
-    "title": "$TASK_TITLE",
-    "completed": $COMPLETED_ARRAY,
-    "todo": $TODO_ARRAY,
-    "next_action": "$NEXT_ACTION"
-  },
+  "active": [],
+  "done_today": [],
+  "blocked": [],
+  "queue": [],
   "production": {
     "status": "$PROD_STATUS",
     "frontend": "https://whatismydelta.com",
-    "backend": "https://what-is-my-delta-site-production.up.railway.app"
+    "backend": "https://what-is-my-delta-site-production.up.railway.app",
+    "last_deploy": "$COMMIT_HASH",
+    "last_check": "$TIMESTAMP"
   },
-  "git": {
-    "branch": "$(git branch --show-current)",
-    "last_commit": "$(git log -1 --pretty=format:'%h - %ar - %s')"
-  },
-  "warnings": $WARNINGS_ARRAY
+  "warnings": [],
+  "last_updated": "$TIMESTAMP"
 }
 EOF
-
-echo "✅ Created CURRENT_WORK.json"
-echo ""
-
-# Build commit warnings for message
-WARNINGS=""
-if echo "$WARNINGS_ARRAY" | jq -e '. | length > 0' > /dev/null; then
-    WARNINGS="Warnings:\n$(echo "$WARNINGS_ARRAY" | jq -r '.[] | "- " + .')\n"
 fi
 
+# Update based on status
+if [ "$STATUS" = "done" ]; then
+    # Remove from active, add to done_today
+    jq --arg task "$TASK_ID" \
+       --arg agent "$AGENT_NAME" \
+       --arg commit "$COMMIT_HASH" \
+       --arg time "$TIMESTAMP" \
+       '.active = [.active[] | select(.task != $task)] |
+        .done_today += [{task: $task, agent: $agent, commit: $commit, completed: $time}] |
+        .last_updated = $time |
+        .production.last_deploy = $commit |
+        .production.last_check = $time |
+        .production.status = "'"$PROD_STATUS"'"' \
+       TEAM_STATUS.json > TEAM_STATUS.tmp && mv TEAM_STATUS.tmp TEAM_STATUS.json
+
+elif [ "$STATUS" = "blocked" ]; then
+    # Add to blocked array
+    jq --arg task "$TASK_ID" \
+       --arg agent "$AGENT_NAME" \
+       --arg blocker "$BLOCKERS" \
+       --arg time "$TIMESTAMP" \
+       '.blocked += [{task: $task, agent: $agent, blocker: $blocker, since: $time}] |
+        .last_updated = $time' \
+       TEAM_STATUS.json > TEAM_STATUS.tmp && mv TEAM_STATUS.tmp TEAM_STATUS.json
+
+else
+    # Still in progress, update timestamp
+    jq --arg task "$TASK_ID" \
+       --arg time "$TIMESTAMP" \
+       '.active = [.active[] | if .task == $task then .last_update = $time else . end] |
+        .last_updated = $time' \
+       TEAM_STATUS.json > TEAM_STATUS.tmp && mv TEAM_STATUS.tmp TEAM_STATUS.json
+fi
+
+echo "✅ Updated TEAM_STATUS.json"
+echo ""
+
 # Create commit message
-COMMIT_MSG="Session: $SESSION_SUMMARY
+COMMIT_MSG="$STATUS: $TASK_ID
 
 Agent: $AGENT_NAME
-Date: $(date '+%Y-%m-%d %H:%M %Z')
+Branch: $CURRENT_BRANCH
 Production: $PROD_STATUS
 
-Changes:
-$(git status --short | head -10 | sed 's/^/  /')
-$([ "$UNCOMMITTED" -gt 10 ] && echo "  ... and $((UNCOMMITTED - 10)) more files")
+$([ "$STATUS" = "blocked" ] && echo "Blocker: $BLOCKERS" && echo "")
+Files changed: $UNCOMMITTED
+$(git status --short | head -5 | sed 's/^/  /')
+$([ "$UNCOMMITTED" -gt 5 ] && echo "  ... and $((UNCOMMITTED - 5)) more")
 
-Status for next agent:
-- Production: https://whatismydelta.com ($PROD_STATUS)
-- Backend: https://what-is-my-delta-site-production.up.railway.app
-- Branch: $(git branch --show-current)
-- Last deploy: $(git log -1 --pretty=format:'%h - %ar - %s')
+Next: Run ./scripts/status.sh"
 
-$([ -n "$WARNINGS" ] && echo "Warnings:" && echo -e "$WARNINGS")
-Next agent: Run ./scripts/status.sh to get current state"
-
-echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "Commit message preview:"
+echo "Commit message:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "$COMMIT_MSG"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Ask if user wants to commit
+# Commit
 echo "Commit these changes? (y/n)"
 read -r CONFIRM
 
 if [ "$CONFIRM" = "y" ] || [ "$CONFIRM" = "Y" ]; then
-    # Stage all changes
     git add -A
-
-    # Create commit with the message
     git commit -m "$COMMIT_MSG"
 
     echo ""
-    echo "✅ Session committed successfully"
-    echo ""
-    echo "📋 For next agent:"
-    echo "   Run: ./scripts/status.sh"
+    echo "✅ Session committed"
     echo ""
 
-    # Ask if they want to push
+    # Push
     echo "Push to remote? (y/n)"
     read -r PUSH_CONFIRM
 
     if [ "$PUSH_CONFIRM" = "y" ] || [ "$PUSH_CONFIRM" = "Y" ]; then
-        CURRENT_BRANCH=$(git branch --show-current)
         git push origin "$CURRENT_BRANCH"
         echo "✅ Pushed to origin/$CURRENT_BRANCH"
-    else
-        echo "ℹ️  Changes committed locally but not pushed"
-        echo "   Next agent can push with: git push origin $(git branch --show-current)"
     fi
 else
-    echo ""
-    echo "❌ Commit cancelled"
-    echo ""
-    echo "Your changes are still uncommitted. Options:"
-    echo "  1. Run this script again: ./scripts/session_end.sh"
-    echo "  2. Commit manually: git add -A && git commit -m 'your message'"
-    echo "  3. Stash changes: git stash save 'WIP: description'"
+    echo "❌ Commit cancelled - changes still uncommitted"
 fi
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
 echo "║              SESSION END COMPLETE                              ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
+echo ""
+echo "Next agent: Run ./scripts/status.sh"
+echo ""
