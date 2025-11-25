@@ -2,6 +2,13 @@
   "active": [],
   "done_today": [
     {
+      "task": "login_diagnostic_implementation",
+      "title": "Implement admin diagnostic endpoints for login investigation",
+      "agent": "Claude Code",
+      "commit": "b7e042c",
+      "completed": "2025-11-24T20:30:00Z"
+    },
+    {
       "task": "P0.2",
       "title": "Documentation consolidation",
       "agent": "Gemini",
@@ -26,6 +33,12 @@
   "blocked": [],
   "queue": [
     {
+      "task": "deploy_login_fix",
+      "title": "Deploy login diagnostic endpoints to Railway",
+      "assigned": "User",
+      "description": "1. Go to Railway dashboard, 2. Set ADMIN_DEBUG_KEY env var (secure random), 3. Trigger redeploy or wait for auto-deploy from origin/main (commit b7e042c), 4. Run diagnostic: curl -H 'X-Admin-Key: KEY' https://what-is-my-delta-site-production.up.railway.app/auth/diagnose/damian.seguin@gmail.com"
+    },
+    {
       "task": "P0.3",
       "title": "User confirms methodology",
       "assigned": "User",
@@ -46,8 +59,8 @@
     {
       "task": "P2.1",
       "title": "Document Phase 1 boundaries",
-      "assigned": "Gemini",
-      "description": "Clearly document what NOT to deploy (Phase 1 incomplete)"
+      "assigned": "User",
+      "description": "Review Gemini's draft PHASE_1_BOUNDARIES.md and provide feedback (blocked awaiting review)"
     },
     {
       "task": "P2.2",
@@ -71,7 +84,8 @@
   },
   "warnings": [
     "Phase 1 branch incomplete - do not deploy",
-    "Health check may show false negative in restricted networks"
+    "Health check may show false negative in restricted networks",
+    "Login fix (commit b7e042c) awaiting Railway deployment - see .ai-agents/DIAGNOSTIC_LOGIN_ISSUE_2025-11-24.md"
   ],
-  "last_updated": "2025-11-24T21:45:00Z"
+  "last_updated": "2025-11-24T20:35:00Z"
 }
