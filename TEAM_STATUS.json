@@ -1,5 +1,14 @@
 {
-  "active": [],
+  "active": [
+    {
+      "task": "deploy_login_fix",
+      "title": "Deploy login diagnostic endpoints to Railway",
+      "assigned": "User",
+      "description": "1. Go to Railway dashboard, 2. Set ADMIN_DEBUG_KEY env var (secure random), 3. Trigger redeploy or wait for auto-deploy from origin/main (commit b7e042c), 4. Run diagnostic: curl -H 'X-Admin-Key: KEY' https://what-is-my-delta-site-production.up.railway.app/auth/diagnose/damian.seguin@gmail.com",
+      "status": "in_progress",
+      "agent": "Gemini"
+    }
+  ],
   "done_today": [
     {
       "task": "login_diagnostic_implementation",
@@ -33,12 +42,6 @@
   "blocked": [],
   "queue": [
     {
-      "task": "deploy_login_fix",
-      "title": "Deploy login diagnostic endpoints to Railway",
-      "assigned": "User",
-      "description": "1. Go to Railway dashboard, 2. Set ADMIN_DEBUG_KEY env var (secure random), 3. Trigger redeploy or wait for auto-deploy from origin/main (commit b7e042c), 4. Run diagnostic: curl -H 'X-Admin-Key: KEY' https://what-is-my-delta-site-production.up.railway.app/auth/diagnose/damian.seguin@gmail.com"
-    },
-    {
       "task": "P0.3",
       "title": "User confirms methodology",
       "assigned": "User",
@@ -55,12 +58,6 @@
       "title": "Update health-check tooling",
       "assigned": "Claude Code",
       "description": "Make scripts environment-aware (distinguish network block from real failure)"
-    },
-    {
-      "task": "P2.1",
-      "title": "Document Phase 1 boundaries",
-      "assigned": "User",
-      "description": "Gemini created a placeholder PHASE_1_BOUNDARIES.md. User to fill in Phase 1 details and remove this warning."
     },
     {
       "task": "P2.2",
@@ -83,9 +80,8 @@
     "last_check": "2025-11-24T18:52:00Z"
   },
   "warnings": [
-    "Phase 1 branch incomplete - do not deploy",
     "Health check may show false negative in restricted networks",
     "Login fix (commit b7e042c) awaiting Railway deployment - see .ai-agents/DIAGNOSTIC_LOGIN_ISSUE_2025-11-24.md"
   ],
-  "last_updated": "2025-11-24T20:35:00Z"
+  "last_updated": "2025-11-25T22:30:00Z"
 }
