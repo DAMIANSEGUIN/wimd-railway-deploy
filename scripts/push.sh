@@ -9,8 +9,10 @@ if [ $# -lt 1 ]; then
   echo "Usage: ./scripts/push.sh <remote> [branch]"
   echo ""
   echo "Examples:"
-  echo "  ./scripts/push.sh railway-origin main"
   echo "  ./scripts/push.sh origin main"
+  echo ""
+  echo "Note: railway-origin is LEGACY and should not be used"
+  echo "See: DEPLOYMENT_TRUTH.md for details"
   echo ""
   exit 1
 fi
@@ -31,7 +33,13 @@ if [[ -n "$REMOTE_URL" ]]; then
 fi
 
 # For production pushes, run verification first (unless bypass requested)
-if [[ "$REMOTE" == "railway-origin" ]]; then
+if [[ "$REMOTE" == "origin" ]] || [[ "$REMOTE" == "railway-origin" ]]; then
+  if [[ "$REMOTE" == "railway-origin" ]]; then
+    echo "⚠️  WARNING: railway-origin is LEGACY - use 'origin' instead"
+    echo "   See DEPLOYMENT_TRUTH.md for details"
+    echo ""
+  fi
+
   if [[ "${SKIP_VERIFICATION:-false}" == "true" ]]; then
     echo "⚠️  Emergency bypass requested - skipping local verification"
     echo "    (pre-push hook will log the bypass)"
