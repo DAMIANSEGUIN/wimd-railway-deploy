@@ -62,7 +62,32 @@ class AgentBrokerHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """Post a new message or mark message as read"""
-        content_length = int(self.headers['Content-Length'])
+
+        if self.path.startswith('/messages/') and '/ack' in self.path:
+            # Mark message as read (no body required)
+            msg_id = self.path.split('/')[2]
+
+            with message_lock:
+                for msg in messages:
+                    if msg['id'] == msg_id:
+                        msg['status'] = 'READ'
+                        save_messages()
+                        print(f"✓ Message {msg_id} marked as read")
+                        break
+
+            self.send_response(200)
+            self.end_headers()
+            return
+
+        # For new messages, require Content-Length
+        content_length = self.headers.get('Content-Length')
+        if not content_length:
+            self.send_response(400)
+            self.end_headers()
+            self.wfile.write(b'{"error": "Missing Content-Length header"}')
+            return
+
+        content_length = int(content_length)
         post_data = self.rfile.read(content_length)
 
         if self.path == '/messages':
@@ -88,20 +113,6 @@ class AgentBrokerHandler(BaseHTTPRequestHandler):
                 self.send_response(400)
                 self.end_headers()
                 self.wfile.write(json.dumps({'error': str(e)}).encode())
-
-        elif self.path.startswith('/messages/') and '/ack' in self.path:
-            # Mark message as read
-            msg_id = self.path.split('/')[2]
-
-            with message_lock:
-                for msg in messages:
-                    if msg['id'] == msg_id:
-                        msg['status'] = 'READ'
-                        save_messages()
-                        break
-
-            self.send_response(200)
-            self.end_headers()
 
         else:
             self.send_response(404)

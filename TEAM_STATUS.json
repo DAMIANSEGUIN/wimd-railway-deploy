@@ -60,13 +60,13 @@
       "task": "P2.1",
       "title": "Document Phase 1 boundaries",
       "assigned": "User",
-      "description": "Review Gemini's draft PHASE_1_BOUNDARIES.md and provide feedback (blocked awaiting review)"
+      "description": "Gemini created a placeholder PHASE_1_BOUNDARIES.md. User to fill in Phase 1 details and remove this warning."
     },
     {
       "task": "P2.2",
       "title": "Map Phase 1 integration blast radius",
       "assigned": "Gemini",
-      "description": "Analysis only - identify files that need Phase 1 integration"
+      "description": "Analysis only - identify files that need Phase 1 integration (blocked until P2.1 is complete)"
     },
     {
       "task": "P3.1",
