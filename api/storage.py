@@ -568,6 +568,93 @@ def authenticate_user(email: str, password: str) -> Optional[str]:
             return user_id
         return None
 
+def diagnose_user_hash(email: str) -> Optional[Dict[str, Any]]:
+    """Diagnose password hash format for a user (admin debug only)"""
+    normalized_email = _normalize_email(email)
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, email, password_hash FROM users WHERE LOWER(email) = LOWER(%s)",
+            (normalized_email,)
+        )
+        row = cursor.fetchone()
+
+        if not row:
+            return None
+
+        user_id, email, password_hash = row
+
+        # Analyze hash format without exposing actual hash
+        hash_length = len(password_hash)
+        has_separator = ":" in password_hash
+        separator_count = password_hash.count(":")
+
+        parts = password_hash.split(":")
+        hash_part_length = len(parts[0]) if len(parts) > 0 else 0
+        salt_part_length = len(parts[1]) if len(parts) > 1 else 0
+
+        # Check if parts are valid hex
+        hash_is_hex = False
+        salt_is_hex = False
+        try:
+            if len(parts) > 0:
+                int(parts[0], 16)
+                hash_is_hex = True
+            if len(parts) > 1:
+                int(parts[1], 16)
+                salt_is_hex = True
+        except ValueError:
+            pass
+
+        # Expected format: 64-char hex hash : 32-char hex salt
+        expected_format = (
+            hash_length == 97 and
+            separator_count == 1 and
+            hash_part_length == 64 and
+            salt_part_length == 32 and
+            hash_is_hex and
+            salt_is_hex
+        )
+
+        return {
+            "user_id": user_id,
+            "email": email,
+            "hash_metadata": {
+                "total_length": hash_length,
+                "expected_length": 97,
+                "separator_count": separator_count,
+                "expected_separator_count": 1,
+                "hash_part_length": hash_part_length,
+                "expected_hash_length": 64,
+                "salt_part_length": salt_part_length,
+                "expected_salt_length": 32,
+                "hash_is_hex": hash_is_hex,
+                "salt_is_hex": salt_is_hex,
+                "expected_format_match": expected_format
+            },
+            "diagnosis": "VALID" if expected_format else "INVALID/CORRUPTED"
+        }
+
+def force_reset_user_password(email: str, new_password: str) -> bool:
+    """Force reset user password (admin debug only)"""
+    normalized_email = _normalize_email(email)
+
+    # Generate new properly-formatted hash
+    new_hash = hash_password(new_password)
+
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE users SET password_hash = %s WHERE LOWER(email) = LOWER(%s)",
+            (new_hash, normalized_email)
+        )
+
+        # Check if update was successful
+        if cursor.rowcount == 0:
+            return False
+
+        return True
+
 def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
     """Get user by email"""
     normalized_email = _normalize_email(email)
