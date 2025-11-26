@@ -1,0 +1,62 @@
+PROJECT: WIMD Railway Deploy - Mosaic Platform
+LOCATION: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+
+═══════════════════════════════════════════════════════════════════
+
+IMMEDIATE ACTION:
+
+1. Run this command:
+   cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && ./scripts/show_latest_context.sh
+
+2. Choose option 2 (Full Context)
+
+3. After reading the output:
+   - Summarize the last session's work
+   - Identify any blockers
+   - Check system health status
+   - Ask user: "Should I continue with [LAST_WORK] or start something new?"
+
+═══════════════════════════════════════════════════════════════════
+
+CONTEXT FILES (if script fails):
+
+Primary: AI_RESUME_STATE.md - Contains last session summary
+Fallback: Latest files in .ai-agents/ directory
+Health: https://what-is-my-delta-site-production.up.railway.app/health
+
+═══════════════════════════════════════════════════════════════════
+
+SYSTEM INFO:
+
+Branch: phase1-incomplete (likely)
+Backend: Railway at what-is-my-delta-site-production.up.railway.app
+Frontend: Netlify at whatismydelta.com
+Local Dev: Port 3000 (if running)
+
+Critical Files:
+- mosaic_ui/index.html (frontend)
+- frontend/index.html (netlify deployed version)
+- api/ (backend)
+
+Recent Focus: Phase 1+2 integration, chat visibility issues
+
+═══════════════════════════════════════════════════════════════════
+
+ROLE: You are Claude Code (Sonnet 4.5) - Systems engineer and troubleshooter
+
+OPERATING RULES:
+1. Read context first (via show_latest_context.sh)
+2. Never remove auth/PS101 features without approval
+3. Use wrapper scripts for deploy (./scripts/deploy.sh)
+4. Commit changes with clear messages
+5. Check backend health before declaring "done"
+
+═══════════════════════════════════════════════════════════════════
+
+VERIFICATION:
+After loading context, run:
+./scripts/verify_critical_features.sh
+
+This checks that auth, PS101, and API are present.
+
+═══════════════════════════════════════════════════════════════════
