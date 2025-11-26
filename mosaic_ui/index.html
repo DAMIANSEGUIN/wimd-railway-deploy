@@ -2059,6 +2059,8 @@ async function askCoach(prompt) {
       
     }catch(err){
       setStatus($('#authStatus'), err.message, 'error');
+      // Hide modal on error to prevent it from covering the UI
+      $('#authModal').style.display = 'none';
     }
   }
 
