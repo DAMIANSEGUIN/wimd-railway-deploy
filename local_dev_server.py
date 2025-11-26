@@ -1,3 +1,4 @@
+print("--- local_dev_server.py starting execution ---")
 #!/usr/bin/env python3
 """
 Minimal local development server for testing modularized frontend.
@@ -91,10 +92,15 @@ class DevProxyHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
 if __name__ == '__main__':
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    server = HTTPServer(('localhost', PORT), DevProxyHandler)
-    print(f"🚀 Local dev server running on http://localhost:{PORT}")
-    print(f"📡 Proxying API requests to {RAILWAY_API}")
-    print(f"📁 Serving static files from mosaic_ui/")
-    print(f"\n✅ Open http://localhost:{PORT} in your browser")
-    server.serve_forever()
+    try:
+        print("--- local_dev_server.py starting up ---")
+        server = HTTPServer(('localhost', PORT), DevProxyHandler)
+        print(f"🚀 Local dev server running on http://localhost:{PORT}")
+        print(f"📡 Proxying API requests to {RAILWAY_API}")
+        print(f"📁 Serving static files from mosaic_ui/")
+        print(f"\n✅ Open http://localhost:{PORT} in your browser")
+        server.serve_forever()
+    except Exception as e:
+        print(f"--- SERVER FAILED TO START ---")
+        print(e)
+
