@@ -26,9 +26,9 @@
 
 ## Deployment Commands (MANDATORY - Use Wrapper Scripts)
 
-**❌ DO NOT use raw commands:**
-- `git push railway-origin main`
-- `netlify deploy --prod`
+**📖 AUTHORITATIVE REFERENCE:** See `DEPLOYMENT_TRUTH.md` for complete details
+
+**Last Verified:** 2025-11-25
 
 **✅ ALWAYS use wrapper scripts:**
 ```bash
@@ -42,11 +42,21 @@
 ./scripts/deploy.sh all
 
 # Push with automated verification
-./scripts/push.sh railway-origin main
+./scripts/push.sh origin main
 
 # Emergency bypass (logged to audit)
-SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh railway-origin main
+SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 ```
+
+**❌ DO NOT use:**
+- `git push origin main` (use wrapper script)
+- `git push railway-origin main` (railway-origin is LEGACY)
+- `netlify deploy --prod` (use wrapper script)
+
+**How Railway Deploys:**
+- Railway watches `origin` (wimd-railway-deploy) via GitHub integration
+- Push to `origin` triggers Railway auto-deploy (2-5 minutes)
+- NO push to `railway-origin` needed (legacy remote, no write access)
 
 **Why wrapper scripts are required:**
 - Automated pre-deployment verification

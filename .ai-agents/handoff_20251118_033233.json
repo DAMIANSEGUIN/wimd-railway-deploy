@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-11-18T03:32:33Z",
+  "commit": "daf197cddf2c6c20dd520bc1705360984229c680",
+  "commit_message": "SESSION END: Complete summary for 2025-11-18 session",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251118_033032Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "daf197c: SESSION END: Complete summary for 2025-11-18 session",
+      "f659c01: Add CodexCapture access guide for Codex",
+      "302bc98: DOCS: Post-deploy audit - update deployment process to match reality",
+      "31d099c: URGENT: Document deployment process ambiguity - blocked by authentication",
+      "93da324: Add evidence folders to .gitignore"
+    ],
+    "modified_files": [
+      ".ai-agents/SESSION_END_2025-11-18.md"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251118_033032Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-11-18T02:30:01Z",
+  "commit": "6f65acb195ac5fb2759f6dcdd362018985ebff87",
+  "commit_message": "Add CodexCapture documentation + PS101 QA Mode",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251118_022416Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "6f65acb: Add CodexCapture documentation + PS101 QA Mode",
+      "798a934: PROTOCOL: Add Rule 10 - Never declare issues fixed without user confirmation",
+      "0b1347e: CHORE: Ignore generated artifacts (handoffs + backups)",
+      "849a4e6: GUARD RAILS: Backup enforcement + session continuity automation",
+      "18c8488: ENFORCE: Require bypass reason + migrate hooks to version control"
+    ],
+    "modified_files": [
+      ".ai-agents/CODEXCAPTURE_STATUS.md",
+      ".ai-agents/HANDOFF_CODEXCAPTURE_2025-11-17.md",
+      ".ai-agents/HANDOFF_TO_CIC_2025-11-15.md",
+      ".ai-agents/SESSION_START_PROTOCOL.md",
+      ".ai-agents/SHARE_WITH_CODEX.md",
+      ".ai-agents/TEAM_NOTE_PS101_PROMPT_BLOCK_2025-11-15.md",
+      "NOTE_FOR_CURSOR_AND_CLAUDE_CODE_2025-10-27.md",
+      "deployment/deploy_baseline.env",
+      "docs/PS101_PROMPT_BLOCK_INVESTIGATION_2025-11-15.md",
+      "frontend/index.html",
+      "mosaic_ui/index.html",
+      "scripts/reset_ps101_trial.mjs"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251118_022416Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}

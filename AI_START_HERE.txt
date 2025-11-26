@@ -1,0 +1,111 @@
+═══════════════════════════════════════════════════════════════════
+AI AGENT: RUN THIS COMMAND FIRST (NEW SYSTEM - 2025-11-24)
+═══════════════════════════════════════════════════════════════════
+
+./scripts/status.sh
+
+That's it. This ONE command will tell you everything you need to know:
+• Production health (live check)
+• What's deployed
+• Latest instructions (auto-finds most recent file)
+• Active warnings
+• Exactly what to do next
+
+───────────────────────────────────────────────────────────────────
+WHY THIS NEW SYSTEM?
+───────────────────────────────────────────────────────────────────
+
+The old multi-file documentation system wasn't working because:
+❌ Too many files with dates (which one is current?)
+❌ Long docs that AI agents skim and miss key info
+❌ Static information that gets stale within hours
+❌ No single source of truth
+
+NEW SYSTEM (as of 2025-11-24):
+✅ ONE command: ./scripts/status.sh
+✅ Always up-to-date (reads live system)
+✅ Auto-finds latest instructions
+✅ Clear, actionable output
+✅ Can't be missed or misinterpreted
+
+───────────────────────────────────────────────────────────────────
+QUICK START (4 STEPS)
+───────────────────────────────────────────────────────────────────
+
+1. Run the status script:
+   ./scripts/status.sh
+
+2. Check TEAM_STATUS.json for your assigned task and read its description.
+
+3. Follow the "WHAT TO DO NEXT" section in the status.sh output.
+
+4. When your task is complete, run:
+   ./scripts/commit_work.sh
+
+Always remember to read .ai-agents/AGENT_PROTOCOL.md for mandatory behavior rules.
+Don't read any other files unless status.sh or your task description specifically
+tells you to.
+
+───────────────────────────────────────────────────────────────────
+FOR DETAILED PROTOCOL
+───────────────────────────────────────────────────────────────────
+
+See: .ai-agents/SESSION_START_PROTOCOL.md
+
+But honestly, just run ./scripts/status.sh - it's all you need.
+
+───────────────────────────────────────────────────────────────────
+PROJECT QUICK FACTS (For Reference)
+───────────────────────────────────────────────────────────────────
+
+Project: WIMD Railway Deploy - Mosaic Platform
+Directory: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+Production: https://whatismydelta.com
+Backend: https://what-is-my-delta-site-production.up.railway.app
+
+Frontend: Netlify (Vanilla JS)
+Backend: Railway (FastAPI + PostgreSQL)
+Domain: whatismydelta.com
+
+───────────────────────────────────────────────────────────────────
+AGENT ROLES (Auto-assigned by Tool)
+───────────────────────────────────────────────────────────────────
+
+• Gemini/ChatGPT (terminal) → Senior Software Engineer & Planning Lead
+• Codex (Cursor) → Local Implementation Engineer
+• Claude Code → Infrastructure & Deployment Engineer
+
+All agents follow same protocol: Run ./scripts/status.sh first
+
+───────────────────────────────────────────────────────────────────
+IF ./scripts/status.sh DOESN'T EXIST
+───────────────────────────────────────────────────────────────────
+
+This means you're in an older version of the repo. Create it:
+
+1. Read this thread for the implementation
+2. Create scripts/status.sh with the full script
+3. Make it executable: chmod +x scripts/status.sh
+4. Run it: ./scripts/status.sh
+
+Or ask the user to pull the latest version.
+
+───────────────────────────────────────────────────────────────────
+DEPLOYMENT RULES (NEVER FORGET THESE)
+───────────────────────────────────────────────────────────────────
+
+✅ ALWAYS use wrapper scripts:
+   ./scripts/deploy.sh netlify  (NOT: netlify deploy --prod)
+   ./scripts/deploy.sh railway  (NOT: git push railway-origin main)
+
+✅ ALWAYS verify before deploy:
+   ./scripts/verify_critical_features.sh
+
+❌ NEVER use raw commands:
+   git push railway-origin main ← NO
+   netlify deploy --prod ← NO
+
+───────────────────────────────────────────────────────────────────
+LAST UPDATED: 2025-11-24 by Claude Code
+SYSTEM VERSION: 2.0 (status.sh based)
+───────────────────────────────────────────────────────────────────

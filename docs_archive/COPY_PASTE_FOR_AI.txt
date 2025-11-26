@@ -1,0 +1,29 @@
+════════════════════════════════════════════════════════════════
+📋 COPY-PASTE THIS TO ANY AI AGENT AT SESSION START
+════════════════════════════════════════════════════════════════
+
+Run this command to see what to read first:
+
+cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && ./scripts/show_latest_context.sh
+
+Then read files in this order:
+
+1. .ai-agents/START_HERE.md
+2. .ai-agents/SESSION_START_PROTOCOL.md
+3. Latest status file (shown by script above)
+4. Latest handoff file (if exists, shown by script above)
+
+After reading, run verification:
+
+./scripts/verify_critical_features.sh
+
+════════════════════════════════════════════════════════════════
+✅ That's it! AI agent will have full context in ~3 minutes.
+════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING:
+- If script fails: cat .ai-agents/START_HERE.md
+- If verification fails: STOP and alert user before proceeding
+- If confused: Ask user "Which file should I update with latest status?"
+
+═══════════════════════════════════════════════════════════════

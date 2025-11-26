@@ -1,0 +1,69 @@
+{
+  "timestamp": "2025-11-19T01:08:14Z",
+  "commit": "476efb489c107d3953ba8cfae70b38358a241af7",
+  "commit_message": "feat: Prepare for deployment by committing recent agent notes, documentation, and script updates",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251118_033032Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "476efb4: feat: Prepare for deployment by committing recent agent notes, documentation, and script updates",
+      "d88b0ee: HANDOFF: Final session handoff to Codex",
+      "daf197c: SESSION END: Complete summary for 2025-11-18 session",
+      "f659c01: Add CodexCapture access guide for Codex",
+      "302bc98: DOCS: Post-deploy audit - update deployment process to match reality"
+    ],
+    "modified_files": [
+      ".ai-agents/AGENT_ROLES.md",
+      ".ai-agents/CIT_STATUS_NOTE_2025-11-18.md",
+      ".ai-agents/CURSOR_COMPLETION_SUMMARY_2025-11-05.md",
+      ".ai-agents/DEPLOYMENT_AUDIT_CHECKLIST.md",
+      ".ai-agents/DEPLOYMENT_TEST_FLOW.md",
+      ".ai-agents/DIAGNOSIS_AND_SUGGESTED_CHANGES_2025-11-18.md",
+      ".ai-agents/GEMINI_CLI_WORKFLOW.md",
+      ".ai-agents/GEMINI_CONTEXT_BRIEF.md",
+      ".ai-agents/GEMINI_HANDOFF_CURRENT.md",
+      ".ai-agents/GEMINI_SESSION_20251118_110500.md",
+      ".ai-agents/GEMINI_SESSION_INIT.md",
+      ".ai-agents/GEMINI_SESSION_NOTE.md",
+      ".ai-agents/GEMINI_SESSION_PROMPT.md",
+      ".ai-agents/GEMINI_SESSION_START.md",
+      ".ai-agents/HANDOFF_TO_CIT_GPT51_CODEX_MINI_2025-11-18.md",
+      ".ai-agents/HANDOFF_TO_CIT_MODEL_SWITCH_2025-11-18.md",
+      ".ai-agents/SESSION_START_PROTOCOL.md",
+      ".ai-agents/STAGE3_VERIFICATION_2025-11-05.md",
+      ".ai-agents/TEAM_NOTE_DEPLOYMENT_FOLLOWUP_2025-11-18.md",
+      ".ai-agents/TEAM_NOTE_ROLE_OPTIMIZATION_2025-11-18.md",
+      ".ai-agents/URGENT_DEPLOYMENT_PROCESS_AMBIGUITY_2025-11-18.md",
+      ".ai-agents/VERIFICATION_SUMMARY_2025-11-18.md",
+      ".ai-agents/handoff_log.txt",
+      "CLAUDE.md",
+      "CURSOR_VERIFICATION_CODEX_FIXES.md",
+      "DEPLOYMENT_ENFORCEMENT_IMPLEMENTATION_COMPLETE.md",
+      "FOR_NARS_FRONTEND_JAVASCRIPT_ISSUE_2025-11-04.md",
+      "INTEGRATION_ANALYSIS_EXISTING_VS_PROPOSED_2025-11-04.md",
+      "README.md",
+      "REVISED_TROUBLESHOOTING_FRAMEWORK_2025-11-05.md",
+      "docs/COMMAND_CENTER_BACKUP_PLAN.md",
+      "docs/EXTERNAL_ARCHITECTURE_OVERVIEW_2025-11-03.md",
+      "frontend/index.html",
+      "mosaic_ui/index.html",
+      "scripts/create_handoff_manifest.sh",
+      "scripts/deploy_now_zsh.sh",
+      "scripts/pre_push_verification.sh",
+      "scripts/verify_critical_features.sh",
+      "scripts/verify_deployment.sh",
+      "scripts/verify_live_deployment.sh"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251118_033032Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}

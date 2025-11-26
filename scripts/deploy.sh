@@ -115,20 +115,22 @@ case "$TARGET" in
   railway)
     echo "Step 2: Deploying to Railway..."
     echo ""
-    echo "Railway deployment uses git push to railway-origin"
+    echo "Railway deployment uses git push to origin (GitHub integration)"
+    echo "Railway auto-deploys from GitHub (no railway-origin push needed)"
     echo ""
 
     # Use push wrapper which will trigger pre-push hook
-    ./scripts/push.sh railway-origin main
+    ./scripts/push.sh origin main
 
     echo ""
     echo "======================================"
     echo "✅ RAILWAY DEPLOYMENT INITIATED"
     echo "======================================"
     echo ""
-    echo "Railway will rebuild backend (~2 minutes)"
+    echo "Railway will auto-deploy from GitHub (~2-5 minutes)"
     echo ""
     echo "Monitor at: https://railway.app/dashboard"
+    echo "Check: https://what-is-my-delta-site-production.up.railway.app/health"
     ;;
 
   all)

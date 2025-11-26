@@ -31,8 +31,10 @@ from .storage import (
     authenticate_user,
     create_user,
     delete_session,
+    diagnose_user_hash,
     ensure_session,
     fetch_job_matches,
+    force_reset_user_password,
     get_conn,
     get_session_data,
     update_session_data,
@@ -192,7 +194,10 @@ class UserResponse(BaseModel):
     created_at: str
     last_login: Optional[str] = None
     subscription_tier: Optional[str] = None
-    subscription_status: Optional[str] = None
+
+class ForceResetRequest(BaseModel):
+    email: str = Field(..., min_length=1)
+    new_password: str = Field(..., min_length=8)
 
 class DiscountCodeValidate(BaseModel):
     code: str = Field(..., min_length=1, max_length=50)
@@ -1183,6 +1188,45 @@ async def reset_password(email: str = Body(..., embed=True)):
 
     # Do not reveal whether the account exists; success either way
     return {"message": "If that email exists, a reset link has been sent"}
+
+
+@app.get("/auth/diagnose/{email}")
+async def diagnose_user_password_hash(email: str, admin_key: str = Header(None, alias="X-Admin-Key")):
+    """Diagnose password hash format for a user (admin debug only)"""
+    expected_key = os.getenv("ADMIN_DEBUG_KEY")
+
+    if not expected_key:
+        raise HTTPException(status_code=503, detail="Admin debug not configured")
+
+    if not admin_key or admin_key != expected_key:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    result = diagnose_user_hash(email)
+    if not result:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return result
+
+
+@app.post("/auth/force-reset")
+async def force_reset_password(
+    payload: ForceResetRequest,
+    admin_key: str = Header(None, alias="X-Admin-Key")
+):
+    """Force reset user password (admin debug only)"""
+    expected_key = os.getenv("ADMIN_DEBUG_KEY")
+
+    if not expected_key:
+        raise HTTPException(status_code=503, detail="Admin debug not configured")
+
+    if not admin_key or admin_key != expected_key:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    success = force_reset_user_password(payload.email, payload.new_password)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {"success": True, "message": f"Password reset for {payload.email}"}
 
 
 @app.post("/auth/logout")

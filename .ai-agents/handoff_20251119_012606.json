@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-11-19T01:26:06Z",
+  "commit": "90742a8a918877927d448519626c392a5579dd6f",
+  "commit_message": "docs: Add QUICK_STATUS_2025-11-18.md",
+  "branch": "restore-chat-auth-20251112",
+  "latest_backup": "site-backup_20251119_011412Z.zip",
+  "critical_features": {
+    "auth_present": true,
+    "ps101_present": true
+  },
+  "session_continuity": {
+    "last_5_commits": [
+      "90742a8: docs: Add QUICK_STATUS_2025-11-18.md",
+      "5caa7e7: docs: Add Claude handoff note",
+      "476efb4: feat: Prepare for deployment by committing recent agent notes, documentation, and script updates",
+      "d88b0ee: HANDOFF: Final session handoff to Codex",
+      "daf197c: SESSION END: Complete summary for 2025-11-18 session"
+    ],
+    "modified_files": [
+      ".ai-agents/QUICK_STATUS_2025-11-18.md"
+    ]
+  },
+  "next_agent_checklist": [
+    "Review this handoff manifest",
+    "Verify backup exists: backups/site-backup_20251119_011412Z.zip",
+    "Run: ./scripts/verify_critical_features.sh",
+    "Check git log for recent changes",
+    "Read .ai-agents/SESSION_START_PROTOCOL.md"
+  ]
+}
