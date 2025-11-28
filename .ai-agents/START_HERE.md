@@ -1,67 +1,102 @@
 # 🎯 START HERE - AI Agent Onboarding (Auto-Updated)
 
-**Last Updated:** 2025-11-23 by Claude Code
+**Last Updated:** 2025-11-28 by Claude Code
 **Project:** WIMD Railway Deploy - Mosaic Platform
-**Working Directory:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+**Working Directory:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project` OR `/home/user/wimd-railway-deploy`
 
 ---
 
 ## 🚨 MOST RECENT STATUS (UPDATED AUTOMATICALLY)
 
-**Latest Critical Event:** Phase 1 Modularization Rollback (2025-11-21 5:00 PM)
+**Latest Critical Event:** Session Management System Deployed (2025-11-24)
 
-**Status:** ✅ STABLE - Website functional after rollback
+**Status:** ✅ STABLE - Production healthy, AI team methodology operational
 
 **Read These Files IN ORDER:**
 
-1. **LATEST INCIDENT:** `.ai-agents/FINAL_STATUS_2025-11-21_EVENING.md`
-   - Complete timeline of Nov 21 Phase 1 failure
-   - What broke: UI non-functional after module extraction
-   - What was done: Emergency rollback via `git revert 1c6c013`
-   - Current state: Website working, Phase 1 work saved in branch
+1. **QUICK START:** `CLAUDE_DESKTOP_START.md` (root directory)
+   - 30-second quick start guide
+   - Essential commands
+   - Your role and current tasks
+   - Common operations
 
-2. **TECHNICAL DETAILS:** `.ai-agents/CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md`
-   - Root cause: Modules extracted but not integrated with IIFE
-   - Why it broke: IIFE code didn't call the new modules
-   - Lesson: Never deploy extraction without integration
+2. **COMPLETE HANDOFF:** `.ai-agents/HANDOFF_FOR_CLAUDE_2025-11-28.md`
+   - Full project context (as of 2025-11-28)
+   - Recent work completed (session management, login diagnostic)
+   - Current issues and blockers (login failure, health check)
+   - Your available tasks (P1.2, P3.1)
+   - Comprehensive troubleshooting guide
 
-3. **MANDATORY PROTOCOL:** `.ai-agents/SESSION_START_PROTOCOL.md`
-   - Critical alert about Phase 1 at top of file
-   - Step-by-step session initialization
-   - Operating rules and verification requirements
+3. **MANDATORY PROTOCOL:** `.ai-agents/AGENT_PROTOCOL.md`
+   - Your role: Infrastructure & Deployment Engineer
+   - Communication protocol (SSEW format)
+   - Handoff procedures
+   - Safety rules and mandatory behaviors
+
+4. **CURRENT STATUS:** `TEAM_STATUS.json` (root directory)
+   - Active tasks
+   - Work completed today
+   - Task queue
+   - Production status
+   - Active warnings
 
 ---
 
 ## 📋 WHAT TO DO RIGHT NOW
 
-### Step 1: Run Session Start Protocol
+### Step 1: Run Status Check (30 seconds)
 ```bash
-# Navigate to project
+# Navigate to project (if not already there)
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+# OR
+cd /home/user/wimd-railway-deploy
 
-# Run verification
-./scripts/verify_critical_features.sh
-
-# Check PS101 continuity
-./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh
-
-# Review recent activity
-git log -5 --oneline
+# Get current status
+./scripts/status.sh
 ```
 
-### Step 2: Understand Current State
-- ✅ Website is WORKING (rollback complete)
-- ✅ Railway backend healthy
-- ✅ Netlify frontend deployed
-- ⚠️ Phase 1 modularization incomplete (in branch `phase1-incomplete`)
-- ❌ DO NOT deploy Phase 1 code without Phase 2 integration
-
-### Step 3: Check for User Instructions
-Look for recent files:
+### Step 2: Read Your Handoff Document (15 minutes)
 ```bash
-ls -lht /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/*.md | head -10
-ls -lht /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/*.md | head -10
+# Quick start guide
+cat CLAUDE_DESKTOP_START.md
+
+# Complete handoff
+cat .ai-agents/HANDOFF_FOR_CLAUDE_2025-11-28.md
+
+# Agent protocol
+cat .ai-agents/AGENT_PROTOCOL.md
 ```
+
+### Step 3: Review Current Tasks (2 minutes)
+```bash
+# Check team status
+cat TEAM_STATUS.json
+
+# Your available tasks:
+# - P1.2: Update health check tooling (environment-aware)
+# - P3.1: Classify uncommitted files
+# - Wait for user instructions
+```
+
+### Step 4: Verify Production Health (1 minute)
+```bash
+# Frontend
+curl https://whatismydelta.com/health
+
+# Backend
+curl https://what-is-my-delta-site-production.up.railway.app/health
+
+# Both should return: {"ok":true,...}
+```
+
+### Current State (2025-11-28)
+- ✅ Production is HEALTHY (all features working)
+- ✅ Session management system operational
+- ✅ Login diagnostic endpoints deployed (awaiting env var)
+- ✅ Documentation consolidated
+- ⚠️ Phase 1 modularization incomplete (in branch `phase1-incomplete`)
+- ⚠️ Login issue for damian.seguin@gmail.com (diagnostic ready)
+- ❌ DO NOT deploy Phase 1 code without integration
 
 ---
 
