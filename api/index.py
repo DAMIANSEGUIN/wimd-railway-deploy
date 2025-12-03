@@ -101,6 +101,7 @@ from .job_sources import (
     DiceSource, MonsterSource, ZipRecruiterSource, CareerBuilderSource,
     HackerNewsSource
 )
+from .ps101 import router as ps101_router
 
 app = FastAPI()
 logger = logging.getLogger(__name__)
@@ -169,9 +170,12 @@ app.add_middleware(
     allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["content-type", "authorization", "x-session-id"],
+    allow_headers=["content-type", "authorization", "x-session-id", "x-user-id"],
     expose_headers=["*"],
 )
+
+# Include PS101 context extraction router (Day 1 MVP)
+app.include_router(ps101_router)
 
 
 class WimdRequest(BaseModel):

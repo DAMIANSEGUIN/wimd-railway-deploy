@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     CLAUDE_API_KEY: Optional[str] = None
     PUBLIC_SITE_ORIGIN: AnyHttpUrl = "https://whatismydelta.com"
     PUBLIC_API_BASE: str = ""
-    APP_SCHEMA_VERSION: str = "v1"
+    APP_SCHEMA_VERSION: str = "v2"
 
 _ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 
