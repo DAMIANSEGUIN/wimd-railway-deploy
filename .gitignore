@@ -36,3 +36,4 @@ mosaic_ui/assets/
 mosaic_ui/data/
 mosaic_ui/src/
 .ai-agents/broker.pid
+session_backups/
