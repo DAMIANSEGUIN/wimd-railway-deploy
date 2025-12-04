@@ -718,6 +718,16 @@ context = json.loads(response_text)  # May fail, may be malformed
 
 ---
 
+#### Pattern 6: Script Lifecycle Management (CRITICAL)
+
+To prevent configuration drift and script chaos, a strict lifecycle for scripts must be followed. When a script is updated or replaced, the new script must be in place and verified before the old one is removed.
+
+**Once the replacement is confirmed to be working, the outdated script *must* be immediately archived to `scripts/archive` or deleted.**
+
+This ensures that only canonical, in-use scripts are present in the active project directories.
+
+---
+
 ### Version Tracking (Every Modified File)
 
 **See Section 7 for full Version Tracking Protocol**
