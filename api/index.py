@@ -353,7 +353,22 @@ def _coach_reply(prompt: str, metrics: Dict[str, int], session_id: str = None) -
 
         # Record response if it's an answer
         from api.conversational_coach import UserIntent
+        from .storage import record_ps101_db_response, get_user_id_for_session # NEW IMPORTS
+
         if intent in [UserIntent.ANSWER, UserIntent.POSSIBILITY_THINKING, UserIntent.CIRCULAR_THINKING]:
+            # Persist to database
+            user_id_from_session = get_user_id_for_session(session_id)
+            if user_id_from_session:
+                record_ps101_db_response(
+                    user_id=user_id_from_session,
+                    step=current_step,
+                    prompt_index=current_prompt_idx,
+                    response=prompt
+                )
+            else:
+                logger.warning(f"No user_id found for session {session_id}. PS101 response not persisted to DB.")
+
+            # Continue updating session data (legacy behavior)
             session_data = record_ps101_response(session_data, current_step, prompt)
 
         # Advance if appropriate

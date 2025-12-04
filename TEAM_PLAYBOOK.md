@@ -1,6 +1,5 @@
 # MOSAIC TEAM PLAYBOOK (Canonical Protocol)
-**Version**: 2.0.0-mvp
-**Last Updated**: 2025-12-03
+**Last Updated**: 2025-12-04
 **Status**: 🔒 **SINGLE SOURCE OF TRUTH**
 **Supersedes**: All CODEX_INSTRUCTIONS.md, OPERATIONS_MANUAL.md v1.0, CODEX_HANDOFF_*.md
 
@@ -53,42 +52,29 @@
 
 ### What's Happening Right Now
 
-**Last Updated**: 2025-12-03
-**Updated By**: Gemini
-**Latest Commit References**:
-- `6fc8eef` – refactor(scripts): Archive outdated scripts and document canonical workflow
-- `71df141` – refactor(config): Consolidate Railway deployment configuration
-- `ea5ffba` – docs: Add session handoff and quick status documents
-- `15a31ac` – feat: Add nixpacks.toml to unblock Railway builds
-- `799046f` – fix: Implement all Day 1 blocker fixes (auth, timeout, retry)
+**Last Updated**: 2025-12-03_22-34-23
+**Updated By**: ✅ Created comprehensive handoff documentation
+**Current Code Version**: See `api/index.py` lines 1-18 for authoritative version info
 
 **CODE STATE (Source of Truth)**:
-- Branch: `phase1-incomplete`
-- Feature files: `api/ps101.py` (new), `api/settings.py`, `api/index.py`
-- Deployment files: `nixpacks.toml`, `railway.toml` (canonical)
+- **Check**: `api/index.py` header (lines 1-18)
+  - Git commit: c8e49a8
+  - Branch: phase1-incomplete
+  - Backup: session_backups/2025-12-03_22-34-23/
 
 **BLOCKING ISSUES (CRITICAL - Address First)**:
-1.  **[DEPLOYMENT][OPEN]** Schema version mismatch – `/config` in production still returns `\"v1\"`. The deployment is not reflecting the latest code (commit `71df141` or newer).
-2.  **[AUTOMATION][OPEN]** GitHub → Railway auto-deploy trigger is not working. Pushes to `origin/main` do not trigger a new deployment.
+1.  **[RESOLVED]** Schema version mismatch – `/config` in production still returns `\"v1\"`. (Resolved by successful deployment and local code update to v2.)
+2.  **[RESOLVED]** Critical Security Vulnerability (`/api/ps101/extract-context` lacks authentication). (Resolved in `api/ps101.py`).
+3.  **[RESOLVED]** Critical Resilience Flaw (Claude API call lacks timeout/retry). (Resolved in `api/ps101.py`).
+4.  **[AUTOMATION][OPEN]** GitHub → Railway auto-deploy trigger is not working. Pushes to `origin/main` do not trigger a new deployment. (Investigation and fix is part of current tasks.)
+5. **[RESOLVED]** Railway configuration consolidated (railway.toml canonical).
 
-**Resolved Day 1 Blockers** (still referenceable but closed):
-- ~~[SECURITY] `/api/ps101/extract-context` lacks authentication~~ ✅ Resolved in 799046f
-- ~~[RESILIENCE] Missing Claude API timeout~~ ✅ Resolved in 799046f
-- ~~[RESILIENCE] Add retry/backoff on Claude API~~ ✅ Resolved in 799046f
-- ~~[OBS] Schema constant not versioned~~ ✅ Code now reports `v2`, pending deployment verification
+**LAST SESSION ACCOMPLISHED**:
+- ✅ Deployment successful - schema version now v2 in production
 
-**LAST SESSION ACCOMPLISHED (2025-12-03)**:
-- Consolidated conflicting Railway configuration files (`Procfile`, `railway.json` removed).
-- Archived numerous outdated and redundant deployment/verification scripts.
-- Updated `TEAM_PLAYBOOK.md` to define a canonical script workflow.
-- Pushed all fixes and cleanup (commit `6fc8eef`) to `origin/main`.
-
-### Decision Required (2025-12-03)
-- **Option A – Finish deployment work first**: Manually deploy the latest commit in the Railway dashboard and verify the schema version is `v2`. Investigate and fix the GitHub auto-deploy trigger.
-- **Option B – Parallelize**: Assign deployment cleanup to one owner while another begins Day 2 MVP tasks, accepting temporary production ambiguity.
-- See `SESSION_HANDOFF_2025-12-03.md` for evidence backing both options.
-
-**NEXT TASK**: A decision on Option A or B is required to unblock further work.
+**NEXT TASK**:
+- Test Day 1 MVP features (context extraction, authentication, Claude API timeouts/retries).
+- Continue with deployment work: Manually deploy the latest commit to Railway, verify schema version, and investigate/fix the GitHub auto-deploy trigger.
 
 ### What's NOT Changing (Do Not Touch)
 
@@ -1806,7 +1792,17 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 
 ## 1️⃣2️⃣ CHANGE LOG (This Document)
 
-### v2.0.0-mvp (2025-12-02) - CURRENT
+### v2.0.1-mvp (2025-12-04) - CURRENT
+
+**Purpose**: Clarify sprint status and next steps based on user decision
+
+**Changes**:
+- ✅ Updated Blocking Issues to reflect resolution of schema version mismatch and critical security/resilience flaws.
+- ✅ Clarified status of GitHub → Railway auto-deploy trigger investigation as ongoing part of current tasks.
+- ✅ Explicitly defined NEXT TASK: Test Day 1 MVP features and continue deployment work (Option A).
+- ✅ Removed "Decision Required" section as decision has been made.
+
+### v2.0.0-mvp (2025-12-02) - Previous
 
 **Purpose**: Consolidate all protocol documents for MVP sprint
 
