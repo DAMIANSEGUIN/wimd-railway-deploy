@@ -81,13 +81,12 @@ class PromptSelector:
         """Log AI fallback usage for analytics."""
         try:
             with get_conn() as conn:
-                conn.execute(
-                    """INSERT INTO ai_fallback_logs 
-                       (session_id, prompt_hash, csv_response, ai_response, fallback_reason, response_time_ms)
-                       VALUES (?, ?, ?, ?, ?, ?)""",
-                    (session_id, prompt_hash, csv_response, ai_response, fallback_reason, response_time_ms)
-                )
-        except Exception as e:
+                            conn.execute(
+                                """INSERT INTO ai_fallback_logs 
+                                   (session_id, prompt_hash, csv_response, ai_response, fallback_reason, response_time_ms)
+                                   VALUES (%s, %s, %s, %s, %s, %s)""",
+                                (session_id, prompt_hash, csv_response, ai_response, fallback_reason, response_time_ms)
+                            )        except Exception as e:
             print(f"⚠️ Fallback logging failed: {e}")
     
     def select_prompt_response(self, prompt: str, session_id: str, 

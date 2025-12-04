@@ -20,8 +20,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import hashlib
 import secrets
-# import openai  # Temporarily disabled for testing
-# import numpy as np  # Temporarily disabled for testing
+import openai  # Temporarily disabled for testing
+import numpy as np  # Temporarily disabled for testing
 
 from .settings import get_settings
 from .startup_checks import startup_or_die
