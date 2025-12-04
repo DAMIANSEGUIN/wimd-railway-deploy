@@ -167,6 +167,45 @@ def init_db() -> None:
             """
         )
 
+        # v2 tables (MVP)
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS ps101_responses (
+                id SERIAL PRIMARY KEY,
+                user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                step INTEGER NOT NULL,
+                prompt_index INTEGER NOT NULL,
+                response TEXT NOT NULL,
+                timestamp TIMESTAMP DEFAULT NOW()
+            )
+            """
+        )
+
+        cursor.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_ps101_user ON ps101_responses(user_id);
+            CREATE INDEX IF NOT EXISTS idx_ps101_timestamp ON ps101_responses(timestamp);
+            """
+        )
+
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS user_contexts (
+                user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+                context_data JSONB NOT NULL,
+                extracted_at TIMESTAMP DEFAULT NOW(),
+                extraction_model TEXT DEFAULT 'claude-sonnet-4-20250514',
+                extraction_prompt_version TEXT DEFAULT 'v1.0'
+            )
+            """
+        )
+
+        cursor.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_contexts_extracted ON user_contexts(extracted_at);
+            """
+        )
+
 
 def _expiry_ts() -> datetime:
     return datetime.utcnow() + timedelta(days=SESSION_TTL_DAYS)
@@ -250,6 +289,27 @@ def record_wimd_output(
                 _json_dump(analysis_data or {}),
                 _json_dump(metrics or {}),
             ),
+        )
+
+
+def record_ps101_db_response(user_id: str, step: int, prompt_index: int, response: str) -> None:
+    """
+    Persist a single PS101 response to the database.
+
+    Args:
+        user_id: The ID of the user providing the response.
+        step: The current PS101 step number.
+        prompt_index: The index of the prompt within the current step.
+        response: The user's response text.
+    """
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO ps101_responses (user_id, step, prompt_index, response, timestamp)
+            VALUES (%s, %s, %s, %s, NOW())
+            """,
+            (user_id, step, prompt_index, response),
         )
 
 
@@ -696,12 +756,26 @@ def get_user_by_id(user_id: str) -> Optional[Dict[str, Any]]:
             "last_login": row[3]
         }
 
+
+def get_user_id_for_session(session_id: str) -> Optional[str]:
+    """Get the user_id associated with a given session_id."""
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT user_id FROM sessions WHERE id = %s",
+            (session_id,)
+        )
+        row = cursor.fetchone()
+        return row[0] if row else None
+
+
 __all__ = [
     "UPLOAD_ROOT",
     "create_session",
     "ensure_session",
     "session_exists",
     "record_wimd_output",
+    "record_ps101_db_response",
     "latest_metrics",
     "wimd_history",
     "store_job_matches",
@@ -718,6 +792,7 @@ __all__ = [
     "authenticate_user",
     "get_user_by_email",
     "get_user_by_id",
+    "get_user_id_for_session",
     "hash_password",
     "verify_password",
     "delete_session",
