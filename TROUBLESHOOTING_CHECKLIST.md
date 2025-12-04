@@ -3,6 +3,27 @@
 
 ---
 
+## 🏷️ LAST KNOWN WORKING VERSION
+
+**Latest Functional Deployment:**
+- **Git Tag:** `prod-2025-11-18`
+- **Commit:** `31d099c`
+- **Status:** Production deployed to Railway/Netlify
+- **To Restore:** `git checkout prod-2025-11-18`
+- **To Create New Tag:** `git tag prod-YYYY-MM-DD` (after verified deployment)
+
+**Check Current Production Tag:**
+```bash
+git describe --tags --abbrev=0
+```
+
+**List All Production Tags:**
+```bash
+git tag -l "prod-*" --sort=-version:refname | head -5
+```
+
+---
+
 ## Quick Diagnostic Filter
 
 **Run this checklist BEFORE making any code changes:**

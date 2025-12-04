@@ -1,0 +1,7 @@
+cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+
+Read SESSION_START.md now.
+
+CRITICAL: Monitor ALL my messages for session end triggers: "ending session", "end session", "wrap up", "that's all", "done for today".
+
+When detected, immediately run ./scripts/session_end.sh without asking permission.

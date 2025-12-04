@@ -1,6 +1,6 @@
 # 🎯 START HERE - AI Agent Onboarding (Auto-Updated)
 
-**Last Updated:** 2025-11-23 by Claude Code
+**Last Updated:** 2025-11-27 by Codex (terminal) via Claude/Gemini
 **Project:** WIMD Railway Deploy - Mosaic Platform
 **Working Directory:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
 
@@ -8,27 +8,30 @@
 
 ## 🚨 MOST RECENT STATUS (UPDATED AUTOMATICALLY)
 
-**Latest Critical Event:** Phase 1 Modularization Rollback (2025-11-21 5:00 PM)
+**Latest Critical Event:** PS101 baseline locked; login/chat stable, PS101 still blocked by hoisting bug (2025-11-27)
 
-**Status:** ✅ STABLE - Website functional after rollback
+**Status:** ⚠️ PARTIALLY STABLE – Login & Chat OK; PS101 blocked on `handleStepAnswerInput` scope/hoisting issue
 
 **Read These Files IN ORDER:**
 
-1. **LATEST INCIDENT:** `.ai-agents/FINAL_STATUS_2025-11-21_EVENING.md`
-   - Complete timeline of Nov 21 Phase 1 failure
-   - What broke: UI non-functional after module extraction
-   - What was done: Emergency rollback via `git revert 1c6c013`
-   - Current state: Website working, Phase 1 work saved in branch
+1. **TODAY’S BASELINE:** `.ai-agents/PS101_BASELINE_STATUS_2025-11-27.md`
+   - Defines current working baseline (pre-ps101-fix backup)
+   - Confirms: Login ✅, Chat ✅, PS101 ❌ (hoisting bug)
+   - Explains why `pre-scope-fix` and `post-restore` backups are not usable baselines
 
-2. **TECHNICAL DETAILS:** `.ai-agents/CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md`
-   - Root cause: Modules extracted but not integrated with IIFE
-   - Why it broke: IIFE code didn't call the new modules
-   - Lesson: Never deploy extraction without integration
+2. **DOC INDEX:** `.ai-agents/TEAM_DOCUMENTATION_REFERENCE.md`
+   - Points to backup manifests and handoff docs
+   - Summarizes current recovery plan status
 
-3. **MANDATORY PROTOCOL:** `.ai-agents/SESSION_START_PROTOCOL.md`
-   - Critical alert about Phase 1 at top of file
-   - Step-by-step session initialization
-   - Operating rules and verification requirements
+3. **LATEST INCIDENT (HISTORICAL):** `.ai-agents/FINAL_STATUS_2025-11-21_EVENING.md`
+   - Timeline of Nov 21 Phase 1 failure and rollback
+
+4. **TECHNICAL DETAILS (PHASE 1):** `.ai-agents/CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md`
+   - Root cause and lessons from the Phase 1 modularization incident
+
+5. **MANDATORY PROTOCOL:** `.ai-agents/SESSION_START_PROTOCOL.md`
+   - Critical alerts
+   - Session initialization and operating rules
 
 ---
 

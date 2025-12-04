@@ -1,15 +1,21 @@
 ═══════════════════════════════════════════════════════════════════
-AI AGENT: RUN THIS COMMAND FIRST (NEW SYSTEM - 2025-11-24)
+AI AGENT: SESSION START PROTOCOL (UPDATED 2025-12-03)
 ═══════════════════════════════════════════════════════════════════
 
-./scripts/status.sh
+Read SESSION_START.md
 
-That's it. This ONE command will tell you everything you need to know:
-• Production health (live check)
-• What's deployed
-• Latest instructions (auto-finds most recent file)
-• Active warnings
-• Exactly what to do next
+That's it. This ONE file contains the complete gated startup protocol.
+
+Or use the copy-paste prompt:
+cat SESSION_START_PROMPT.txt
+
+═══════════════════════════════════════════════════════════════════
+DEPRECATED SYSTEM (DO NOT USE - Kept for reference)
+═══════════════════════════════════════════════════════════════════
+
+OLD: ./scripts/status.sh
+
+That command is deprecated. Use SESSION_START.md instead.
 
 ───────────────────────────────────────────────────────────────────
 WHY THIS NEW SYSTEM?

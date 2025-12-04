@@ -1117,9 +1117,6 @@
   </div>
 </noscript>
 
-<!-- Phase 1 Modularization: Load extracted modules -->
-<script type="module" src="./js/main.js"></script>
-
 <script>
 (async function(){
   console.log('[IIFE] Starting execution');
@@ -2526,12 +2523,219 @@ async function askCoach(prompt) {
     }
   }
 
-  function validateCurrentStep() {
+  // === PS101 Helper Functions (must be globally accessible) ===
+
+  function updateCharCount(current, minRequired = 0, max = 0) {
+      const currentEl = document.getElementById('char-current');
+      const maxEl = document.getElementById('char-max');
+      const minEl = document.getElementById('char-min');
+      const charCount = document.getElementById('char-count');
+
+      if (currentEl) currentEl.textContent = current;
+      if (maxEl) maxEl.textContent = max;
+
+      if (minEl) {
+        if (minRequired) {
+          minEl.textContent = `(min ${minRequired})`;
+          minEl.style.display = '';
+        } else {
+          minEl.textContent = '';
+          minEl.style.display = 'none';
+        }
+      }
+
+      if (charCount) {
+        const needsDetail = minRequired > 0 && current < minRequired;
+        const nearLimit = !needsDetail && max > 0 && current > max * 0.9;
+
+        charCount.classList.toggle('needs-detail', needsDetail);
+        charCount.classList.toggle('near-limit', nearLimit);
+        if (!needsDetail && !nearLimit) {
+          charCount.style.color = '';
+        } else {
+          charCount.style.color = '';
+        }
+
+        let ariaStatus;
+        if (needsDetail) {
+          ariaStatus = `Need at least ${minRequired} characters. Currently at ${current}.`;
+        } else if (minRequired) {
+          ariaStatus = `Characters ${current} of ${max}. Minimum required ${minRequired}.`;
+        } else {
+          ariaStatus = `Characters ${current} of ${max}.`;
+        }
+        charCount.setAttribute('aria-label', ariaStatus);
+        charCount.setAttribute('title', ariaStatus);
+      }
+    }
+
+    function updateNavButtons(currentStep, promptIndex, totalPrompts) {
+      const backBtn = document.getElementById('ps101-back');
+      const nextBtn = document.getElementById('ps101-next');
+
+      if (backBtn) {
+        backBtn.disabled = (currentStep === 1 && promptIndex === 0);
+        backBtn.textContent = '← Back';
+      }
+
+      if (nextBtn) {
+        const isLastStep = currentStep === 10;
+        const isLastPrompt = promptIndex === totalPrompts - 1;
+
+        if (isLastStep && isLastPrompt) {
+          nextBtn.textContent = 'Complete PS101 →';
+        } else if (!isLastPrompt) {
+          nextBtn.textContent = 'Next Prompt →';
+        } else {
+          nextBtn.textContent = 'Next Step →';
+        }
+
+        let isValid = true;
+        if (isLastPrompt) {
+          const currentAnswer = PS101State.getAnswer(currentStep, promptIndex);
+          const step = PS101_STEPS.find(s => s.step === currentStep);
+          isValid = currentAnswer.length >= (step ? step.minChars : 30);
+
+          if (isValid && [6, 7, 8, 9].includes(currentStep)) {
+            const activeExp = PS101State.getActiveExperiment();
+            if (currentStep === 6 && activeExp) {
+              isValid = activeExp.hypothesis && activeExp.successMetric &&
+                       (activeExp.duration?.start || activeExp.duration?.review);
+            } else if (currentStep === 7 && activeExp) {
+              isValid = activeExp.obstacles && activeExp.obstacles.length > 0 &&
+                       activeExp.obstacles.some(o => o.label && o.strategy);
+            } else if (currentStep === 8 && activeExp) {
+              isValid = activeExp.actions && activeExp.actions.length >= 3;
+            } else if (currentStep === 9 && activeExp) {
+              isValid = activeExp.reflection &&
+                       activeExp.reflection.outcome && activeExp.reflection.learning &&
+                       activeExp.reflection.confidence?.after;
+            }
+          }
+        }
+
+        nextBtn.disabled = !isValid;
+      }
+    }
+
+    let autosaveTimeout;
+    function autosaveAnswer(stepNumber, promptIndex, answerText) {
+      clearTimeout(autosaveTimeout);
+      autosaveTimeout = setTimeout(() => {
+        PS101State.setAnswer(stepNumber, promptIndex, answerText);
+        showAutosaveIndicator('Saved');
+      }, 1000);
+    }
+
+    function showAutosaveIndicator(message) {
+      const indicator = document.getElementById('autosave-indicator');
+      if (!indicator) return;
+
+      const text = indicator.querySelector('.autosave-text');
+      if (text) {
+        text.textContent = message;
+        indicator.classList.add('visible');
+        setTimeout(() => {
+          indicator.classList.remove('visible');
+        }, 2000);
+      }
+    }
+
+    function downloadSummary() {
+      const state = PS101State;
+      const summary = {
+        version: '1.0',
+        timestamp: new Date().toISOString(),
+        ps101: {
+          completed_at: state.lastUpdated,
+          answers: state.answers
+        }
+      };
+
+      try {
+        const blob = new Blob([JSON.stringify(summary, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'ps101-summary.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+      } catch (error) {
+        console.error('Download failed:', error);
+        alert('Save failed - please try again');
+      }
+    }
+
+  // PS101 Event Listeners Setup
+  function initPS101EventListeners() {
+    // === Event Listeners ===
+    // Welcome screen buttons
+    const startBtn = document.getElementById('start-ps101');
+    if (startBtn) {
+      startBtn.addEventListener('click', () => {
+        PS101State.currentStep = 1;
+        PS101State.save();
+        renderCurrentStep();
+      });
+    }
+
+    const continueBtn = document.getElementById('continue-ps101');
+    if (continueBtn) {
+      continueBtn.addEventListener('click', () => {
+        renderCurrentStep();
+      });
+    }
+
+    const learnMoreBtn = document.getElementById('learn-more-ps101');
+    if (learnMoreBtn) {
+      learnMoreBtn.addEventListener('click', () => {
+        scrollToSection('about');
+      });
+    }
+
+    // Navigation buttons
+    const backBtn = document.getElementById('ps101-back');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        PS101State.prevPrompt();
+      });
+    }
+
+    const nextBtn = document.getElementById('ps101-next');
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        // ALWAYS save what user wrote, even if validation fails
+        const textarea = document.getElementById('step-answer');
+        if (textarea) {
+          PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, textarea.value);
+        }
+
+        // Then check if valid to proceed
+        const isValid = validateCurrentStep();
+        if (isValid) {
+          PS101State.nextPrompt();
+        }
+      });
+    }
+
+    // Progress dots (click to jump to step)
+    document.querySelectorAll('.progress-dots .dot').forEach(dot => {
+      dot.addEventListener('click', (e) => {
+        if (!e.target.disabled) {
+          const stepNumber = parseInt(e.target.dataset.step);
+          PS101State.goToStep(stepNumber);
+        }
+      });
+    });
+
+    // Validation function (must be defined before Next button listener)
+    function validateCurrentStep() {
       const state = PS101State;
       const step = state.getCurrentStep();
       const textarea = document.getElementById('step-answer');
       if (!textarea || !step) return false;
-      
+
       const answer = textarea.value.trim();
       const promptIndex = state.currentPromptIndex || 0;
       const totalPrompts = (step.prompts && step.prompts.length) ? step.prompts.length : 1;
@@ -2600,6 +2804,7 @@ async function askCoach(prompt) {
       return true;
     }
 
+    // Textarea input (auto-save + char count)
     function handleStepAnswerInput(e) {
       const step = PS101State.getCurrentStep();
       if (!step) return;
@@ -2613,66 +2818,7 @@ async function askCoach(prompt) {
       const totalPrompts = step.prompts ? step.prompts.length : 1;
       updateNavButtons(PS101State.currentStep, promptIndex, totalPrompts);
     }
-  
-  // PS101 Event Listeners Setup (extracted for clarity)
-  function initPS101EventListeners() {
-    // Welcome screen buttons
-    const startBtn = document.getElementById('start-ps101');
-    if (startBtn) {
-      startBtn.addEventListener('click', () => {
-        PS101State.currentStep = 1;
-        PS101State.save();
-        renderCurrentStep();
-      });
-    }
 
-    const continueBtn = document.getElementById('continue-ps101');
-    if (continueBtn) {
-      continueBtn.addEventListener('click', () => {
-        renderCurrentStep();
-      });
-    }
-
-    const learnMoreBtn = document.getElementById('learn-more-ps101');
-    if (learnMoreBtn) {
-      learnMoreBtn.addEventListener('click', () => {
-        scrollToSection('about');
-      });
-    }
-
-    // Navigation buttons
-    const backBtn = document.getElementById('ps101-back');
-    if (backBtn) {
-      backBtn.addEventListener('click', () => {
-        PS101State.prevPrompt();
-      });
-    }
-
-    const nextBtn = document.getElementById('ps101-next');
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        const isValid = validateCurrentStep();
-        if (isValid) {
-          const textarea = document.getElementById('step-answer');
-          if (textarea) {
-            PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, textarea.value);
-            PS101State.nextPrompt();
-          }
-        }
-      });
-    }
-
-    // Progress dots (click to jump to step)
-    document.querySelectorAll('.progress-dots .dot').forEach(dot => {
-      dot.addEventListener('click', (e) => {
-        if (!e.target.disabled) {
-          const stepNumber = parseInt(e.target.dataset.step);
-          PS101State.goToStep(stepNumber);
-        }
-      });
-    });
-
-    // Textarea input (auto-save + char count)
     const textarea = document.getElementById('step-answer');
     if (textarea) {
       textarea.removeEventListener('input', handleStepAnswerInput);
@@ -3747,52 +3893,8 @@ async function askCoach(prompt) {
     }
 
     // Update character count
-    function updateCharCount(current, minRequired = 0, max = 0) {
-      const currentEl = document.getElementById('char-current');
-      const maxEl = document.getElementById('char-max');
-      const minEl = document.getElementById('char-min');
-      const charCount = document.getElementById('char-count');
-      
-      if (currentEl) currentEl.textContent = current;
-      if (maxEl) maxEl.textContent = max;
-
-      if (minEl) {
-        if (minRequired) {
-          minEl.textContent = `(min ${minRequired})`;
-          minEl.style.display = '';
-        } else {
-          minEl.textContent = '';
-          minEl.style.display = 'none';
-        }
-      }
-
-      if (charCount) {
-        const needsDetail = minRequired > 0 && current < minRequired;
-        const nearLimit = !needsDetail && max > 0 && current > max * 0.9;
-
-        charCount.classList.toggle('needs-detail', needsDetail);
-        charCount.classList.toggle('near-limit', nearLimit);
-        if (!needsDetail && !nearLimit) {
-          charCount.style.color = '';
-        } else {
-          charCount.style.color = '';
-        }
-
-        let ariaStatus;
-        if (needsDetail) {
-          ariaStatus = `Need at least ${minRequired} characters. Currently at ${current}.`;
-        } else if (minRequired) {
-          ariaStatus = `Characters ${current} of ${max}. Minimum required ${minRequired}.`;
-        } else {
-          ariaStatus = `Characters ${current} of ${max}.`;
-        }
-        charCount.setAttribute('aria-label', ariaStatus);
-        charCount.setAttribute('title', ariaStatus);
-      }
-    }
-
-    // Update navigation buttons
-    function updateNavButtons(currentStep, promptIndex, totalPrompts) {
+    // MOVED: updateCharCount now defined before use (line ~2533)
+    // MOVED: updateNavButtons now defined before use (line ~2577)
       const backBtn = document.getElementById('ps101-back');
       const nextBtn = document.getElementById('ps101-next');
 
@@ -3844,19 +3946,7 @@ async function askCoach(prompt) {
   }
 }
 
-    function handleStepAnswerInput(e) {
-      const step = PS101State.getCurrentStep();
-      if (!step) return;
-      updateCharCount(
-        e.target.value.length,
-        step?.minChars || 0,
-        step?.maxChars || 0
-      );
-      PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, e.target.value);
-      const promptIndex = PS101State.currentPromptIndex || 0;
-      const totalPrompts = step.prompts ? step.prompts.length : 1;
-      updateNavButtons(PS101State.currentStep, promptIndex, totalPrompts);
-    }
+    // MOVED: handleStepAnswerInput now defined before use (line ~2587)
 
     // Render previous answers
     function renderPreviousAnswers(currentStep) {
@@ -4272,6 +4362,13 @@ async function askCoach(prompt) {
         });
       }
     }
+
+    // Validate current step
+    // MOVED: validateCurrentStep now defined before use (line ~2587)
+
+    // MOVED: autosaveAnswer now defined before use (line ~2626)
+    // MOVED: showAutosaveIndicator now defined before use (line ~2635)
+    // MOVED: downloadSummary now defined before use (line ~2649)
 
     // Event listeners setup - now handled by consolidated initApp() via initPS101EventListeners()
     // Removed duplicate DOMContentLoaded handler - all logic consolidated into initPS101EventListeners()

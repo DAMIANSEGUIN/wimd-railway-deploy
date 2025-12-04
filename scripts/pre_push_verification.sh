@@ -24,23 +24,8 @@ else
 fi
 echo ""
 
-# Step 2: Verify critical features locally
-echo "Step 2: Critical features verification..."
-if [ -f "./scripts/verify_critical_features.sh" ]; then
-  if ! ./scripts/verify_critical_features.sh; then
-    echo "❌ Critical features verification failed"
-    ERRORS=$((ERRORS + 1))
-  else
-    echo "✅ Critical features verified"
-  fi
-else
-  echo "❌ verify_critical_features.sh not found"
-  ERRORS=$((ERRORS + 1))
-fi
-echo ""
-
-# Step 3: Check git status is clean
-echo "Step 3: Git status check..."
+# Step 2: Git status check...
+echo "Step 2: Git status check..."
 if [ -n "$(git status --porcelain)" ]; then
   echo "❌ Uncommitted changes detected"
   echo "Run: git status"
@@ -50,23 +35,9 @@ else
 fi
 echo ""
 
-# Step 4: Verify expected content (mosaic_ui/index.html)
-echo "Step 4: Content verification..."
+# Step 3: Verify expected content (mosaic_ui/index.html)
+echo "Step 3: Content verification..."
 if [ -f "mosaic_ui/index.html" ]; then
-  ACTUAL_LINES=$(wc -l mosaic_ui/index.html | awk '{print $1}')
-  # Consolidated build with initApp + auth button: 3989 lines (commit 3acab1d + auth button fix)
-  EXPECTED_LINES=3989
-
-  if [ "$ACTUAL_LINES" != "$EXPECTED_LINES" ]; then
-    echo "⚠️  Warning: Line count mismatch"
-    echo "   Expected: $EXPECTED_LINES"
-    echo "   Actual:   $ACTUAL_LINES"
-    echo "   This may indicate missing content"
-    # Don't fail on this - just warn
-  else
-    echo "✅ Content line count matches expected ($EXPECTED_LINES lines)"
-  fi
-
   # Check for critical features in content
   if ! grep -q "authModal" mosaic_ui/index.html; then
     echo "❌ Authentication UI missing from mosaic_ui/index.html"

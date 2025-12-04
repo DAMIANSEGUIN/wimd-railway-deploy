@@ -1,24 +1,24 @@
 # Current Backup Reference
 
-**Last Updated:** 2025-11-26T22:07:04Z
+**Last Updated:** 2025-11-26T23:31:00Z
 **Agent:** Claude Code
 
 ---
 
 ## Latest Backup
 
-**Location:** `backups/pre-ps101-fix_20251126_220704Z/`
+**Location:** `backups/pre-scope-fix_20251126_233100Z/`
 
-**Reason:** Before fixing PS101 handleStepAnswerInput hoisting issue
+**Reason:** Before fixing function scope issues (character counter, prompt counter not updating)
 
-**Issue:** PS101 cannot progress past step 1
-- Error: `ReferenceError: handleStepAnswerInput is not defined`
-- Function defined at line 3759, called at line 2591
-- Phase 1 modularization created hoisting problem
+**Status:**
+- ✅ mosaic_ui/index.html - PS101 fix applied and tested locally
+- ⏳ frontend/index.html - Auth modal fix applied, PS101 fix pending
+- ✅ local_dev_server.py - Working test server
 
 **Files:**
-- `mosaic_ui/index.html` - Working local version
-- `frontend/index.html` - Deployed Netlify version
+- `mosaic_ui_index.html` - Local version with PS101 fix
+- `frontend_index.html` - Production version awaiting PS101 fix
 - `local_dev_server.py` - Test server
 - `BACKUP_MANIFEST.md` - Full backup details
 
@@ -27,10 +27,10 @@
 ## To Restore
 
 ```bash
-BACKUP="backups/pre-ps101-fix_20251126_220704Z"
-cp "$BACKUP/mosaic_ui_index.html" mosaic_ui/index.html
+BACKUP="backups/pre-frontend-deploy_20251126_224015Z"
 cp "$BACKUP/frontend_index.html" frontend/index.html
-git checkout mosaic_ui/index.html frontend/index.html  # Or restore from backup
+cp "$BACKUP/mosaic_ui_index.html" mosaic_ui/index.html
+git checkout frontend/index.html mosaic_ui/index.html  # Or restore from backup
 ```
 
 ---
@@ -38,9 +38,9 @@ git checkout mosaic_ui/index.html frontend/index.html  # Or restore from backup
 ## Current State at Backup
 
 - **Branch:** phase1-incomplete
-- **Commit:** aa204bb (CodexCapture status doc)
-- **Server:** Running PID 57948, port 3000
-- **Production:** Live with auth modal fix (commit 759eb70)
+- **Commit:** 3fa9672 (Gemini handoff for PS101 issue)
+- **Server:** Running PID 15280, port 3000
+- **Fix Status:** Applied to mosaic_ui, tested locally, ready for frontend
 
 ---
 
@@ -49,9 +49,9 @@ git checkout mosaic_ui/index.html frontend/index.html  # Or restore from backup
 If you're an AI agent starting a new session:
 
 1. Read this file first
-2. Check if fix was applied: `git log --oneline -1`
-3. If fix failed, restore from backup above
-4. Read `backups/pre-ps101-fix_20251126_220704Z/BACKUP_MANIFEST.md` for details
+2. Check if frontend fix was applied: `git log --oneline -1`
+3. If deployment failed, restore from backup above
+4. Read `backups/pre-frontend-deploy_20251126_224015Z/BACKUP_MANIFEST.md` for details
 
 ---
 

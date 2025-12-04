@@ -1,6 +1,6 @@
 # MOSAIC TEAM PLAYBOOK (Canonical Protocol)
 **Version**: 2.0.0-mvp
-**Last Updated**: 2025-12-02
+**Last Updated**: 2025-12-03
 **Status**: 🔒 **SINGLE SOURCE OF TRUTH**
 **Supersedes**: All CODEX_INSTRUCTIONS.md, OPERATIONS_MANUAL.md v1.0, CODEX_HANDOFF_*.md
 
@@ -53,52 +53,50 @@
 
 ### What's Happening Right Now
 
-**Last Updated**: 2025-12-03_20-33-00
+**Last Updated**: 2025-12-03_21-00-00
 **Updated By**: Claude Code
-**Current Code Version**: See git commit 15a31ac (Railway config fix)
+**Current Code Version**: Docs snapshot `ea5ffba`; deployment config `15a31ac`; Day 1 feature bundle `799046f`.
+
+**Latest Commit References**:
+- `ea5ffba` – refreshed `SESSION_HANDOFF`, `QUICK_STATUS`, `TEAM_PLAYBOOK`.
+- `15a31ac` – adds `nixpacks.toml` (Python 3.11 + gunicorn start command) to unblock Railway builds.
+- `799046f` – delivers the Day 1 PS101 hardening (auth, timeout, retries, schema v2).
 
 **CODE STATE (Source of Truth)**:
-- **Check**: Git commit 15a31ac
-  - Branch: phase1-incomplete
-  - Files: nixpacks.toml (NEW), api/ps101.py (NEW), api/settings.py, api/index.py
-  - Previous: 799046f (Day 1 blockers fixed)
+- Branch: `phase1-incomplete`
+- Feature files: `api/ps101.py` (new), `api/settings.py`, `api/index.py`
+- Deployment files: `nixpacks.toml`, `railway.toml`, `railway.json`, `Procfile` (conflicting directives still unresolved)
 
 **BLOCKING ISSUES (CRITICAL - Address First)**:
-~~1. **[SECURITY]** `/api/ps101/extract-context` lacks authentication~~ ✅ RESOLVED (799046f)
-~~2. **[RESILIENCE]** Claude API call needs timeout~~ ✅ RESOLVED (799046f)
-~~3. **[RESILIENCE]** Claude API call needs retry logic with exponential backoff~~ ✅ RESOLVED (799046f)
-~~4. **[MINOR]** Schema version reporting shows v1 instead of v2 in `/config` endpoint~~ ✅ RESOLVED (799046f)
+1. **[DEPLOYMENT][OPEN] Schema version mismatch** – `/config` in production still returns `\"v1\"`; need to confirm deployed commit/environment and reconcile with code that hard-codes `v2`.
+2. **[QA][OPEN] Verification gate false positives** – `deploy_wrapper` and `verify_live` exit non-zero because of Netlify line-count drift (3989 vs 3992) plus untracked assets; deploy pipeline blocked until scripts updated.
+3. **[AUTOMATION][OPEN] GitHub → Railway trigger missing** – pushes to `origin/main` (799046f, 15a31ac, ea5ffba) produce no deployment; manual dashboard trigger is the only path.
+4. **[CONFIG][OPEN] Multiple Railway config files** – `nixpacks.toml`, `railway.toml`, `railway.json`, and `Procfile` disagree on builder/runtime; must pick one canonical source.
 
-**NEW ISSUES DISCOVERED (Needs Team Investigation)**:
-1. **[DEPLOYMENT]** Schema version shows v1 in production despite code setting v2
-   - Production health: ✅ All systems operational
-   - Code: ✅ Updated to v2 (799046f)
-   - Production /config: ⚠️ Still shows v1
-   - Action: Team needs to investigate Railway deployment state
-   - See: SESSION_HANDOFF_2025-12-03.md for details
+**Resolved Day 1 Blockers** (still referenceable but closed):
+- ~~[SECURITY] `/api/ps101/extract-context` lacks authentication~~ ✅ Resolved in 799046f
+- ~~[RESILIENCE] Missing Claude API timeout~~ ✅ Resolved in 799046f
+- ~~[RESILIENCE] Add retry/backoff on Claude API~~ ✅ Resolved in 799046f
+- ~~[OBS] Schema constant not versioned~~ ✅ Code now reports `v2`, pending deployment verification
 
-2. **[DEPLOYMENT]** Conflicting Railway configuration files
-   - Files: nixpacks.toml, railway.toml, railway.json, Procfile
-   - Issue: Unknown which file Railway actually uses
-   - Action: Team needs to consolidate config files
-
-3. **[DEPLOYMENT]** GitHub auto-deploy status unclear
-   - Git pushes to origin/main didn't trigger Railway deployment
-   - Manual dashboard trigger was required
-   - Action: Team needs to verify GitHub integration configuration
+**NEW DEPLOYMENT ISSUES DOCUMENTED (2025-12-03)**:
+- Schema mismatch vs. production response (see `SESSION_HANDOFF_2025-12-03.md`).
+- Verification tooling drift causing line-count failures (`deploy_wrapper.log`, `verify_live.log`).
+- Conflicting Railway config files leading to uncertainty around runtime.
+- GitHub auto-deploy disabled/unknown, forcing dashboard redeploys.
 
 **LAST SESSION ACCOMPLISHED (2025-12-03)**:
-- Attempted deployment of Day 1 fixes to Railway
-- Created nixpacks.toml for Python 3.11 build configuration (15a31ac)
-- Identified deployment verification gaps
-- Created comprehensive handoff documentation (SESSION_HANDOFF_2025-12-03.md)
-- Production confirmed healthy by NARs diagnostic
+- Attempted Day 1 deployment; cataloged permission + builder blockers.
+- Authored `nixpacks.toml` to enforce Python 3.11 + gunicorn (`15a31ac`).
+- Confirmed production health manually (NARs diag) while documenting schema discrepancy.
+- Produced the current documentation handoff bundle (`ea5ffba`).
 
-**NEXT TASK**:
-**DECISION REQUIRED**:
-- Option A: Investigate deployment issues before Day 2 work
-- Option B: Proceed to Day 2 if production health is sufficient
-- See SESSION_HANDOFF_2025-12-03.md for full context
+### Decision Required (2025-12-03)
+- **Option A – Finish deployment work first**: Resolve schema mismatch, verification scripts, and auto-deploy before starting Day 2 features.
+- **Option B – Parallelize**: Assign deployment cleanup to one owner while another begins Day 2 MVP tasks, accepting temporary production ambiguity.
+- See `SESSION_HANDOFF_2025-12-03.md` for evidence backing both options.
+
+**NEXT TASK**: Pick an option above, then either (a) dive into Railway/verification fixes or (b) kick off Day 2 backlog items with deployment owner identified.
 
 
 ### What's NOT Changing (Do Not Touch)
@@ -433,6 +431,28 @@
 ### When Starting a New Sprint (All Roles):
 - ✅ **Current Sprint Status** (Section 2 - updated at sprint start)
 - ✅ **Sprint documentation** (links in Current Sprint Status)
+
+---
+
+## 📜 CANONICAL SCRIPTS
+
+To reduce confusion from a large number of outdated and conflicting scripts, the deployment and verification process has been consolidated. The following scripts are the canonical, blessed scripts to be used for deployment and verification.
+
+All other scripts have been moved to `scripts/archive` for historical purposes and should not be used.
+
+### Deployment
+- **`scripts/deploy.sh`**: The main deployment wrapper. This is the entry point for all deployments.
+  - **Usage**: `./scripts/deploy.sh <railway|netlify|all>`
+
+### Verification
+- **`scripts/verify_live_deployment.sh`**: The canonical script for verifying the live production deployment. It is called by `scripts/deploy.sh` after a deployment.
+  - **Usage**: `./scripts/verify_live_deployment.sh`
+
+### Supporting Scripts (used by the canonical scripts)
+- **`scripts/push.sh`**: A wrapper for `git push` that runs pre-push verification. Called by `deploy.sh`.
+- **`scripts/pre_push_verification.sh`**: A script that runs sanity checks before pushing to production. Called by `push.sh`.
+- **`scripts/deploy_frontend_netlify.sh`**: Deploys the frontend to Netlify. Called by `deploy.sh`.
+- **`scripts/predeploy_sanity.sh`**: Performs basic sanity checks. Called by `pre_push_verification.sh`.
 
 ---
 

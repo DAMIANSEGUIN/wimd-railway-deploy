@@ -98,10 +98,10 @@ case "$TARGET" in
     echo "Step 4: Verifying live deployment..."
     echo ""
 
-    if [ -f "./scripts/verify_deployment.sh" ]; then
-      ./scripts/verify_deployment.sh
+    if [ -f "./scripts/verify_live_deployment.sh" ]; then
+      ./scripts/verify_live_deployment.sh
     else
-      echo "⚠️  verify_deployment.sh not found - manual verification required"
+      echo "⚠️  verify_live_deployment.sh not found - manual verification required"
     fi
 
     echo ""

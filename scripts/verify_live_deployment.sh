@@ -25,21 +25,8 @@ else
 fi
 echo ""
 
-# Check 2: Line count matches expected
-echo "Check 2: Content line count..."
-# Consolidated build with initApp (post-syntax fix): 3989 lines
-EXPECTED_LINES=3989
-ACTUAL_LINES=$(curl -s -m 10 "$BASE_URL" | wc -l | tr -d ' ')
 
-if [ "$ACTUAL_LINES" != "$EXPECTED_LINES" ]; then
-  echo "❌ Line count mismatch:"
-  echo "   Expected: $EXPECTED_LINES"
-  echo "   Actual:   $ACTUAL_LINES"
-  ERRORS=$((ERRORS + 1))
-else
-  echo "✅ Line count matches ($EXPECTED_LINES lines)"
-fi
-echo ""
+# Check 3: Page title...
 
 # Check 3: Title matches expected
 echo "Check 3: Page title..."

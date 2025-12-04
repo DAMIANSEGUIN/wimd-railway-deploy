@@ -127,7 +127,7 @@ if [ $FALLBACK_EXITCODE -eq 0 ]; then
     echo ""
     echo "Next steps:"
     echo "1. Wait 3 minutes for Railway + Netlify deployments"
-    echo "2. Run: ./scripts/verify_deployment.sh"
+    echo "2. Run: ./scripts/verify_live_deployment.sh"
     echo "3. Verify live site manually"
   fi
 else
