@@ -103,6 +103,11 @@
 - Production-ready context extraction implementation
 - Use as reference for endpoint development
 
+**Recurring Blockers Analysis**:
+`RECURRING_BLOCKERS.md`
+- Analysis of common blockers, root causes, and prevention strategies
+- Must be reviewed to avoid repeating past mistakes
+
 ### Sprint Status Updates
 
 **Last Updated**: 2025-12-02 11:00 AM
@@ -135,9 +140,10 @@
 **MUST READ Every Session**:
 1. This Quick Start section (above)
 2. Current Sprint Status (above)
-3. Implementation Protocols (Section 5)
-4. Database Patterns (Section 6)
-5. Version Tracking Protocol (Section 7)
+3. Local Development Setup (Section 4)
+4. Implementation Protocols (Section 5)
+5. Database Patterns (Section 6)
+6. Version Tracking Protocol (Section 7)
 
 **MUST DO Before Any Code Changes**:
 1. Create backup (git tag + folder copy)
@@ -161,12 +167,28 @@
 - Security concerns → Human + Gemini immediately
 - Scope creep detected → Human + OPUS
 
+**Communication Protocol with User**:
+- **ALWAYS provide FULL paths in ALL commands** - NEVER use relative paths like `./scripts/` or assume current directory
+  - ✅ CORRECT: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/deploy.sh`
+  - ❌ WRONG: `./scripts/deploy.sh` (requires user to cd first)
+  - This is a RECURRING issue - full paths are MANDATORY in all terminal commands
+- **NEVER add line breaks in file paths or commands** - user copies from markdown, line breaks cause command failures
+  - ✅ CORRECT: Single line, no wrapping: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/diagnose_railway_autodeploy.sh`
+  - ❌ WRONG: Line break in path causes terminal to split it into multiple commands
+  - Keep all paths and commands on ONE LINE even if long
+- **If user uses incorrect terminology**: Interpret intent, respond to what they meant, then gently correct
+  - Example: User says "endpoint not in canon" (meant "production") → Answer about production, then clarify: "I believe you meant 'production' rather than 'canon' (which refers to documentation)"
+- **If user request is ambiguous**: State your interpretation, proceed with it, ask for confirmation if wrong
+- **If technical term is misused**: Provide correct term in parentheses after first use
+- **Never assume user is wrong without checking**: They may be using project-specific terminology you haven't seen
+
 **Your Success Metrics**:
 - ✅ All changes have version tracking
 - ✅ All deployments have rollback paths
 - ✅ Tests pass before deploy
 - ✅ No context manager pattern violations
 - ✅ No silent failures (all errors logged)
+- ✅ User terminology corrected tactfully when needed
 
 ---
 
@@ -430,6 +452,78 @@ All other scripts have been moved to `scripts/archive` for historical purposes a
 - **`scripts/pre_push_verification.sh`**: A script that runs sanity checks before pushing to production. Called by `push.sh`.
 - **`scripts/deploy_frontend_netlify.sh`**: Deploys the frontend to Netlify. Called by `deploy.sh`.
 - **`scripts/predeploy_sanity.sh`**: Performs basic sanity checks. Called by `pre_push_verification.sh`.
+
+---
+
+## 4️⃣ LOCAL DEVELOPMENT SETUP (MANDATORY)
+
+### Python Environment Requirements
+
+**CRITICAL**: Local development requires Python 3.9+ with SSL support. Railway uses Python 3.11 (nixpacks.toml).
+
+### Setup Protocol (Run BEFORE any local development)
+
+```bash
+# 1. Verify Python 3.9+ with SSL support
+python3 --version  # Must be 3.9 or higher
+python3 -c "import ssl; print('✅ SSL available')"
+
+# If SSL check fails:
+brew reinstall python@3.12 openssl@3  # macOS Homebrew
+# OR
+apt-get install python3.12 python3.12-dev libssl-dev  # Ubuntu/Debian
+
+# 2. Create virtual environment
+cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+python3 -m venv .venv
+
+# 3. Activate
+source .venv/bin/activate  # Unix/macOS
+# OR
+.venv\Scripts\activate  # Windows
+
+# 4. Install dependencies
+pip install -r requirements.txt
+
+# 5. Verify installation
+python -c "from api.ps101 import router; print('✅ All imports work')"
+```
+
+### Environment Variables (Local Development)
+
+```bash
+# Required for local testing
+export OPENAI_API_KEY="sk-..."
+export CLAUDE_API_KEY="sk-ant-..."
+export PUBLIC_SITE_ORIGIN="http://localhost:8000"
+export APP_SCHEMA_VERSION="v2"
+export DATABASE_URL="postgresql://..."  # Optional: defaults to SQLite
+
+# Start local server
+python -m uvicorn api.index:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Common Setup Issues
+
+| Issue | Symptom | Solution |
+|-------|---------|----------|
+| **SSL Missing** | `ImportError: cannot import name '_ssl'` | `brew reinstall python@3.12 openssl@3` |
+| **Wrong Python** | Python 3.7.x or 3.8.x | Install Python 3.9+ |
+| **Missing Dependencies** | `ModuleNotFoundError` | Activate venv, run `pip install -r requirements.txt` |
+| **Port Conflict** | `Address already in use` | Kill process on port 8000: `lsof -ti:8000 \| xargs kill -9` |
+
+### Pre-Flight Checklist (Before Local Testing)
+
+```
+□ Python 3.9+ installed
+□ SSL support verified (import ssl works)
+□ Virtual environment created and activated
+□ All dependencies installed (pip install -r requirements.txt)
+□ Environment variables set (at minimum: OPENAI_API_KEY, CLAUDE_API_KEY)
+□ Can import api modules without errors
+```
+
+**If ANY item fails → Fix it before proceeding. Do not skip setup.**
 
 ---
 
@@ -1852,6 +1946,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 **For Technical Details:**
 - `TROUBLESHOOTING_CHECKLIST.md` - Error classification dashboard, debugging workflows
 - `SELF_DIAGNOSTIC_FRAMEWORK.md` - Architecture-specific error prevention
+- `RECURRING_BLOCKERS.md` - Analysis of common blockers and prevention strategies
 
 **For Current State:**
 - `START_HERE.md` - Session initialization (still active, but protocol details superseded by this doc)

@@ -10,6 +10,7 @@ anthropic
 numpy
 python-dotenv
 sentence-transformers>=2.2.2
+torch
 scikit-learn>=1.3.0
 requests
 beautifulsoup4

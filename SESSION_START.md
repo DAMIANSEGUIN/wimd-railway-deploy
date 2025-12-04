@@ -104,20 +104,31 @@ You are now in **UNDERSTANDING MODE**. You may NOT write code, create files, or 
 
 ## ENFORCEMENT RULES
 
-### ❌ FORBIDDEN QUESTIONS:
+### ❌ FORBIDDEN QUESTIONS (AUTOMATIC PROTOCOL VIOLATION):
 - "What should I work on?"
 - "What's the priority?"
 - "Where do I start?"
+- "Which option do you want?" (when both options are documented in playbook)
+- "Should I do X or Y?" (when decision criteria exists in playbook)
+
+**CRITICAL: User does NOT make technical decisions. Playbook documents decision criteria. If you ask user to choose, you are violating protocol.**
 
 ### ✅ ALLOWED QUESTIONS (After reading docs):
 - "I read [X], but [specific unclear part] - can you clarify?"
-- "Blocker #1 requires [decision Y] - should I [option A] or [option B]?"
+- "The playbook says [criteria], but I found [exception] - how should I proceed?"
+
+### ❌ FORBIDDEN ACTIONS (AUTOMATIC PROTOCOL VIOLATION):
+- Asking user to decide between technical options when playbook has decision criteria
+- Asking user for priorities when TEAM_PLAYBOOK.md Section 2 documents priorities
+- Presenting "Option 1 vs Option 2" when one is clearly the workaround and playbook says "use workarounds for blockers"
 
 ### 🚫 SESSION WILL BE STOPPED IF:
 - You ask forbidden questions
+- You ask user to make decisions that are documented in playbook
 - You skip reading required documents
 - You propose code changes before passing gates
 - You claim confusion without citing what you read
+- You present options to user instead of executing based on documented protocol
 
 ---
 
