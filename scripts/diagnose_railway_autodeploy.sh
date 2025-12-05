@@ -58,9 +58,50 @@ else
 fi
 echo ""
 
-# Check 4: Git status
+# Check 4: Railway CLI Health
 echo "=========================================="
-echo "CHECK 4: Git Working Tree Status"
+echo "CHECK 4: Railway CLI Health"
+echo "=========================================="
+
+# Check if Railway CLI is installed
+if ! command -v railway &> /dev/null; then
+    echo -e "${RED}❌ Railway CLI not installed${NC}"
+    RAILWAY_CLI_HEALTHY=false
+else
+    echo -e "${GREEN}✅ Railway CLI installed${NC}"
+    railway --version
+
+    # Check Railway CLI permissions
+    if [ -f ~/.railway/version.json ]; then
+        VERSION_JSON_OWNER=$(stat -f "%Su" ~/.railway/version.json 2>/dev/null || stat -c "%U" ~/.railway/version.json 2>/dev/null)
+        CURRENT_USER=$(whoami)
+
+        if [ "$VERSION_JSON_OWNER" != "$CURRENT_USER" ]; then
+            echo -e "${RED}❌ ~/.railway/version.json owned by $VERSION_JSON_OWNER (should be $CURRENT_USER)${NC}"
+            echo "   Fix: sudo chown $CURRENT_USER:staff ~/.railway/version.json"
+            RAILWAY_CLI_HEALTHY=false
+        else
+            echo -e "${GREEN}✅ ~/.railway/ permissions correct${NC}"
+            RAILWAY_CLI_HEALTHY=true
+        fi
+    else
+        echo -e "${YELLOW}⚠️  ~/.railway/version.json not found${NC}"
+        RAILWAY_CLI_HEALTHY=true
+    fi
+
+    # Test Railway CLI connectivity
+    if railway status &> /dev/null; then
+        echo -e "${GREEN}✅ Railway CLI can connect to project${NC}"
+    else
+        echo -e "${RED}❌ Railway CLI cannot connect (auth issue?)${NC}"
+        RAILWAY_CLI_HEALTHY=false
+    fi
+fi
+echo ""
+
+# Check 5: Git status
+echo "=========================================="
+echo "CHECK 5: Git Working Tree Status"
 echo "=========================================="
 if git diff-index --quiet HEAD --; then
     echo -e "${GREEN}✅ Working tree is clean${NC}"
@@ -77,6 +118,7 @@ echo "=================================================="
 echo ""
 echo "Expected GitHub commit: $EXPECTED_HASH"
 echo "New code deployed: $NEW_CODE_DEPLOYED"
+echo "Railway CLI healthy: ${RAILWAY_CLI_HEALTHY:-unknown}"
 echo ""
 
 if [ "$NEW_CODE_DEPLOYED" = false ]; then

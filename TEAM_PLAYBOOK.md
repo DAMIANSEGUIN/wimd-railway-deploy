@@ -52,15 +52,15 @@
 
 ### What's Happening Right Now
 
-**Last Updated**: 2025-12-03_22-34-23
-**Updated By**: ✅ Created comprehensive handoff documentation
+**Last Updated**: 2025-12-04_21-12-41
+**Updated By**: Codex
 **Current Code Version**: See `api/index.py` lines 1-18 for authoritative version info
 
 **CODE STATE (Source of Truth)**:
 - **Check**: `api/index.py` header (lines 1-18)
-  - Git commit: c8e49a8
-  - Branch: phase1-incomplete
-  - Backup: session_backups/2025-12-03_22-34-23/
+  - Git commit: 7387a63
+  - Branch: main
+  - Backup: session_backups/2025-12-04_21-12-41/
 
 **BLOCKING ISSUES (CRITICAL - Address First)**:
 1.  **[RESOLVED]** Schema version mismatch – `/config` in production still returns `\"v1\"`. (Resolved by successful deployment and local code update to v2.)
@@ -68,13 +68,14 @@
 3.  **[RESOLVED]** Critical Resilience Flaw (Claude API call lacks timeout/retry). (Resolved in `api/ps101.py`).
 4.  **[AUTOMATION][OPEN]** GitHub → Railway auto-deploy trigger is not working. Pushes to `origin/main` do not trigger a new deployment. (Investigation and fix is part of current tasks.)
 5. **[RESOLVED]** Railway configuration consolidated (railway.toml canonical).
+5. **[NEW]** No new blockers beyond the two existing deployment issues. (Discovered: 2025-12-04_21-12-41)
 
 **LAST SESSION ACCOMPLISHED**:
-- ✅ Deployment successful - schema version now v2 in production
+- Completed SESSION_START gate work, documented mosaic-diag v2 completion and Gemini handoff, and guided Gemini on next investigative steps for the GitHub→Railway auto-deploy blocker.
 
-**NEXT TASK**:
-- Test Day 1 MVP features (context extraction, authentication, Claude API timeouts/retries).
-- Continue with deployment work: Manually deploy the latest commit to Railway, verify schema version, and investigate/fix the GitHub auto-deploy trigger.
+**NEXT TASK (After Blockers Resolved)**:
+- Next session should inspect Railway dashboard + GitHub webhook logs to restore auto-deploy, then resolve the production schema mismatch once deploy path is stable.
+
 
 ### What's NOT Changing (Do Not Touch)
 
