@@ -1,7 +1,10 @@
 # DEPLOYMENT TRUTH - SINGLE SOURCE OF AUTHORITY
-**Created:** 2025-11-25 by Claude Code
-**Last Verified:** 2025-11-25
-**Status:** CANONICAL - All other docs must reference this file
+
+**Document Metadata:**
+- Created: 2025-11-25 by Claude Code
+- Last Updated: 2025-11-25 by Claude Code
+- Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
+- Status: ACTIVE - CANONICAL (All other docs must reference this file)
 
 ---
 

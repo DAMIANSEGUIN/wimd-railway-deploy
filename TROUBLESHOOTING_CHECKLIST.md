@@ -1,6 +1,12 @@
 # Mosaic Platform Troubleshooting Checklist
 **Custom Dashboard Filter for Claude Code**
 
+**Document Metadata:**
+- Created: 2025-11-02 by Claude Code
+- Last Updated: 2025-12-06 by Claude Code
+- Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
+- Status: ACTIVE
+
 ---
 
 ## 🏷️ LAST KNOWN WORKING VERSION

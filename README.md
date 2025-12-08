@@ -1,3 +1,9 @@
+**Document Metadata:**
+- Created: 2024-09-15 by Multiple Contributors
+- Last Updated: 2025-12-06 by Gemini
+- Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
+- Status: ACTIVE - Entry point for all agents
+
 # 🚦 MOSAIC Project - Quick Start
 
 ## 🎯 FOR AI AGENTS: Start Here
@@ -9,6 +15,25 @@ AI_START_HERE.txt
 ```
 
 That's it. Everything you need is in that file in the project root.
+
+---
+
+## FAST GUIDE: Which Repo Do I Use?
+
+LOCAL (edit here):  
+  /Users/damianseguin/AI_Workspace/WIMD-Railway_Deploy_Project
+
+GDRIVE MASTER (authoritative cloud):  
+  Located in Google Drive under Mosaic/Master
+
+GDRIVE CONSULTING MIRROR (LLM-only):  
+  Located in Google Drive under Mosaic/Consulting_Mirror
+
+Manual Sync (run anytime):  
+  /Users/damianseguin/.local/bin/google-drive-sync.sh  
+
+Core Rule: Only LOCAL is editable.  
+All other copies are generated via sync.
 
 ---
 
@@ -33,12 +58,14 @@ The script auto-loads APP_URL from wimd_config.sh (asks once, then saves), runs 
 - **Latest Diagnostic:** `.ai-agents/FINAL_DIAGNOSTIC_20251102.md`
 
 ### Essential Documentation
-1. **`CLAUDE.md`** - Main architecture overview and deployment status
-2. **`TROUBLESHOOTING_CHECKLIST.md`** - Error prevention workflows
-3. **`SELF_DIAGNOSTIC_FRAMEWORK.md`** - Architecture-specific error handling
-4. **`.ai-agents/SESSION_START_PROTOCOL.md`** - Mandatory AI agent checklist
-5. **`.ai-agents/IMPLEMENTATION_TEAM_HANDOFF.md`** - Team onboarding guide
-6. **`.ai-agents/FINAL_DIAGNOSTIC_20251102.md`** - Current system state
+1. **`Mosaic_Governance_Core_v1.md`** - Top-level governance rules (ALL AGENTS)
+2. **`TEAM_PLAYBOOK_v2.md`** - Operational contract and behavior rules
+3. **`SESSION_START_v2.md`** - Session initialization protocol
+4. **`SESSION_END_OPTIONS.md`** - Session termination commands
+5. **`CLAUDE.md`** - Main architecture overview and deployment status
+6. **`TROUBLESHOOTING_CHECKLIST.md`** - Error prevention workflows
+7. **`SELF_DIAGNOSTIC_FRAMEWORK.md`** - Architecture-specific error handling
+8. **`.ai-agents/START_HERE.md`** - Quick start guide for AI agents
 
 ### Safety Protocols (MANDATORY)
 
@@ -140,7 +167,7 @@ curl http://localhost:8000/prompts/active
   - After deploy, copy the service URL to `PUBLIC_API_BASE` as needed and re-run `./scripts/verify_deploy.sh`.
   - If you want to remove the old service/project, do so from the Railway dashboard to avoid accidental data loss.
 
-## Railway Variables (Build vs Runtime)
+## Railway Variables (_Build vs Runtime)
 - In the Railway service → Variables, ensure each variable is:
   - Scoped to the correct environment (e.g., Production)
   - Marked "Available during deploy" so Nixpacks can access it at build time

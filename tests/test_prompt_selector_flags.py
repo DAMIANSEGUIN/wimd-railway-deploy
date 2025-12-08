@@ -1,4 +1,5 @@
 import sqlite3
+import os
 
 import pytest
 
@@ -10,7 +11,7 @@ from api.prompt_selector import PromptSelector
 def temp_db(tmp_path, monkeypatch):
     """Point storage.get_conn at an isolated SQLite database for this test."""
     db_path = tmp_path / "test_flags.db"
-    monkeypatch.setattr(storage, "DB_PATH", db_path)
+    monkeypatch.setenv("DATABASE_PATH", str(db_path))
 
     with storage.get_conn() as conn:
         conn.execute(

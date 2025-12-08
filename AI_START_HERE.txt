@@ -1,13 +1,23 @@
 ═══════════════════════════════════════════════════════════════════
-AI AGENT: SESSION START PROTOCOL (UPDATED 2025-12-03)
+AI AGENT: SESSION START PROTOCOL (UPDATED 2025-12-06)
 ═══════════════════════════════════════════════════════════════════
 
-Read SESSION_START.md
+GOVERNANCE v2 IS NOW ACTIVE
 
-That's it. This ONE file contains the complete gated startup protocol.
+Read these files IN ORDER:
+1. Mosaic_Governance_Core_v1.md  (Top-level rules - ALL AGENTS)
+2. TEAM_PLAYBOOK_v2.md           (Operational contract)
+3. SESSION_START_v2.md           (Session initialization)
+4. SESSION_END_OPTIONS.md        (Session termination)
 
-Or use the copy-paste prompt:
-cat SESSION_START_PROMPT.txt
+**IF OPERATING IN API MODE (Claude Code, ChatGPT API, etc.):**
+5. API_MODE_GOVERNANCE_PROTOCOL.md (Mandatory for API sessions)
+   - Execute 7-step initialization protocol
+   - Initialize token tracking
+   - Load state from files (not conversation memory)
+
+Or use the quick start:
+cat .ai-agents/START_HERE.md
 
 ═══════════════════════════════════════════════════════════════════
 DEPRECATED SYSTEM (DO NOT USE - Kept for reference)
@@ -112,6 +122,6 @@ DEPLOYMENT RULES (NEVER FORGET THESE)
    netlify deploy --prod ← NO
 
 ───────────────────────────────────────────────────────────────────
-LAST UPDATED: 2025-11-24 by Claude Code
-SYSTEM VERSION: 2.0 (status.sh based)
+LAST UPDATED: 2025-12-05 by Claude Code
+SYSTEM VERSION: 3.0 (Governance v2 - Mosaic Governance Core)
 ───────────────────────────────────────────────────────────────────

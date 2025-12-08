@@ -1,0 +1,58 @@
+{
+  "project": "Mosaic Platform - WIMD Railway Deploy",
+  "log_created": "2025-12-06",
+  "sessions": [
+    {
+      "session_id": "2025-12-06-claude-code-001",
+      "mode": "API",
+      "provider": "Anthropic Claude API",
+      "model": "claude-sonnet-4-5-20250929",
+      "start_time": "2025-12-06T12:00:00Z",
+      "end_time": "2025-12-06T13:15:00Z",
+      "token_usage": {
+        "input_tokens": 58720,
+        "output_tokens": 14500,
+        "cached_tokens": 0
+      },
+      "actual_cost_usd": 5.00,
+      "estimated_cost_usd": 0.394,
+      "cost_discrepancy_note": "Estimated $0.394, Anthropic reported $5.00 - 12.7x discrepancy. See token_tracking_reliability_issue.md",
+      "reason_for_api_use": "Session initialization - API mode tracking documentation created",
+      "tasks_completed": [
+        "Research API vs web interface consistency issues",
+        "Create comprehensive API tracking documentation",
+        "Update SESSION_START_v2.md with API mode detection",
+        "Create API_USAGE_LOG.json template"
+      ],
+      "governance_files_loaded": [
+        "Mosaic_Governance_Core_v1.md",
+        "TEAM_PLAYBOOK_v2.md",
+        "SESSION_START_v2.md",
+        "AI_START_HERE.txt"
+      ],
+      "notes": "Initial session to address ChatGPT concern about API/web interface switching. Created docs/API_MODE_TRACKING_AND_ISSUES.md with research findings and mitigation strategies."
+    }
+  ],
+  "monthly_summary": {
+    "2025-12": {
+      "total_sessions": 1,
+      "total_cost_usd": 5.00,
+      "total_input_tokens": 58720,
+      "total_output_tokens": 14500,
+      "api_vs_subscription_ratio": "API backup usage only"
+    }
+  },
+  "budget_tracking": {
+    "monthly_budget_usd": 20.00,
+    "current_month_spent": 5.00,
+    "remaining_budget": 15.00,
+    "alert_threshold_session": 5.00,
+    "alert_threshold_monthly": 15.00
+  },
+  "usage_notes": [
+    "API mode used only when hitting Claude Pro weekly limits",
+    "Primary work done via Claude Pro subscription at claude.ai",
+    "Log updated manually at end of each API session",
+    "Cost calculation: Input ($3/M tokens) + Output ($15/M tokens)"
+  ]
+}

@@ -1,5 +1,11 @@
 # Foundation & Mosaic Development Guide
 
+**Document Metadata:**
+- Created: 2024-09-15 by Multiple Contributors
+- Last Updated: 2025-11-03 by Claude Code
+- Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
+- Status: ACTIVE - Primary development reference
+
 ## Architecture
 - Microservices architecture: Foundation (Safety & Evidence) + Mosaic (Career Transition Platform)
 - Production URL: https://whatismydelta.com (LIVE ✅)
