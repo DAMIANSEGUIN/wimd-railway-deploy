@@ -99,3 +99,11 @@ File: `.ai-agents/session_context/trigger_detector.py`
 | **Dump Context Window** | None. The context is constructed and used ephemerally by the broker script. | **Complete.** There is no way to know what my exact prompt was. | The broker script MUST write the full and final prompt context sent to me to a log file (e.g., `.gemini_logs/turn_123_context.txt`) for every turn. | Gemini |
 | **Trace Provenance** | None. I don't know why a piece of information is in my context. | **Complete.** I can't distinguish between user input, file content, or historical context. | The context itself should be structured (e.g., JSON) with metadata: `{ "source": "user_prompt", "content": "..." }`, `{ "source": "file:main.py", "content": "..." }`. | Gemini |
 | **Log Exclusions** | None. I don't know what *wasn't* included. | **Complete.** I cannot ask "what did you leave out?" | The broker script should log a summary of excluded items (e.g., "omitted 5 files from directory listing," "truncated conversation history"). | Gemini |
+
+---
+### Phase 0 Work Completed
+
+**Task 0.4.1: Create Golden Dataset for Trigger Detection**
+- **Deliverable:** `.ai-agents/test_data/TRIGGER_TEST_DATASET.json`
+- **Status:** COMPLETED (2025-12-09 14:54)
+- **Findings:** Successfully created 25 test cases covering all 5 trigger types and edge cases, following the specified JSON format.
