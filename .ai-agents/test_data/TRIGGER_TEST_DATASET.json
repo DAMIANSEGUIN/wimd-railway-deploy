@@ -1,0 +1,202 @@
+[
+  {
+    "id": "test_001",
+    "user_message": "The deployment to Railway failed with a 500 error.",
+    "agent_response": "Let me check the deployment logs and the last push.",
+    "expected_triggers": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH"],
+    "should_not_trigger": ["STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'failed' (error keyword) in user_message and 'deployment' in both messages."
+  },
+  {
+    "id": "test_002",
+    "user_message": "Can you help me write a unit test for the auth system?",
+    "agent_response": "Sure, let's create a test suite.",
+    "expected_triggers": ["TEST_FRAMEWORK"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'unit test' (test keyword) in user_message."
+  },
+  {
+    "id": "test_003",
+    "user_message": "The PostgreSQL connection is timing out.",
+    "agent_response": "This could be a database configuration issue. I will query the schema.",
+    "expected_triggers": ["TROUBLESHOOTING_CHECKLIST", "STORAGE_PATTERNS"],
+    "should_not_trigger": ["DEPLOYMENT_TRUTH", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'timing out' (error) in user_message and 'PostgreSQL' and 'query' (database) in agent_response."
+  },
+  {
+    "id": "test_004",
+    "user_message": "What is the current status of the production environment?",
+    "agent_response": "Checking the status of production deployment.",
+    "expected_triggers": ["DEPLOYMENT_TRUTH"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'production' and 'deployment' in both messages."
+  },
+  {
+    "id": "test_005",
+    "user_message": "No issues found, continue with the task.",
+    "agent_response": "Acknowledged. Proceeding as planned.",
+    "expected_triggers": [],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "No trigger keywords present."
+  },
+  {
+    "id": "test_006",
+    "user_message": "There's a bug in the new feature.",
+    "agent_response": "Investigating the bug report.",
+    "expected_triggers": ["TROUBLESHOOTING_CHECKLIST"],
+    "should_not_trigger": ["DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'bug' (error keyword) in user_message."
+  },
+  {
+    "id": "test_007",
+    "user_message": "Please push these changes to staging.",
+    "agent_response": "Preparing changes for push to staging environment.",
+    "expected_triggers": ["DEPLOYMENT_TRUTH"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'push' and 'staging' (deployment keywords) in user_message."
+  },
+  {
+    "id": "test_008",
+    "user_message": "I need to perform a database migration.",
+    "agent_response": "Please specify the migration details for the SQLite database.",
+    "expected_triggers": ["STORAGE_PATTERNS"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'database migration' (database keyword) in user_message and 'SQLite database' in agent_response."
+  },
+  {
+    "id": "test_009",
+    "user_message": "The unit tests are failing consistently.",
+    "agent_response": "Let's debug the failing test cases.",
+    "expected_triggers": ["TROUBLESHOOTING_CHECKLIST", "TEST_FRAMEWORK"],
+    "should_not_trigger": ["DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'failing' (error) and 'unit tests' (test) in user_message."
+  },
+  {
+    "id": "test_010",
+    "user_message": "Optimize the query performance for the user table.",
+    "agent_response": "Analyzing the query plan for the user table in the database.",
+    "expected_triggers": ["STORAGE_PATTERNS"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'query' and 'database' (database keywords) in agent_response."
+  },
+  {
+    "id": "test_011",
+    "user_message": "The application crashed unexpectedly.",
+    "agent_response": "Checking the crash logs.",
+    "expected_triggers": ["TROUBLESHOOTING_CHECKLIST"],
+    "should_not_trigger": ["DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'crashed' (error keyword) in user_message."
+  },
+  {
+    "id": "test_012",
+    "user_message": "Release the new version to production.",
+    "agent_response": "Confirming release to production environment.",
+    "expected_triggers": ["DEPLOYMENT_TRUTH"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'release' and 'production' (deployment keywords) in user_message."
+  },
+  {
+    "id": "test_013",
+    "user_message": "Verify the test coverage of the new module.",
+    "agent_response": "Running coverage reports.",
+    "expected_triggers": ["TEST_FRAMEWORK"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'test coverage' (test keyword) in user_message."
+  },
+  {
+    "id": "test_014",
+    "user_message": "I need to roll back the last deployment.",
+    "agent_response": "Initiating rollback procedure.",
+    "expected_triggers": ["DEPLOYMENT_TRUTH"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'roll back' and 'deployment' (deployment keywords) in user_message."
+  },
+  {
+    "id": "test_015",
+    "user_message": "Debug the performance issue.",
+    "agent_response": "Analyzing logs to pinpoint the problem.",
+    "expected_triggers": ["TROUBLESHOOTING_CHECKLIST"],
+    "should_not_trigger": ["DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'issue' and 'problem' (error keywords) in agent_response."
+  },
+  {
+    "id": "test_016",
+    "user_message": "The application is currently working as expected.",
+    "agent_response": "Good to know. What's next?",
+    "expected_triggers": [],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "No trigger keywords present."
+  },
+  {
+    "id": "test_017",
+    "user_message": "Can you check the main database for an entry?",
+    "agent_response": "Executing query on the main database.",
+    "expected_triggers": ["STORAGE_PATTERNS"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'database' and 'query' (database keywords) in both messages."
+  },
+  {
+    "id": "test_018",
+    "user_message": "The pytest suite failed.",
+    "agent_response": "Checking the pytest logs.",
+    "expected_triggers": ["TROUBLESHOOTING_CHECKLIST", "TEST_FRAMEWORK"],
+    "should_not_trigger": ["DEPLOYING_TRUTH", "STORAGE_PATTERNS", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'pytest' (test) and 'failed' (error) in user_message."
+  },
+  {
+    "id": "test_019",
+    "user_message": "Context overflow test case. This user message is intentionally very very long to simulate a large context. " + "word " * 500,
+    "agent_response": "This response will be short.",
+    "expected_triggers": [],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "user_message length does not trigger context_overflow, only agent_response does."
+  },
+  {
+    "id": "test_020",
+    "user_message": "This is a normal user message.",
+    "agent_response": "This is a normal agent response that is very, very long and goes over the 1000 word limit. " + "word " * 1000,
+    "expected_triggers": ["CONTEXT_ENGINEERING_GUIDE"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK"],
+    "rationale": "agent_response contains more than 1000 words, triggering context_overflow."
+  },
+  {
+    "id": "test_021",
+    "user_message": "I am working on the new feature.",
+    "agent_response": "Understood. Keep me updated.",
+    "expected_triggers": [],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "No trigger keywords present."
+  },
+  {
+    "id": "test_022",
+    "user_message": "The system encountered an exception.",
+    "agent_response": "Checking logs for the exception details.",
+    "expected_triggers": ["TROUBLESHOOTING_CHECKLIST"],
+    "should_not_trigger": ["DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'exception' (error keyword) in user_message."
+  },
+  {
+    "id": "test_023",
+    "user_message": "I need to ensure all unit tests pass before release.",
+    "agent_response": "Running unit tests.",
+    "expected_triggers": ["TEST_FRAMEWORK", "DEPLOYMENT_TRUTH"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "STORAGE_PATTERNS", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'unit tests' (test) and 'release' (deployment keyword)."
+  },
+  {
+    "id": "test_024",
+    "user_message": "Connect to the production database.",
+    "agent_response": "Establishing connection to the production database.",
+    "expected_triggers": ["DEPLOYMENT_TRUTH", "STORAGE_PATTERNS"],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'production' (deployment) and 'database' (database) keywords."
+  },
+  {
+    "id": "test_025",
+    "user_message": "Ambiguous: 'I saw a bug flying by the window.'",
+    "agent_response": "Humor noted. How can I assist with software development?",
+    "expected_triggers": [],
+    "should_not_trigger": ["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH", "STORAGE_PATTERNS", "TEST_FRAMEWORK", "CONTEXT_ENGINEERING_GUIDE"],
+    "rationale": "Contains 'bug' but in a non-software context, should not trigger TROUBLESHOOTING_CHECKLIST."
+  }
+]
