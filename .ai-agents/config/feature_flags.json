@@ -1,0 +1,20 @@
+{
+  "schema_version": "v1.0",
+  "last_updated": "2025-12-09T16:00:00Z",
+  "flags": {
+    "MCP_ENABLED": false,
+    "MCP_SESSION_SUMMARIES": false,
+    "MCP_RETRIEVAL_TRIGGERS": false,
+    "MCP_STRUCTURED_LOGS": false,
+    "MCP_BROKER_INTEGRATION": false,
+    "MCP_MIRROR_EXPORTS": false
+  },
+  "notes": {
+    "MCP_ENABLED": "Master switch - disables all MCP features",
+    "MCP_SESSION_SUMMARIES": "Load summaries instead of full docs at session start",
+    "MCP_RETRIEVAL_TRIGGERS": "Automatic document retrieval based on triggers",
+    "MCP_STRUCTURED_LOGS": "Log events in structured format",
+    "MCP_BROKER_INTEGRATION": "Broker script uses MCP for context",
+    "MCP_MIRROR_EXPORTS": "Export MCP state to files for mirror agent"
+  }
+}
