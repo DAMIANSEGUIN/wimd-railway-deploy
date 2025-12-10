@@ -177,7 +177,7 @@ app.add_middleware(
 )
 
 # Include PS101 context extraction router (Day 1 MVP)
-app.include_router(ps101_router)
+app.include_router(ps101_router, prefix="/api/ps101")
 
 
 class WimdRequest(BaseModel):

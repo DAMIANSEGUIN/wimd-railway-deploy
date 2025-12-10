@@ -236,7 +236,7 @@ Rules:
 # FASTAPI ENDPOINT (with AUTHENTICATION FIX)
 # ===================================================================
 
-@router.post("/api/ps101/extract-context")
+@router.post("/extract-context")
 async def extract_context_endpoint(
     user_id: str = Header(..., alias="X-User-ID")  # ✅ SECURITY FIX: Authentication required
 ):
