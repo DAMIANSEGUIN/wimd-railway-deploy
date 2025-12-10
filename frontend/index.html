@@ -1967,6 +1967,11 @@ async function askCoach(prompt) {
     if(sessionId){
       init.headers['X-Session-ID'] = sessionId;
     }
+    if (currentUser && currentUser.userId) {
+      init.headers['X-User-ID'] = currentUser.userId;
+    } else if (userData && userData.userId) {
+      init.headers['X-User-ID'] = userData.userId;
+    }
     const res = await fetch(`${apiBase}${path}`, init);
     let data = null;
     try{ data = await res.json(); } catch(err){ data = null; }
@@ -4425,9 +4430,24 @@ async function askCoach(prompt) {
       const flow = document.getElementById('ps101-flow');
       const welcome = document.getElementById('ps101-welcome');
 
-      if (completion) completion.classList.remove('hidden');
-      if (flow) flow.classList.add('hidden');
-      if (welcome) welcome.classList.add('hidden');
+      if (this.isComplete) {
+        if(welcome) welcome.classList.add('hidden');
+        if(flow) flow.classList.add('hidden');
+        if(completion) completion.classList.remove('hidden');
+        this.renderCompletionSummary();
+        // Trigger backend context extraction
+        if (isAuthenticated && currentUser && currentUser.userId) {
+            console.log('Triggering backend context extraction...');
+            callJson('/api/ps101/extract-context', {
+                method: 'POST'
+            }).then(result => {
+                console.log('Context extraction successful:', result);
+            }).catch(err => {
+                console.error('Context extraction failed:', err);
+            });
+        }
+        return;
+      }
 
       // Render commitment highlight
       const commitmentText = document.getElementById('commitment-text');

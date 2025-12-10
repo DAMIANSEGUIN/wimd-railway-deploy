@@ -129,16 +129,23 @@ class AIClientManager:
     def _call_openai(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> Optional[str]:
         """Call OpenAI API with proper error handling."""
         try:
-            messages = [
-                {"role": "system", "content": "You are a helpful career coach assistant. Provide thoughtful, actionable advice."}
-            ]
+            system_prompt = "You are a helpful career coach assistant. Provide thoughtful, actionable advice."
+            if context and "system_prompt" in context:
+                system_prompt = context["system_prompt"]
+
+            messages = [{"role": "system", "content": system_prompt}]
             
-            if context:
-                context_str = json.dumps(context, indent=2)
-                messages.append({"role": "user", "content": f"Context: {context_str}\n\nUser prompt: {prompt}"})
+            # If a system_prompt is provided, we assume it contains all necessary context.
+            # Otherwise, we fall back to the old behavior of dumping the context.
+            if "system_prompt" not in (context or {}):
+                if context:
+                    context_str = json.dumps(context, indent=2)
+                    messages.append({"role": "user", "content": f"Context: {context_str}\n\nUser prompt: {prompt}"})
+                else:
+                    messages.append({"role": "user", "content": prompt})
             else:
                 messages.append({"role": "user", "content": prompt})
-            
+
             response = self.openai_client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
@@ -156,8 +163,13 @@ class AIClientManager:
         """Call Anthropic API with proper error handling."""
         try:
             system_prompt = "You are a helpful career coach assistant. Provide thoughtful, actionable advice."
+            if context and "system_prompt" in context:
+                system_prompt = context["system_prompt"]
             
-            if context:
+            # If a system_prompt is provided, we assume it contains all necessary context.
+            if "system_prompt" in (context or {}):
+                full_prompt = prompt
+            elif context:
                 context_str = json.dumps(context, indent=2)
                 full_prompt = f"Context: {context_str}\n\nUser prompt: {prompt}"
             else:

@@ -40,6 +40,8 @@ from .storage import (
     update_session_data,
     get_user_by_email,
     get_user_by_id,
+    get_user_context,
+    get_user_id_for_session,
     latest_metrics,
     list_resume_versions,
     record_wimd_output,
@@ -382,6 +384,19 @@ def _coach_reply(prompt: str, metrics: Dict[str, int], session_id: str = None) -
 
     # Normal CSV→AI fallback flow (PS101 not active)
     try:
+        # PS101 COMPLETION GATE
+        user_id = get_user_id_for_session(session_id)
+        if user_id:
+            ps101_context_data = get_user_context(user_id)
+            if not ps101_context_data:
+                 # User has finished the flow, but context isn't extracted yet.
+                 # Or, they haven't finished the flow at all.
+                 return "Please complete the PS101 questionnaire first to get personalized coaching."
+        else:
+            # No user_id associated with the session, so no context is possible.
+            return "It looks like you're not logged in. Please log in and complete the PS101 questionnaire for a personalized experience."
+
+
         # Get CSV prompts data
         csv_prompts = None
         try:
@@ -400,8 +415,32 @@ def _coach_reply(prompt: str, metrics: Dict[str, int], session_id: str = None) -
         except Exception:
             pass
 
+        # Create a dynamic prompt with the context
+        if ps101_context_data:
+            system_prompt = f"""You are Mosaic, an expert career coach specializing in helping people design small, actionable experiments to test new career paths.
+
+Your user has just completed the PS101 self-reflection exercise. This is their structured summary:
+<ps101_context>
+{json.dumps(ps101_context_data, indent=2)}
+</ps101_context>
+
+Your primary goal is to help them design their NEXT EXPERIMENT. Use their context—passions, skills, secret powers, and obstacles—to ask insightful questions and propose tiny, low-risk ways for them to test their assumptions.
+
+- **DO NOT** mention "PS101" or the reflection process.
+- **DO** use their "key_quotes" to build rapport and show you've listened.
+- **FOCUS ON ACTION.** Always be guiding towards a small, concrete next step.
+- **Synthesize, don't just repeat.** Connect their passions and skills to potential experiments.
+- **Challenge their obstacles.** Gently question their "internal_obstacles" and brainstorm ways around "external_obstacles".
+
+Keep your responses concise, empathetic, and relentlessly focused on helping them build momentum through small wins.
+"""
+            context = {"metrics": metrics, "system_prompt": system_prompt}
+        else:
+            # This else block should ideally not be hit due to the completion gate above,
+            # but it's here as a fallback.
+            context = {"metrics": metrics}
+
         # Use prompt selector with CSV→AI fallback
-        context = {"metrics": metrics}
         result = get_prompt_response(
             prompt=prompt,
             session_id=session_id or "default",

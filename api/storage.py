@@ -769,6 +769,20 @@ def get_user_id_for_session(session_id: str) -> Optional[str]:
         return row[0] if row else None
 
 
+def get_user_context(user_id: str) -> Optional[Dict[str, Any]]:
+    """Get extracted PS101 context for a user."""
+    with get_conn() as conn:
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute(
+            "SELECT context_data FROM user_contexts WHERE user_id = %s",
+            (user_id,)
+        )
+        row = cursor.fetchone()
+        if row and row["context_data"]:
+            return _json_load(row["context_data"])
+    return None
+
+
 __all__ = [
     "UPLOAD_ROOT",
     "create_session",
@@ -793,6 +807,7 @@ __all__ = [
     "get_user_by_email",
     "get_user_by_id",
     "get_user_id_for_session",
+    "get_user_context",
     "hash_password",
     "verify_password",
     "delete_session",
