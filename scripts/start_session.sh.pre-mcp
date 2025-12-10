@@ -1,0 +1,30 @@
+#!/bin/bash
+# WIMD Railway Deploy - Session Start Script
+# Automatically outputs essential context for AI agents
+
+echo "# WIMD Railway Deploy - Session Context"
+echo ""
+echo "## Quick Reference"
+echo "- **Project:** Production career transition platform (whatismydelta.com)"
+echo "- **Stack:** FastAPI + PostgreSQL (Railway) + Vanilla JS (Netlify)"
+echo "- **Status:** LIVE in production"
+echo ""
+
+# Output essential governance
+cat CLAUDE.md
+
+echo ""
+echo "---"
+echo ""
+
+# Output troubleshooting checklist
+cat TROUBLESHOOTING_CHECKLIST.md
+
+echo ""
+echo "---"
+echo ""
+echo "## Session Ready"
+echo "- Architecture, deployment commands, and status loaded from CLAUDE.md"
+echo "- Error prevention and debugging loaded from TROUBLESHOOTING_CHECKLIST.md"
+echo "- For architecture-specific errors, read SELF_DIAGNOSTIC_FRAMEWORK.md"
+echo ""

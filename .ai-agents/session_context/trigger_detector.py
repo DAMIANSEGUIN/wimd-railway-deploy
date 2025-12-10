@@ -1,83 +1,140 @@
-from typing import List
+#!/usr/bin/env python3
+"""
+MCP Trigger Detector
+Detects when to retrieve full documentation based on conversation patterns
+"""
 
-def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[str]:
-    """Detect which docs should be fetched based on message content."""
+import re
+from typing import List, Set
 
-    triggers = []
+class TriggerDetector:
+    """Detects retrieval triggers from user messages and agent responses"""
 
-    # Error pattern
-    if any(word in user_message.lower() for word in ['error', 'failed', 'crash', 'bug']):
-        triggers.append('TROUBLESHOOTING_CHECKLIST')
+    def __init__(self):
+        # Define trigger patterns based on RETRIEVAL_TRIGGERS.md
+        self.patterns = {
+            "TROUBLESHOOTING_CHECKLIST": [
+                # Match error/problem keywords in technical contexts
+                r'\b(error|errors|failed|fails|failing|crash|crashed|exception|broken)\b',
+                # Match timeout variations
+                r'\b(timeout|timeouts|timing\s+out|timed\s+out)\b',
+                # Match bug in technical context (not "bug flying")
+                r'\bbug\s+(in|with|report|fix|fixes)',
+                r'\bbugs\b',
+                # Match issue/problem in technical context
+                r'\bissues?\s+(with|in|report|detected)',
+                r'\b(performance|security|critical)\s+issues?\b',
+                r'\bproblems?\s+(with|in|detected)',
+            ],
+            "DEPLOYMENT_TRUTH": [
+                r'\b(deploy|deployment|deploying|deployed|push|pushing|railway|production|prod|staging|release|released|rollback)\b',
+            ],
+            "STORAGE_PATTERNS": [
+                r'\b(database|postgresql|postgres|sqlite|query|queries|migration|migrations|schema|connection|connections|sql)\b',
+            ],
+            "TEST_FRAMEWORK": [
+                # Match test-related phrases
+                r'\b(pytest|golden\s+dataset|coverage)\b',
+                r'\bunit\s+tests?\b',
+                r'\btests?\s+(are\s+)?(failing|failed|passed?|pass|running)\b',
+            ],
+            "CONTEXT_ENGINEERING_GUIDE": [
+                # Triggered by response length, not keywords
+            ]
+        }
 
-    # Deployment pattern
-    if any(word in user_message.lower() for word in ['deploy', 'push', 'railway', 'production']):
-        triggers.append('DEPLOYMENT_TRUTH')
+        # Compile regex patterns
+        self.compiled_patterns = {}
+        for trigger, patterns in self.patterns.items():
+            self.compiled_patterns[trigger] = [
+                re.compile(pattern, re.IGNORECASE)
+                for pattern in patterns
+            ]
 
-    # Database pattern
-    if any(word in agent_response.lower() for word in ['database', 'postgresql', 'sqlite', 'query']):
-        triggers.append('STORAGE_PATTERNS')
+    def detect_triggers(
+        self,
+        user_message: str,
+        agent_response: str = ""
+    ) -> List[str]:
+        """
+        Detect which documents should be retrieved
 
-    # Test pattern
-    if any(word in user_message.lower() for word in ['test', 'pytest', 'golden']):
-        triggers.append('TEST_FRAMEWORK')
+        Args:
+            user_message: The user's input message
+            agent_response: The agent's response (optional)
 
-    # Context overflow (agent struggling)
-    if len(agent_response.split()) > 1000:
-        triggers.append('CONTEXT_ENGINEERING_GUIDE')
+        Returns:
+            List of document names to retrieve (e.g., ["TROUBLESHOOTING_CHECKLIST"])
+        """
+        triggered = set()
 
-    return triggers
+        # Combine messages for pattern matching
+        combined_text = f"{user_message} {agent_response}"
 
-if __name__ == '__main__':
-    # Example usage and basic tests
-    print("Running trigger detector tests...")
+        # Check keyword-based triggers
+        for trigger, patterns in self.compiled_patterns.items():
+            if trigger == "CONTEXT_ENGINEERING_GUIDE":
+                continue  # Handled separately below
 
-    # Test 1: Error trigger
-    user_msg_1 = "I encountered an error trying to run the script."
-    agent_resp_1 = "Attempting to fix the issue."
-    expected_1 = ['TROUBLESHOOTING_CHECKLIST']
-    result_1 = detect_retrieval_triggers(user_msg_1, agent_resp_1)
-    print(f"Test 1 (Error): {'PASS' if result_1 == expected_1 else f'FAIL (Expected: {expected_1}, Got: {result_1})'}")
+            for pattern in patterns:
+                if pattern.search(combined_text):
+                    triggered.add(trigger)
+                    break  # One match per trigger is enough
 
-    # Test 2: Deployment trigger
-    user_msg_2 = "Please deploy the changes to production."
-    agent_resp_2 = "Initiating deployment process."
-    expected_2 = ['DEPLOYMENT_TRUTH']
-    result_2 = detect_retrieval_triggers(user_msg_2, agent_resp_2)
-    print(f"Test 2 (Deployment): {'PASS' if result_2 == expected_2 else f'FAIL (Expected: {expected_2}, Got: {result_2})'}")
+        # Check context overflow trigger (response length)
+        if agent_response:
+            word_count = len(agent_response.split())
+            if word_count > 1000:
+                triggered.add("CONTEXT_ENGINEERING_GUIDE")
 
-    # Test 3: Database trigger
-    user_msg_3 = "Check the database logs."
-    agent_resp_3 = "Querying the postgresql database for recent entries."
-    expected_3 = ['STORAGE_PATTERNS']
-    result_3 = detect_retrieval_triggers(user_msg_3, agent_resp_3)
-    print(f"Test 3 (Database): {'PASS' if result_3 == expected_3 else f'FAIL (Expected: {expected_3}, Got: {result_3})'}")
+        return sorted(list(triggered))
 
-    # Test 4: Test trigger
-    user_msg_4 = "Run the pytest suite."
-    agent_resp_4 = "Executing tests."
-    expected_4 = ['TEST_FRAMEWORK']
-    result_4 = detect_retrieval_triggers(user_msg_4, agent_resp_4)
-    print(f"Test 4 (Test): {'PASS' if result_4 == expected_4 else f'FAIL (Expected: {expected_4}, Got: {result_4})'}")
+    def get_document_paths(self, triggers: List[str]) -> dict:
+        """
+        Map trigger names to actual document paths
 
-    # Test 5: Context Overflow trigger (simulated)
-    user_msg_5 = "Continue working on the task."
-    agent_resp_5 = "This is a very long agent response to simulate context overflow. " * 1001 # Make it 1001 words to ensure len > 1000
-    expected_5 = ['CONTEXT_ENGINEERING_GUIDE']
-    result_5 = detect_retrieval_triggers(user_msg_5, agent_resp_5)
-    print(f"Test 5 (Context Overflow): {'PASS' if result_5 == expected_5 else f'FAIL (Expected: {expected_5}, Got: {result_5})'}")
+        Args:
+            triggers: List of trigger names
 
-    # Test 6: Multiple triggers
-    user_msg_6 = "There was an error during deployment. Please check logs and run tests."
-    agent_resp_6 = "Checking logs and preparing for tests."
-    expected_6 = ['TROUBLESHOOTING_CHECKLIST', 'DEPLOYMENT_TRUTH', 'TEST_FRAMEWORK']
-    # Sort for consistent comparison as order might vary with `any()`
-    result_6 = sorted(detect_retrieval_triggers(user_msg_6, agent_resp_6))
-    print(f"Test 6 (Multiple): {'PASS' if result_6 == sorted(expected_6) else f'FAIL (Expected: {sorted(expected_6)}, Got: {result_6})'}")
+        Returns:
+            Dict mapping trigger to file path
+        """
+        document_map = {
+            "TROUBLESHOOTING_CHECKLIST": "TROUBLESHOOTING_CHECKLIST.md",
+            "DEPLOYMENT_TRUTH": "CLAUDE.md",  # Deployment section
+            "STORAGE_PATTERNS": "SELF_DIAGNOSTIC_FRAMEWORK.md",  # Storage section
+            "TEST_FRAMEWORK": "CLAUDE.md",  # Testing section
+            "CONTEXT_ENGINEERING_GUIDE": "docs/CONTEXT_ENGINEERING_CRITICAL_INFRASTRUCTURE.md"
+        }
 
-    # Test 7: No triggers
-    user_msg_7 = "Hello world."
-    agent_resp_7 = "Hello to you too."
-    expected_7 = []
-    result_7 = detect_retrieval_triggers(user_msg_7, agent_resp_7)
-    print(f"Test 7 (None): {'PASS' if result_7 == expected_7 else f'FAIL (Expected: {expected_7}, Got: {result_7})'}")
+        return {trigger: document_map[trigger] for trigger in triggers if trigger in document_map}
 
+
+def main():
+    """Test the trigger detector with sample messages"""
+    detector = TriggerDetector()
+
+    # Test cases
+    test_cases = [
+        ("The deployment failed with a 500 error", ""),
+        ("Can you help me write a test?", ""),
+        ("The PostgreSQL connection is timing out", ""),
+        ("Normal conversation", ""),
+        ("Test case", "word " * 1500),  # Long response
+    ]
+
+    print("Trigger Detector Test Results:")
+    print("-" * 60)
+
+    for user_msg, agent_resp in test_cases:
+        triggers = detector.detect_triggers(user_msg, agent_resp)
+        print(f"\nUser: {user_msg[:50]}...")
+        print(f"Agent: {agent_resp[:50]}...")
+        print(f"Triggers: {triggers if triggers else 'None'}")
+
+    print("\n" + "=" * 60)
+    print("Test complete. Run with golden dataset for full validation.")
+
+
+if __name__ == "__main__":
+    main()

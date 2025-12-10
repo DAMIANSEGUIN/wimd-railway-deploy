@@ -1,0 +1,7 @@
+From: claude_code
+Task: Handoff Protocol Standardization
+Previous: phase3_production_hardening completed
+Dependencies: All satisfied
+
+Your task is ready. Check gate status with:
+./scripts/start_session.sh claude_code
