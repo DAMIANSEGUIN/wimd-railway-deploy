@@ -3,10 +3,25 @@
 
 ---
 
+## CRITICAL QUESTION TO ANSWER ON RESTART
+
+**User asked: "Why would you not follow protocol?"**
+
+**Answer this immediately:**
+1. Why did you create COMMAND_VALIDATION_GATE.md but not use it?
+2. What specific steps will you take to ENFORCE validation (not just document it)?
+3. How will you ensure you NEVER skip validation again?
+
+**Then proceed with validation enforcement implementation.**
+
+---
+
 ## PROMPT FOR NEXT SESSION
 
 ```
 Continue from session end. Read this file first: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
+
+FIRST: Answer the critical question at the top about why you didn't follow validation protocol.
 
 Context:
 - Mosaic MVP successfully deployed to production (commits: 493e62c, 34a3960, a968e9a)

@@ -1,8 +1,14 @@
 # Foundation & Mosaic Development Guide
 
+**🚨 MANDATORY FIRST ACTION ON EVERY SESSION:**
+```bash
+Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
+```
+**Read SESSION_RESUME_PROMPT.md BEFORE doing ANYTHING else. Contains critical session state and context.**
+
 **Document Metadata:**
 - Created: 2024-09-15 by Multiple Contributors
-- Last Updated: 2025-11-03 by Claude Code
+- Last Updated: 2025-12-10 by Claude Code
 - Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
 - Status: ACTIVE - Primary development reference
 
