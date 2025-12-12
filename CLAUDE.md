@@ -158,6 +158,13 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - Multi-layer checklist verification (system reminders + git hooks + output protocol)
 - Pre-commit hooks block dangerous patterns (context manager violations, SQLite syntax, silent exceptions)
 - Mandatory checklist output before code changes (audit trail)
+- **Command Validation Gate**: Technical enforcement that blocks untested commands
+  - Location: `.ai-agents/automation/COMMAND_VALIDATION_GATE.md`
+  - Validator: `.ai-agents/automation/validate_command.sh`
+  - Enforcement: `.ai-agents/automation/enforce_validation.sh`
+  - Pre-commit integration: Validates shell scripts before commit
+  - **RULE**: ALL commands must use absolute paths, be tested, and include error handling
+  - **NO EXCEPTIONS**: Validation cannot be skipped (technical, not cognitive enforcement)
 
 ## Import Patterns
 @issues.json

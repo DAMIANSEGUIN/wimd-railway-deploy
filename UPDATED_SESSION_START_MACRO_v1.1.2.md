@@ -2,6 +2,7 @@
 **Document Metadata:**
 - Created: 2025-12-06
 - Last Updated: 2025-12-06 by Gemini
+- Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
 - Status: ACTIVE
 
 NOTE: This macro fully replaces the legacy `SESSION_START_v2.md`, which is now

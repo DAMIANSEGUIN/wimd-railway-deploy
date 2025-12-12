@@ -8,7 +8,7 @@ set -e
 TIER1_FILES=(
     "Mosaic_Governance_Core_v1.md"
     "TEAM_PLAYBOOK_v2.md"
-    "SESSION_START_v2.md"
+    "UPDATED_SESSION_START_MACRO_v1.1.2.md"
     "SESSION_END_OPTIONS.md"
     "API_MODE_GOVERNANCE_PROTOCOL.md"
 )
