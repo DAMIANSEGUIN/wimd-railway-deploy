@@ -1,4 +1,5 @@
 # Pre-Deployment Spec Verification
+
 **Date:** 2025-11-03
 **Commit:** 6e026fa RESTORE: Auth UI from railway-origin/main
 
@@ -7,6 +8,7 @@
 ## Critical Requirements Check
 
 ### 1. Authentication (MUST HAVE)
+
 - [ ] Login modal present
 - [ ] Register functionality
 - [ ] Password reset flow
@@ -14,6 +16,7 @@
 - [ ] Auth token handling
 
 ### 2. PS101 Flow (MUST HAVE - Per PS101_CANONICAL_SPEC_V2.md)
+
 - [ ] 10-step problem-solving journey
 - [ ] Multiple prompts per step (3-6 prompts each)
 - [ ] Step progress indicator (10 dots)
@@ -25,6 +28,7 @@
 - [ ] localStorage persistence
 
 ### 3. Small Experiments Framework (MUST HAVE - Steps 6-9)
+
 - [ ] Experiment Canvas (Step 6)
   - [ ] Experiment name
   - [ ] Hypothesis statement
@@ -46,12 +50,14 @@
   - [ ] Confidence delta slider
 
 ### 4. Chat/Coach Integration (MUST HAVE)
+
 - [ ] Chat window functional
 - [ ] API_BASE correctly configured (empty string for Netlify proxy)
 - [ ] /wimd endpoint proxied to Railway
 - [ ] Coach responses working
 
 ### 5. Peripheral Calm Aesthetic (MUST HAVE)
+
 - [ ] Root token palette used
 - [ ] Generous whitespace
 - [ ] Calm typography (13-15px system sans)
@@ -63,11 +69,13 @@
 ## Current State Analysis
 
 ### Restored Version (6e026fa)
+
 **Source:** railway-origin/main
 **Line Count:** 2,766 lines
 **Title:** "What Is My Delta — Clean Interface"
 
 **Features Present:**
+
 - ✅ Authentication: 7 authModal references
 - ✅ PS101 flow: 39 PS101State references
 - ✅ API_BASE: Empty string (correct)
@@ -76,6 +84,7 @@
 - ❓ All 10 PS101 steps: NEEDS VERIFICATION
 
 **Features Potentially Missing:**
+
 - ❌ PS101 v2 enhancements (3,427 line version had improvements)
 - ❌ Enhanced inline forms from PS101-FIX-001
 - ❌ Experiment components HTML/CSS
@@ -85,14 +94,16 @@
 
 ## Spec Comparison Required
 
-### Need to Check:
+### Need to Check
+
 1. Does current version have all 10 PS101 steps?
 2. Does it have multi-prompt experience per step?
 3. Does it have Small Experiments Framework components?
 4. Does it have inline forms or browser prompts?
 5. Does it match PS101_CANONICAL_SPEC_V2.md requirements?
 
-### Files to Compare:
+### Files to Compare
+
 - Current: `mosaic_ui/index.html` (2,766 lines)
 - PS101 v2: Commit 890d2bc (3,427 lines)
 - Spec: `docs/PS101_CANONICAL_SPEC_V2.md`
@@ -103,12 +114,15 @@
 ## Decision Point
 
 ### Option A: Deploy Current (2,766 lines)
+
 **Pros:**
+
 - ✅ Auth working immediately
 - ✅ PS101 flow functional
 - ✅ Known stable version
 
 **Cons:**
+
 - ❌ May be missing PS101 v2 enhancements
 - ❌ May still have browser prompts (not inline forms)
 - ❌ May not have complete Small Experiments Framework
@@ -117,12 +131,15 @@
 **Risk:** Deploying incomplete version that doesn't meet PS101_CANONICAL_SPEC_V2 requirements
 
 ### Option B: Merge PS101 v2 Features into Current
+
 **Pros:**
+
 - ✅ Gets both auth AND PS101 v2 enhancements
 - ✅ Meets full spec requirements
 - ✅ Includes inline forms (PS101-FIX-001)
 
 **Cons:**
+
 - ❌ Requires manual feature extraction
 - ❌ More testing needed
 - ⏱️ Takes more time
@@ -130,12 +147,15 @@
 **Risk:** Introducing bugs during merge
 
 ### Option C: Verify Current First, Then Enhance
+
 **Pros:**
+
 - ✅ Deploys working auth immediately
 - ✅ Establishes stable baseline
 - ✅ Can add enhancements incrementally
 
 **Cons:**
+
 - ⏱️ Delayed full spec compliance
 - ❌ Multiple deployments needed
 
@@ -154,6 +174,7 @@
 5. ✅ Make informed decision: Deploy current vs. enhance first
 
 **Next Steps:**
+
 1. Check if current version has all 10 PS101 steps with multi-prompts
 2. Check if Small Experiments Framework is complete
 3. Check if inline forms are present (not browser prompts)
@@ -168,6 +189,7 @@
 ## ✅ VERIFICATION COMPLETE
 
 ### Authentication (MUST HAVE)
+
 - ✅ Login modal present (7 authModal references)
 - ✅ Register functionality
 - ✅ Password reset flow
@@ -175,6 +197,7 @@
 - ✅ Auth token handling
 
 ### PS101 Flow (MUST HAVE)
+
 - ✅ All 10 steps present (dots 1-10 confirmed)
 - ✅ Step progress indicator (10 dots with aria labels)
 - ✅ PS101State implementation (39 references)
@@ -182,6 +205,7 @@
 - ✅ localStorage persistence
 
 ### Small Experiments Framework (MUST HAVE)
+
 - ✅ Experiment Canvas (Step 6) - HTML line 664
 - ✅ Obstacle Mapping (Step 7) - HTML line 690
   - ✅ **INLINE FORMS** present (id="add-obstacle-form" line 696)
@@ -192,17 +216,20 @@
 - ✅ Experiment form styling (CSS line 152: .experiment-form)
 
 ### PS101-FIX-001 Task (Browser Prompts)
+
 - ✅ **COMPLETE**: Inline forms implemented
 - ✅ 0 browser prompt() calls
 - ✅ Add Obstacle form present
 - ✅ Add Action form present
 
 ### Chat/Coach Integration
+
 - ✅ API_BASE: Empty string (Netlify proxy)
 - ✅ /wimd proxy rules added to netlify.toml
 - ✅ Railway backend configured
 
 ### Peripheral Calm Aesthetic
+
 - ✅ Root token palette used
 - ✅ Generous whitespace
 - ✅ Calm typography
@@ -215,6 +242,7 @@
 ### Verdict: ✅ **SAFE TO DEPLOY**
 
 **Reasoning:**
+
 1. ✅ All MUST HAVE requirements present
 2. ✅ Authentication working (7 references)
 3. ✅ All 10 PS101 steps present
@@ -225,6 +253,7 @@
 8. ✅ Matches PS101_CANONICAL_SPEC_V2.md requirements
 
 **What We're Deploying:**
+
 - Source: railway-origin/main (known stable)
 - Line count: 2,766 lines
 - Features: Auth + PS101 + Experiments + Inline Forms
@@ -250,11 +279,13 @@
 - ✅ Commits ready (4 commits queued)
 
 **Ready to push:**
+
 ```bash
 git push origin main
 ```
 
 **Expected result after deployment:**
+
 1. Netlify auto-deploys from GitHub
 2. Users can login/register ✅
 3. Users can complete PS101 flow ✅

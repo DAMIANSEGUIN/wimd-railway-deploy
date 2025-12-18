@@ -1,13 +1,15 @@
 # Foundation & Mosaic Development Guide
 
 ## Architecture
+
 - Microservices architecture: Foundation (Safety & Evidence) + Mosaic (Career Transition Platform)
-- Production URL: https://whatismydelta.com (LIVE ✅)
+- Production URL: <https://whatismydelta.com> (LIVE ✅)
 - Backend API: Railway deployment at what-is-my-delta-site-production.up.railway.app
 - Frontend: Netlify deployment (resonant-crostata-90b706)
 - Repository: github.com/DAMIANSEGUIN/wimd-railway-deploy
 
 ## Deployment Status (v2.0 Phase 1-4+ - PRODUCTION)
+
 - ✅ Frontend: Fully deployed and functional
 - ✅ Backend API: Railway deployment operational
 - ✅ Authentication: Login/register/password reset flows working
@@ -23,6 +25,7 @@
 - ✅ Phase 4+: Dynamic source discovery + cost controls + competitive intelligence + OSINT + domain-adjacent search
 
 ## API Endpoints
+
 - Health: `/health`, `/health/comprehensive`, `/health/recover`, `/health/prompts`, `/health/rag`, `/health/experiments`
 - Config: `/config`
 - Prompts: `/prompts/*`
@@ -39,6 +42,7 @@
 - Domain Adjacent: `/domain-adjacent/discover`, `/domain-adjacent/health`
 
 ## Current Status (Updated: 2025-10-07 - Phase 4 COMPLETE + All 12 Free Sources LIVE)
+
 - ✅ UI frontend: OPERATIONAL
 - ✅ Chat/Coach interface: OPERATIONAL
 - ✅ Backend API: OPERATIONAL (FastAPI on Railway)
@@ -56,7 +60,9 @@
 - ✅ Cost controls: OPERATIONAL (usage tracking, daily/monthly limits, emergency stop)
 
 ## Job Sources Status (Updated: 2025-10-07)
+
 **All 12 Free Sources Implemented:**
+
 - ✅ **6 Direct API Sources** (production-ready):
   - RemoteOK (JSON API - api/job_sources/remoteok.py)
   - WeWorkRemotely (RSS feed - api/job_sources/weworkremotely.py)
@@ -75,6 +81,7 @@
 **Cost Savings:** $3,120-7,200/year by using free sources vs. paid APIs
 
 ## Outstanding Issues
+
 - ⚠️ **Testing Required**: All 12 job sources deployed but untested in production
   - Web scraping sources may need CSS selector adjustments
   - Need to verify real job data returns from all sources
@@ -86,6 +93,7 @@
   - ⚠️ `EXPERIMENTS_ENABLED`: disabled (experiment engine)
 
 ## MANDATORY: Quality & Safety Controls
+
 **CRITICAL: Read these files at the start of EVERY session and before ANY code changes:**
 
 1. **`TROUBLESHOOTING_CHECKLIST.md`** - Pre-flight checks for all code changes
@@ -100,11 +108,13 @@
    - Automated fix patterns with rollback procedures
 
 **Enforcement Mechanisms:**
+
 - Multi-layer checklist verification (system reminders + git hooks + output protocol)
 - Pre-commit hooks block dangerous patterns (context manager violations, SQLite syntax, silent exceptions)
 - Mandatory checklist output before code changes (audit trail)
 
 ## Import Patterns
+
 @issues.json
 @decision_matrix.csv
 @surface_presence.json
@@ -113,6 +123,7 @@
 @SELF_DIAGNOSTIC_FRAMEWORK.md
 
 ## Surface Presence Map
+
 ```json
 {
   "ui_frontend": true,
@@ -128,6 +139,7 @@
 ```
 
 ## Nate's Solution Ladder (Decision Matrix)
+
 1. Data ingestion & cleaning → Data Ops
 2. Storage & retrieval → Data Ops (+RAG if justified)
 3. Scoring/Ranking → Classical ML
@@ -139,6 +151,7 @@
 9. **Safety & Evidence (Foundation)** → **Data Ops + LLM**
 
 ## Resolved Issues (v1.0 + v2.0 Phase 1-3)
+
 - ✅ **BLOCKER-UI-ASK**: Chat/coach interface now operational
 - ✅ **BLOCKER-API-BACKEND**: Backend deployed on Railway and connected
 - ✅ **Button functionality**: All Phase 1-3 interactive elements working
@@ -152,6 +165,7 @@
 - ✅ **Auto-restart monitoring**: Railway health checks with automatic restart on prompt system failure
 
 ## Monitoring & Auto-Restart System
+
 - **Railway Health Checks**: Configured via `railway.toml` with `/health` endpoint monitoring
 - **Automatic Recovery**: System attempts cache clearing and flag reset on failure
 - **Multi-layer Monitoring**:
@@ -164,6 +178,7 @@
 - **Auto-restart Triggers**: 503 HTTP status codes automatically trigger Railway container restart
 
 ## Technical Implementation Notes
+
 - Frontend uses vanilla JavaScript (ES6+) with IIFE pattern
 - Event listeners use null checks to prevent script crashes
 - Semantic search uses OpenAI embeddings with cosine similarity
@@ -177,6 +192,7 @@
 - Trial timer persists across page refreshes via localStorage
 
 ## Known Limitations (v1.0)
+
 - No staging environment (direct to production deployment)
 - API keys stored in Railway environment variables (secure but not rotated)
 - CSV prompt library integration incomplete
@@ -184,13 +200,16 @@
 - Browser requirement: Chrome 55+, Firefox 52+, Safari 10.1+, Edge 15+ (2017+)
 
 ## Foundation Integration Points
+
 - Safety layer: Data Ops + LLM for evidence validation (pending)
 - Evidence Bridge: Connect classical ML scoring with LLM generation (pending)
 - Governance: Eval traces for observability (pending)
 - Security: API keys managed via Railway environment variables
 
 ## Recent Changes (2025-10-07)
+
 **Phase 4 Recovery & Full Implementation:**
+
 1. **Clean Rollback**: Reverted to stable commit f439633 (pre-failed Cursor implementation)
 2. **RAG Engine Fixed**: Removed random fallback, now uses real OpenAI embeddings exclusively
 3. **All 12 Job Sources Implemented**:
@@ -201,6 +220,7 @@
 5. **Deployed to Production**: Pushed to Railway, health check confirms deployment successful
 
 ## Next Steps for v2.0 Phase 4+
+
 - ✅ **Phase 4 Implementation** (Claude Code): COMPLETE (2025-10-07)
 - ✅ **Phase 4 Deployment** (Claude Code): COMPLETE (2025-10-07)
 - 📋 **Immediate Next Steps**:

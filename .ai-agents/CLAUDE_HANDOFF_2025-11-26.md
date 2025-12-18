@@ -1,6 +1,7 @@
 # Claude Code Session Handoff - 2025-11-26
 
 ## Session Summary
+
 **Date:** 2025-11-26
 **Agent:** Claude Code (Sonnet 4.5)
 **Branch:** phase1-incomplete
@@ -9,6 +10,7 @@
 ## Work Completed
 
 ### ✅ Syntax Error Fixed
+
 - **Issue:** "Uncaught SyntaxError: Missing catch or finally after try"
 - **Location:** Voice input section around line 2476 (mosaic_ui) and 2468 (frontend)
 - **Root Cause:** Extra closing brace `}` before `else if` statement
@@ -16,34 +18,40 @@
 - **Commits:** NOT YET COMMITTED (files modified but not saved to git)
 
 ### ✅ Local Dev Server Restarted
-- Server running on http://localhost:3000
+
+- Server running on <http://localhost:3000>
 - Proxying API calls to production Railway backend
 - Serving static files from mosaic_ui/
 
 ## 🚨 CRITICAL BLOCKER
 
 ### Issue: Chat Disappears After Login Attempt
+
 **User Report:** "AS USUAL I CANNOT GET TO THE CHAT IT DISAPPEARS LIKE EVERY TIME I TRY LOGGING IN"
 
 **Context:**
+
 - User attempts to log in
 - Gets "wrong credentials" error (expected - needs to register first)
 - Chat interface disappears from page
 - This is a **recurring issue** - user says "EVERY TIME"
 
 **Not Yet Investigated:**
+
 - What UI state changes happen on login?
 - Is the coach-strip element being hidden/removed?
 - Is there a visibility toggle tied to authentication state?
 - Does the module initialization sequence hide elements?
 
 **Files to Check:**
+
 - mosaic_ui/index.html lines 2025-2062 (login handler)
 - mosaic_ui/index.html lines 393-397 (coach-strip HTML)
 - mosaic_ui/js/state.js (authentication state management)
 - Look for any code that hides/shows coach elements based on auth
 
 ## Files Modified (Uncommitted)
+
 ```
 M mosaic_ui/index.html  (line 2476: removed extra })
 M frontend/index.html   (line 2468: removed extra })
@@ -52,6 +60,7 @@ M frontend/index.html   (line 2468: removed extra })
 ## Next Steps
 
 ### IMMEDIATE (Before Any Other Work)
+
 1. **Debug chat disappearance issue:**
    - Add console logging to login handler
    - Check if coach-strip visibility is being toggled
@@ -65,6 +74,7 @@ M frontend/index.html   (line 2468: removed extra })
    - Is JavaScript removing/hiding the coach-strip?
 
 ### AFTER FIX
+
 3. Commit syntax error fixes
 4. Commit chat visibility fix
 5. Complete local testing checklist:
@@ -77,6 +87,7 @@ M frontend/index.html   (line 2468: removed extra })
 7. Deploy to production
 
 ## User Preferences
+
 - **Browser:** Use Chromium (not default browser)
   - Command: `open -a "Chromium" <url>`
 - **Frustration Level:** HIGH - recurring issue, all caps message
@@ -84,12 +95,14 @@ M frontend/index.html   (line 2468: removed extra })
 ## Technical Context
 
 ### Architecture
+
 - **Frontend:** Vanilla JavaScript with IIFE pattern
-- **Backend:** Railway (production) at https://what-is-my-delta-site-production.up.railway.app
+- **Backend:** Railway (production) at <https://what-is-my-delta-site-production.up.railway.app>
 - **Database:** Production PostgreSQL (no local database)
 - **Auth:** Production credentials required (user needs to register)
 
 ### Phase 1+2 Status
+
 - ✅ Phase 1: Module extraction complete (state.js, api.js, main.js)
 - ✅ Phase 2: IIFE integration attempted (Gemini)
 - 🐛 Phase 2: Had async bug (fixed by Claude Code)
@@ -97,6 +110,7 @@ M frontend/index.html   (line 2468: removed extra })
 - ❌ Phase 2: Has chat visibility bug (NOT YET FIXED)
 
 ### Module Loading
+
 ```javascript
 // Line 1128-1130 in mosaic_ui/index.html
 if (window.__WIMD_MODULES__) {
@@ -105,12 +119,14 @@ if (window.__WIMD_MODULES__) {
 ```
 
 The `initModules()` function (mosaic_ui/js/main.js lines 38-75):
+
 - Initializes state.js (loads session/user/trial from localStorage)
 - Initializes api.js (pre-fetches config)
 - Sets up session callbacks
 - Does NOT manipulate DOM visibility (confirmed)
 
 ### Coach Strip HTML
+
 ```html
 <!-- Line 393-397 in mosaic_ui/index.html -->
 <div class="coach-strip">
@@ -137,6 +153,7 @@ The `initModules()` function (mosaic_ui/js/main.js lines 38-75):
    - Check git log for previous fixes related to chat visibility
 
 ## Files to Review
+
 ```
 mosaic_ui/index.html          - Login handler, coach-strip HTML
 mosaic_ui/js/state.js         - Auth state management
@@ -146,6 +163,7 @@ local_dev_server.py           - Local dev proxy to Railway
 ```
 
 ## Git Status
+
 ```
 On branch: phase1-incomplete
 Modified files: 2 (uncommitted)
@@ -155,6 +173,7 @@ Recent commits:
 ```
 
 ## Background Tasks
+
 - Background Bash ffaf6e: Local dev server (RUNNING on port 3000)
 - Background Bash d48678: Previous server attempt (STOPPED - failed to start)
 

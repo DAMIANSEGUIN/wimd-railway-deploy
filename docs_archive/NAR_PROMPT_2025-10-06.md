@@ -1,9 +1,11 @@
 # NAR (No Action Required) Prompt Template
+
 ## Date: October 6, 2025
 
 ---
 
 ## Purpose
+
 This document defines when and how to create NAR (No Action Required) responses during multi-agent workflows. NARs prevent premature action when verification, external input, or dependencies must be resolved first.
 
 ---
@@ -11,26 +13,31 @@ This document defines when and how to create NAR (No Action Required) responses 
 ## When to Create a NAR
 
 ### **Scenario 1: Awaiting External Verification**
+
 **Trigger:** User or another agent needs to verify claims/status before proceeding
 **Example:** "CODEX is reviewing what Cursor said it did, we will give you status in a minute"
 **Response:** Document current state, surface findings, wait for explicit approval
 
 ### **Scenario 2: Dependency Blocker**
+
 **Trigger:** Required resource/service/data unavailable
 **Example:** API keys missing, service unreachable, file not found
 **Response:** Document what's needed, provide workaround if available, wait for resolution
 
 ### **Scenario 3: Ambiguous Requirements**
+
 **Trigger:** User request unclear or conflicting information present
 **Example:** "Fix the button" when multiple buttons exist
 **Response:** Ask clarifying questions, don't guess
 
 ### **Scenario 4: Reality Check Failed**
+
 **Trigger:** Stated status contradicts evidence
 **Example:** "Deployment successful" but endpoints return 404
 **Response:** Surface the contradiction, provide evidence, wait for confirmation
 
 ### **Scenario 5: Multi-Agent Handoff In Progress**
+
 **Trigger:** Another agent (Cursor, CODEX) is actively working
 **Example:** Cursor implementing changes that Claude Code will deploy
 **Response:** Wait for explicit "READY" signal, don't assume completion
@@ -40,26 +47,31 @@ This document defines when and how to create NAR (No Action Required) responses 
 ## NAR Response Structure
 
 ### **1. Acknowledgment**
+
 - Confirm understanding of the situation
 - Restate the blocker or verification need
 
 ### **2. Current State Assessment**
+
 - What is known to be true (with evidence)
 - What is claimed but unverified
 - What contradicts other information
 
 ### **3. Evidence Documentation**
+
 - Commands run and their output
 - File states (commits, diffs, file existence)
 - API responses
 - Error messages
 
 ### **4. Explicit Wait Statement**
+
 - "Waiting for [specific trigger]"
 - "Standing by for [agent/user] to confirm"
 - "No action taken pending [condition]"
 
 ### **5. Next Steps (Conditional)**
+
 - "Once [trigger] occurs, I will [action]"
 - Clear dependency chain
 
@@ -68,6 +80,7 @@ This document defines when and how to create NAR (No Action Required) responses 
 ## Example NAR Responses
 
 ### **Example 1: Verification Needed**
+
 ```
 Understood - waiting for CODEX review of Cursor's work before proceeding.
 
@@ -93,6 +106,7 @@ Once CODEX confirms implementation status:
 ```
 
 ### **Example 2: Dependency Blocker**
+
 ```
 Cannot proceed - missing API key for OpenAI embeddings.
 
@@ -115,6 +129,7 @@ Once API key is added to Railway:
 ```
 
 ### **Example 3: Reality Check**
+
 ```
 Reality check failed - claimed status contradicts evidence.
 
@@ -147,30 +162,35 @@ Next Steps:
 ## Anti-Patterns (What NOT to Do)
 
 ### **❌ Anti-Pattern 1: Assume Success**
+
 ```
 BAD: "Deployment complete! All endpoints working."
 GOOD: "Deployment pushed. Waiting 90s for build, then will verify endpoints."
 ```
 
 ### **❌ Anti-Pattern 2: Proceed Without Verification**
+
 ```
 BAD: User says "Cursor finished" → immediately deploy
 GOOD: User says "Cursor finished" → check files exist, verify commits, run pre-deployment checklist
 ```
 
 ### **❌ Anti-Pattern 3: Hide Contradictions**
+
 ```
 BAD: Ignore that endpoints return 404, report "operational"
 GOOD: Surface 404 errors immediately, investigate before claiming success
 ```
 
 ### **❌ Anti-Pattern 4: Guess at Unclear Requirements**
+
 ```
 BAD: "Fix the button" → pick random button and modify
 GOOD: "Fix the button" → ask which button (Find Jobs? Apply? Chat?)
 ```
 
 ### **❌ Anti-Pattern 5: Deploy Without Handoff Signal**
+
 ```
 BAD: See code committed → immediately push to production
 GOOD: See code committed → check for "READY FOR DEPLOYMENT" signal → run checklist → deploy
@@ -209,17 +229,20 @@ Is the request clear and unambiguous?
 ## Integration with Existing Protocols
 
 ### **Deployment Protocol**
+
 - Pre-deployment checklist must pass (NAR if fails)
 - Explicit "READY FOR DEPLOYMENT" signal required (NAR if absent)
 - Post-deployment validation required (NAR if endpoints fail)
 
 ### **Handoff Protocol (Cursor → Claude Code)**
+
 - Cursor signals "IMPLEMENTATION COMPLETE" (NAR until received)
 - Claude Code verifies files/commits exist (NAR if missing)
 - Claude Code runs pre-deployment checks (NAR if fails)
 - Claude Code deploys and validates (NAR if validation fails)
 
 ### **Multi-Agent Workflow**
+
 - CODEX plans → Cursor implements → Claude Code deploys
 - Each agent waits for explicit signal from previous agent
 - NAR if signal unclear or evidence contradicts signal
@@ -229,12 +252,14 @@ Is the request clear and unambiguous?
 ## Metrics for NAR Effectiveness
 
 ### **Success Indicators**
+
 - ✅ Zero "assumed success" deployments that actually failed
 - ✅ Zero contradictions between claimed and actual state
 - ✅ All blockers surfaced before action taken
 - ✅ User/CODEX confirms NAR was appropriate decision
 
 ### **Failure Indicators**
+
 - ❌ Deployed without verification, found failures later
 - ❌ Claimed success while endpoints returned 404
 - ❌ Acted on ambiguous request without clarifying
@@ -257,18 +282,21 @@ Is the request clear and unambiguous?
 ## NAR Communication Style
 
 ### **Tone**
+
 - Professional, not apologetic
 - Clear and direct
 - Evidence-based, not speculative
 - Action-oriented (state what's needed to proceed)
 
 ### **Format**
+
 1. One-line summary of wait condition
 2. Current state with evidence
 3. Explicit "No action taken" statement
 4. Conditional next steps
 
 ### **Language**
+
 - Use: "Waiting for X", "Standing by", "No action taken"
 - Avoid: "Sorry", "Unfortunately", "I can't"
 - Be specific: "Waiting for CODEX approval" not "Waiting"
@@ -278,6 +306,7 @@ Is the request clear and unambiguous?
 ## NAR History Log
 
 ### **2025-10-06 - Semantic Upgrade Verification**
+
 **Trigger:** User said "CODEX is reviewing what Cursor said it did"
 **NAR Decision:** Wait for CODEX status update before proceeding
 **Evidence:** Endpoints returning 404 despite claimed successful deployment

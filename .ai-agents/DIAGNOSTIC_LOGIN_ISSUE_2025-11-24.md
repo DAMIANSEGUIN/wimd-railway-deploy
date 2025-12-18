@@ -1,7 +1,7 @@
 # DIAGNOSTIC: Production Login Failure (10+ days)
 
 **Date:** 2025-11-24
-**Issue:** Login fails for existing user (damian.seguin@gmail.com) but works for newly registered accounts
+**Issue:** Login fails for existing user (<damian.seguin@gmail.com>) but works for newly registered accounts
 **Severity:** P0 - Blocks production use
 **For:** NARs
 
@@ -10,13 +10,15 @@
 ## SYMPTOMS
 
 ### What Works ✅
+
 - Backend API health check: `{"ok":true,"database":true,"prompt_system":true}`
 - User registration: New accounts can be created
-- Login with newly created accounts: testuser@test.com logs in successfully
+- Login with newly created accounts: <testuser@test.com> logs in successfully
 - Database connectivity: All connection pool operations working
 
 ### What Fails ❌
-- Login for damian.seguin@gmail.com: Always returns `{"detail":"Invalid credentials"}`
+
+- Login for <damian.seguin@gmail.com>: Always returns `{"detail":"Invalid credentials"}`
 - Frontend JavaScript error: `bindPS101TextareaInput is not defined` (in console)
 - User reports: "i have done this every time and it has never worked" (10+ days)
 
@@ -54,7 +56,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/login 
 # Result: {"detail":"Invalid credentials"}
 ```
 
-**Key Finding:** The authentication logic works correctly for new accounts but fails for the existing damian.seguin@gmail.com account.
+**Key Finding:** The authentication logic works correctly for new accounts but fails for the existing <damian.seguin@gmail.com> account.
 
 ---
 
@@ -110,14 +112,16 @@ def verify_password(password: str, hashed: str) -> bool:
 ## HYPOTHESES (Ranked by Likelihood)
 
 ### 1. **Corrupted/Incompatible Password Hash in Database** (MOST LIKELY)
+
 - **Evidence:** New accounts work, existing account fails
-- **Root Cause:** Password hash for damian.seguin@gmail.com may be:
+- **Root Cause:** Password hash for <damian.seguin@gmail.com> may be:
   - From old hashing algorithm (pre-SHA-256 implementation)
   - Corrupted during migration
   - Malformed (missing salt separator `:`)
   - Different format that doesn't match `hash:salt` pattern
 
 ### 2. **Database Migration Issues**
+
 - **Evidence:** Git history shows Phase 1 rollback (commit 39b2486)
 - **Root Cause:** Schema changes may have:
   - Altered password_hash column without migrating existing data
@@ -125,12 +129,14 @@ def verify_password(password: str, hashed: str) -> bool:
   - Left orphaned/incompatible hashes
 
 ### 3. **Email Normalization Mismatch**
+
 - **Evidence:** Code uses `_normalize_email()` and `LOWER(email)` in query
 - **Root Cause:** Account may be stored with different email format:
   - Original: `Damian.Seguin@gmail.com` vs query: `damian.seguin@gmail.com`
   - However, this is unlikely since registration check confirms account exists
 
 ### 4. **Password Never Set Correctly**
+
 - **Evidence:** User reports never being able to log in
 - **Root Cause:** Account created without proper password hash
   - Import from external source
@@ -159,12 +165,14 @@ WHERE LOWER(email) = 'damian.seguin@gmail.com';
 ```
 
 **What to look for:**
+
 - Hash length should be ~97 characters
 - Hash should contain exactly one `:` separator
 - Format: `[64-char-hex]:[32-char-hex]`
 - If different format → **Hypothesis 1 confirmed**
 
 **Compare with working account:**
+
 ```sql
 SELECT
     id,
@@ -183,6 +191,7 @@ SELECT created_at FROM users WHERE LOWER(email) = 'damian.seguin@gmail.com';
 ```
 
 **Cross-reference with git history:**
+
 - Find commits around account creation date
 - Look for hashing algorithm changes
 - Check for migration scripts that may have run
@@ -217,7 +226,8 @@ grep -r "password_hash" . --include="*.sql" --include="*.py"
 ### Step 5: Test Password Reset (If Available)
 
 If password reset functionality exists:
-1. Trigger password reset for damian.seguin@gmail.com
+
+1. Trigger password reset for <damian.seguin@gmail.com>
 2. Set new password
 3. Attempt login
 4. If this works → **Hypothesis 1 confirmed** (old hash was incompatible)
@@ -226,9 +236,10 @@ If password reset functionality exists:
 
 ## RECOMMENDED FIXES (Based on Root Cause)
 
-### If Hypothesis 1 (Corrupted Hash) is Confirmed:
+### If Hypothesis 1 (Corrupted Hash) is Confirmed
 
 **Option A: Direct Password Reset (FASTEST)**
+
 ```sql
 -- Generate new hash for a known password
 -- Use Python to generate: hash_password("TemporaryPassword123")
@@ -240,6 +251,7 @@ WHERE LOWER(email) = 'damian.seguin@gmail.com';
 ```
 
 **Option B: Force Re-registration**
+
 ```sql
 -- Delete old account (backup first!)
 DELETE FROM users WHERE LOWER(email) = 'damian.seguin@gmail.com';
@@ -250,14 +262,16 @@ DELETE FROM users WHERE LOWER(email) = 'damian.seguin@gmail.com';
 
 **Option C: Migration Script for All Old Accounts**
 If multiple accounts affected:
+
 ```python
 # Migration script to identify and fix all old hash formats
 # Notify affected users to reset passwords
 ```
 
-### If Hypothesis 2 (Migration Issues) is Confirmed:
+### If Hypothesis 2 (Migration Issues) is Confirmed
 
 Review and fix migration scripts, then run database repair:
+
 ```bash
 # Example migration to fix password hashes
 alembic upgrade head  # or whatever migration system is used
@@ -269,7 +283,7 @@ alembic upgrade head  # or whatever migration system is used
 
 **User feedback:** "cant you look at prod logs and git history so you dont keep trying the same solutions that do not work?"
 
-### Railway Logs to Check:
+### Railway Logs to Check
 
 ```bash
 # View recent production logs
@@ -286,6 +300,7 @@ railway logs --service production | grep "ERROR\|Exception"
 ```
 
 **What to look for:**
+
 - Pattern of login failures for specific email
 - Any exceptions in `verify_password()` function
 - Database connection issues during auth attempts
@@ -300,6 +315,7 @@ railway logs --service production | grep "ERROR\|Exception"
 **Location:** Console error when page loads
 
 **Investigation:**
+
 ```bash
 # Check if function exists in deployed frontend
 grep -r "bindPS101TextareaInput" frontend/
@@ -316,7 +332,7 @@ git log -p --all -- "frontend/*.js" | grep -B10 -A10 "bindPS101TextareaInput"
 
 ## SUCCESS CRITERIA
 
-- [ ] damian.seguin@gmail.com can successfully log in
+- [ ] <damian.seguin@gmail.com> can successfully log in
 - [ ] Root cause identified and documented
 - [ ] Fix applied does not break existing working accounts
 - [ ] Frontend console error resolved
@@ -327,12 +343,14 @@ git log -p --all -- "frontend/*.js" | grep -B10 -A10 "bindPS101TextareaInput"
 ## NOTES FROM PREVIOUS ATTEMPTS
 
 User indicates this has been attempted multiple times over 10 days without success. **DO NOT:**
+
 - Ask user to try logging in again with same credentials
 - Test registration without checking existing hash first
 - Attempt password changes without understanding root cause
 - Make assumptions about correct password format
 
 **DO:**
+
 - Start with database inspection (Step 1)
 - Compare working vs broken accounts
 - Review git history for context

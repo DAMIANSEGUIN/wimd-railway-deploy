@@ -7,11 +7,12 @@ Simulates different user behavior patterns to verify:
 - Exit confirmation prevents easy abandonment
 """
 
+from typing import Dict
+
 import requests
-import json
-from typing import Dict, List, Tuple
 
 BASE_URL = "https://what-is-my-delta-site-production.up.railway.app"
+
 
 class PersonaTester:
     def __init__(self, name: str, base_url: str = BASE_URL):
@@ -30,14 +31,11 @@ class PersonaTester:
 
     def send_message(self, message: str) -> Dict:
         """Send message to coach"""
-        payload = {
-            "prompt": message,
-            "session_id": self.session_id
-        }
+        payload = {"prompt": message, "session_id": self.session_id}
         response = requests.post(
             f"{self.base_url}/wimd",
             json=payload,
-            headers={"X-Session-ID": self.session_id} if self.session_id else {}
+            headers={"X-Session-ID": self.session_id} if self.session_id else {},
         )
         data = response.json()
         self.log_interaction("USER", message)
@@ -46,10 +44,7 @@ class PersonaTester:
 
     def log_interaction(self, speaker: str, message: str):
         """Log conversation"""
-        self.conversation_log.append({
-            "speaker": speaker,
-            "message": message
-        })
+        self.conversation_log.append({"speaker": speaker, "message": message})
 
     def print_log(self):
         """Print conversation log"""
@@ -109,9 +104,7 @@ def test_tangent_user():
     tester.start_ps101()
 
     # Step 1: TANGENT - talks about fear instead of problem
-    response = tester.send_message(
-        "I'm really scared to make any changes. What if I fail?"
-    )
+    response = tester.send_message("I'm really scared to make any changes. What if I fail?")
 
     # Check if redirect happened
     has_redirect = "ready to resume" in response.get("message", "").lower()
@@ -145,9 +138,7 @@ def test_exit_user():
     tester.start_ps101()
 
     # Step 1: Answers question
-    tester.send_message(
-        "I'm not happy in my current role but I don't know what else I'd do."
-    )
+    tester.send_message("I'm not happy in my current role but I don't know what else I'd do.")
 
     # Step 2: Tries to exit
     response = tester.send_message("I'm done, this is too much")
@@ -159,7 +150,10 @@ def test_exit_user():
     # User confirms exit
     response2 = tester.send_message("yes")
 
-    exited = "return to the guided process" in response2.get("message", "").lower() or "explore" in response2.get("message", "").lower()
+    exited = (
+        "return to the guided process" in response2.get("message", "").lower()
+        or "explore" in response2.get("message", "").lower()
+    )
     print(f"✓ Exit confirmed: {exited}")
 
     tester.print_log()
@@ -180,7 +174,7 @@ def test_rapid_user():
         "Been here 3 years, no growth, tried talking to manager",
         "Took job for security not passion",
         "Confidence is 4/10 because I've failed before",
-        "Five solutions: new job, side project, consulting, grad school, career coach"
+        "Five solutions: new job, side project, consulting, grad school, career coach",
     ]
 
     for response_text in responses:
@@ -193,26 +187,26 @@ def test_rapid_user():
 if __name__ == "__main__":
     print("🧪 Running PS101 Persona Tests\n")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("TEST 1: Compliant User (Stays On-Topic)")
-    print("="*80)
+    print("=" * 80)
     test_compliant_user()
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("TEST 2: Tangent-Prone User (Goes Off-Topic)")
-    print("="*80)
+    print("=" * 80)
     test_tangent_user()
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("TEST 3: Exit-Seeking User (Tries to Quit Early)")
-    print("="*80)
+    print("=" * 80)
     test_exit_user()
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("TEST 4: Rapid Advancer (Minimal Answers)")
-    print("="*80)
+    print("=" * 80)
     test_rapid_user()
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("✅ All Persona Tests Complete")
-    print("="*80)
+    print("=" * 80)

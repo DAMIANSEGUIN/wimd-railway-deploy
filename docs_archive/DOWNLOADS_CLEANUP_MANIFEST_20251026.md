@@ -1,4 +1,5 @@
 # Downloads Cleanup Manifest
+
 **Date:** 2025-10-26
 **Executed by:** Scout (Claude Code)
 **Approved by:** Damian Seguin (autonomous approval for session)
@@ -8,6 +9,7 @@
 ## Purpose
 
 Organized all loose files from `~/Downloads/` to prevent:
+
 - Duplicate files causing confusion
 - Wrong versions being synced to GDrive
 - ChatGPT referencing obsolete docs
@@ -18,6 +20,7 @@ Organized all loose files from `~/Downloads/` to prevent:
 ## Files Moved to Project
 
 ### UI Redesign Master Plan
+
 **Source:** `~/Downloads/UI_Redesign_Master_Plan_v1.0.md`
 **Destination:** `mosaic_ui/docs/redesign/UI_Redesign_Master_Plan_v1.0.md`
 **Reason:** Implementation plan from ChatGPT for interface redesign
@@ -30,6 +33,7 @@ Organized all loose files from `~/Downloads/` to prevent:
 **Archive Location:** `~/Downloads/Archive_Old_Backups_20251026/`
 
 ### Mosaic-Related Scripts (8 files)
+
 1. `mosaic_prune_and_overwrite.command` - Old cleanup script
 2. `mosaic_one_shot_install.command` - Old install script
 3. `trash_old_mosaic_secure.command` - Old deletion script
@@ -42,6 +46,7 @@ Organized all loose files from `~/Downloads/` to prevent:
 **Reason:** Obsolete utility scripts from previous work sessions
 
 ### Mosaic-Related Backups (4 files)
+
 1. `Mosaic_JSM_Acorn_Exec_Kit.zip` (6.9KB) - Sep 8
 2. `Mosaic_Placement_Framework_2025-09-24.zip` (1.7KB) - Sep 24
 3. `Mosaic_UI_Redesign_Backup_2025-10-26.zip` (1.9MB) - Oct 26
@@ -50,6 +55,7 @@ Organized all loose files from `~/Downloads/` to prevent:
 **Reason:** Superseded by current project structure
 
 ### WIMD Project Backups (6 files)
+
 1. `WIMD-Railway-Deploy-Backup-20250919-005711.zip` (345B) - Sep 18
 2. `WIMD-Railway-Deploy-Project 2.zip` (60KB) - Sep 18
 3. `WIMD-Railway-Deploy-Project.zip` (60KB) - Sep 18
@@ -60,6 +66,7 @@ Organized all loose files from `~/Downloads/` to prevent:
 **Reason:** Old project snapshots, current project is in proper structure
 
 ### Planning & Framework Backups (4 files)
+
 1. `OB_Placement_Framework_Backup_2025-09-24.zip` (1.7KB) - Sep 24
 2. `OB_Placement_Session_Bundle_2025-09-24.zip` (4.5KB) - Sep 24
 3. `Planning_Archive_v1.0.zip` (181KB) - Oct 16
@@ -68,6 +75,7 @@ Organized all loose files from `~/Downloads/` to prevent:
 **Reason:** Old planning documents, current planning in `Planning/` directory
 
 ### Miscellaneous Backups (4 files)
+
 1. `JSM_profiles_bundle.zip` (3.8KB) - Sep 4
 2. `Skills-20251024T234330Z-1-001.zip` (233KB) - Oct 24
 3. `Skills-20251024T234519Z-1-001.zip` (233KB) - Oct 24 (duplicate export)
@@ -76,6 +84,7 @@ Organized all loose files from `~/Downloads/` to prevent:
 **Reason:** Unrelated exports and old bundles
 
 ### Utility Scripts (2 files)
+
 1. `clear_archives_exclusion_terminal_only.command` - Aug 24
 2. `fix_and_backup_archives.command` - Aug 24
 
@@ -97,18 +106,21 @@ Organized all loose files from `~/Downloads/` to prevent:
 ## Verification
 
 **Before cleanup:**
+
 - Loose .md files in Downloads: 1 (UI_Redesign_Master_Plan_v1.0.md)
 - Loose .zip files in Downloads: 19
 - Loose .command scripts in Downloads: 8
 - **Total loose files: 28**
 
 **After cleanup:**
+
 - Loose .md files in Downloads: 0 ✅
 - Loose .zip files in Downloads: 0 ✅
 - Loose .command scripts in Downloads: 0 ✅
 - **Total loose files: 0** ✅
 
 **Project structure:**
+
 ```
 mosaic_ui/docs/redesign/
   ├── HOLO_README.md
@@ -118,6 +130,7 @@ mosaic_ui/docs/redesign/
 ```
 
 **Archive structure:**
+
 ```
 ~/Downloads/Archive_Old_Backups_20251026/
   ├── [28 archived files organized by category]

@@ -1,4 +1,5 @@
 # Deployment Action Plan - DOM Timing Fix
+
 **Created:** 2025-11-07 16:01
 **Status:** READY TO EXECUTE
 **Target:** Deploy commit `8d8d83f` to production
@@ -7,17 +8,20 @@
 
 ## Code Review: ✅ VERIFIED CORRECT
 
-### Lines 1208-1210 (Footer Year):
+### Lines 1208-1210 (Footer Year)
+
 ```javascript
 // Safe footer year update with null-guard
 const yearEl = $('#y');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 ```
+
 ✅ Null-guard present
 ✅ No immediate execution (runs inside init flow)
 ✅ Pattern matches playbook
 
-### Lines 2059-2115 (Phase 2.5 - Chat Initialization):
+### Lines 2059-2115 (Phase 2.5 - Chat Initialization)
+
 ```javascript
 // Phase 2.5: Initialize API check and chat system
 console.log('[INIT] Phase 2.5: Initializing API check and chat...');
@@ -76,6 +80,7 @@ if (chatInput) {
 
 console.log('[INIT] Phase 2.5 complete');
 ```
+
 ✅ All DOM access after DOMContentLoaded
 ✅ Null-guards on every element
 ✅ Event listeners set up safely
@@ -91,18 +96,21 @@ console.log('[INIT] Phase 2.5 complete');
 ### Option 1: Use Wrapper Script (RECOMMENDED)
 
 **Command:**
+
 ```bash
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 ./scripts/deploy.sh netlify
 ```
 
 **Why Recommended:**
+
 - Automated verification built-in
 - Follows protocol (SESSION_START_PROTOCOL.md rule #9)
 - Runs pre-deployment checks
 - Logs to `.verification_audit.log`
 
 **Prerequisites:**
+
 - ✅ Git working tree clean (only untracked .ai-agents files)
 - ✅ Code verified correct
 - ✅ Netlify CLI authenticated
@@ -113,6 +121,7 @@ cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 ### Option 2: Manual Netlify CLI (IF WRAPPER FAILS)
 
 **Step 1: Check Prerequisites**
+
 ```bash
 # Verify Netlify CLI installed
 netlify --version
@@ -125,12 +134,14 @@ netlify link --id resonant-crostata-90b706
 ```
 
 **Step 2: Deploy**
+
 ```bash
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 netlify deploy --prod --dir mosaic_ui
 ```
 
 **Step 3: Verify**
+
 ```bash
 ./scripts/verify_live_deployment.sh
 ```
@@ -140,12 +151,14 @@ netlify deploy --prod --dir mosaic_ui
 ### Option 3: Netlify Dashboard (IF CLI BLOCKED)
 
 **Steps:**
+
 1. Push commits to GitHub origin:
+
    ```bash
    git push origin main
    ```
 
-2. Go to Netlify Dashboard: https://app.netlify.com/
+2. Go to Netlify Dashboard: <https://app.netlify.com/>
 
 3. Find site: `resonant-crostata-90b706` (whatismydelta.com)
 
@@ -154,6 +167,7 @@ netlify deploy --prod --dir mosaic_ui
 5. Wait for build to complete (~2-3 minutes)
 
 6. Verify production:
+
    ```bash
    ./scripts/verify_live_deployment.sh
    ```
@@ -190,7 +204,8 @@ tail -1 mosaic_ui/index.html
 
 ## Post-Deployment Verification
 
-### Automated Checks:
+### Automated Checks
+
 ```bash
 # Run live deployment verification
 ./scripts/verify_live_deployment.sh
@@ -204,9 +219,10 @@ tail -1 mosaic_ui/index.html
 # ✅ BUILD_ID matches current commit
 ```
 
-### Browser Verification:
+### Browser Verification
 
 **1. Open DevTools Console:**
+
 ```javascript
 // Check initApp defined
 typeof window.initApp
@@ -219,16 +235,19 @@ typeof window.initApp
 ```
 
 **2. Test Chat Functionality:**
+
 - Click chat button (should open)
 - Type message and press Enter
 - Check Network tab for `/wimd` request
 - Verify response received
 
 **3. Test Login/Auth:**
+
 - Look for login/sign up button or modal trigger
 - Verify auth modal can open
 
 **4. Check Console for Errors:**
+
 - Should see NO TypeError messages
 - Should see NO "Cannot set properties of null" errors
 - Should see clean initialization logs
@@ -237,21 +256,24 @@ typeof window.initApp
 
 ## Expected Changes After Deployment
 
-### Production Will Change From:
+### Production Will Change From
+
 ```
 BUILD_ID: 6d8f2ed
 Commit: 6d8f2ed (docs update)
 Status: Partial fix, chat broken
 ```
 
-### Production Will Change To:
+### Production Will Change To
+
 ```
 BUILD_ID: 8d8d83f (or regenerated)
 Commit: 8d8d83f (complete DOM timing fix)
 Status: Full fix, chat functional
 ```
 
-### User-Visible Changes:
+### User-Visible Changes
+
 - ✅ Chat window opens AND functional (not just opens)
 - ✅ Chat sends messages to API
 - ✅ Login/auth modal shows when needed
@@ -262,14 +284,16 @@ Status: Full fix, chat functional
 
 ## Rollback Plan (IF DEPLOYMENT FAILS)
 
-### If Production Breaks:
+### If Production Breaks
 
 **Option 1: Rollback via Netlify Dashboard**
+
 1. Go to Netlify Deploys tab
 2. Find last working deploy (before this one)
 3. Click "Publish deploy" to restore it
 
 **Option 2: Rollback via Git**
+
 ```bash
 # Revert to previous commit
 git revert HEAD
@@ -281,6 +305,7 @@ git push origin main --force
 ```
 
 **Option 3: Use Backup Branch**
+
 ```bash
 # Switch to backup
 git checkout backup-before-dom-fix
@@ -311,16 +336,19 @@ git push origin backup-before-dom-fix:main --force
 ## Decision Matrix: Which Deploy Method?
 
 **Use Wrapper Script IF:**
+
 - ✅ Netlify CLI is working
 - ✅ Want automated verification
 - ✅ Want audit trail
 
 **Use Manual CLI IF:**
+
 - ✅ Wrapper script fails
 - ✅ Need fine control
 - ✅ Debugging deploy issues
 
 **Use Dashboard IF:**
+
 - ❌ CLI is completely broken (EPERM, auth issues)
 - ✅ Want visual confirmation
 - ✅ Need to see build logs in real-time
@@ -331,17 +359,20 @@ git push origin backup-before-dom-fix:main --force
 
 **User can now run:**
 
-### Quick Deploy (Recommended):
+### Quick Deploy (Recommended)
+
 ```bash
 ./scripts/deploy.sh netlify
 ```
 
-### Or Manual:
+### Or Manual
+
 ```bash
 netlify deploy --prod --dir mosaic_ui
 ```
 
-### Or Push + Auto-Deploy:
+### Or Push + Auto-Deploy
+
 ```bash
 git push origin main
 # Then trigger deploy in Netlify Dashboard if not auto-deployed
@@ -354,11 +385,13 @@ git push origin main
 **After successful deploy:**
 
 1. Update `.verification_audit.log`:
+
    ```bash
    echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] DOM_TIMING_FIX_DEPLOYED | Commit=8d8d83f | Deploy=SUCCESS | User_Issue=RESOLVED" >> .verification_audit.log
    ```
 
 2. Update Stage 3 verification document:
+
    ```bash
    # Document resolution in .ai-agents/STAGE3_VERIFICATION_2025-11-05.md
    ```
@@ -369,6 +402,7 @@ git push origin main
    - Ask user to check console for errors
 
 4. Create handoff if session ending:
+
    ```bash
    ./scripts/create_handoff_manifest.sh > .ai-agents/handoff_$(date +%Y%m%d_%H%M%S).json
    ```

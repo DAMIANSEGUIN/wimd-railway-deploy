@@ -39,69 +39,69 @@
   .status{font-size:11px;color:var(--muted);margin-top:8px}
   .status.error{color:#b00020}
   .status.ok{color:#2d7a2d}
-  
+
   /* Enhanced depth and detail */
   .flow-circle {
     background: linear-gradient(145deg, #ffffff 0%, #f8f8f8 100%);
-    box-shadow: 
+    box-shadow:
       0 3px 6px rgba(0,0,0,0.08),
       0 1px 3px rgba(0,0,0,0.04),
       inset 0 1px 0 rgba(255,255,255,0.9);
     transition: all 0.2s ease;
   }
-  
+
   .flow-circle:hover {
     background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
-    box-shadow: 
+    box-shadow:
       0 4px 12px rgba(0,0,0,0.12),
       0 2px 6px rgba(0,0,0,0.06),
       inset 0 1px 0 rgba(255,255,255,0.95);
     transform: translateY(-2px);
   }
-  
+
   .flow-circle.active {
     background: linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%);
-    box-shadow: 
+    box-shadow:
       0 5px 15px rgba(0,0,0,0.15),
       0 3px 8px rgba(0,0,0,0.08),
       inset 0 1px 0 rgba(255,255,255,0.98);
   }
-  
+
   .quiet {
     background: linear-gradient(145deg, #ffffff 0%, #f8f8f8 100%);
-    box-shadow: 
+    box-shadow:
       0 2px 4px rgba(0,0,0,0.06),
       inset 0 1px 0 rgba(255,255,255,0.8);
     transition: all 0.15s ease;
   }
-  
+
   .quiet:hover {
     background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
-    box-shadow: 
+    box-shadow:
       0 3px 8px rgba(0,0,0,0.10),
       inset 0 1px 0 rgba(255,255,255,0.9);
     transform: translateY(-1px);
   }
-  
+
   .quiet:active {
     transform: translateY(0);
     background: linear-gradient(145deg, #f8f8f8 0%, #eeeeee 100%);
-    box-shadow: 
+    box-shadow:
       0 1px 3px rgba(0,0,0,0.04),
       inset 0 1px 0 rgba(255,255,255,0.6);
   }
-  
+
   .section-card {
     background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
-    box-shadow: 
+    box-shadow:
       0 2px 6px rgba(0,0,0,0.06),
       0 1px 3px rgba(0,0,0,0.03);
     transition: all 0.2s ease;
   }
-  
+
   .section-card:hover {
     background: linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%);
-    box-shadow: 
+    box-shadow:
       0 4px 12px rgba(0,0,0,0.10),
       0 2px 6px rgba(0,0,0,0.06);
   }
@@ -133,7 +133,7 @@
   <div id="authModal" class="modal" style="display:block">
     <div class="panel" style="max-width:400px">
       <h2 style="font:600 14px/1.2 Helvetica,Arial;margin:0 0 20px;text-transform:uppercase;letter-spacing:.08em;text-align:center">welcome to your career transition</h2>
-      
+
       <!-- LOGIN FORM -->
       <form id="loginForm" style="margin-bottom:20px">
         <div style="margin-bottom:16px">
@@ -149,7 +149,7 @@
         </div>
         <button type="submit" class="quiet" style="width:100%;padding:10px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;background:var(--hair);color:#fff;border:1px solid var(--hair)">sign in</button>
       </form>
-      
+
       <!-- REGISTER FORM -->
       <form id="registerForm" style="margin-bottom:20px" hidden>
         <div style="margin-bottom:16px">
@@ -170,11 +170,11 @@
         </div>
         <button type="submit" class="quiet" style="width:100%;padding:10px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;background:var(--hair);color:#fff;border:1px solid var(--hair)">create account</button>
       </form>
-      
+
       <div style="text-align:center;margin-top:16px">
         <button id="toggleAuth" class="quiet" style="padding:6px 12px;font-size:9px;text-transform:uppercase;letter-spacing:.08em">need an account?</button>
       </div>
-      
+
       <div id="authStatus" class="status" style="margin-top:12px;text-align:center"></div>
     </div>
   </div>
@@ -205,12 +205,12 @@
     <div style="max-width:var(--max);margin:0 auto;text-align:center">
       <h1 style="font:600 18px/1.2 Helvetica,Arial;margin:0 0 16px;text-transform:uppercase;letter-spacing:.08em">welcome to your career transition</h1>
       <p style="margin:0 0 24px;color:var(--muted);font-size:12px;line-height:1.5;max-width:64ch;margin:0 auto 24px">this is a problem-solving approach to career transition. we'll work through three phases to bridge your skills and passions to meaningful work in the present job market.</p>
-      
+
       <div style="display:flex;gap:12px;justify-content:center;margin:24px 0">
         <button id="startFastTrack" class="quiet" style="padding:10px 20px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;background:var(--hair);color:#fff;border:1px solid var(--hair)">fast track</button>
         <button id="startDiscovery" class="quiet" style="padding:10px 20px;font-size:11px;text-transform:uppercase;letter-spacing:.08em">explore freely</button>
       </div>
-      
+
       <details style="margin-top:20px;text-align:left;max-width:500px;margin:20px auto 0">
         <summary style="font-size:10px;color:var(--muted);cursor:pointer;text-transform:uppercase;letter-spacing:.08em">how it works</summary>
         <div style="margin-top:12px;font-size:10px;color:var(--muted);line-height:1.4">
@@ -233,7 +233,7 @@
   <section style="margin:80px 0;padding:40px 0">
     <div style="max-width:var(--max);margin:0 auto">
       <h2 style="font:600 12px/1 Helvetica,Arial;margin:0 0 40px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">your career transition</h2>
-      
+
       <!-- ORGANIC FLOW -->
       <div style="display:flex;justify-content:center;align-items:center;margin:60px 0;position:relative">
             <!-- EXPLORE -->
@@ -256,7 +256,7 @@
           <h3 style="font:600 10px/1 Helvetica,Arial;margin:0 0 6px;text-transform:uppercase;letter-spacing:.08em;color:var(--hair)">apply</h3>
           <p style="margin:0;font-size:9px;color:var(--muted);line-height:1.3;max-width:100px">optimize for specific roles</p>
         </div>
-        
+
             <!-- CONNECTING LINES -->
             <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 300 200">
               <defs>
@@ -271,7 +271,7 @@
               <path d="M250,25 Q150,150 150,100" stroke="url(#lineGrad1)" stroke-width="1.5" fill="none"/>
             </svg>
       </div>
-      
+
       <!-- START ACTIONS -->
       <div style="text-align:center;margin-top:80px">
         <p style="margin:0 0 20px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">begin anywhere</p>
@@ -296,19 +296,19 @@
       <div>Path: <span id="pathDisplay">-</span></div>
       <div>Last activity: <span id="lastActivityDisplay">-</span></div>
     </div>
-    
+
     <!-- Self-Efficacy Metrics Toggle -->
     <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <h4 style="font:600 10px/1 Helvetica,Arial;margin:0;text-transform:uppercase;letter-spacing:.08em;color:var(--hair)">self-efficacy metrics</h4>
         <button id="toggleMetrics" class="quiet" style="padding:4px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.08em">show new metrics</button>
       </div>
-      
+
       <!-- Legacy Metrics (Default Visible) -->
       <div id="legacyMetrics" style="font-size:10px;color:var(--muted);line-height:1.4">
         <div>Legacy metrics display (existing functionality)</div>
       </div>
-      
+
       <!-- New Self-Efficacy Metrics (Hidden by Default) -->
       <div id="newMetrics" style="display:none;font-size:10px;color:var(--muted);line-height:1.4">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px">
@@ -318,21 +318,21 @@
             <div id="completionRate" style="font-size:14px;font-weight:600;color:var(--hair)">-</div>
             <div style="font-size:9px;color:var(--muted)">completed/total experiments</div>
           </div>
-          
+
           <!-- Learning Velocity -->
           <div class="metric-card" style="padding:12px;border:1px solid var(--line);border-radius:4px;background:#fff">
             <div style="font-weight:600;margin-bottom:4px">Learning Velocity</div>
             <div id="learningVelocity" style="font-size:14px;font-weight:600;color:var(--hair)">-</div>
             <div style="font-size:9px;color:var(--muted)">events per day</div>
           </div>
-          
+
           <!-- Confidence Score -->
           <div class="metric-card" style="padding:12px;border:1px solid var(--line);border-radius:4px;background:#fff">
             <div style="font-weight:600;margin-bottom:4px">Confidence Score</div>
             <div id="confidenceScore" style="font-size:14px;font-weight:600;color:var(--hair)">-</div>
             <div style="font-size:9px;color:var(--muted)">average confidence level</div>
           </div>
-          
+
           <!-- Escalation Risk -->
           <div class="metric-card" style="padding:12px;border:1px solid var(--line);border-radius:4px;background:#fff">
             <div style="font-weight:600;margin-bottom:4px">Escalation Risk</div>
@@ -340,7 +340,7 @@
             <div style="font-size:9px;color:var(--muted)">risk level indicator</div>
           </div>
         </div>
-        
+
         <!-- Escalation Alert -->
         <div id="escalationAlert" style="display:none;margin-top:12px;padding:12px;border:1px solid #b00020;border-radius:4px;background:#ffeaea">
           <div style="font-weight:600;color:#b00020;margin-bottom:4px">🚨 Coach Escalation Needed</div>
@@ -354,39 +354,39 @@
   <section id="userGuide" style="margin:60px 0;padding:40px 0;border:1px solid var(--line);border-radius:4px;background:linear-gradient(145deg, #ffffff 0%, #fafafa 100%)" hidden>
     <div style="max-width:var(--max);margin:0 auto">
       <h2 style="font:600 12px/1 Helvetica,Arial;margin:0 0 20px;text-transform:uppercase;letter-spacing:.08em;color:var(--hair)">user guide</h2>
-      
+
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;margin:20px 0">
         <div>
           <h3 style="font:600 10px/1 Helvetica,Arial;margin:0 0 8px;text-transform:uppercase;letter-spacing:.08em;color:var(--hair)">getting started</h3>
           <p style="margin:0;font-size:9px;color:var(--muted);line-height:1.4">Start by chatting with the coach or uploading your resume. The system will guide you through career discovery.</p>
         </div>
-        
+
         <div>
           <h3 style="font:600 10px/1 Helvetica,Arial;margin:0 0 8px;text-transform:uppercase;letter-spacing:.08em;color:var(--hair)">chat with coach</h3>
           <p style="margin:0;font-size:9px;color:var(--muted);line-height:1.4">Ask questions about your career, skills, or goals. The AI coach provides personalized guidance.</p>
         </div>
-        
+
         <div>
           <h3 style="font:600 10px/1 Helvetica,Arial;margin:0 0 8px;text-transform:uppercase;letter-spacing:.08em;color:var(--hair)">upload files</h3>
           <p style="margin:0;font-size:9px;color:var(--muted);line-height:1.4">Upload your resume, documents, or audio files for deeper analysis and personalized insights.</p>
         </div>
-        
+
         <div>
           <h3 style="font:600 10px/1 Helvetica,Arial;margin:0 0 8px;text-transform:uppercase;letter-spacing:.08em;color:var(--hair)">find opportunities</h3>
           <p style="margin:0;font-size:9px;color:var(--muted);line-height:1.4">Discover job opportunities that match your skills, values, and career goals.</p>
         </div>
-        
+
         <div>
           <h3 style="font:600 10px/1 Helvetica,Arial;margin:0 0 8px;text-transform:uppercase;letter-spacing:.08em;color:var(--hair)">optimize resume</h3>
           <p style="margin:0;font-size:9px;color:var(--muted);line-height:1.4">Get personalized resume recommendations and optimize your materials for specific roles.</p>
         </div>
-        
+
         <div>
           <h3 style="font:600 10px/1 Helvetica,Arial;margin:0 0 8px;text-transform:uppercase;letter-spacing:.08em;color:var(--hair)">your data</h3>
           <p style="margin:0;font-size:9px;color:var(--muted);line-height:1.4">All your conversations, uploads, and progress are saved securely and can be exported anytime.</p>
         </div>
       </div>
-      
+
       <div style="text-align:center;margin-top:24px">
         <button id="hideGuide" class="quiet" style="padding:6px 12px;font-size:9px;text-transform:uppercase;letter-spacing:.08em">hide guide</button>
       </div>
@@ -397,7 +397,7 @@
   <div id="status" class="status" aria-live="polite"></div>
   <div id="jobsStatus" class="status" aria-live="polite"></div>
   <div id="jobsList" aria-live="polite"></div>
-  
+
   <!-- RESUME CONTROLS -->
   <section id="resumeControls" style="margin:40px 0;padding:20px;border:1px solid var(--line);border-radius:4px;background:linear-gradient(145deg, #fafafa 0%, #f5f5f5 100%)" hidden>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -409,7 +409,7 @@
       <button id="resumeFeedback" class="quiet" style="padding:6px 12px;font-size:9px;text-transform:uppercase;letter-spacing:.08em">feedback</button>
     </div>
   </section>
-  
+
   <div id="resumeStatus" class="status" aria-live="polite"></div>
   <pre id="resumeOutput" class="resume-output" hidden></pre>
 
@@ -541,7 +541,7 @@ if(!sessionStorage.getItem('cache_cleared_v3')){
     const legacyMetrics = $('#legacyMetrics');
     const newMetrics = $('#newMetrics');
     const toggleButton = $('#toggleMetrics');
-    
+
     if(showNewMetrics) {
       legacyMetrics.style.display = 'none';
       newMetrics.style.display = 'block';
@@ -558,21 +558,21 @@ if(!sessionStorage.getItem('cache_cleared_v3')){
   // Load Self-Efficacy Metrics
   async function loadSelfEfficacyMetrics() {
     if(!sessionId) return;
-    
+
     try {
       const response = await fetch(`${apiBase}/self-efficacy/metrics`, {
         headers: { 'X-Session-ID': sessionId }
       });
-      
+
       if(response.ok) {
         const data = await response.json();
         updateMetricsDisplay(data);
-        
+
         // Check for escalation
         const escalationResponse = await fetch(`${apiBase}/self-efficacy/escalation`, {
           headers: { 'X-Session-ID': sessionId }
         });
-        
+
         if(escalationResponse.ok) {
           const escalationData = await escalationResponse.json();
           updateEscalationDisplay(escalationData);
@@ -589,33 +589,33 @@ if(!sessionStorage.getItem('cache_cleared_v3')){
     const learningVelocity = data.learning_velocity.toFixed(2);
     const confidenceScore = (data.confidence_score * 100).toFixed(1);
     const escalationRisk = (data.escalation_risk * 100).toFixed(1);
-    
+
     $('#completionRate').textContent = `${data.completed_experiments}/${data.total_experiments} (${completionRate}%)`;
     $('#learningVelocity').textContent = `${learningVelocity} events/day`;
     $('#confidenceScore').textContent = `${confidenceScore}%`;
     $('#escalationRisk').textContent = `${escalationRisk}%`;
-    
+
     // Color coding based on values
     const completionEl = $('#completionRate');
     const velocityEl = $('#learningVelocity');
     const confidenceEl = $('#confidenceScore');
     const riskEl = $('#escalationRisk');
-    
+
     // Completion rate colors
     if(data.experiment_completion_rate >= 0.8) completionEl.style.color = '#2d7a2d';
     else if(data.experiment_completion_rate >= 0.5) completionEl.style.color = '#b8860b';
     else completionEl.style.color = '#b00020';
-    
+
     // Learning velocity colors
     if(data.learning_velocity >= 1.0) velocityEl.style.color = '#2d7a2d';
     else if(data.learning_velocity >= 0.5) velocityEl.style.color = '#b8860b';
     else velocityEl.style.color = '#b00020';
-    
+
     // Confidence score colors
     if(data.confidence_score >= 0.7) confidenceEl.style.color = '#2d7a2d';
     else if(data.confidence_score >= 0.4) confidenceEl.style.color = '#b8860b';
     else confidenceEl.style.color = '#b00020';
-    
+
     // Escalation risk colors
     if(data.escalation_risk >= 0.7) riskEl.style.color = '#b00020';
     else if(data.escalation_risk >= 0.4) riskEl.style.color = '#b8860b';
@@ -626,7 +626,7 @@ if(!sessionStorage.getItem('cache_cleared_v3')){
   function updateEscalationDisplay(data) {
     const escalationAlert = $('#escalationAlert');
     const escalationMessage = $('#escalationMessage');
-    
+
     if(data.should_escalate) {
       escalationAlert.style.display = 'block';
       escalationMessage.textContent = data.reason;
@@ -683,17 +683,17 @@ if(!sessionStorage.getItem('cache_cleared_v3')){
           method: 'POST',
           body: { email, password }
         });
-        
+
         currentUser = {
           id: response.user_id,
           email: response.email,
           createdAt: response.created_at,
           lastLogin: response.last_login
         };
-        
+
         setStatus($('#authStatus'), 'welcome back!', 'ok');
       }
-      
+
       // Success - set user data
       isAuthenticated = true;
       localStorage.removeItem(TRIAL_START_KEY); // Clear trial
@@ -712,7 +712,7 @@ if(!sessionStorage.getItem('cache_cleared_v3')){
 
       // Start auto-save for authenticated user
       startAutoSave();
-      
+
     }catch(err){
       setStatus($('#authStatus'), err.message, 'error');
     }
@@ -928,7 +928,7 @@ if(!sessionStorage.getItem('cache_cleared_v3')){
       jobsList.appendChild(card);
     });
     setStatus(jobsStatus, `found ${jobCache.length} opportunities`, 'ok');
-    
+
     // Show resume controls when jobs are available
     const resumeControls = $('#resumeControls');
     if(resumeControls) resumeControls.hidden = false;

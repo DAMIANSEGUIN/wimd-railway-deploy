@@ -6,7 +6,7 @@ MCP Gate Checker - Determines agent's next task based on completion gates
 import json
 import sys
 from pathlib import Path
-from datetime import datetime
+
 
 def load_gate_file(filepath):
     """Load a gate completion file"""
@@ -15,6 +15,7 @@ def load_gate_file(filepath):
             return json.load(f)
     except:
         return None
+
 
 def check_my_next_task(agent_name):
     """
@@ -38,8 +39,8 @@ def check_my_next_task(agent_name):
         if gate:
             gates[gate_file.stem] = gate
             # Also index by task ID from the gate content
-            if 'task' in gate:
-                gate_tasks[gate['task']] = gate
+            if "task" in gate:
+                gate_tasks[gate["task"]] = gate
 
     # Phase 1 tasks
     phase1_tasks = {
@@ -53,27 +54,27 @@ def check_my_next_task(agent_name):
             "task": "phase2_task2.1_broker",
             "name": "Broker Integration",
             "dependencies": ["phase1_validation"],
-            "description": "Build broker scripts for automatic doc retrieval"
+            "description": "Build broker scripts for automatic doc retrieval",
         },
         "codex": {
             "task": "phase2_task2.2_logging",
             "name": "Structured Session Logs",
             "dependencies": ["phase2_task2.1_broker_integration"],
-            "description": "Implement session log schema and rotation"
+            "description": "Implement session log schema and rotation",
         },
         "claude_code": {
             "task": "phase2_task2.3_handoffs",
             "name": "Handoff Protocol Standardization",
             "dependencies": ["phase2_task2.1_broker_integration", "phase2_task2.2_logging"],
-            "description": "Create standardized handoff templates"
-        }
+            "description": "Create standardized handoff templates",
+        },
     }
 
     # Check Phase 1 status
     phase1_complete = {
         "task1a": "phase1_task1a_claude" in gates,
         "task1c": "phase1_task1c_gemini" in gates,
-        "validation": "phase1_validation" in gates
+        "validation": "phase1_validation" in gates,
     }
 
     # If Phase 1 not complete for this agent
@@ -84,7 +85,7 @@ def check_my_next_task(agent_name):
                     "task": task,
                     "should_start": True,
                     "reason": "Phase 1 task not yet complete",
-                    "dependencies": []
+                    "dependencies": [],
                 }
 
     # If all Phase 1 complete, check Phase 2
@@ -99,7 +100,7 @@ def check_my_next_task(agent_name):
                     "task": None,
                     "should_start": False,
                     "reason": f"{task_info['name']} already complete",
-                    "dependencies": []
+                    "dependencies": [],
                 }
 
             # Check dependencies (check both gate file stems and task IDs)
@@ -119,7 +120,7 @@ def check_my_next_task(agent_name):
                     "should_start": True,
                     "reason": "All dependencies satisfied",
                     "dependencies": deps_met,
-                    "description": task_info["description"]
+                    "description": task_info["description"],
                 }
             else:
                 return {
@@ -128,7 +129,7 @@ def check_my_next_task(agent_name):
                     "should_start": False,
                     "reason": "Waiting for dependencies",
                     "dependencies_met": deps_met,
-                    "dependencies_missing": deps_missing
+                    "dependencies_missing": deps_missing,
                 }
 
     # Phase 1 not complete yet
@@ -138,16 +139,12 @@ def check_my_next_task(agent_name):
             "task": None,
             "should_start": False,
             "reason": "Phase 1 not complete",
-            "waiting_for": waiting_for
+            "waiting_for": waiting_for,
         }
 
     # No tasks for this agent
-    return {
-        "task": None,
-        "should_start": False,
-        "reason": "No tasks assigned",
-        "dependencies": []
-    }
+    return {"task": None, "should_start": False, "reason": "No tasks assigned", "dependencies": []}
+
 
 def print_status_report(agent_name):
     """Print a human-readable status report"""
@@ -158,14 +155,14 @@ def print_status_report(agent_name):
     print(f"{'='*60}\n")
 
     if result["should_start"]:
-        print(f"🚀 READY TO START")
+        print("🚀 READY TO START")
         print(f"   Task: {result.get('name', result['task'])}")
         print(f"   Description: {result.get('description', 'N/A')}")
         print(f"   Reason: {result['reason']}")
         if result.get("dependencies"):
             print(f"   Dependencies met: {', '.join(result['dependencies'])}")
     else:
-        print(f"⏳ WAITING")
+        print("⏳ WAITING")
         print(f"   Reason: {result['reason']}")
         if result.get("waiting_for"):
             print(f"   Waiting for: {', '.join(result['waiting_for'])}")
@@ -175,6 +172,7 @@ def print_status_report(agent_name):
     print(f"\n{'='*60}\n")
 
     return result
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

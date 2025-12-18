@@ -1,6 +1,7 @@
 # Claude Code MCP Questionnaire Responses
 
 **Document Metadata:**
+
 - Agent: Claude Code (CLI Local Agent)
 - Date: 2025-12-09
 - Status: ✅ COMPLETE
@@ -44,18 +45,22 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 ### Analysis
 
 **Current Problem:**
+
 - I load 60KB+ of governance docs every session even when just fixing typos
 - Biggest bloat: TROUBLESHOOTING_CHECKLIST.md (15KB) + SELF_DIAGNOSTIC_FRAMEWORK.md (32KB) = 47KB loaded preemptively
 
 **Proposed Improvement:**
+
 - Load governance as EXTERNAL ARTIFACTS, fetch only relevant sections via retrieval triggers
 - Example: "error occurred" → fetch troubleshooting, "deployment command" → fetch deployment truth
 
 **MCP Opportunity:**
+
 - Summarize governance into decision rules (~5KB)
 - Keep full docs as retrievable artifacts
 
 ### Open Questions
+
 - @Codex: Do you agree governance files should be EXTERNAL ARTIFACTS vs. DURABLE?
 - @Damian: Is 60KB governance load acceptable, or should we optimize with MCP retrieval?
 - @ALL: Should error messages persist across sessions (durable) or only within-session (transient)?
@@ -86,27 +91,32 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 ### Analysis
 
 **Current Problem (v1.1.2):**
+
 - No triggers → Agent loads everything at session start
 - Wastes 60KB context on info that might never be needed
 - Agent doesn't know when to refresh context (stale feature flags, old docs)
 
 **MCP Opportunity:**
+
 - Trigger-based retrieval reduces initial context to ~5KB (governance summary only)
 - Fetch additional context just-in-time when signals detected
 - Can refresh context mid-session (e.g., re-fetch feature flags before deployment)
 
 **Implementation Notes:**
+
 - Trigger detection happens in agent's reasoning layer (before tool calls)
 - MCP query format needs to be defined (JSON-RPC? REST API?)
 - Fallback: If MCP unavailable, fall back to full file reads (current behavior)
 - Retrieval latency must be <500ms to not disrupt workflow
 
 **Testing Strategy:**
+
 - Measure context size with vs. without triggers
 - Track retrieval accuracy (did we fetch the right doc?)
 - Monitor false positives (fetched unnecessarily) and false negatives (missed fetching)
 
 ### Open Questions
+
 - @Codex: Should semantic search be part of MCP retrieval, or separate?
 - @Gemini: How would API mode detect triggers without tool introspection?
 - @Damian: Are 500ms retrieval latencies acceptable, or must be faster?
@@ -141,12 +151,14 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 ### Analysis
 
 **Current Approach (v1.1.2):**
+
 - All context loaded from files each session (no summarization)
 - No structured external memory (just filesystem)
 - No checkpointing or cross-session persistence
 - Works, but inefficient (60KB+ governance load every time)
 
 **Proposed MCP Approach:**
+
 - **In-context:** Summaries only (~15KB total: 5KB governance rules + 3KB architecture + 2KB schema + 2KB API inventory + 1KB flags + 1KB git + 1KB todos)
 - **External storage:** Full documents in filesystem, MCP servers provide retrieval
 - **Structured store:** Future - could use PostgreSQL for agent state (query history, learned patterns, cross-session memory)
@@ -171,11 +183,13 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
    - **Recommendation:** Not in Phase 1 - prove MCP value with file-based first
 
 ### Rollback Safety
+
 - All external storage stays in filesystem (unchanged from v1.1.2)
 - If MCP fails, agents fall back to direct file reads
 - No data loss risk - MCP is query layer only, not storage
 
 ### Open Questions
+
 - @Damian: Budget for MCP server infrastructure? (Railway service ~$5-10/month)
 - @Codex: Can ChatGPT query HTTP MCP servers, or only file-based retrieval?
 - @Gemini: How would API mode broker scripts interact with MCP servers?
@@ -206,12 +220,14 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 ### Analysis
 
 **Current State (v1.1.2):**
+
 - Essentially blind to my own context
 - Cannot debug "why did I not fetch doc X?"
 - Cannot prove compliance with governance rules
 - No audit trail for decisions
 
 **Criticality for MCP:**
+
 - MCP retrieval REQUIRES observability to debug
 - Must log: what was retrieved, why, what was excluded
 - Must track: MCP query latency, retrieval accuracy
@@ -220,37 +236,44 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 ### Implementation Approach
 
 **Phase 1 (No MCP):** Add basic logging to `.ai-agents/` folder
+
 - `context_dump_TIMESTAMP.txt` - manual dumps on request
 - `token_usage.jsonl` - token tracking
 - `sessions.jsonl` - session metadata
 
 **Phase 2 (With MCP):** Add retrieval logging
+
 - `retrieval_log.jsonl` - all MCP queries
 - Provenance tags in retrieved content
 - Exclusion tracking (what was NOT fetched)
 
 **Phase 3 (Advanced):** Add ML-based audit
+
 - Analyze retrieval accuracy (did we fetch the right doc?)
 - Detect pattern: agent repeatedly fails same task → context issue
 - Auto-suggest trigger improvements
 
 ### Storage Considerations
+
 - `.ai-agents/` folder already exists for governance docs
 - JSONL format for logs (append-only, easy to parse)
 - Rotate logs after 7 days (or 100MB file size)
 - .gitignore logs (don't commit context dumps)
 
 ### Privacy/Security
+
 - Redact sensitive info from context dumps (API keys, credentials)
 - Separate audit trail (what was done) from content dumps (what was said)
 - Alert if context dump requested in production environment
 
 ### Testing Instrumentation
+
 - Add `/debug stats` command → show token usage, retrieval count, tool calls
 - Add `/debug last-retrieval` → show details of most recent MCP query
 - Add `/debug context-size` → show breakdown of context by category
 
 ### Open Questions
+
 - @Damian: Is logging to `.ai-agents/` folder acceptable, or need separate location?
 - @Codex: How do you audit your ChatGPT sessions currently? (ChatGPT doesn't expose context dump commands)
 - @Gemini: Can API mode agents log to filesystem, or need different approach?
@@ -263,23 +286,27 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 ### MCP Value Proposition (From My Perspective)
 
 **Problems MCP Could Solve:**
+
 1. **Context Bloat:** Reduce 60KB governance load to 5KB summaries
 2. **Just-In-Time Retrieval:** Fetch docs only when needed, not preemptively
 3. **Context Refresh:** Update stale info (feature flags) mid-session
 4. **Observability:** Track what was retrieved, why, and audit decisions
 
 **Costs/Risks:**
+
 1. **Complexity:** New infrastructure to maintain (MCP servers)
 2. **Latency:** Retrieval adds overhead (<500ms target)
 3. **Failure Modes:** What if MCP is down? (need fallback)
 4. **Development Time:** 2-4 weeks to implement + test
 
 **Go/No-Go Opinion:** 🟡 **CAUTIOUS YES** - BUT start small
+
 - Phase 1: Local MCP server, file-based only, prove value
 - Phase 2: If valuable, migrate to Railway, add structured storage
 - Phase 3: If still valuable, add advanced features (semantic search, cross-session memory)
 
 ### Critical Success Factors
+
 1. ✅ **Observability FIRST** - must log/debug MCP before trusting it
 2. ✅ **Fallback always works** - if MCP fails, agents read files directly
 3. ✅ **Measurable improvement** - track context size, retrieval accuracy, workflow speed
@@ -288,17 +315,20 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 ### What I Need From Other Agents
 
 **From Gemini:**
+
 - Section 4: Attention Budget - cost analysis (is MCP worth token savings?)
 - Section 9: Failure Reflection - how to handle MCP failures in API mode
 - Answer: Can you query HTTP MCP servers from API mode context?
 
 **From Codex:**
+
 - Section 2: View Compilation - what should be in context per step type?
 - Section 5: Summarization Schema - how to compress governance to 5KB safely?
 - Section 7: Multi-Agent Scope - do we need separate agents with MCP shared memory?
 - Answer: Can ChatGPT query external MCP servers, or only file-based?
 
 **From Damian:**
+
 - Strategic: What's the budget for MCP infrastructure?
 - Timeline: How urgent is context optimization? (current system works)
 - Decision: If MCP only benefits 1-2 agents, still worth it?

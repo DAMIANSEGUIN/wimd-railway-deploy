@@ -8,6 +8,7 @@
 ## The Problem We're Solving
 
 **Before this system:**
+
 - AI agents ask "where should I start?" every session
 - User has to explain project history repeatedly
 - Important context buried in old files
@@ -15,6 +16,7 @@
 - Documentation gets stale and misleading
 
 **After this system:**
+
 - AI runs ONE command → gets complete context in <3 minutes
 - Latest status always in predictable location
 - Automatic discovery of recent files
@@ -131,7 +133,7 @@
 
 ## Update Protocol
 
-### When START_HERE.md MUST be updated:
+### When START_HERE.md MUST be updated
 
 1. **After critical incidents**
    - Production down
@@ -151,7 +153,7 @@
    - Beginning of new work sprint
    - After user reports "AI confused"
 
-### How to update START_HERE.md:
+### How to update START_HERE.md
 
 ```markdown
 # Update these sections:
@@ -163,7 +165,8 @@
 5. Add new warnings in "Critical Warnings" if needed
 ```
 
-### Commit message format:
+### Commit message format
+
 ```bash
 git commit -m "Update START_HERE.md - [brief event description]"
 
@@ -177,7 +180,7 @@ git commit -m "Update START_HERE.md - [brief event description]"
 
 ## Discovery Logic
 
-### How `show_latest_context.sh` works:
+### How `show_latest_context.sh` works
 
 ```bash
 # 1. Check START_HERE.md exists and show age
@@ -211,41 +214,47 @@ curl -s https://whatismydelta.com/health
 
 ## Success Metrics
 
-### This system is working if:
+### This system is working if
 
 ✅ **AI Productivity**
+
 - New AI session productive in <5 minutes
 - No "where do I start?" questions
 - Finds critical context automatically
 - Reads correct files in correct order
 
 ✅ **Information Quality**
+
 - START_HERE.md updated within 3 days
 - Status files match reality
 - Links point to existing files
 - No conflicting information
 
 ✅ **User Experience**
+
 - Doesn't have to explain project history
 - Can paste one command to onboard AI
 - Trusts AI has full context
 - Documentation stays current
 
-### This system needs improvement if:
+### This system needs improvement if
 
 ❌ **AI Confusion**
+
 - Repeated questions about project state
 - Reading outdated documentation
 - Can't find latest incident reports
 - Asks about resolved issues
 
 ❌ **Staleness**
+
 - START_HERE.md >7 days old
 - Status files don't reflect current state
 - Broken links to moved/deleted files
 - Git history contradicts docs
 
 ❌ **User Friction**
+
 - Has to manually guide AI to files
 - Explains same context every session
 - AI misses critical recent events
@@ -319,6 +328,7 @@ AI: [runs verification script]
 ## Maintenance
 
 ### Weekly Tasks
+
 ```bash
 # Check if START_HERE.md needs update
 ls -l .ai-agents/START_HERE.md
@@ -332,6 +342,7 @@ ls -t .ai-agents/handoff_*.json | tail -n +11 | xargs -I {} mv {} .ai-agents/arc
 ```
 
 ### Monthly Tasks
+
 ```bash
 # Review and clean up
 - Remove resolved alerts from SESSION_START_PROTOCOL.md
@@ -345,6 +356,7 @@ ls -t .ai-agents/handoff_*.json | tail -n +11 | xargs -I {} mv {} .ai-agents/arc
 ## Troubleshooting
 
 ### "Script not found"
+
 ```bash
 # Make sure you're in project root
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
@@ -354,6 +366,7 @@ chmod +x ./scripts/show_latest_context.sh
 ```
 
 ### "START_HERE.md outdated"
+
 ```bash
 # AI agent should update it:
 # 1. Read recent files to understand current state
@@ -362,6 +375,7 @@ chmod +x ./scripts/show_latest_context.sh
 ```
 
 ### "Conflicting information"
+
 ```bash
 # Newest file wins:
 # 1. Check dates: ls -lt .ai-agents/*.md
@@ -371,6 +385,7 @@ chmod +x ./scripts/show_latest_context.sh
 ```
 
 ### "User says file is wrong"
+
 ```bash
 # User is always right:
 # 1. Ask: "Should I update START_HERE.md with current info?"
@@ -384,26 +399,32 @@ chmod +x ./scripts/show_latest_context.sh
 ## Key Design Principles
 
 ### 1. Single Command Discovery
+
 **Why:** AI shouldn't hunt for files
 **How:** `show_latest_context.sh` finds everything automatically
 
 ### 2. Predictable Locations
+
 **Why:** Consistency reduces confusion
 **How:** All agent files in `.ai-agents/`, all scripts in `scripts/`
 
 ### 3. Date-Based Freshness
+
 **Why:** Recent files more likely correct
 **How:** Filenames include dates, scripts sort by modification time
 
 ### 4. Self-Updating Documentation
+
 **Why:** Outdated docs worse than no docs
 **How:** Agents required to update START_HERE.md after major events
 
 ### 5. Fail-Fast Verification
+
 **Why:** Catch problems before they spread
 **How:** Verification scripts run before any deployment
 
 ### 6. Clear Reading Order
+
 **Why:** Context builds on context
 **How:** Numbered reading order in all onboarding docs
 
@@ -414,30 +435,35 @@ chmod +x ./scripts/show_latest_context.sh
 ### Future Enhancements
 
 1. **Automated Staleness Detection**
+
    ```bash
    # Script runs daily, alerts if START_HERE.md >7 days old
    # Could integrate with git hooks
    ```
 
 2. **Smart File Recommendations**
+
    ```bash
    # AI detects user intent, recommends specific files
    # "You mentioned deployment → read DEPLOYMENT_SNAPSHOT_2025-11-21.md"
    ```
 
 3. **Interactive Onboarding**
+
    ```bash
    # Script asks questions, customizes reading list
    # "What are you working on? [deployment/bugfix/feature]"
    ```
 
 4. **Health Dashboard**
+
    ```bash
    # Visual status of documentation freshness
    # Color-coded file ages, broken link detection
    ```
 
 5. **Auto-Generate Summaries**
+
    ```bash
    # AI summarizes git commits → updates START_HERE.md
    # Reduces manual update burden
@@ -448,14 +474,17 @@ chmod +x ./scripts/show_latest_context.sh
 ## Success Stories
 
 ### Problem Solved: AI Can't Find Latest Context
+
 **Before:** AI reads CLAUDE_CODE_README.md from Sept 29, thinks there are unresolved CORS issues
 **After:** AI runs script, sees Nov 21 rollback, reads correct status file, understands current state
 
 ### Problem Solved: User Repeats History Every Session
+
 **Before:** User explains "Phase 1 was rolled back" every new AI session
 **After:** User pastes one command, AI reads START_HERE.md, already knows about rollback
 
 ### Problem Solved: Documentation Gets Stale
+
 **Before:** Multiple README files with contradictory information
 **After:** START_HERE.md is single source of truth, updated after every major event
 

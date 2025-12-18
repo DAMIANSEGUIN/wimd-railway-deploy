@@ -1,6 +1,7 @@
 # SENIOR ENGINEER HANDOFF - WHAT IS MY DELTA
-**Date**: September 12, 2025  
-**Status**: CRITICAL - Ask functionality broken, core engine not operational  
+
+**Date**: September 12, 2025
+**Status**: CRITICAL - Ask functionality broken, core engine not operational
 **Priority**: P0 - Primary user journey non-functional
 
 ## 🚨 IMMEDIATE CRITICAL ISSUE
@@ -12,6 +13,7 @@
 ## 📋 INTENDED ARCHITECTURE
 
 ### Core System Design
+
 ```
 USER INPUT → CSV MATCH (607 prompts) → API FALLBACK (OpenAI) → RESPONSE
     ↓              ↓                         ↓
@@ -21,6 +23,7 @@ sendStrip()    Local Response         API Response
 ```
 
 ### File Structure & Locations
+
 ```
 what_is_my_delta_site/
 ├── index.html                    # Main app - ALL code in single file
@@ -33,6 +36,7 @@ what_is_my_delta_site/
 ```
 
 ### Prompt System Architecture
+
 1. **CSV Prompts (607)**: Static career coaching responses
    - Format: `Prompt,Completion,Labels`
    - Example: `"I'm not sure what I'm good at anymore","Uncertainty often follows burnout...","Experimentation & Testing"`
@@ -43,6 +47,7 @@ what_is_my_delta_site/
 ## 🔍 PIPELINE FAILURE ANALYSIS
 
 ### Current Flow (BROKEN)
+
 ```javascript
 // Line 798-801: Event Handler ✅ WORKING
 coachSend.addEventListener('click', (e) => {
@@ -69,7 +74,9 @@ function findBestMatch(userInput) {
 ```
 
 ### Root Cause Identification
+
 **PRIMARY**: CSV parsing fails due to embedded commas in quoted fields
+
 ```javascript
 // Line 571: BROKEN PARSING
 const [prompt, completion, labels] = line.split(',');
@@ -77,6 +84,7 @@ const [prompt, completion, labels] = line.split(',');
 ```
 
 **SECONDARY**: Async loading race condition
+
 ```javascript
 // Line 620: loadPrompts() called but may not complete before user interaction
 loadPrompts(); // Async call
@@ -86,6 +94,7 @@ loadPrompts(); // Async call
 ## 🛠️ EXACT FIX LOCATIONS
 
 ### Fix 1: CSV Parsing (CRITICAL - Line 568-573)
+
 **Problem**: Simple split(',') breaks on embedded commas
 **Solution**: Implement proper CSV parsing with quote handling
 
@@ -95,7 +104,7 @@ function parseCSVLine(line) {
   const result = [];
   let current = '';
   let inQuotes = false;
-  
+
   for (let i = 0; i < line.length; i++) {
     const char = line[i];
     if (char === '"') {
@@ -115,6 +124,7 @@ function parseCSVLine(line) {
 ```
 
 ### Fix 2: Loading State Management (Line 620)
+
 **Problem**: No guarantee prompts loaded before user interaction
 **Solution**: Add loading state and user feedback
 
@@ -131,6 +141,7 @@ if (!promptsLoaded) {
 ```
 
 ### Fix 3: Debug Instrumentation
+
 **Add debugging to trace exact failure point:**
 
 ```javascript
@@ -145,11 +156,13 @@ console.log('Match result:', match);
 ## 📁 FILE ACCESS PATHS
 
 ### Live Site Files (Verified Accessible)
+
 - CSV: `https://whatismydelta.com/assets/prompts.csv` ✅ (138KB, 607 lines)
 - JSON: `https://whatismydelta.com/data/prompts.ps101.json` ✅ (556B, 8 questions)
 - Site: `https://whatismydelta.com` ✅ (Deployed)
 
 ### Local Development
+
 - Main file: `/Users/damianseguin/Documents/what_is_my_delta_site/index.html`
 - CSV source: `/Users/damianseguin/Documents/what_is_my_delta_site/assets/prompts.csv`
 - JSON source: `/Users/damianseguin/Documents/what_is_my_delta_site/data/prompts.ps101.json`
@@ -157,9 +170,11 @@ console.log('Match result:', match);
 ## 🚀 DEPLOYMENT INFO
 
 ### Netlify Configuration
+
 - **Site ID**: `bb594f69-4d23-4817-b7de-dadb8b4db874`
 - **Auth Token**: `nfp_KfjJx2FFoANpnQSyD9rnb8RWExzfkpLb65a0`
-- **Deploy Command**: 
+- **Deploy Command**:
+
 ```bash
 netlify deploy --site=bb594f69-4d23-4817-b7de-dadb8b4db874 --auth=nfp_KfjJx2FFoANpnQSyD9rnb8RWExzfkpLb65a0 --prod --dir=.
 ```
@@ -167,6 +182,7 @@ netlify deploy --site=bb594f69-4d23-4817-b7de-dadb8b4db874 --auth=nfp_KfjJx2FFoA
 ## 🔍 TESTING PROTOCOL
 
 ### Manual Testing Steps
+
 1. Open `https://whatismydelta.com`
 2. Open browser console (F12)
 3. Type "i need a job" in ask field
@@ -175,6 +191,7 @@ netlify deploy --site=bb594f69-4d23-4817-b7de-dadb8b4db874 --auth=nfp_KfjJx2FFoA
 6. **Current**: No logs, no response, silent failure
 
 ### Debugging Commands (Browser Console)
+
 ```javascript
 // Check if prompts loaded:
 console.log('Career prompts:', careerPrompts.length);
@@ -190,6 +207,7 @@ findBestMatch('i need a job');
 ## 📋 VERIFICATION CHECKLIST
 
 ### Pre-Deploy Verification
+
 - [ ] CSV parsing handles embedded commas correctly
 - [ ] careerPrompts array populates with 607 items
 - [ ] ps101Framework array populates with 8 items
@@ -198,6 +216,7 @@ findBestMatch('i need a job');
 - [ ] Loading states provide user feedback
 
 ### Post-Deploy Testing
+
 - [ ] "i need a job" → Returns career coaching response
 - [ ] "help me with my resume" → Returns relevant guidance
 - [ ] "xyz invalid input" → Falls back to API or helpful message
@@ -206,6 +225,7 @@ findBestMatch('i need a job');
 ## 💡 SUCCESS CRITERIA
 
 **Functional Requirements Met When:**
+
 1. Ask button produces intelligent career coaching responses
 2. CSV prompts provide instant matching for common queries
 3. API fallback handles novel questions
@@ -228,7 +248,7 @@ const fallbackResponses = {
 ## 🎯 NEXT SESSION PRIORITY
 
 1. **IMMEDIATE**: Fix CSV parsing (15 minutes)
-2. **TEST**: Verify prompt loading (5 minutes)  
+2. **TEST**: Verify prompt loading (5 minutes)
 3. **DEPLOY**: Push fix to production (5 minutes)
 4. **VALIDATE**: Test ask functionality end-to-end (10 minutes)
 

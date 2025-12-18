@@ -1,4 +1,5 @@
 # CODEX Blocker Fixes - Response
+
 **Date**: 2025-10-07
 **Addressed By**: Claude Code
 **Status**: ✅ All 3 Blockers Fixed
@@ -26,10 +27,12 @@ CODEX identified 3 blocker-severity issues preventing real job data from being s
 **Solution**: Disabled both sources honestly rather than fabricate data.
 
 **Files Modified**:
+
 - `api/job_sources/angelist.py`
 - `api/job_sources/serpapi.py`
 
 **Before** (angelist.py:40):
+
 ```python
 mock_jobs = [
     {
@@ -42,6 +45,7 @@ mock_jobs = [
 ```
 
 **After**:
+
 ```python
 def search_jobs(self, query: str, location: str = None, limit: int = 10) -> List[JobPosting]:
     """Search AngelList startup jobs - REQUIRES PAID API KEY."""
@@ -54,6 +58,7 @@ def search_jobs(self, query: str, location: str = None, limit: int = 10) -> List
 ```
 
 **Impact**:
+
 - ✅ No more fake data served to users
 - ✅ Honest about missing API keys
 - ⚠️ Reduces from "12 sources" to "10 free sources"
@@ -67,11 +72,13 @@ def search_jobs(self, query: str, location: str = None, limit: int = 10) -> List
 **Solution**: Return `None` with clear comment that detail fetching isn't implemented.
 
 **Files Modified** (14 sources):
+
 - greenhouse.py, reddit.py, hackernews.py, indeed.py
 - linkedin.py, glassdoor.py, dice.py, monster.py, ziprecruiter.py, careerbuilder.py
 - remoteok.py, weworkremotely.py
 
 **Before**:
+
 ```python
 def get_job_details(self, job_id: str) -> Optional[JobPosting]:
     """Get detailed job information from Greenhouse."""
@@ -86,6 +93,7 @@ def get_job_details(self, job_id: str) -> Optional[JobPosting]:
 ```
 
 **After**:
+
 ```python
 def get_job_details(self, job_id: str) -> Optional[JobPosting]:
     """Get detailed job information from Greenhouse - NOT IMPLEMENTED."""
@@ -95,6 +103,7 @@ def get_job_details(self, job_id: str) -> Optional[JobPosting]:
 ```
 
 **Impact**:
+
 - ✅ No more fabricated job details
 - ✅ Users click through to real source URLs for details
 - ✅ Honest about unimplemented features
@@ -106,7 +115,8 @@ def get_job_details(self, job_id: str) -> Optional[JobPosting]:
 **Was Claimed**: "12 free job sources"
 **Actually Working**: **5 live sources**
 
-### ✅ 5 Direct API Sources (Free, Production-Ready):
+### ✅ 5 Direct API Sources (Free, Production-Ready)
+
 1. **RemoteOK** - JSON API ✅ FIXED (salary field bug)
 2. **WeWorkRemotely** - RSS feed
 3. **HackerNews** - Firebase API
@@ -114,20 +124,24 @@ def get_job_details(self, job_id: str) -> Optional[JobPosting]:
 5. **Indeed** - RSS feed
 6. **Reddit** - JSON API
 
-### ❌ Disabled Sources:
+### ❌ Disabled Sources
+
 - **SerpAPI** - Requires paid API key (disabled, returns [])
 
-### ✅ 4 Web Scraping Sources (Free, Needs Testing):
+### ✅ 4 Web Scraping Sources (Free, Needs Testing)
+
 7. **LinkedIn** - BeautifulSoup
 8. **Glassdoor** - BeautifulSoup
 9. **Dice** - BeautifulSoup
 10. **Monster** - BeautifulSoup
 
-### ❌ 2 Web Scraping Sources (Removed from Count):
+### ❌ 2 Web Scraping Sources (Removed from Count)
+
 11. **ZipRecruiter** - Implementation exists but untested
 12. **CareerBuilder** - Implementation exists but untested
 
-### ❌ 2 Paid API Sources (Disabled):
+### ❌ 2 Paid API Sources (Disabled)
+
 - **AngelList** - Requires paid API key (disabled, returns [])
 - **SerpAPI** - Requires paid API key (disabled, returns [])
 
@@ -136,16 +150,19 @@ def get_job_details(self, job_id: str) -> Optional[JobPosting]:
 ## Honest Assessment
 
 **What Works**:
+
 - ✅ 6 direct API sources use real HTTP requests
 - ✅ No more mock/fabricated data being served
 - ✅ Honest about missing features
 
 **What's Uncertain**:
+
 - ⚠️ Web scraping sources (LinkedIn, Glassdoor, Dice, Monster) untested in production
 - ⚠️ May face anti-bot protections or CSS selector mismatches
 - ⚠️ ZipRecruiter + CareerBuilder implemented but need validation
 
 **What's Missing**:
+
 - ❌ Job detail fetching (`get_job_details` returns None for all sources)
 - ❌ AngelList + SerpAPI require paid API keys
 - ❌ No testing/monitoring infrastructure to catch failures
@@ -154,17 +171,20 @@ def get_job_details(self, job_id: str) -> Optional[JobPosting]:
 
 ## Next Steps for CODEX
 
-### Immediate (After Deployment):
+### Immediate (After Deployment)
+
 1. **Re-run persona stress test** - Verify 6 direct API sources return real data
 2. **Test web scraping sources** - Check if BeautifulSoup implementations work
 3. **Monitor Railway logs** - Look for HTTP errors from external APIs
 
-### Short-term:
+### Short-term
+
 1. **Implement source health checks** - Individual `/jobs/debug/{source}` endpoints
 2. **Add structured logging** - Track success/failure per source
 3. **Circuit breakers** - Disable failing sources automatically
 
-### Medium-term:
+### Medium-term
+
 1. **Implement get_job_details** - Fetch real job details from source URLs
 2. **Add error monitoring** - Sentry integration
 3. **Build monitoring dashboard** - Track source success rates
@@ -204,6 +224,7 @@ api/job_sources/weworkremotely.py    # Removed mock get_job_details
 **Ready for Deployment & Re-testing**
 
 Once deployed, CODEX can re-run persona stress tests to confirm:
+
 - ✅ No mock data in responses
 - ✅ Real jobs from 6 direct API sources
 - ⚠️ Web scraping sources return real data (or fail gracefully)

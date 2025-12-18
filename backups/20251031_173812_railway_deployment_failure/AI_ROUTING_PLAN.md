@@ -40,7 +40,7 @@ This document is the authoritative specification for coach responses. All agents
 | `CSV_MATCH_THRESHOLD` | `0.55` | Minimum relevance to accept CSV answer |
 | `AI_FALLBACK_ENABLED` | `true` | Feature flag for Stage 2 |
 | `AI_PRIMARY_PROVIDER` | `openai` | `openai` or `anthropic` |
-| `AI_SECONDARY_PROVIDER` | _(optional)_ | Optional backup provider |
+| `AI_SECONDARY_PROVIDER` | *(optional)* | Optional backup provider |
 | `AI_TIMEOUT_SECS` | `8` | Timeout per provider request |
 
 Document any change to these defaults in this file and `OPERATIONS_MANUAL.md`.
@@ -65,4 +65,3 @@ Document any change to these defaults in this file and `OPERATIONS_MANUAL.md`.
 - Keep `prompts.csv` canonical; regenerate derived JSON via `ingest_prompts` before deploys.
 - Revisit threshold and matching strategy after collecting real usage metrics.
 - If providers change, update this plan, `PROJECT_STRUCTURE.md`, and `CONVERSATION_NOTES.md` before coding.
-

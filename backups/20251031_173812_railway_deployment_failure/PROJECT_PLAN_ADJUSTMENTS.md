@@ -9,6 +9,7 @@
 ### 📝 Document Amendments (2025-10-31)
 
 **Codex corrections applied:**
+
 1. ✅ Fixed test references - `test_golden_dataset.py` doesn't exist, replaced with existing `test_ps101_personas.py`
 2. ✅ Fixed script references - `scripts/validate_data_quality.py` doesn't exist, marked as TODO with alternative
 3. ✅ Fixed OPERATIONS_MANUAL duplication - Changed from "create new section" to "expand existing section at lines 120-125"
@@ -21,10 +22,12 @@
 ## EXECUTIVE SUMMARY
 
 This document consolidates findings from:
+
 1. **Claude Code (Troubleshooting SSE)** - PS101 v2 technical review
 2. **Codex (Product Process Analyst)** - Operational gaps in project documentation
 
 **Critical Path Update:**
+
 - PS101 v2 has 3 blocking issues requiring 2.5-4 hours to fix before deployment
 - Operational documentation (key management, metrics validation, ownership) needs immediate attention
 - Current checklists lack owner assignments and timelines
@@ -52,6 +55,7 @@ This document consolidates findings from:
 **Details:** See `docs/CURSOR_FIXES_REQUIRED.md` for complete implementation guide with code snippets.
 
 **✅ Issue #1 Status:** COMPLETE (2025-10-31)
+
 - Browser prompts replaced with inline forms
 - Inline validation protocol established (see `docs/PS101_INLINE_VALIDATION_PROTOCOL.md`)
 - All requirements met per Decision #003
@@ -60,6 +64,7 @@ This document consolidates findings from:
 ### Action Items (PS101 v2)
 
 **Immediate (This Sprint):**
+
 - [x] **Cursor:** Implement inline forms for obstacle/action collection (Issue #1) ✅ **COMPLETE** - 2025-10-31
 - [ ] **Cursor:** Fix experiment validation to check all prompts (Issue #2)
 - [ ] **Cursor:** Add Step 10 Mastery Dashboard placeholder (Issue #3)
@@ -70,6 +75,7 @@ This document consolidates findings from:
 - [ ] **Cursor:** Deploy to production
 
 **Short Term (Next Sprint):**
+
 - [ ] **Cursor:** Implement full Step 10 Mastery Dashboard (6-8h)
 - [ ] **Cursor:** Design backend API contract for experiments array
 - [ ] **Cursor:** Add inline validation messages (replace `alert()`)
@@ -77,6 +83,7 @@ This document consolidates findings from:
 - [ ] **Cursor:** Improve ID generation (prevent collisions)
 
 **Medium Term (Sprint 3):**
+
 - [ ] **Backend Team:** Implement experiment sync to PostgreSQL
 - [ ] **Cursor:** Add keyboard shortcuts (Alt+N, Alt+B)
 - [ ] **QA:** Full accessibility audit
@@ -94,12 +101,14 @@ This document consolidates findings from:
 ### Gap #1: Checklist Ownership & Timelines
 
 **Problem:**
+
 - Lines 107-127 in SHARE_WITH_MOSAIC_TEAM.md have all actions unchecked
 - No owners assigned
 - No deadlines set
 - Unclear if items are assumed complete or waiting for assignment
 
 **Specifically affects:**
+
 - Rate limiting implementation
 - Monitoring setup
 - Scraping protections
@@ -109,6 +118,7 @@ This document consolidates findings from:
 **Impact:** Team may assume these are already done when they're not.
 
 **Action Required:**
+
 - [ ] **Codex:** Review checklist and assign current status (✅ Done / 🔄 In Progress / ⏳ Not Started)
 - [ ] **Codex:** Assign owners for each unchecked item
 - [ ] **Codex:** Set realistic deadlines
@@ -117,6 +127,7 @@ This document consolidates findings from:
 ### Gap #2: API Key Management & Security
 
 **Problem:**
+
 - Lines 145-158 state "API keys configured and ready"
 - No documentation on:
   - Key rotation process
@@ -128,6 +139,7 @@ This document consolidates findings from:
 **Impact:** Security risk if keys compromised; no clear recovery process.
 
 **Action Required:**
+
 - [ ] **Codex:** Document API key rotation process
 - [ ] **Codex:** Create key rotation schedule (e.g., every 90 days)
 - [ ] **Codex:** Document emergency revocation procedure
@@ -138,6 +150,7 @@ This document consolidates findings from:
 ### Gap #3: Success Metrics Validation Plan
 
 **Problem:**
+
 - Lines 131-141 define performance targets:
   - Response Time: <2 seconds
   - Success Rate: >95%
@@ -152,6 +165,7 @@ This document consolidates findings from:
 **Impact:** Can't verify if we're meeting targets; no objective success criteria.
 
 **Action Required:**
+
 - [ ] **Codex:** Define measurement methodology for each metric
 - [ ] **Codex:** Specify tools (Railway metrics? Custom dashboard? Sentry?)
 - [ ] **Codex:** Create "data quality" rubric with examples
@@ -237,9 +251,11 @@ This document consolidates findings from:
 - **Location:** `docs/key_rotation_log.md` (create)
 - **Format:**
   ```
+
   Date | Key Type | Rotated By | Reason | Status
   -----|----------|------------|--------|-------
   2025-10-31 | OPENAI_API_KEY | Damian | Scheduled | ✅ Complete
+
   ```
 
 ### Key Rotation Script (NEW - TODO)
@@ -250,9 +266,11 @@ This document consolidates findings from:
 ```
 
 ### Monitoring (NEW)
+
 - **Cost alerts:** Set up in OpenAI/Anthropic dashboard ($50/day threshold)
 - **Usage tracking:** Railway logs for API call volume
 - **Error rate:** Monitor 401 errors (invalid key spike)
+
 ```
 
 **Why this approach:**
@@ -290,10 +308,12 @@ time curl https://what-is-my-delta-site-production.up.railway.app/wimd/ask \
 ### Success Rate: >95%
 
 **Measurement:**
+
 - Track HTTP status codes (200 vs 4xx/5xx)
 - Use Railway logs or custom error tracking
 
 **Test:**
+
 ```bash
 # TODO: Golden dataset tests not yet implemented
 # For now, use existing persona tests:
@@ -303,6 +323,7 @@ pytest tests/stress_test_job_sources.py -v
 ```
 
 **Calculation:**
+
 ```
 Success Rate = (200 responses) / (total requests) * 100
 ```
@@ -313,11 +334,13 @@ Success Rate = (200 responses) / (total requests) * 100
 ### Data Quality: >90%
 
 **Definition:**
+
 - Job data completeness (title, company, location, description all present)
 - No duplicate results in single query
 - Results match query intent
 
 **Measurement:**
+
 ```python
 # Quality rubric:
 # - Title present: 1 point
@@ -330,6 +353,7 @@ Success Rate = (200 responses) / (total requests) * 100
 ```
 
 **Test:**
+
 ```bash
 # TODO: scripts/validate_data_quality.py not yet created
 # For now, use existing job sources test:
@@ -343,16 +367,19 @@ pytest tests/test_job_sources.py -v
 ### Uptime: >99%
 
 **Measurement:**
+
 - Railway health checks (automatic)
 - Uptime Robot or similar service (free tier)
 
 **Calculation:**
+
 ```
 Uptime = (total minutes - downtime minutes) / (total minutes) * 100
 ```
 
 **Validation Frequency:** Real-time monitoring
 **Alert Threshold:** Any downtime > 5 minutes
+
 ```
 
 ---

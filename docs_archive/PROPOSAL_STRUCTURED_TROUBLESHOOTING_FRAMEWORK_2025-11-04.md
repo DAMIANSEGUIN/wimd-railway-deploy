@@ -1,8 +1,9 @@
 # PROPOSAL: Structured Troubleshooting Framework with Team Oversight
+>
 > **Status Note (2025-11-05):** Superseded by `REVISED_TROUBLESHOOTING_FRAMEWORK_2025-11-05.md`, which integrates this proposal with existing enforcement protocols. Retain this file for historical reference only.
-**Date:** 2025-11-04  
-**Proposed by:** Claude Code (SSE)  
-**For Review:** Codex (Oversight)  
+**Date:** 2025-11-04
+**Proposed by:** Claude Code (SSE)
+**For Review:** Codex (Oversight)
 **Context:** Multiple production issues, firefighting without structure
 
 ---
@@ -10,7 +11,8 @@
 ## PROBLEM STATEMENT
 
 **Current State:**
-- Production site (https://whatismydelta.com/) has multiple non-functional elements
+
+- Production site (<https://whatismydelta.com/>) has multiple non-functional elements
 - JavaScript executes partially (first console.log works, rest fails silently)
 - Login modal exists but hidden, unclear if functional
 - Chat button non-responsive
@@ -19,6 +21,7 @@
 - Team has spent hours firefighting without reaching Desired Outcome
 
 **Why This Keeps Failing:**
+
 1. No clear "Current State → Desired Outcome" definition
 2. Agents firefighting symptoms instead of diagnosing architecture
 3. No oversight/verification between steps
@@ -33,13 +36,16 @@
 I recommend **3 techniques** from the companion guide:
 
 #### 1. **Chain-of-Verification Template** (TIER 1)
+
 **Why:** Forces explicit enumeration of what could be wrong before proceeding
 **Application:** Before any code change, agent must:
+
 - List 3 ways the diagnosis could be incomplete/wrong
 - Cite specific evidence confirming or refuting each concern
 - Provide revised diagnosis incorporating verified corrections
 
 **Example for current issue:**
+
 ```
 Initial diagnosis: "JavaScript execution stops at localStorage call"
 
@@ -58,6 +64,7 @@ Verification:
 ```
 
 #### 2. **Zero-Shot Chain-of-Thought Structure** (TIER 3)
+
 **Why:** Forces sequential reasoning instead of jumping to solutions
 **Application:** Every troubleshooting task follows this structure:
 
@@ -65,37 +72,41 @@ Verification:
 Step 1 - Define the scope:
   Current State: [Specific, testable]
   Desired Outcome: [Specific, measurable]
-  
+
 Step 2 - Identify key variables:
   What works? What doesn't? What's unknown?
-  
+
 Step 3 - Analyze relationships:
   How do working/broken components interact?
-  
+
 Step 4 - Consider edge cases:
   What browsers? What localStorage states? What network conditions?
-  
+
 Step 5 - Synthesize diagnosis:
   Root cause hypothesis with evidence
-  
+
 Verification check: What would prove this diagnosis wrong?
 
 Action Plan: [Specific, testable steps]
 ```
 
 #### 3. **Multi-Persona Debate** (TIER 4)
+
 **Why:** Surface conflicting technical priorities before committing to solution
 **Application:** For any proposed fix, simulate debate between:
 
 **Persona 1: Deployment Engineer (Claude Code)**
+
 - Priority: Ship working code to production quickly
 - Argues for: Minimal changes, fail-open design, deploy now
 
 **Persona 2: Quality Assurance (Codex Oversight)**
+
 - Priority: Root cause understanding, prevent regression
 - Argues for: Full architecture audit, test coverage, systematic diagnosis
 
 **Persona 3: End User Advocate (Cursor/NARs)**
+
 - Priority: Actual user experience, functional completeness
 - Argues for: All buttons work, trial mode functions, no login wall
 
@@ -211,12 +222,14 @@ Documentation updated? [What files changed, why?]
 ### Roles & Responsibilities
 
 **Claude Code (SSE - Systems & Software Engineering):**
+
 - Execute troubleshooting using above framework
 - Cannot proceed past Stage 2 without Codex approval
 - Documents all verification checks and evidence
 - Proposes solutions in Multi-Persona debate format
 
 **Codex (Oversight & Architecture):**
+
 - Reviews Stage 2 diagnosis before proceeding
 - Validates Stage 3 reasoning chain
 - Approves or iterates Stage 4 synthesis
@@ -224,11 +237,13 @@ Documentation updated? [What files changed, why?]
 - Final sign-off on Stage 6 verification
 
 **Cursor (Code Review & Implementation):**
+
 - Reviews actual code changes proposed in Stage 4
 - Validates implementation quality in Stage 5
 - Tests acceptance criteria in Stage 6
 
 **NARs (User Experience & Validation):**
+
 - Confirms Desired Outcome in Stage 1 matches user needs
 - Represents User Advocate persona in Stage 4
 - Performs final UAT in Stage 6
@@ -236,6 +251,7 @@ Documentation updated? [What files changed, why?]
 ### For Current Issue
 
 **Immediate Next Step:**
+
 1. I (Claude Code) will create STAGE 1 document defining Current State → Desired Outcome
 2. Post to repository for team review
 3. No further code changes until Codex approves Stage 1
@@ -246,6 +262,7 @@ Documentation updated? [What files changed, why?]
 ## ASSESSMENT OF THIS SOLUTION
 
 **Strengths:**
+
 - Forces explicit alignment on goals before action
 - Prevents firefighting by requiring verification
 - Built-in oversight prevents runaway diagnosis
@@ -253,18 +270,21 @@ Documentation updated? [What files changed, why?]
 - Creates audit trail for future troubleshooting
 
 **Weaknesses:**
+
 - Slower than current ad-hoc approach (by design)
 - Requires all team members to adopt framework
 - Adds coordination overhead
 - May be over-engineering for simple issues
 
 **When to Use:**
+
 - ✅ Production issues with unknown root cause (like current)
 - ✅ Multiple failed fix attempts
 - ✅ High-stakes changes with regression risk
 - ❌ Simple, well-understood bugs with clear fixes
 
 **Risk Mitigation:**
+
 - If framework takes >2 hours without resolution, escalate to external review
 - Emergency bypass: any team member can call "rollback to last known good" and restart
 
@@ -275,6 +295,7 @@ Documentation updated? [What files changed, why?]
 **Adopt this framework immediately for the current production issue.**
 
 Timeline:
+
 - Next 15 min: Claude Code creates Stage 1 document
 - Codex reviews and approves/revises Stage 1
 - Next 30 min: Execute Stages 2-3 with verification
@@ -302,13 +323,14 @@ If framework proves effective, adopt as standard operating procedure for all pro
 Default mode: **Batch all decisions into a single permission request per session.**
 
 **Implementation:**
+
 ```
 At session start, agent presents:
 
 **SESSION PLAN**
 I will execute the following without further approval:
 1. [Action 1 with expected outcome]
-2. [Action 2 with expected outcome]  
+2. [Action 2 with expected outcome]
 3. [Action 3 with expected outcome]
 
 **CHECKPOINT REQUIRED** if:
@@ -320,10 +342,11 @@ Do you approve this plan? Reply "APPROVED" or specify revisions.
 ```
 
 **Exceptions requiring immediate stop:**
+
 - ⚠️ **CATASTROPHIC RISK**: Potential data loss without retrievable backup
   - Examples: Dropping database tables, deleting git history, overwriting files without .bak
   - Action: STOP, get explicit approval, verify backup exists
-  
+
 - ⚠️ **BREAKING CHANGE**: Modification that could break production
   - Examples: Changing API contracts, altering database schema, modifying authentication flow
   - Action: STOP, present multi-persona risk assessment, get approval
@@ -337,25 +360,30 @@ Do you approve this plan? Reply "APPROVED" or specify revisions.
 Use structured status format instead of conversational explanations:
 
 **Verbose (wasteful):**
+
 ```
-I've completed the first step of adding the try-catch block to the initialization 
-code. This should help us catch any errors that might be occurring. Now I'm going 
+I've completed the first step of adding the try-catch block to the initialization
+code. This should help us catch any errors that might be occurring. Now I'm going
 to move on to the next step which is testing whether this works...
 ```
+
 **Tokens:** ~45
 
 **Compressed (efficient):**
+
 ```
 ✅ Step 1 complete: try-catch added
 → Next: Test initialization
 ```
+
 **Tokens:** ~12
 
 **Implementation:**
 All status updates use this format:
+
 ```
 ✅ [completed action]: [outcome]
-⚠️ [warning/issue]: [impact]  
+⚠️ [warning/issue]: [impact]
 → Next: [upcoming action]
 🔴 BLOCKED: [blocker description]
 ```
@@ -369,14 +397,17 @@ All status updates use this format:
 Replace explanations with evidence, then synthesize.
 
 **Verbose:**
+
 ```
-I think the problem might be related to the way we're handling localStorage 
-because I noticed in the code that we're trying to access it in a certain way 
+I think the problem might be related to the way we're handling localStorage
+because I noticed in the code that we're trying to access it in a certain way
 that could potentially cause issues...
 ```
+
 **Tokens:** ~38
 
 **Evidence-First:**
+
 ```
 Evidence:
 - localStorage.getItem() at line 2023
@@ -386,10 +417,12 @@ Evidence:
 Hypothesis: Silent exception in localStorage access
 Test: Add logging before/after getItem call
 ```
+
 **Tokens:** ~28
 
 **Implementation:**
 Structure all technical communication as:
+
 ```
 Evidence: [Observable facts]
 Hypothesis: [Theory explaining evidence]
@@ -405,6 +438,7 @@ Test: [How to verify/refute]
 Pre-define verification checks as templates to avoid regenerating.
 
 **Standard Deployment Verification Template:**
+
 ```
 DEPLOY_CHECK:
 1. Syntax: node --check [file] → [✅/❌]
@@ -414,6 +448,7 @@ DEPLOY_CHECK:
 ```
 
 **Agent simply fills in results:**
+
 ```
 DEPLOY_CHECK (commit abc1234):
 1. Syntax: node --check mosaic_ui/index.html → ✅
@@ -433,20 +468,24 @@ DEPLOY_CHECK (commit abc1234):
 When providing updates, report only deltas from previous state.
 
 **Verbose:**
+
 ```
-The site has these features working: login modal, registration form, trial mode, 
-and the three main sections. However, the chat button is still not working, and 
+The site has these features working: login modal, registration form, trial mode,
+and the three main sections. However, the chat button is still not working, and
 we're still investigating the JavaScript execution issue...
 ```
+
 **Tokens:** ~35
 
 **Differential:**
+
 ```
 DELTA since last update:
 + Added: try-catch logging
 - Still broken: chat button
 ○ Unchanged: trial mode logic
 ```
+
 **Tokens:** ~15
 
 **Token Savings:** 55% reduction in progress reports.
@@ -456,24 +495,26 @@ DELTA since last update:
 ### Token Budget Management
 
 **Per-Session Allocation:**
+
 - **Stage 1 (Planning):** 2,000 tokens max
   - Includes: Current State definition, Desired Outcome, approval request
-  
+
 - **Stage 2-3 (Diagnosis):** 5,000 tokens max
   - Includes: Chain-of-Verification, Zero-Shot analysis, evidence gathering
-  
-- **Stage 4 (Solution):** 3,000 tokens max  
+
+- **Stage 4 (Solution):** 3,000 tokens max
   - Includes: Multi-Persona debate, synthesis, approval request
-  
+
 - **Stage 5 (Implementation):** 4,000 tokens max
   - Includes: Code changes, deployment, checkpoint confirmations
-  
+
 - **Stage 6 (Verification):** 1,000 tokens max
   - Includes: Test results, final documentation
 
 **Total Session Budget:** 15,000 tokens (well under 200k limit)
 
 **If Budget Exceeded:**
+
 1. Use Summary-Expand Loop (TIER 5 from companion guide)
 2. Start fresh session with compressed context
 3. Link sessions via git commit hashes for continuity
@@ -525,15 +566,17 @@ Allow graduated enforcement based on issue severity:
 ```
 
 **Modes:**
+
 - **strict:** All 6 stages, all checkpoints (current proposal)
 - **standard:** Stages 1,2,4,6 with checkpoints only at 2 and 4
 - **fast:** Stages 1,5,6 only (for trivial bugs with clear fixes)
 
 **Decision criteria:**
+
 ```
 Use STRICT if:
 - Unknown root cause
-- Multiple failed fix attempts  
+- Multiple failed fix attempts
 - Production user impact
 
 Use STANDARD if:
@@ -541,7 +584,7 @@ Use STANDARD if:
 - Low regression risk
 - Isolated component
 
-Use FAST if:  
+Use FAST if:
 - Obvious typo/syntax error
 - No user impact
 - Fully reversible change
@@ -610,7 +653,7 @@ Build knowledge base of diagnosed issues to avoid re-diagnosing similar problems
     ],
     "common_causes": [
       "Corrupted text from copy-paste",
-      "Mismatched quotes/braces", 
+      "Mismatched quotes/braces",
       "Scope conflict in IIFE"
     ],
     "test_commands": [
@@ -622,6 +665,7 @@ Build knowledge base of diagnosed issues to avoid re-diagnosing similar problems
 ```
 
 **Usage:** When symptoms match a known pattern, agent can say:
+
 ```
 Symptom matches known issue: js_silent_failure
 Skipping Stage 2-3 diagnosis (cached)
@@ -637,6 +681,7 @@ Proceeding directly to Stage 4 with established solution pattern
 **MECHANISM 1: Automatic State Snapshots**
 
 Before any Stage 5 action:
+
 ```bash
 # Create snapshot
 SNAPSHOT_ID=$(git rev-parse --short HEAD)
@@ -656,6 +701,7 @@ git tag -d "pre-action-$SNAPSHOT_ID"
 All features should fail open, not closed:
 
 **Bad (fail closed):**
+
 ```javascript
 if (!sessionId) {
   showAuthModal();  // Blocks user
@@ -665,6 +711,7 @@ if (!sessionId) {
 ```
 
 **Good (fail open):**
+
 ```javascript
 try {
   if (sessionId) {
@@ -696,7 +743,7 @@ echo "=== Regression Test Suite ==="
 # Test 1: JS syntax (added after syntax error incident)
 node --check mosaic_ui/index.html || exit 1
 
-# Test 2: No Unicode artifacts (added after tool▁call incident)  
+# Test 2: No Unicode artifacts (added after tool▁call incident)
 if grep -q '▁' mosaic_ui/index.html; then
   echo "FAIL: Unicode artifacts found"
   exit 1
@@ -722,17 +769,20 @@ echo "All regression tests passed"
 To activate this protocol:
 
 **Immediate (today):**
+
 - [ ] Add `.ai-agents/templates/` directory with standard templates
 - [ ] Create `.ai-agents/checkpoint_validator.sh` script
 - [ ] Add token budget tracking to session start messages
 - [ ] Codex confirms batched-approval workflow acceptable
 
 **This week:**
+
 - [ ] Create `.ai-agents/known_issues.json` from recent incidents
 - [ ] Implement `regression_tests.sh` with current 3 tests
 - [ ] Add retrospective template to `.ai-agents/templates/`
 
 **Ongoing:**
+
 - [ ] After each issue: Add test to regression suite
 - [ ] Monthly: Codex reviews retrospectives, updates framework
 - [ ] Quarterly: Evaluate token savings, adjust budgets

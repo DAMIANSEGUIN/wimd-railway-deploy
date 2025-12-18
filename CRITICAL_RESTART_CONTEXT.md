@@ -53,12 +53,14 @@
 **Working backup:** `backups/pre-ps101-fix_20251126_220704Z/`
 
 **Why this is correct:**
+
 - Manifest says: "working local version"
 - Created BEFORE PS101 fix attempts started
 - Should have login, chat, auth - everything except PS101 advancement
 - Date: 2025-11-26 22:07:04Z (earliest recent backup)
 
 **Known issue in this backup:**
+
 - PS101 cannot progress past step 1
 - ReferenceError: handleStepAnswerInput is not defined
 - This is ACCEPTABLE - we can fix this specific issue
@@ -69,11 +71,13 @@
 ## CURRENT STATE (2025-11-27T18:00Z)
 
 **Files:**
+
 - `mosaic_ui/index.html` - Restored from pre-ps101-fix backup + removed js/main.js line
-- Server: Running on http://localhost:3000
+- Server: Running on <http://localhost:3000>
 - Chromium: Launched with CodexCapture
 
 **Expected behavior NOW:**
+
 - ✅ Login should work
 - ✅ Chat should work
 - ✅ Auth modal should work
@@ -86,6 +90,7 @@
 **For ANY AI agent resuming this work:**
 
 ### Step 1: Read These Files (IN ORDER)
+
 1. **THIS FILE FIRST** - `CRITICAL_RESTART_CONTEXT.md`
 2. `AI_RESUME_STATE.md` - Current session state
 3. `CLAUDE.md` - Architecture overview
@@ -129,6 +134,7 @@ ps aux | grep local_dev_server | grep -v grep
 **Create:** `.ai-agents/[AGENT]_RESTART_FINDINGS_[DATE].md`
 
 Include:
+
 - What's working
 - What's broken
 - Matches expected state (yes/no)
@@ -137,6 +143,7 @@ Include:
 ### Step 5: Only THEN Proceed
 
 **DO NOT:**
+
 - Restore from ANY backup without verification
 - Make code changes before testing current state
 - Trust any recommendation without validation
@@ -149,6 +156,7 @@ Include:
 **BEFORE restoring from ANY backup:**
 
 1. **Read the BACKUP_MANIFEST.md**
+
    ```bash
    cat backups/[BACKUP_NAME]/BACKUP_MANIFEST.md
    ```
@@ -160,6 +168,7 @@ Include:
    - "pre-ps101-fix" = BEFORE problems started ✅
 
 3. **Verify the file:**
+
    ```bash
    # Check PS101 objects present
    grep -c "PS101_STEPS\|PS101State\|PROMPT_HINTS" backups/[NAME]/mosaic_ui_index.html
@@ -170,6 +179,7 @@ Include:
    ```
 
 4. **Test in isolation:**
+
    ```bash
    # Copy to test location
    cp backups/[NAME]/mosaic_ui_index.html /tmp/test_index.html
@@ -206,16 +216,19 @@ Include:
 **This incident shows role confusion:**
 
 ### Gemini (Architecture)
+
 - ✅ Provided architectural guidance
 - ✅ Approved "move functions" approach
 - ❌ Not asked to review backup selection
 
 ### Codex (Debugging)
+
 - ✅ Found root cause (missing PS101 objects)
 - ❌ Recommended wrong backup
 - ❌ Didn't verify backup before recommending
 
 ### Claude (Implementation)
+
 - ❌ **CRITICAL FAILURE:** Restored without verification
 - ❌ **CRITICAL FAILURE:** Didn't test after restore
 - ❌ **CRITICAL FAILURE:** Declared "RESOLVED" prematurely
@@ -226,18 +239,21 @@ Include:
 ## NEXT STEPS
 
 ### Immediate (Claude)
+
 1. Verify current state matches "pre-ps101-fix" backup expectations
 2. Test login, chat, auth work
 3. Confirm PS101 fails at step 1 (expected)
 4. Hand to user for verification
 
 ### Short-term (For Next Agent)
+
 1. Fix the handleStepAnswerInput hoisting issue
 2. Test PS101 advancement works
 3. Complete all 10 steps
 4. Deploy to production
 
 ### Long-term (For Gemini)
+
 1. Review this incident
 2. Recommend process improvements
 3. Decide on Phase 1 modularization strategy
@@ -248,14 +264,17 @@ Include:
 ## FILES REFERENCE
 
 **Current backups:**
+
 - `backups/pre-ps101-fix_20251126_220704Z/` - ✅ WORKING (before PS101 issues)
 - `backups/pre-scope-fix_20251126_233100Z/` - ❌ BROKEN (has js/main.js issue)
 - `backups/post-restore_20251127_171057Z/` - ❌ BROKEN (copied from wrong source)
 
 **Working file:**
+
 - `mosaic_ui/index.html` - Currently restored from pre-ps101-fix + js/main.js removed
 
 **Fallback:**
+
 - `mosaic_ui/index.html.bak` - Unknown state, dated 2025-11-13
 
 ---
@@ -263,6 +282,7 @@ Include:
 ## FOR USER
 
 I apologize for this catastrophic regression. I:
+
 1. Restored from the wrong backup
 2. Never verified it was working
 3. Declared it "fixed" without testing
@@ -271,9 +291,10 @@ I apologize for this catastrophic regression. I:
 This is unforgivable and I've documented everything above so this never happens again.
 
 **Current status:**
+
 - Restored from correct backup (pre-ps101-fix)
 - Removed broken js/main.js reference
-- Ready for you to test: http://localhost:3000
+- Ready for you to test: <http://localhost:3000>
 - Expected: Login/chat work, PS101 fails at step 1
 
 ---

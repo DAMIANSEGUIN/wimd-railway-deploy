@@ -2,11 +2,14 @@
 Glassdoor job source implementation via web scraping.
 """
 
-import requests
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
+
+import requests
 from bs4 import BeautifulSoup
-from .base import JobSource, JobPosting
+
+from .base import JobPosting, JobSource
+
 
 class GlassdoorSource(JobSource):
     """Glassdoor job board integration via web scraping."""
@@ -22,45 +25,49 @@ class GlassdoorSource(JobSource):
 
         try:
             # Build search URL (Glassdoor format: /Job/location-query-jobs-SRCH_IL.0,8_IC1147401_KO9,15.htm)
-            location_slug = location.replace(' ', '-').replace(',', '') if location else 'remote'
-            query_slug = query.replace(' ', '-')
+            location_slug = location.replace(" ", "-").replace(",", "") if location else "remote"
+            query_slug = query.replace(" ", "-")
 
-            search_url = f"{self.base_url}{location_slug}-{query_slug}-jobs-SRCH_KO0,{len(query)}.htm"
+            search_url = (
+                f"{self.base_url}{location_slug}-{query_slug}-jobs-SRCH_KO0,{len(query)}.htm"
+            )
 
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
             }
 
             response = requests.get(search_url, headers=headers, timeout=10)
             response.raise_for_status()
 
-            soup = BeautifulSoup(response.content, 'html.parser')
-            job_cards = soup.find_all('li', class_='react-job-listing', limit=limit)
+            soup = BeautifulSoup(response.content, "html.parser")
+            job_cards = soup.find_all("li", class_="react-job-listing", limit=limit)
 
             jobs = []
             for card in job_cards:
                 try:
-                    title_elem = card.find('a', class_='job-title')
-                    company_elem = card.find('div', class_='employer-name')
-                    location_elem = card.find('div', class_='location')
+                    title_elem = card.find("a", class_="job-title")
+                    company_elem = card.find("div", class_="employer-name")
+                    location_elem = card.find("div", class_="location")
 
                     if not (title_elem and company_elem):
                         continue
 
                     job_url = f"https://www.glassdoor.com{title_elem.get('href', '')}"
-                    job_id = title_elem.get('data-job-id', str(hash(title_elem.text)))
+                    job_id = title_elem.get("data-job-id", str(hash(title_elem.text)))
 
                     job = {
                         "id": f"glassdoor_{job_id}",
                         "title": title_elem.text.strip(),
                         "company": company_elem.text.strip(),
-                        "location": location_elem.text.strip() if location_elem else "See description",
+                        "location": (
+                            location_elem.text.strip() if location_elem else "See description"
+                        ),
                         "description": f"Glassdoor job: {title_elem.text.strip()}",
                         "url": job_url,
                         "posted_date": datetime.now(),
-                        "remote": 'remote' in (location_elem.text.lower() if location_elem else ''),
+                        "remote": "remote" in (location_elem.text.lower() if location_elem else ""),
                         "skills": [],
-                        "experience_level": "mid"
+                        "experience_level": "mid",
                     }
 
                     jobs.append(self._normalize_job_data(job))
@@ -76,7 +83,7 @@ class GlassdoorSource(JobSource):
         except Exception as e:
             print(f"Error parsing Glassdoor jobs: {e}")
             return []
-    
+
     def get_job_details(self, job_id: str) -> Optional[JobPosting]:
         """Get detailed job information from Glassdoor."""
         # Job details endpoint not implemented - users should click through to source URL

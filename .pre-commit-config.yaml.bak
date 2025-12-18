@@ -1,0 +1,183 @@
+# Pre-commit hooks for automated code quality enforcement
+# Based on ISO/IEC 5055:2021 + Policy-as-Code industry standards
+# Install: pre-commit install --install-hooks
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Python code quality - Ruff (replaces flake8, isort, pyupgrade)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.8
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        name: Ruff linter (PEP 8 + security checks)
+      - id: ruff-format
+        name: Ruff formatter (Black-compatible)
+
+  # Python code formatting - Black
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        name: Black code formatter
+        language_version: python3.9
+
+  # Security - Git secrets detection
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+        name: Gitleaks (detect hardcoded secrets)
+
+  # Security - Additional secret detection
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        name: Detect secrets in code
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package-lock.json
+
+  # Pre-commit hooks - General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+        name: Check for large files (>500KB)
+
+      - id: check-ast
+        name: Check Python AST syntax
+
+      - id: check-json
+        name: Check JSON syntax
+
+      - id: check-yaml
+        name: Check YAML syntax
+
+      - id: check-toml
+        name: Check TOML syntax
+
+      - id: detect-private-key
+        name: Detect private keys
+
+      - id: end-of-file-fixer
+        name: Fix end of files
+
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+
+      - id: mixed-line-ending
+        name: Fix mixed line endings
+        args: ['--fix=lf']
+
+      - id: check-merge-conflict
+        name: Check for merge conflict markers
+
+      - id: check-executables-have-shebangs
+        name: Check executables have shebangs
+
+      - id: check-shebang-scripts-are-executable
+        name: Check shebang scripts are executable
+
+  # Python security - Bandit (security linter)
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.10
+    hooks:
+      - id: bandit
+        name: Bandit security linter
+        args: ['-c', 'pyproject.toml']
+        additional_dependencies: ['bandit[toml]']
+
+  # Python imports - isort (import sorting)
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort (sort imports)
+        args: ['--profile', 'black']
+
+  # Python type checking - mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.2
+    hooks:
+      - id: mypy
+        name: mypy (type checking)
+        args: [--ignore-missing-imports, --strict]
+        additional_dependencies: []
+        exclude: ^tests/
+
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.41.0
+    hooks:
+      - id: markdownlint
+        name: Markdown linter
+        args: ['--fix']
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        name: ShellCheck (shell script linter)
+
+  # Dependency security - Safety
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.3.3
+    hooks:
+      - id: python-safety-dependencies-check
+        name: Safety (Python dependency security)
+
+# Custom local hooks
+  - repo: local
+    hooks:
+      # Mosaic-specific: PostgreSQL pattern enforcement
+      - id: check-postgres-patterns
+        name: Check PostgreSQL context manager pattern
+        entry: python -c "import sys; code = open(sys.argv[1]).read(); sys.exit(1 if 'conn = get_conn()' in code and 'with get_conn()' not in code else 0)"
+        language: system
+        files: '^api/.*\.py$'
+        exclude: ^api/storage.py$
+
+      # Mosaic-specific: No SQLite syntax in PostgreSQL code
+      - id: check-no-sqlite-syntax
+        name: Check no SQLite syntax (use %s not ?)
+        entry: python -c "import sys, re; code = open(sys.argv[1]).read(); sys.exit(1 if re.search(r'execute\([^)]*\?', code) else 0)"
+        language: system
+        files: '^api/.*\.py$'
+
+      # Mosaic-specific: Critical feature preservation
+      - id: check-critical-features
+        name: Check critical features not removed
+        entry: bash -c 'if git diff --cached --name-only | grep -q "frontend/index.html\|mosaic_ui/index.html"; then ./scripts/verify_critical_features.sh; fi'
+        language: system
+        pass_filenames: false
+        always_run: true
+
+# Configuration
+default_language_version:
+  python: python3.9
+
+# Global excludes
+exclude: |
+  (?x)^(
+      \.git/|
+      \.venv/|
+      venv/|
+      __pycache__/|
+      \.pytest_cache/|
+      node_modules/|
+      build/|
+      dist/|
+      .*\.egg-info/|
+      backups/|
+      docs_archive/|
+      Archives/
+  )$
+
+# Fail fast: stop on first failure
+fail_fast: false
+
+# Minimum pre-commit version
+minimum_pre_commit_version: '2.21.0'

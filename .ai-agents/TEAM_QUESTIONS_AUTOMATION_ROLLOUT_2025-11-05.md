@@ -1,6 +1,7 @@
 # Team Questions - Automation Rollout Planning
-**Date:** 2025-11-05  
-**From:** Codex (Planning)  
+
+**Date:** 2025-11-05
+**From:** Codex (Planning)
 **Context:** Post-FAST-mode remediation, pre-automation template build
 
 ---
@@ -8,6 +9,7 @@
 ## Prerequisites Status ✅
 
 **FAST-mode remediation complete:**
+
 - ✅ DOMContentLoaded handlers consolidated into single `initApp()` function
 - ✅ Verification scripts executed and passed
 - ✅ Evidence captured in incident log (`FOR_NARS_FRONTEND_JAVASCRIPT_ISSUE_2025-11-04.md`)
@@ -21,10 +23,11 @@
 
 ### 1. Documentation Discipline Script Scope
 
-**Decision:** ✅ Include four mandatory touchpoints  
-- `CLAUDE.md`  
-- `.verification_audit.log`  
-- Active incident note (`FOR_*_*.md`)  
+**Decision:** ✅ Include four mandatory touchpoints
+
+- `CLAUDE.md`
+- `.verification_audit.log`
+- Active incident note (`FOR_*_*.md`)
 - Relevant checklist used for the session (e.g., `TROUBLESHOOTING_CHECKLIST.md`, `DEPLOYMENT_CHECKLIST.md`)
 
 Architecture decisions and handoff docs remain optional (notify reviewer when changed, but no hard gate).
@@ -35,9 +38,10 @@ Architecture decisions and handoff docs remain optional (notify reviewer when ch
 
 ### 2. Regression Test Suite Scope
 
-**Decision:** ✅ Ship a minimum smoke suite initially  
-- Verify `[INIT]` log sequence to confirm trial initializer  
-- Check auth modal visibility + form elements  
+**Decision:** ✅ Ship a minimum smoke suite initially
+
+- Verify `[INIT]` log sequence to confirm trial initializer
+- Check auth modal visibility + form elements
 - Confirm chat button/input exist and handler is attached
 
 **Context:** The script (`scripts/regression_tests.sh`) will serve as the baseline UX regression suite. Initial version can wrap existing smoke tests.
@@ -46,9 +50,10 @@ Architecture decisions and handoff docs remain optional (notify reviewer when ch
 
 ### 3. Checkpoint Validator Enforcement Level
 
-**Decision:** ✅ Keep the validator lightweight  
-- Quick syntax check  
-- Critical signature presence (auth modal, PS101 markers, chat DOM nodes)  
+**Decision:** ✅ Keep the validator lightweight
+
+- Quick syntax check
+- Critical signature presence (auth modal, PS101 markers, chat DOM nodes)
 - Hard fail only when signatures missing; leave lint/style enforcement to pre-commit hooks
 
 **Context:** The validator (`.ai-agents/checkpoint_validator.sh`) is a fast lint/feature smoke test that runs after each significant change. It's a subset of pre-push checks designed to fail fast.
@@ -57,16 +62,19 @@ Architecture decisions and handoff docs remain optional (notify reviewer when ch
 
 ### 4. Retrospective Scheduling
 
-**Decision:** ✅ 30-minute live session the day after production stability  
-- Attendees: Codex (planning), Cursor (implementation), Netlify Ops rep, owners for chat/auth  
+**Decision:** ✅ 30-minute live session the day after production stability
+
+- Attendees: Codex (planning), Cursor (implementation), Netlify Ops rep, owners for chat/auth
 - Use call to lock in framework adoption timing; capture actions in short follow-up doc
 
 **Context:** After the outage is confirmed closed and automation templates are built, we'll hold a short post-fix retrospective to:
+
 - Review how FAST mode went
 - Confirm adoption timing for the revised framework
 - Assign automation deliverables
 
 **Need team input on:**
+
 - Preferred timing (immediate after fix, next day, end of week)?
 - Duration (15 min, 30 min, 1 hour)?
 - Required attendees?

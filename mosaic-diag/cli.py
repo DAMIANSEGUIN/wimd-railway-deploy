@@ -22,17 +22,17 @@ EXIT CODES:
     3 - Invalid arguments
 """
 
-import sys
-import json
 import argparse
+import json
+import sys
 from pathlib import Path
 
 # Add parent dir to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
+from incidents import IncidentCategory, IncidentLogger, IncidentSeverity, format_incidents_human
+from preflight import PreflightEngine, format_results_human, format_results_json
 from storage import Storage
-from preflight import PreflightEngine, format_results_json, format_results_human
-from incidents import IncidentLogger, IncidentCategory, IncidentSeverity, format_incidents_human
 
 
 def cmd_preflight(args):
@@ -68,14 +68,20 @@ def cmd_incident_add(args):
         category = IncidentCategory[args.category.upper()]
     except KeyError:
         print(f"Error: Invalid category '{args.category}'", file=sys.stderr)
-        print(f"Valid categories: {', '.join(c.name.lower() for c in IncidentCategory)}", file=sys.stderr)
+        print(
+            f"Valid categories: {', '.join(c.name.lower() for c in IncidentCategory)}",
+            file=sys.stderr,
+        )
         sys.exit(3)
 
     try:
         severity = IncidentSeverity[args.severity.upper()]
     except KeyError:
         print(f"Error: Invalid severity '{args.severity}'", file=sys.stderr)
-        print(f"Valid severities: {', '.join(s.name.lower() for s in IncidentSeverity)}", file=sys.stderr)
+        print(
+            f"Valid severities: {', '.join(s.name.lower() for s in IncidentSeverity)}",
+            file=sys.stderr,
+        )
         sys.exit(3)
 
     # Log incident
@@ -85,7 +91,7 @@ def cmd_incident_add(args):
         symptom=args.symptom,
         root_cause=args.root_cause,
         context=json.loads(args.context) if args.context else {},
-        resolution=args.resolution
+        resolution=args.resolution,
     )
 
     print(f"✅ Incident logged: {incident.incident_id}")
@@ -102,9 +108,7 @@ def cmd_incidents_list(args):
     logger = IncidentLogger(storage)
 
     incidents = logger.list_incidents(
-        category=args.category,
-        severity=args.severity,
-        limit=args.limit
+        category=args.category, severity=args.severity, limit=args.limit
     )
 
     if args.json:
@@ -133,8 +137,7 @@ def cmd_suggestions_list(args):
 def main():
     """Main CLI entrypoint"""
     parser = argparse.ArgumentParser(
-        prog="mosaic-diag",
-        description="Mosaic diagnostic and prognostic system v2.0"
+        prog="mosaic-diag", description="Mosaic diagnostic and prognostic system v2.0"
     )
 
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -143,8 +146,18 @@ def main():
     preflight_parser = subparsers.add_parser("preflight", help="Run preflight checks")
     preflight_parser.add_argument(
         "category",
-        choices=["deploy", "deployment", "env", "environment", "access", "permissions", "docs", "documentation", "all"],
-        help="Category of checks to run"
+        choices=[
+            "deploy",
+            "deployment",
+            "env",
+            "environment",
+            "access",
+            "permissions",
+            "docs",
+            "documentation",
+            "all",
+        ],
+        help="Category of checks to run",
     )
     preflight_parser.add_argument("--json", action="store_true", help="Output as JSON")
     preflight_parser.set_defaults(func=cmd_preflight)
@@ -155,7 +168,7 @@ def main():
             "deploy": "deployment",
             "env": "environment",
             "access": "permissions",
-            "docs": "documentation"
+            "docs": "documentation",
         }
         return mapping.get(category, category)
 
@@ -183,7 +196,9 @@ def main():
 
     # suggestions command
     suggestions_parser = subparsers.add_parser("suggestions", help="List suggestions")
-    suggestions_parser.add_argument("--type", choices=["check", "doc", "roadmap"], help="Suggestion type")
+    suggestions_parser.add_argument(
+        "--type", choices=["check", "doc", "roadmap"], help="Suggestion type"
+    )
     suggestions_parser.set_defaults(func=cmd_suggestions_list)
 
     # Parse args

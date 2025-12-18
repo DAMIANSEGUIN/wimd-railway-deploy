@@ -1,4 +1,5 @@
 # Documentation Cleanup Summary
+
 **Date**: 2025-12-05
 **Executed By**: Claude Code (Sonnet 4.5)
 **User Approval**: Confirmed via 6-question decision process
@@ -18,6 +19,7 @@
 ## ✅ ACTIONS COMPLETED
 
 ### Phase 1: Backup (CRITICAL SAFETY)
+
 - **Created**: `/Users/damianseguin/AI_Workspace/WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz`
 - **Size**: 410 MB
 - **Files**: 61,176 files archived
@@ -25,9 +27,11 @@
 - **Status**: Can restore entire project state if needed
 
 ### Phase 2: Archive Superseded Documentation (5 files)
+
 **Location**: `deprecated/2025-12/`
 
 Moved files superseded by TEAM_PLAYBOOK.md v2.0.0:
+
 1. `OPERATIONS_MANUAL.md` (Root)
 2. `docs/CODEX_INSTRUCTIONS.md`
 3. `docs/CODEX_HANDOVER_KIT.md`
@@ -37,9 +41,11 @@ Moved files superseded by TEAM_PLAYBOOK.md v2.0.0:
 **Reason**: All operational protocols now consolidated in TEAM_PLAYBOOK.md (published 2025-12-02)
 
 ### Phase 3: Archive Dated Handoffs (16 files)
+
 **Location**: `.ai-agents/archive/handoffs/2025-11/` and `.ai-agents/archive/deployments/2025-11/`
 
 November handoffs and deployment logs (15-30 days old):
+
 - HANDOFF_NETLIFY_RUNNER_2025-11-06.md
 - NETLIFY_RUNNER_FILE_REFERENCE_2025-11-06.md
 - NETLIFY_RUNNER_START_HERE_2025-11-06.md
@@ -60,9 +66,11 @@ November handoffs and deployment logs (15-30 days old):
 **Reason**: Historical context, not needed for current operations
 
 ### Phase 4: Archive Old Diagnostics (9 files)
+
 **Location**: `.ai-agents/archive/deployments/2025-11/` and `.ai-agents/archive/sessions/2025-11/`
 
 November diagnostics and stage documents:
+
 - DIAGNOSTIC_REPORT_20251102.md
 - FINAL_DIAGNOSTIC_20251102.md
 - FINDINGS_SUMMARY.md
@@ -78,11 +86,13 @@ November diagnostics and stage documents:
 ### Phase 5: User Decision-Based Actions (17 files)
 
 #### 5A: Deleted Empty Template (1 file)
+
 - **Deleted**: `PHASE_1_BOUNDARIES.md` (Root)
 - **Reason**: Empty template never completed, scope now in TEAM_PLAYBOOK.md Section 2
 - **User Decision**: YES (delete)
 
 #### 5B: Archived Planning Protocols (2 files)
+
 **Location**: `Planning/Archive_20251026/`
 
 - `Planning/00_READ_TWICE_PROTOCOL.md` → Archive
@@ -92,11 +102,13 @@ November diagnostics and stage documents:
 **User Decision**: YES (archive)
 
 #### 5C: Renamed Booking Document (1 file)
+
 - **Renamed**: `Planning/BOOKING_SESSION_BACKUP_2025-10-25.md` → `Planning/BOOKING_SYSTEM_FUTURE_MODULE.md`
 - **Reason**: Clarify that booking system is a future module, not obsolete
 - **User Decision**: Future module (keep, but clarify)
 
 #### 5D: Archived Generic Cursor Team Docs (4 files)
+
 **Location**: `deprecated/2025-12/cursor-team/`
 
 - `docs/CURSOR_TEAM_README.md`
@@ -108,6 +120,7 @@ November diagnostics and stage documents:
 **User Decision**: Keep Codex-specific docs, archive generic Cursor team docs
 
 #### 5E: Archived Dated Cursor Session Docs (9 files)
+
 **Location**: `.ai-agents/archive/sessions/2025-11/`
 
 - CURSOR_COMPLETION_SUMMARY_2025-11-05.md
@@ -123,6 +136,7 @@ November diagnostics and stage documents:
 **Reason**: November session summaries, historical context
 
 #### 5F: Kept Active Files (6 files)
+
 **NO ACTION - Kept as active documentation:**
 
 1. `AI_DETAILED_PROMPT.txt` (Root) - Keep per user decision
@@ -188,11 +202,13 @@ Planning/Archive_20251026/
 ## 🔐 DATA SAFETY
 
 **All archived/deleted files preserved in:**
+
 - **Backup**: `/Users/damianseguin/AI_Workspace/WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz`
 - **Retention**: 90 days minimum
 - **Recovery**: Extract backup and restore any file if needed
 
 **Restore Command (if needed):**
+
 ```bash
 cd /Users/damianseguin/AI_Workspace
 tar -xzf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz
@@ -203,6 +219,7 @@ tar -xzf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz
 ## ✅ CURRENT STATE (POST-CLEANUP)
 
 ### Active Documentation (Canonical)
+
 - **TEAM_PLAYBOOK.md** - Single source of truth (v2.0.0)
 - **SESSION_START.md** - Session initialization protocol
 - **TROUBLESHOOTING_CHECKLIST.md** - Error classification & debugging
@@ -212,12 +229,14 @@ tar -xzf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz
 - **api_keys.md** - API keys strategy (current)
 
 ### Active Text Files (Per User Decision)
+
 - `AI_DETAILED_PROMPT.txt`
 - `AI_SHORT_PROMPT.txt`
 - `AI_START_HERE.txt`
 - `SESSION_START_PROMPT.txt`
 
 ### Codex (Cursor) Active Docs
+
 - `docs/CURSOR_AGENT_PROMPT_PS101_V2.md`
 - `.ai-agents/CODEX_AGENT_WORKFLOW.md`
 - `.ai-agents/CODEX_AGENT_BROWSER_GUIDE.md`
@@ -225,6 +244,7 @@ tar -xzf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz
 - `.ai-agents/CODEX_RESET_PROTOCOL.md`
 
 ### Future Module Preserved
+
 - `Planning/BOOKING_SYSTEM_FUTURE_MODULE.md` (renamed for clarity)
 
 ---
@@ -244,21 +264,26 @@ tar -xzf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz
 ## 📋 NEXT STEPS
 
 ### Google Drive Sync (PENDING)
+
 **Status**: GDrive sync verified - `gdrive:WIMD-Railway-Deploy-Project` exists with 121+ docs
 
 **Recommended Actions**:
+
 1. Verify latest changes synced to GDrive
 2. Upload backup tar.gz to GDrive for redundancy
 3. Confirm ChatGPT has access to GDrive folder
 
 ### Ongoing Maintenance
+
 **Retention Policy**:
+
 - Archive dated docs older than 2 weeks
 - Keep current month + previous 2 months in archive (90-day window)
 - Delete files older than 180 days (6 months) unless flagged
 - Review archive quarterly
 
 **Archive Structure**:
+
 - `deprecated/YYYY-MM/` - Superseded documentation
 - `.ai-agents/archive/{type}/YYYY-MM/` - Dated operational docs
 
@@ -267,11 +292,13 @@ tar -xzf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz
 ## 📞 CONTACT
 
 **Questions about archived files?**
+
 - Check backup: `/Users/damianseguin/AI_Workspace/WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz`
 - Review this summary: `CLEANUP_SUMMARY_2025-12-05.md`
 - Check audit: `MOSAIC_DOCUMENTATION_AUDIT_2025-12-05.md`
 
 **Need to restore a file?**
+
 - Extract from backup tar.gz
 - Move from archive/ back to active location
 

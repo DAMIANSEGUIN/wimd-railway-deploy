@@ -3,31 +3,30 @@ Prompt selector for Mosaic 2.0 with CSV→AI fallback system.
 Handles prompt selection, caching, and AI fallback when CSV prompts fail.
 """
 
-import json
 import hashlib
 import time
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timedelta
+from datetime import datetime
+from typing import Any, Dict, Optional
 
-from .storage import get_conn
 from .ai_clients import get_ai_fallback_response, get_ai_health_status
 from .settings import get_settings
+from .storage import get_conn
+
 
 class PromptSelector:
     """Handles prompt selection with CSV→AI fallback logic."""
-    
+
     def __init__(self):
         self.settings = get_settings()
         self.cache_ttl_hours = 24
         # Don't cache feature flag - check dynamically to allow runtime updates
-    
+
     def _check_feature_flag(self, flag_name: str) -> bool:
         """Check if a feature flag is enabled."""
         try:
             with get_conn() as conn:
                 row = conn.execute(
-                    "SELECT enabled FROM feature_flags WHERE flag_name = ?",
-                    (flag_name,)
+                    "SELECT enabled FROM feature_flags WHERE flag_name = ?", (flag_name,)
                 ).fetchone()
                 # FORCE BOOLEAN CONVERSION - SQLite returns 0/1, not True/False
                 # This is critical because Python evaluates `0 or False` as False
@@ -35,70 +34,91 @@ class PromptSelector:
         except Exception:
             # If feature flags table doesn't exist, default to False
             return False
-    
+
     def _hash_prompt(self, prompt: str) -> str:
         """Create a hash for prompt caching."""
         return hashlib.sha256(prompt.encode()).hexdigest()
-    
+
     def _get_cached_response(self, prompt_hash: str) -> Optional[Dict[str, Any]]:
         """Get cached response for a prompt hash."""
         try:
             with get_conn() as conn:
                 row = conn.execute(
                     "SELECT csv_available, ai_fallback_used, last_updated FROM prompt_selector_cache WHERE prompt_hash = ?",
-                    (prompt_hash,)
+                    (prompt_hash,),
                 ).fetchone()
-                
+
                 if row:
                     # Check if cache is still valid
                     last_updated = datetime.fromisoformat(row[2])
-                    if (datetime.now() - last_updated).total_seconds() < (self.cache_ttl_hours * 3600):
+                    if (datetime.now() - last_updated).total_seconds() < (
+                        self.cache_ttl_hours * 3600
+                    ):
                         return {
                             "csv_available": bool(row[0]),
                             "ai_fallback_used": bool(row[1]),
-                            "cached": True
+                            "cached": True,
                         }
         except Exception as e:
             print(f"⚠️ Cache lookup failed: {e}")
-        
+
         return None
-    
+
     def _update_cache(self, prompt_hash: str, csv_available: bool, ai_fallback_used: bool):
         """Update cache with prompt selection results."""
         try:
             with get_conn() as conn:
                 conn.execute(
-                    """INSERT OR REPLACE INTO prompt_selector_cache 
+                    """INSERT OR REPLACE INTO prompt_selector_cache
                        (prompt_hash, csv_available, ai_fallback_used, last_updated)
                        VALUES (?, ?, ?, ?)""",
-                    (prompt_hash, csv_available, ai_fallback_used, datetime.now().isoformat())
+                    (prompt_hash, csv_available, ai_fallback_used, datetime.now().isoformat()),
                 )
         except Exception as e:
             print(f"⚠️ Cache update failed: {e}")
-    
-    def _log_fallback_usage(self, session_id: str, prompt_hash: str, csv_response: str, 
-                           ai_response: str, fallback_reason: str, response_time_ms: int):
+
+    def _log_fallback_usage(
+        self,
+        session_id: str,
+        prompt_hash: str,
+        csv_response: str,
+        ai_response: str,
+        fallback_reason: str,
+        response_time_ms: int,
+    ):
         """Log AI fallback usage for analytics."""
         try:
             with get_conn() as conn:
-                            conn.execute(
-                                """INSERT INTO ai_fallback_logs 
+                conn.execute(
+                    """INSERT INTO ai_fallback_logs
                                    (session_id, prompt_hash, csv_response, ai_response, fallback_reason, response_time_ms)
                                    VALUES (%s, %s, %s, %s, %s, %s)""",
-                                (session_id, prompt_hash, csv_response, ai_response, fallback_reason, response_time_ms)
-                            )
+                    (
+                        session_id,
+                        prompt_hash,
+                        csv_response,
+                        ai_response,
+                        fallback_reason,
+                        response_time_ms,
+                    ),
+                )
         except Exception as e:
             print(f"⚠️ Fallback logging failed: {e}")
-    
-    def select_prompt_response(self, prompt: str, session_id: str, 
-                              csv_prompts: Optional[Dict[str, Any]] = None,
-                              context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+
+    def select_prompt_response(
+        self,
+        prompt: str,
+        session_id: str,
+        csv_prompts: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
         """Select the best prompt response using CSV→AI fallback logic."""
         start_time = time.time()
         prompt_hash = self._hash_prompt(prompt)
 
         # Check if PS101 is active - disable cache for PS101 sessions
         from .storage import get_session_data
+
         session_data = get_session_data(session_id) if session_id else {}
         ps101_active = session_data.get("ps101_active", False)
 
@@ -126,12 +146,14 @@ class PromptSelector:
                     # CSV rows use "completion"; JSON overrides may use "response"
                     csv_response = best_match.get("response") or best_match.get("completion", "")
                     csv_available = True
-                    print(f"✓ Semantic match found for '{prompt[:50]}...' -> '{best_match.get('prompt', '')[:50]}...'")
+                    print(
+                        f"✓ Semantic match found for '{prompt[:50]}...' -> '{best_match.get('prompt', '')[:50]}...'"
+                    )
                 else:
                     print(f"⚠️ No semantic match found for '{prompt[:50]}...'")
             except Exception as e:
                 print(f"⚠️ CSV prompt lookup failed: {e}")
-        
+
         # If CSV response found, use it
         if csv_response:
             self._update_cache(prompt_hash, True, False)
@@ -140,9 +162,9 @@ class PromptSelector:
                 "source": "csv",
                 "csv_available": True,
                 "ai_fallback_used": False,
-                "response_time_ms": int((time.time() - start_time) * 1000)
+                "response_time_ms": int((time.time() - start_time) * 1000),
             }
-        
+
         # CSV failed, try AI fallback if enabled
         fallback_enabled = self._check_feature_flag("AI_FALLBACK_ENABLED")
         if fallback_enabled:
@@ -150,15 +172,18 @@ class PromptSelector:
             if ai_health.get("any_available", False):
                 try:
                     ai_result = get_ai_fallback_response(prompt, context)
-                    
+
                     if ai_result.get("fallback_used", False):
                         # Log the fallback usage
                         self._log_fallback_usage(
-                            session_id, prompt_hash, csv_response or "",
-                            ai_result.get("response", ""), "csv_unavailable",
-                            ai_result.get("response_time_ms", 0)
+                            session_id,
+                            prompt_hash,
+                            csv_response or "",
+                            ai_result.get("response", ""),
+                            "csv_unavailable",
+                            ai_result.get("response_time_ms", 0),
                         )
-                        
+
                         self._update_cache(prompt_hash, False, True)
                         return {
                             "response": ai_result.get("response", ""),
@@ -166,11 +191,11 @@ class PromptSelector:
                             "provider": ai_result.get("provider", "unknown"),
                             "csv_available": False,
                             "ai_fallback_used": True,
-                            "response_time_ms": ai_result.get("response_time_ms", 0)
+                            "response_time_ms": ai_result.get("response_time_ms", 0),
                         }
                 except Exception as e:
                     print(f"⚠️ AI fallback failed: {e}")
-        
+
         # All methods failed
         self._update_cache(prompt_hash, False, False)
         return {
@@ -179,9 +204,9 @@ class PromptSelector:
             "csv_available": False,
             "ai_fallback_used": False,
             "error": "All response methods failed",
-            "response_time_ms": int((time.time() - start_time) * 1000)
+            "response_time_ms": int((time.time() - start_time) * 1000),
         }
-    
+
     def get_fallback_stats(self, session_id: Optional[str] = None) -> Dict[str, Any]:
         """Get AI fallback usage statistics."""
         try:
@@ -189,11 +214,11 @@ class PromptSelector:
                 if session_id:
                     # Get stats for specific session
                     row = conn.execute(
-                        """SELECT COUNT(*) as total_fallbacks, 
+                        """SELECT COUNT(*) as total_fallbacks,
                                   AVG(response_time_ms) as avg_response_time,
                                   COUNT(DISTINCT prompt_hash) as unique_prompts
                            FROM ai_fallback_logs WHERE session_id = ?""",
-                        (session_id,)
+                        (session_id,),
                     ).fetchone()
                 else:
                     # Get global stats
@@ -203,44 +228,51 @@ class PromptSelector:
                                   COUNT(DISTINCT prompt_hash) as unique_prompts
                            FROM ai_fallback_logs"""
                     ).fetchone()
-                
+
                 if row:
                     return {
                         "total_fallbacks": row[0] or 0,
                         "avg_response_time_ms": int(row[1] or 0),
                         "unique_prompts": row[2] or 0,
-                        "fallback_enabled": self._check_feature_flag("AI_FALLBACK_ENABLED")
+                        "fallback_enabled": self._check_feature_flag("AI_FALLBACK_ENABLED"),
                     }
         except Exception as e:
             print(f"⚠️ Stats query failed: {e}")
-        
+
         return {
             "total_fallbacks": 0,
             "avg_response_time_ms": 0,
             "unique_prompts": 0,
-            "fallback_enabled": self._check_feature_flag("AI_FALLBACK_ENABLED")
+            "fallback_enabled": self._check_feature_flag("AI_FALLBACK_ENABLED"),
         }
-    
+
     def get_health_status(self) -> Dict[str, Any]:
         """Get prompt selector health status."""
         return {
             "fallback_enabled": self._check_feature_flag("AI_FALLBACK_ENABLED"),
             "ai_health": get_ai_health_status(),
-            "cache_ttl_hours": self.cache_ttl_hours
+            "cache_ttl_hours": self.cache_ttl_hours,
         }
+
 
 # Global prompt selector instance
 prompt_selector = PromptSelector()
 
-def get_prompt_response(prompt: str, session_id: str, 
-                      csv_prompts: Optional[Dict[str, Any]] = None,
-                      context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+
+def get_prompt_response(
+    prompt: str,
+    session_id: str,
+    csv_prompts: Optional[Dict[str, Any]] = None,
+    context: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Get prompt response using the global prompt selector."""
     return prompt_selector.select_prompt_response(prompt, session_id, csv_prompts, context)
+
 
 def get_prompt_stats(session_id: Optional[str] = None) -> Dict[str, Any]:
     """Get prompt selector statistics."""
     return prompt_selector.get_fallback_stats(session_id)
+
 
 def get_prompt_health() -> Dict[str, Any]:
     """Get prompt selector health status."""

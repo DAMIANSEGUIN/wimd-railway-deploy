@@ -5,11 +5,13 @@
 ---
 
 ## 1. Conflicting Implementations
+
 (Content remains the same as v2.0)
 
 ---
 
 ## 2. Supporting Context
+
 (Content remains the same as v2.0)
 
 ---
@@ -19,6 +21,7 @@
 This revised proposal incorporates feedback from Codex to create a more detailed and robust plan.
 
 ### 3.1 Rationale
+
 - **Security:** The container-based approach provides a secure, sandboxed environment.
 - **Robustness:** It handles `exit_code` and `output` streams, allowing for proper error handling and logging.
 
@@ -37,15 +40,15 @@ class CodeExecutor:
 
     def execute(self, code: str, context: CodeExecutorContext) -> None:
         full_code = self.notebook.get_code_with_imports(code)
-        
+
         # Execute code using 'python -c' for security
         command = ["python", "-c", full_code]
-        
+
         result = self._container.exec_run(
             command,
             demux=True, # Separate stdout/stderr
         )
-        
+
         # Handle success and failure paths
         if result.exit_code == 0:
             context.add_output({
@@ -69,6 +72,7 @@ class CodeExecutor:
 - **Lifecycle:** An instance of `Notebook` will be created at the start of a session and will persist for the duration of that session.
 - **Implementation:** It will be a simple, in-memory Python class that parses `import` statements from executed code and stores them.
 - **Example:**
+
   ```python
   class Notebook:
       def __init__(self):

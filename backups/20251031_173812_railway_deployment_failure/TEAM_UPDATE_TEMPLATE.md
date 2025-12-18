@@ -29,9 +29,11 @@
 ## Full Update (Email/Documentation)
 
 ### Subject Line Format
+
 `[Project] [Component] - [Action] Complete/In Progress/Blocked`
 
 **Examples:**
+
 - `PS101 v2 - Browser Prompts Fix Complete`
 - `Checkpoint System - Ready for Review`
 - `Deployment - Issue #1 Live in Production`
@@ -198,21 +200,25 @@
 ## Update Frequency Guidelines
 
 **Daily standups (Quick format):**
+
 - What you completed yesterday
 - What you're working on today
 - Any blockers
 
 **Weekly updates (Full format):**
+
 - Major milestones achieved
 - Documentation changes
 - Action items for next week
 
 **Deployment updates (Full format):**
+
 - Always send after production deployment
 - Include verification results
 - Document any issues encountered
 
 **Incident updates (Full format):**
+
 - Send immediately when critical issue found
 - Update every 30 min during active incident
 - Send final update when resolved
@@ -224,18 +230,21 @@
 **Who gets updates:**
 
 **All team members (Cursor, Codex, Claude Code, Damian):**
+
 - Major feature completions
 - Deployment notifications
 - Breaking changes
 - Critical incidents
 
 **Damian only:**
+
 - Budget/cost changes
 - Security incidents
 - Strategic decisions needed
 - Timeline impacts
 
 **Agent-specific:**
+
 - Cursor: Code changes, architecture decisions
 - Codex: Documentation changes, process updates
 - Claude Code: Infrastructure changes, operational updates
@@ -245,12 +254,14 @@
 ## Update Storage
 
 **All team updates should be:**
+
 - Saved to `docs/TEAM_UPDATE_[TOPIC]_[DATE].md`
 - Referenced in PROJECT_PLAN_ADJUSTMENTS.md
 - Linked from relevant task briefs
 - Archived after 90 days (move to `docs/archive/`)
 
 **Archive policy:**
+
 - Keep last 90 days in `docs/`
 - Move older to `docs/archive/YYYY-MM/`
 - Never delete (maintain history)
@@ -260,6 +271,7 @@
 ## Examples
 
 See these for reference:
+
 - `docs/TEAM_UPDATE_PS101_FIX_001.md` - Feature completion update
 - `docs/SHARE_CHECKPOINT_SYSTEM_FOR_CODEX_REVIEW.md` - Review request update
 - `docs/PROJECT_PLAN_ADJUSTMENTS.md` - Consolidated update

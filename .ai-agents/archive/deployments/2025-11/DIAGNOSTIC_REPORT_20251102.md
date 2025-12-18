@@ -1,4 +1,5 @@
 # Comprehensive Project Diagnostic Report
+
 **Date:** 2025-11-02
 **Triggered By:** Auth restoration completion + user request for full audit
 **Purpose:** Identify all features removed/overwritten during commit 890d2bc incident
@@ -10,6 +11,7 @@
 **Incident:** Commit `890d2bc` (Nov 1) copied PS101 v2 from `frontend/` to `mosaic_ui/`, overwriting authentication system.
 
 **Recovery Status:**
+
 - ✅ Authentication: RESTORED and DEPLOYED (commit cf26aa0)
 - ⚠️ PS101 v2: Lost during restoration (now have PS101 v1 - functional but missing enhancements)
 - 🔍 Other Features: Under investigation
@@ -19,6 +21,7 @@
 ## Section 1: What SHOULD Exist (Per CLAUDE.md)
 
 ### Frontend Features (Expected)
+
 1. ✅ Authentication (login/register/password reset)
 2. ✅ Chat/Coach interface
 3. ✅ File upload
@@ -30,7 +33,9 @@
 9. ? Focus Stack UI
 
 ### Backend API Endpoints (Expected)
+
 **Tested Status:**
+
 - ✅ `/health` - 200 OK
 - ✅ `/health/comprehensive` - 200 OK
 - ✅ `/config` - 200 OK
@@ -43,6 +48,7 @@
 - ✅ `/cost/analytics` - 200 OK
 
 **Not Yet Tested:**
+
 - `/resume/rewrite`
 - `/resume/customize`
 - `/intelligence/company/{name}`
@@ -50,7 +56,9 @@
 - `/experiments/*` (if enabled)
 
 ### Database Schema (Expected)
+
 Per CLAUDE.md Phase 1-4:
+
 - Users table
 - Sessions table
 - PS101 state table
@@ -68,6 +76,7 @@ Per CLAUDE.md Phase 1-4:
 ### Critical Commits
 
 **Commit Timeline:**
+
 ```
 70b8392 (Oct 31) - Has auth, no PS101 v2
 890d2bc (Nov 1)  - Overwrote with PS101 v2, no auth  ← INCIDENT
@@ -80,6 +89,7 @@ cf26aa0 (Nov 2)  - Restored auth from 70b8392 (current)
 **Comparing 70b8392 (before) vs 890d2bc (after):**
 
 **Lost:**
+
 1. Authentication modals (login/register/password reset)
 2. Authentication JavaScript functions
 3. Session management code
@@ -87,6 +97,7 @@ cf26aa0 (Nov 2)  - Restored auth from 70b8392 (current)
 5. User state persistence
 
 **Gained:**
+
 1. PS101 v2 enhancements (inline forms, experiment components)
 2. Enhanced step navigation
 3. Better state management
@@ -98,6 +109,7 @@ cf26aa0 (Nov 2)  - Restored auth from 70b8392 (current)
 ### Frontend (whatismydelta.com)
 
 **✅ Working:**
+
 - Authentication UI (22 references detected)
 - Login/register functionality
 - PS101 v1 (10-step flow - 89 references)
@@ -106,6 +118,7 @@ cf26aa0 (Nov 2)  - Restored auth from 70b8392 (current)
 - API proxy to Railway backend
 
 **⚠️ Unknown Status:**
+
 - Job search UI
 - Resume optimization UI
 - File upload UI
@@ -114,6 +127,7 @@ cf26aa0 (Nov 2)  - Restored auth from 70b8392 (current)
 - Experiment components
 
 **❌ Missing:**
+
 - PS101 v2 enhancements (inline forms vs browser prompts)
 - Experiment components (Steps 6-9)
 - Enhanced UX states (calm/focus/recovery/explore)
@@ -121,6 +135,7 @@ cf26aa0 (Nov 2)  - Restored auth from 70b8392 (current)
 ### Backend (Railway)
 
 **✅ Operational:**
+
 - Core API endpoints
 - Database connection (PostgreSQL)
 - Authentication system
@@ -130,6 +145,7 @@ cf26aa0 (Nov 2)  - Restored auth from 70b8392 (current)
 - Source analytics
 
 **❌ Issues:**
+
 - `/rag/health` endpoint missing (404)
 
 ---
@@ -153,6 +169,7 @@ prompt_health_log
 ```
 
 **Action Required:** Connect to Railway PostgreSQL and run:
+
 ```bash
 railway run psql $DATABASE_URL -c "\dt"
 ```
@@ -162,12 +179,14 @@ railway run psql $DATABASE_URL -c "\dt"
 ## Section 5: Feature Flags Status
 
 **Per CLAUDE.md:**
+
 - ✅ `RAG_BASELINE`: ENABLED
 - ✅ `JOB_SOURCES_STUBBED_ENABLED`: ENABLED
 - ✅ `AI_FALLBACK_ENABLED`: ENABLED
 - ⚠️ `EXPERIMENTS_ENABLED`: DISABLED
 
 **Need to verify actual values in Railway:**
+
 ```bash
 railway variables | grep ENABLED
 ```
@@ -222,6 +241,7 @@ railway variables | grep ENABLED
 ## Section 7: Contingency System Status
 
 **✅ INSTALLED (Nov 2):**
+
 - Pre-commit hook blocking feature removal
 - Critical feature verification script
 - Agent handoff protocol
@@ -264,12 +284,14 @@ railway variables | grep ENABLED
 **Current Risk Level:** MEDIUM
 
 **Why:**
+
 - ✅ Core functionality working (auth, basic flow)
 - ⚠️ Some features unknown status
 - ⚠️ PS101 v2 enhancements missing (UX degradation)
 - ✅ Contingency system now installed
 
 **Mitigation:**
+
 - Auth working and deployed ✅
 - Pre-commit hooks active ✅
 - Verification scripts operational ✅
@@ -280,6 +302,7 @@ railway variables | grep ENABLED
 ## Section 10: Next Steps
 
 **Continuing diagnostic:**
+
 1. Check Railway variables for feature flags
 2. Connect to database and verify schema
 3. Test frontend UI features manually

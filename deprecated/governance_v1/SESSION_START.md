@@ -13,6 +13,7 @@
 **YOU MUST MONITOR FOR THESE PHRASES IN EVERY USER MESSAGE:**
 
 **Trigger Phrases:**
+
 - "ending session"
 - "end session"
 - "session end"
@@ -42,21 +43,24 @@ If you fail to detect session end trigger, the session state will NOT be saved a
 
 You are now in **UNDERSTANDING MODE**. You may NOT write code, create files, or propose solutions until you pass all gates.
 
-### Required Actions (Complete in Order):
+### Required Actions (Complete in Order)
 
 **□ 1. Read `TEAM_PLAYBOOK.md` Section 1 (Quick Start) - 5 minutes**
 
 **□ 2. Read `TEAM_PLAYBOOK.md` Section 2 (Current Sprint Status) - 2 minutes**
-   - Note the "BLOCKING ISSUES" section
-   - Note the "CODE STATE" section
-   - Check `api/index.py` lines 1-18 for current version
+
+- Note the "BLOCKING ISSUES" section
+- Note the "CODE STATE" section
+- Check `api/index.py` lines 1-18 for current version
 
 **□ 3. Read current blocking issue sources:**
-   - `MOSAIC_MVP_IMPLEMENTATION/GEMINI_DAY_1_REVIEW.md`
+
+- `MOSAIC_MVP_IMPLEMENTATION/GEMINI_DAY_1_REVIEW.md`
 
 **□ 4. Read MANDATORY safety documents:**
-   - `TROUBLESHOOTING_CHECKLIST.md` (scan error taxonomy)
-   - `SELF_DIAGNOSTIC_FRAMEWORK.md` (scan sacred patterns)
+
+- `TROUBLESHOOTING_CHECKLIST.md` (scan error taxonomy)
+- `SELF_DIAGNOSTIC_FRAMEWORK.md` (scan sacred patterns)
 
 ---
 
@@ -65,37 +69,45 @@ You are now in **UNDERSTANDING MODE**. You may NOT write code, create files, or 
 **You must answer these questions before proceeding:**
 
 ### Q1: What is the current code version?
+
 **Where to find answer**: `api/index.py` lines 1-18
 
 ### Q2: How many BLOCKING ISSUES exist right now?
+
 **Where to find answer**: `TEAM_PLAYBOOK.md` Section 2 "BLOCKING ISSUES"
 
 ### Q3: What is the rollback path if you break something?
+
 **Where to find answer**: `api/index.py` lines 1-18 ROLLBACK_PATH
 
 ### Q4: What pattern MUST you use for database operations?
+
 **Where to find answer**: `TROUBLESHOOTING_CHECKLIST.md` Code Pattern Filters
 
 ---
 
 ## GATE 3: DECISION TREE (WHAT TO WORK ON)
 
-### IF Blocking Issues > 0:
+### IF Blocking Issues > 0
+
 → **WORK ON BLOCKING ISSUES FIRST**
 → Do NOT ask "what should I work on"
 → Address them in priority order: SECURITY > RESILIENCE > MINOR
 
-### IF Blocking Issues = 0:
+### IF Blocking Issues = 0
+
 → **Check "NEXT TASK" in TEAM_PLAYBOOK.md Section 2**
 → Do NOT ask "what should I work on"
 → Work on the documented next task
 
-### IF you're unclear about a task:
+### IF you're unclear about a task
+
 → **READ the source document listed in TEAM_PLAYBOOK.md**
 → Example: "see IMPLEMENTATION_REFINEMENT_Claude-Gemini.md"
 → Do NOT ask user to explain - read the documentation first
 
-### IF documentation is unclear after reading:
+### IF documentation is unclear after reading
+
 → **STATE what you read and what specific part is unclear**
 → Do NOT say "I don't know what to work on"
 → Say "I read [document X, section Y], but [specific question]"
@@ -104,7 +116,8 @@ You are now in **UNDERSTANDING MODE**. You may NOT write code, create files, or 
 
 ## ENFORCEMENT RULES
 
-### ❌ FORBIDDEN QUESTIONS (AUTOMATIC PROTOCOL VIOLATION):
+### ❌ FORBIDDEN QUESTIONS (AUTOMATIC PROTOCOL VIOLATION)
+
 - "What should I work on?"
 - "What's the priority?"
 - "Where do I start?"
@@ -113,16 +126,19 @@ You are now in **UNDERSTANDING MODE**. You may NOT write code, create files, or 
 
 **CRITICAL: User does NOT make technical decisions. Playbook documents decision criteria. If you ask user to choose, you are violating protocol.**
 
-### ✅ ALLOWED QUESTIONS (After reading docs):
+### ✅ ALLOWED QUESTIONS (After reading docs)
+
 - "I read [X], but [specific unclear part] - can you clarify?"
 - "The playbook says [criteria], but I found [exception] - how should I proceed?"
 
-### ❌ FORBIDDEN ACTIONS (AUTOMATIC PROTOCOL VIOLATION):
+### ❌ FORBIDDEN ACTIONS (AUTOMATIC PROTOCOL VIOLATION)
+
 - Asking user to decide between technical options when playbook has decision criteria
 - Asking user for priorities when TEAM_PLAYBOOK.md Section 2 documents priorities
 - Presenting "Option 1 vs Option 2" when one is clearly the workaround and playbook says "use workarounds for blockers"
 
-### 🚫 SESSION WILL BE STOPPED IF:
+### 🚫 SESSION WILL BE STOPPED IF
+
 - You ask forbidden questions
 - You ask user to make decisions that are documented in playbook
 - You skip reading required documents
@@ -156,6 +172,7 @@ CONFIRMATION: I will NOT ask "what should I work on" - it's documented in TEAM_P
 ## TL;DR (Minimal Version for Copy-Paste)
 
 **Every session start:**
+
 1. Read `TEAM_PLAYBOOK.md` Sections 1 & 2
 2. Check blocking issues in Section 2
 3. If blockers exist: work on them (priority: SECURITY > RESILIENCE > MINOR)
@@ -175,11 +192,13 @@ CONFIRMATION: I will NOT ask "what should I work on" - it's documented in TEAM_P
 **When user says "ending session" or similar:**
 
 Run this command:
+
 ```bash
 ./scripts/session_end.sh
 ```
 
 This will:
+
 1. Backup critical files (JSON configs, Python files) to `session_backups/[timestamp]/`
 2. Prompt you for session summary
 3. Update `TEAM_PLAYBOOK.md` Section 2 with current state

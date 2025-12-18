@@ -27,6 +27,7 @@ Standardized metadata headers and change tracking system across all governance a
 ## Files Updated
 
 ### Tier-1 Governance Files (5 files)
+
 1. Mosaic_Governance_Core_v1.md
 2. TEAM_PLAYBOOK_v2.md
 3. SESSION_START_v2.md
@@ -34,6 +35,7 @@ Standardized metadata headers and change tracking system across all governance a
 5. API_MODE_GOVERNANCE_PROTOCOL.md
 
 ### Tier-2 Deployment Files (3 files)
+
 6. DEPLOYMENT_TRUTH.md
 7. CLAUDE.md
 8. README.md
@@ -45,6 +47,7 @@ Standardized metadata headers and change tracking system across all governance a
 **Full specification:** `METADATA_STANDARD.md` (root directory)
 
 **Includes:**
+
 - Mandatory header format
 - Changelog requirements
 - Update protocols

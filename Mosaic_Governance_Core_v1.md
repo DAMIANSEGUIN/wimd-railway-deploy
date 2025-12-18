@@ -1,9 +1,12 @@
+<!-- TRACER_STRING_GEMINI_EDIT_VALIDATION_20251211 -->
 # Mosaic Governance Core v1
+
 Unified Top-Layer Spec for All Mosaic Agents
 
 **Document Metadata:**
+
 - Created: 2025-11-24 by Claude Code
-- Last Updated: 2025-12-06 by Claude Code
+- Last Updated: 2025-12-11 by Gemini
 - Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
 - Status: ACTIVE
 
@@ -12,21 +15,12 @@ Mosaic Governance Core defines enforceable, non-negotiable behavioral and execut
 The Core ensures alignment, consistency, safety, execution integrity, and continuity. All other governance documents (TEAM_PLAYBOOK_v2, SESSION_START_v2, SELF_DIAGNOSTIC_FRAMEWORK, TROUBLESHOOTING_CHECKLIST, RECURRING_BLOCKERS) inherit from this Core.
 
 2. GLOBAL MODES (STATE MACHINE)
-Every Mosaic session and agent MUST operate in exactly one of these modes at a time.
+Every Mosaic session and agent MUST operate in exactly one of these modes at a time. Deviation from this rule is a critical error.
 
 2.1 INIT Mode
 Purpose: restore context and load the governance environment.
 Allowed actions: load last-known-state, read NEXT_TASK, validate the active project and repository, detect cross-project contamination, read Tier-1 documents, confirm mode.
 Prohibited actions: any code generation, file modifications, or deployment actions.
-
-2.1.1 API Mode Requirements (Added 2025-12-06)
-When operating in API mode (Claude Code CLI, ChatGPT API, or similar terminal-based tools with local filesystem access), agents MUST execute additional initialization procedures to prevent context loss and protocol drift:
-- Detect and declare API mode explicitly
-- Load ALL Tier-1 governance files from disk (Mosaic_Governance_Core_v1.md, TEAM_PLAYBOOK_v2.md, SESSION_START_v2.md, SESSION_END_OPTIONS.md)
-- Initialize token usage tracking and cost monitoring
-- Load project state from files, never from conversation memory
-- Reference: See API_MODE_GOVERNANCE_PROTOCOL.md for complete 7-step initialization procedure
-- Rationale: API sessions do not persist context between terminal closures (documented issue: GitHub anthropics/claude-code#2954)
 
 2.2 BUILD Mode
 Purpose: produce new code or modify existing code within approved scope.
@@ -57,28 +51,30 @@ Prohibited actions: starting new work or expanding scope.
 3. EXECUTION INTEGRITY LAYER
 
 3.1 No Unverified Path
-Agents MUST NOT use a directory or file path until it has been explicitly verified or confirmed by repository inspection or known context. Unverified paths require a question to the user or a verification step.
+Agents MUST NOT use a directory or file path until it has been explicitly verified or confirmed by repository inspection or known context. Unverified paths REQUIRE a question to the user or a verification step.
 
 3.2 No Obsolete Code
-Agents MUST compare proposed edits against the current live version of files and MUST treat unknown or legacy fragments as suspicious. They MUST NOT rely on remembered or speculative versions.
+Agents MUST compare proposed edits against the current live version of files and to treat unknown or legacy fragments as suspicious. The agent MUST NOT rely on remembered or speculative versions.
 
 3.3 No Ghost Fragments
-If agents encounter unexplained variables, unused functions, orphaned config, or mismatched environment blocks, they MUST flag these as potential ghost fragments and ask whether cleanup, archival, or removal is required before building on them.
+If agents encounter unexplained variables, unused functions, orphaned config, or mismatched environment blocks, they MUST flag these as potential ghost fragments and request clarification before proceeding.
 
 3.4 No Hidden Assumptions
 Agents MUST NOT assume language versions, package versions, environment variables, endpoints, deployment targets, or directory layouts without explicit validation in the session.
 
 3.5 Stop on Ambiguity
-Whenever an agent is uncertain about scope, constraints, state, or environment, it MUST stop and ask clarifying questions before proceeding. Continuing under ambiguity is prohibited.
+Whenever an agent is uncertain about scope, constraints, state, or environment, it is MANDATED to stop and ask clarifying questions before proceeding. Continuing under ambiguity is prohibited.
 
 4. MODEL-BEHAVIOR CONTRACT
-All models working on Mosaic MUST:
+All models working on Mosaic MUST adhere to the following:
+
 - Declare their current mode before doing any non-trivial work.
 - Restate user instructions and NEXT_TASK at the beginning of the session.
 - Confirm which project and repo they are operating on.
 - Operate within TEAM_PLAYBOOK_v2 and this Governance Core.
 - Document uncertainty instead of silently guessing.
-- Refuse to perform actions that violate the Execution Integrity rules.
+- **No Guessing Rule:** Before stating any technical fact or proposing a command, the agent MUST search for and cite a canonical source (e.g., file:line, documentation URL). If a source cannot be found, the agent MUST state "I don't know" or "Source not found."
+- The agent MUST refuse to perform actions that violate the Execution Integrity rules.
 
 5. TIER-1 INTEGRATION
 
@@ -100,13 +96,11 @@ Provides concrete recovery steps and guardrails when known failures occur. It ti
 5.6 RECURRING_BLOCKERS
 Captures known recurring obstacles and their prevention measures and ensures they are linked back to Execution Integrity rules and Governance Core sections.
 
-5.7 API_MODE_GOVERNANCE_PROTOCOL (Added 2025-12-06)
-Defines mandatory procedures for operating in API mode, including environment detection, token tracking, mode switching protocols, and proactive session boundary management. Prevents context loss and protocol drift when switching between web interface and API environments.
-
 6. CORE FAILURE MODES AND COUNTERMEASURES
 Each common failure in Mosaic maps to a Core rule.
 
 Examples:
+
 - Using wrong directories or local-only paths: prevented by No Unverified Path and VERIFY mode.
 - Reusing obsolete scripts or config: prevented by No Obsolete Code and INIT + VERIFY.
 - Losing project boundaries and switching context: prevented by explicit project validation in INIT and by mode declarations.
@@ -114,19 +108,21 @@ Examples:
 
 7. NEXT_TASK GOVERNANCE
 NEXT_TASK is the single active objective for Mosaic.
-It MUST be:
+NEXT_TASK MUST be:
+
 - Explicit, testable, and scoped.
 - Confirmed at session start.
 - Updated only in HANDOFF mode.
 - Used as the reference for deciding what to prioritize.
-Agents MUST NOT invent or silently modify NEXT_TASK. Changes require acknowledgment and alignment with the user.
+Agents MUST NOT invent or silently modify NEXT_TASK. Changes REQUIRE acknowledgment and alignment with the user.
 
 8. CROSS-MODEL CONSISTENCY
-All models (GPT, Claude, Gemini, and others) must follow the same rules. Provider differences do not change the obligations under this Governance Core.
+All models (GPT, Claude, Gemini, and others) MUST follow the same rules. Provider differences do not change the obligations under this Governance Core.
 Where behavior diverges across models, agents MUST fall back to the strictest interpretation of Execution Integrity and Stop on Ambiguity.
 
 9. ESCALATION
 Agents MUST escalate to the user or a designated Supervisor when:
+
 - Governance rules conflict.
 - Project identity or repo identity is unclear.
 - Environment or deployment targets are unknown.
@@ -137,6 +133,24 @@ Escalation pauses further modifications until resolved.
 This document is Mosaic Governance Core v1.
 Any update to this Core MUST be versioned and recorded. Subordinate governance files (TEAM_PLAYBOOK, SESSION_START, SESSION_END_OPTIONS, SELF_DIAGNOSTIC, TROUBLESHOOTING, RECURRING_BLOCKERS, API_MODE_GOVERNANCE_PROTOCOL) MUST be updated to stay consistent with the Core.
 
-10.1 Changelog
+11. VALIDATED ARTIFACT GENERATION PROTOCOL (v1.2)
+To ensure quality and provide a guarantee of transparency, all generated artifacts (code, scripts, commands, configuration) MUST be delivered using the following, non-skippable workflow.
+
+11.1 Workflow
+
+1. **Generate Artifact:** The agent generates the required artifact.
+2. **Save to Temporary File:** The agent MUST save the artifact to a temporary file using the `write_file` tool. The filename MUST be descriptive of the artifact's purpose.
+3. **Execute Validation:** The agent MUST execute a relevant, pre-existing validation script against the temporary file using the `run_shell_command` tool.
+4. **Present Proof:** The agent MUST show the user the validation command that was run and its full, verbatim output.
+5. **Analyze and Self-Heal:**
+    - **On Failure:** If the validation script fails, the agent MUST analyze the failure, `write_file` a corrected version of the artifact to the temporary file, and re-run the validation. This loop continues until validation passes. The entire process MUST be shown to the user.
+    - **On Success:** Once validation passes, the agent MUST present the final, validated artifact to the user, typically by reading from the temporary file.
+
+12. Changelog
+
 - v1.0 (2025-11-24): Initial Governance Core v2 system established
 - v1.1 (2025-12-06): Added Section 2.1.1 (API Mode Requirements), Section 5.3 (SESSION_END_OPTIONS), Section 5.7 (API_MODE_GOVERNANCE_PROTOCOL)
+- v1.2 (2025-12-11): Governance rewrite based on GOVERNANCE_FAILURE_ANALYSIS.md. Incorporated "No Guessing" rule.
+- v1.3 (2025-12-11): Added Section 11, the "Validated Artifact Generation Protocol," to provide a transparent, auditable workflow for artifact delivery.
+- v1.4 (2025-12-11): Governance documents updated to reflect mandatory agent directives.
+- v1.5 (2025-12-12): Removed API Mode from mandatory INIT flow - relocated to appendix as emergency fallback only (user operates in claude.ai web interface exclusively)

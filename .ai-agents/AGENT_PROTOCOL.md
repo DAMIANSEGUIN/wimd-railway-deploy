@@ -20,11 +20,13 @@
 ## Example: Gemini Finishes Task 2.1
 
 **Gemini's last action in their session:**
+
 ```bash
 ./scripts/complete_task.sh gemini phase2_task2.1_broker '["scripts/broker.sh"]'
 ```
 
 **Script generates:**
+
 ```
 ╔════════════════════════════════════════════════════════════╗
 ║  🚀 NEXT AGENT READY: codex                                ║
@@ -39,6 +41,7 @@ Your task is ready. Begin when you see your assignment.
 ```
 
 **Gemini's final message to you:**
+
 ```
 Task 2.1 complete. Deliverables:
 - scripts/broker.sh
@@ -65,6 +68,7 @@ Your task is ready. Begin when you see your assignment.
 **YOU MUST:**
 
 1. Run the completion script:
+
    ```bash
    ./scripts/complete_task.sh <your_name> <task_id> '<deliverables_json>'
    ```

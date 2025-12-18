@@ -5,3 +5,11 @@ httpx
 pydantic
 pydantic-settings
 python-multipart
+openai
+anthropic
+numpy
+python-dotenv
+
+google-api-python-client
+google-auth
+typing-extensions>=4.0.0

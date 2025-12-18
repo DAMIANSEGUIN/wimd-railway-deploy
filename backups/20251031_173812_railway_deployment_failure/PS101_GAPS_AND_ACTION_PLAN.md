@@ -1,7 +1,7 @@
 # PS101 Implementation Gaps & Action Plan
 
-**Date**: 2025-10-30  
-**Status**: Critical gaps identified - requires spec update before continuing implementation  
+**Date**: 2025-10-30
+**Status**: Critical gaps identified - requires spec update before continuing implementation
 **Priority**: HIGH - Cannot proceed with 7-step implementation when canonical is 10 steps
 
 ---
@@ -10,7 +10,7 @@
 
 ### 1. **Step Count Mismatch** ❌
 
-**Current Implementation**: 7 steps (based on outdated spec)  
+**Current Implementation**: 7 steps (based on outdated spec)
 **Canonical Source**: 10 steps (from `api/ps101_flow.py` and `PS101_Intro_and_Prompts.docx`)
 
 **Actual 10-Step PS101 Framework** (from `api/ps101_flow.py`):
@@ -58,6 +58,7 @@
 > "Small Experiments Framework is essential and any other gaps, there will be no putting off elements of this build"
 
 **What's Needed**:
+
 - Experiment design interface (Step 6: Experimental Design)
 - Hypothesis formation
 - Experiment parameters (measurable outcomes, duration, resources)
@@ -73,6 +74,7 @@
 **Backend Structure**: Each step has an **array of prompts** (3-6 prompts per step), not a single question.
 
 **Example from Step 1**:
+
 ```python
 "prompts": [
     "What specific challenge are you currently facing...?",
@@ -130,7 +132,7 @@ These remain unplanned even after Phase 4:
 
 ## What I Need From You (Codex)
 
-### **Immediate (This Week)**:
+### **Immediate (This Week)**
 
 1. **PS101_Intro_and_Prompts.docx Access**
    - Path: `frontend/assets/PS101_Intro_and_Prompts.docx`
@@ -160,7 +162,7 @@ These remain unplanned even after Phase 4:
 
 ## Action Items
 
-### **For Codex** (Product Spec):
+### **For Codex** (Product Spec)
 
 - [ ] Review `api/ps101_flow.py` (10-step structure)
 - [ ] Export/read `frontend/assets/PS101_Intro_and_Prompts.docx`
@@ -171,7 +173,7 @@ These remain unplanned even after Phase 4:
 - [ ] Define Small Experiments UI components
 - [ ] Sequence remaining features (Delta viz, exploration/exploit, etc.)
 
-### **For Cursor** (Implementation):
+### **For Cursor** (Implementation)
 
 - [ ] **STOP** current 7-step implementation
 - [ ] Wait for `PS101_CANONICAL_SPEC_V2.md`
@@ -219,4 +221,3 @@ These remain unplanned even after Phase 4:
 ---
 
 **Status**: Waiting on Codex spec before continuing implementation.
-

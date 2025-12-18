@@ -1,0 +1,182 @@
+MOSAIC_RAILWAY_RESET_SPEC:
+  version: 1.0
+  intent: >
+    Establish a single canonical Railway service for Mosaic with deterministic
+    deployment, eliminate service-level drift, preserve valid settings only,
+    and enforce runtime-verifiable identity. Terminal-first. Dashboard last-resort.
+
+  operating_principles:
+    - terminal_is_primary_authority
+    - runtime_is_authoritative_over_ui
+    - services_are_authorities_deployments_are_instances
+    - no_action_without_clear_service_scope
+    - fail_fast_on_ambiguity
+    - never_preserve_unknown_state
+
+  current_state_confirmed:
+    projects_detected:
+      - wimd-career-coaching
+      - wimd-api-250923-1842
+      - wimd-api-250923-1828
+      - lovely-blessing
+      - fabulous-appreciation
+      - luminous-acceptance
+
+    canonical_candidate:
+      project: wimd-career-coaching
+      service: what-is-my-delta-site
+      environment: production
+      status: not_responding
+      health_endpoint: 404
+
+    git_state:
+      active_remote: origin -> wimd-railway-deploy
+      legacy_remote: railway-origin -> what-is-my-delta-site
+
+    frontend_state:
+      provider: netlify
+      status: live
+      api_dependency: mosaic-platform.vercel.app
+      api_dependency_status: legacy_hardcoded
+
+  conclusion_locked:
+    - deployment_cleanup_alone_is_insufficient
+    - service_identity_is_tainted
+    - new_canonical_service_required
+
+  execution_phases:
+
+    PHASE_1_FORENSIC_CONFIRMATION:
+      description: >
+        Confirm CLI scope and service/project mappings without mutation.
+      allowed_actions:
+        - railway status
+        - railway list projects
+        - railway list services
+        - git remote -v
+      forbidden_actions:
+        - delete
+        - deploy
+        - modify
+      exit_condition:
+        - cli_scope_confirmed
+      on_ambiguity:
+        action: halt_and_report
+
+    PHASE_2_CANONICAL_SERVICE_DECLARATION:
+      description: >
+        Create a new canonical service inside the canonical project.
+        This breaks legacy repo wiring and hidden inheritance.
+      requires_dashboard: true
+      dashboard_actions_required:
+        - create_new_service:
+            project: wimd-career-coaching
+            repo: wimd-railway-deploy
+            branch: default_only
+            root_directory: explicit_required
+      agent_instruction:
+        - DO_NOT attempt service duplication
+        - DO_NOT reuse what-is-my-delta-site
+      pause_and_notify_user:
+        reason: >
+          Dashboard required to create new service and connect GitHub repo.
+        required_confirmation:
+          - service_created
+          - repo_connected
+          - root_directory_set
+
+    PHASE_3_ENVIRONMENT_REHYDRATION:
+      description: >
+        Recreate environment variables intentionally.
+        No blind copying from legacy services.
+      allowed_sources:
+        - user_provided_env
+        - documented_env_list
+      forbidden_sources:
+        - legacy_service_auto_import
+      validation:
+        - required_env_vars_present
+        - no_unknown_env_vars
+      exit_condition:
+        - env_validated
+
+    PHASE_4_TERMINAL_DEPLOYMENT:
+      description: >
+        Deploy using terminal/CLI only.
+      actions:
+        - railway deploy
+        - railway logs
+      forbidden_actions:
+        - dashboard_deploy_buttons
+      validation:
+        - deployment_succeeds
+        - runtime_process_starts
+
+    PHASE_5_RUNTIME_IDENTITY_VERIFICATION:
+      description: >
+        Verify deployed runtime identity. UI evidence is ignored.
+      required_endpoints:
+        - /__version
+      required_fields:
+        - git_sha
+        - build_timestamp
+        - environment
+        - node_version
+      validation:
+        - runtime_sha_matches_expected
+      on_failure:
+        action: halt_and_report
+
+    PHASE_6_FRONTEND_RECONNECTION:
+      description: >
+        Update frontend only after backend is verified.
+      prerequisites:
+        - PHASE_5 complete
+      actions:
+        - remove_hardcoded_legacy_api
+        - inject_new_api_endpoint
+        - redeploy_frontend
+      validation:
+        - frontend_calls_correct_api
+        - end_to_end_path_valid
+
+    PHASE_7_DECOMMISSION_LEGACY:
+      description: >
+        Remove obsolete Railway projects and services.
+      prerequisites:
+        - new_service_verified
+      actions:
+        - delete_projects:
+            - wimd-api-250923-1842
+            - wimd-api-250923-1828
+            - lovely-blessing
+            - fabulous-appreciation
+            - luminous-acceptance
+      note: >
+        Optional archival allowed before deletion.
+
+  escalation_protocol:
+    when_to_call_user:
+      - dashboard_action_required
+      - service_scope_uncertain
+      - runtime_identity_missing
+      - invariant_violation
+    required_payload:
+      - phase
+      - blocking_condition
+      - exact_ui_action_needed
+    forbidden:
+      - speculative_questions
+      - open-ended requests
+
+  success_criteria:
+    - exactly_one_canonical_service
+    - terminal_deployable_without_ui
+    - runtime_self_identifying
+    - frontend_verified_against_runtime
+    - no_legacy_services_remaining
+
+  final_state_assertion:
+    description: >
+      Mosaic Railway deployment is deterministic, auditable, and immune
+      to UI ambiguity or legacy drift.

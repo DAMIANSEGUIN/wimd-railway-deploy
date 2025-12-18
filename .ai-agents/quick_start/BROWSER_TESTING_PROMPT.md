@@ -1,4 +1,5 @@
 # Browser Testing Prompt for CodexCapture
+
 **Copy-paste prompt for opening Chrome with CodexCapture**
 
 ---
@@ -14,6 +15,7 @@ open -a "Google Chrome" https://whatismydelta.com
 ## Testing Checklist (Copy to CodexCapture)
 
 **Test 1: Registration**
+
 - Email: test+mosaic_[TIMESTAMP]@example.com
 - Password: TestPass123!
 - Expected: Successful registration → redirect to app
@@ -41,15 +43,18 @@ Q9 - Key Quotes: I feel like I'm building someone else's dream instead of my own
 Q10 - Commitment: Send 3 LinkedIn messages to founders offering free ML consulting
 
 **After PS101:**
+
 - Check console for: "Context extraction successful"
 - If error: Report logs to Claude Code
 
 **Test 3: Personalized Chat**
+
 - Message: "What should I do next?"
 - Expected: Response mentions ML/consulting, references obstacles, suggests experiments
 - Should NOT say "PS101"
 
 **Test 4: Completion Gate (New Account)**
+
 - Register 2nd account: test+no_ps101_[TIMESTAMP]@example.com
 - Try chat WITHOUT completing PS101
 - Expected: "Please complete the PS101 questionnaire first..."
@@ -59,13 +64,15 @@ Q10 - Commitment: Send 3 LinkedIn messages to founders offering free ML consulti
 ## DevTools Checks
 
 **Console tab:**
+
 - Look for: "Context extraction successful"
 - No red errors
 
 **Network tab:**
+
 - POST /wimd/ask → Check headers for X-User-ID
 - POST /api/ps101/extract-context → Should be 200 OK
 
 **Application tab:**
-- localStorage → Check for currentUser object with userId
 
+- localStorage → Check for currentUser object with userId

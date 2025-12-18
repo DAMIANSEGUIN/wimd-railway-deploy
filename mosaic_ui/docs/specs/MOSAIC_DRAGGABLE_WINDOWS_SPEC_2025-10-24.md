@@ -1,4 +1,5 @@
 # Mosaic Feature Spec: Draggable & Resizable Windows
+
 **Date**: 2025-10-22
 **Status**: Ready for Browser Implementation
 **Priority**: Medium-High (UX enhancement)
@@ -14,6 +15,7 @@ Make Mosaic site windows/panels **moveable (draggable)** and **resizable** by th
 ## User Story
 
 **As a user**, I want to:
+
 - Drag windows/panels around the screen to organize my workspace
 - Resize windows to see more/less content
 - Customize my layout based on my workflow
@@ -31,12 +33,12 @@ Both are lightweight, well-maintained React libraries:
 1. **react-draggable**: Makes components draggable
    - npm: `react-draggable`
    - Size: ~12KB
-   - Docs: https://github.com/react-grid-layout/react-draggable
+   - Docs: <https://github.com/react-grid-layout/react-draggable>
 
 2. **re-resizable**: Makes components resizable
    - npm: `re-resizable`
    - Size: ~20KB
-   - Docs: https://github.com/bokuweb/re-resizable
+   - Docs: <https://github.com/bokuweb/re-resizable>
 
 ---
 
@@ -115,6 +117,7 @@ export default DraggableWindow;
 **Example**: Wrap PS101 coaching flow steps in draggable windows
 
 **Before**:
+
 ```jsx
 <div className="ps101-step">
   <h2>What Is My Delta?</h2>
@@ -123,6 +126,7 @@ export default DraggableWindow;
 ```
 
 **After**:
+
 ```jsx
 <DraggableWindow
   title="What Is My Delta?"
@@ -138,13 +142,15 @@ export default DraggableWindow;
 
 ## Which Components to Make Draggable?
 
-### Priority 1 (Core UX):
+### Priority 1 (Core UX)
+
 - **PS101 Coaching Steps**: Each step in its own window
 - **Job Matches Panel** (OpportunityBridge results)
 - **Resume Preview Panel**
 - **User Dashboard Widgets**
 
-### Priority 2 (Nice-to-Have):
+### Priority 2 (Nice-to-Have)
+
 - **Settings Panel**
 - **Help/Documentation Panel**
 - **Notifications Panel**
@@ -177,6 +183,7 @@ const loadLayout = () => {
 ## Design Considerations
 
 ### Minimize/Maximize/Close Buttons?
+
 Add window controls to header:
 
 ```jsx
@@ -191,6 +198,7 @@ Add window controls to header:
 ```
 
 ### Mobile Responsiveness?
+
 - Disable dragging on mobile (too finicky on touch)
 - Use standard stacked layout on small screens
 - Only enable draggable windows on desktop (>768px width)
@@ -223,6 +231,7 @@ const isMobile = window.innerWidth < 768;
 ## Potential Issues & Solutions
 
 ### Issue 1: Windows overlap/stack messily
+
 **Solution**: Implement z-index management (clicked window comes to front)
 
 ```jsx
@@ -238,9 +247,11 @@ const bringToFront = () => {
 ```
 
 ### Issue 2: Performance with many windows
+
 **Solution**: Limit max open windows (3-5), or virtualize off-screen windows
 
 ### Issue 3: User loses window off-screen
+
 **Solution**: Add "Reset Layout" button to restore default positions
 
 ---
@@ -262,6 +273,7 @@ const bringToFront = () => {
 **Task**: Implement draggable/resizable windows in Mosaic
 
 **Steps**:
+
 1. `npm install react-draggable re-resizable`
 2. Create `DraggableWindow.jsx` component
 3. Wrap PS101 steps (or other key UI elements) in `<DraggableWindow>`
@@ -280,7 +292,7 @@ const bringToFront = () => {
 If you want a more structured grid system (like a dashboard):
 
 - **Library**: `react-grid-layout`
-- **Docs**: https://github.com/react-grid-layout/react-grid-layout
+- **Docs**: <https://github.com/react-grid-layout/react-grid-layout>
 - **Use case**: Dashboard with widgets that snap to grid
 - **Trade-off**: More structured, less freeform than draggable windows
 

@@ -1,4 +1,5 @@
 # AI Team Development Methodology
+
 ## Based on Working Patterns + Industry Best Practices
 
 **Created:** 2025-11-24
@@ -10,6 +11,7 @@
 ## PART 1: TEAM STRUCTURE & ROLES
 
 ### Current Team
+
 - **Gemini/ChatGPT (terminal)** - Senior Software Engineer & Planning Lead
 - **Cursor/Codex** - Local Implementation Engineer
 - **Claude Code** - Infrastructure & Deployment Engineer
@@ -58,6 +60,7 @@ Estimate files to touch:
 ```
 
 **Phase 1 example:**
+
 - Extracted 3 module files (state.js, api.js, main.js)
 - BUT didn't estimate: "How many files need to CALL these modules?"
 - **Lesson:** Extraction is half the blast radius. Integration is the other half.
@@ -67,6 +70,7 @@ Estimate files to touch:
 **Trigger:** If you can't estimate blast radius, requirements are unclear.
 
 **Process:**
+
 1. **STOP implementation**
 2. **Load technical dimensions:**
    - Data flow: Where does data come from/go?
@@ -81,6 +85,7 @@ Estimate files to touch:
 5. **Only then estimate blast radius and implement**
 
 **Phase 1 applied retroactively:**
+
 ```
 Questions we SHOULD have asked:
 - User: Is this user-facing change or internal refactor? (INTERNAL)
@@ -98,22 +103,27 @@ Answers would have revealed: This is 2-phase work, can't deploy phase 1 alone.
 ### Agentic Development Principles (Applied)
 
 **1. Natural Conversation > Elaborate Frameworks**
+
 - ✅ "Extract modules from IIFE and integrate them"
 - ❌ Multi-step orchestration with subagents and RAG
 
 **2. Screenshots > Long Descriptions**
+
 - ✅ Drag screenshot of broken UI into terminal
 - ❌ "The login form doesn't appear and chat is non-functional and..."
 
 **3. Interrupt When Uncertain**
+
 - ✅ Hit escape after 5min, ask "what's the status?"
 - ❌ Let AI run for 30min hoping it figures it out
 
 **4. Parallel Agents (When Appropriate)**
+
 - ✅ 3 agents working on independent features
 - ❌ 3 agents working on same 10 files (merge hell)
 
 **5. Refactoring in Low-Focus Time**
+
 - ✅ Queue Phase 1 modularization for "cleanup day"
 - ❌ Try to do it while also implementing new features
 
@@ -182,6 +192,7 @@ Answers would have revealed: This is 2-phase work, can't deploy phase 1 alone.
 ### Rule 1: Blast Radius Check (MANDATORY)
 
 Before ANY implementation work:
+
 ```
 Agent: "Blast radius check: This will touch approximately X files"
 If X > 10: "Breaking into smaller tasks"
@@ -191,6 +202,7 @@ If can't estimate X: "Need requirements clarification"
 ### Rule 2: 2-Hour Stuck Rule (MANDATORY)
 
 If working on same problem >2 hours:
+
 ```
 STOP
 Run requirements elicitation
@@ -283,6 +295,7 @@ Are tasks independent? (different files)
 ## PART 7: PHASE 1 POST-MORTEM (Case Study)
 
 ### What Happened
+
 - Extracted modules (state.js, api.js, main.js) ✅
 - Didn't integrate them with IIFE ❌
 - Deployed anyway ❌
@@ -294,6 +307,7 @@ Are tasks independent? (different files)
 **Using this methodology:**
 
 1. **Blast Radius Check**
+
    ```
    "Phase 1: Extract modules"
    Blast radius: 3 files created
@@ -305,6 +319,7 @@ Are tasks independent? (different files)
    ```
 
 2. **Requirements Elicitation**
+
    ```
    Question for User: Can we deploy extraction without integration?
    Answer: NO - would break UI
@@ -316,6 +331,7 @@ Are tasks independent? (different files)
    ```
 
 3. **Single Agent Lead**
+
    ```
    Lead: Cursor/Codex (has local environment)
    Task: Extract modules AND integrate (one atomic change)
@@ -324,6 +340,7 @@ Are tasks independent? (different files)
    ```
 
 4. **Interrupt Protocol**
+
    ```
    At 1hr: "Status check - where are we?"
    Response: "Modules extracted, starting integration"
@@ -333,6 +350,7 @@ Are tasks independent? (different files)
    ```
 
 5. **Verification Before Deploy**
+
    ```
    Test locally with USE_MODULES=true
    Run verify_critical_features.sh
@@ -396,21 +414,25 @@ Are tasks independent? (different files)
 ### How to Know This Is Working
 
 **Week 1:**
+
 - Agents estimate blast radius before starting
 - No work runs >2 hours without reassessment
 - Requirements elicitation used at least once
 
 **Week 2:**
+
 - Single-agent-lead pattern is default
 - Interrupt protocol used regularly
 - Screenshots replace long descriptions
 
 **Week 4:**
+
 - No problems stuck >1 day
 - CURRENT_WORK.json handoffs working smoothly
 - Team coordination is natural
 
 **Week 8:**
+
 - Can estimate accurately: "This will take X hours, touch Y files"
 - Pivot quickly when stuck instead of grinding
 - Requirements elicitation is fast (15-30min not 3 weeks)
@@ -420,6 +442,7 @@ Are tasks independent? (different files)
 ## PART 10: QUICK REFERENCE
 
 ### When Starting Session
+
 ```bash
 ./scripts/status.sh
 # Read CURRENT_WORK.json
@@ -429,6 +452,7 @@ Are tasks independent? (different files)
 ```
 
 ### When Stuck
+
 ```
 1. How long stuck? (>2hr = stop)
 2. Requirements clear? (no = elicit)
@@ -437,6 +461,7 @@ Are tasks independent? (different files)
 ```
 
 ### When Coordinating
+
 ```
 1. Who leads this task?
 2. Who supports?
@@ -445,6 +470,7 @@ Are tasks independent? (different files)
 ```
 
 ### When Completing Task
+
 ```bash
 ./scripts/commit_work.sh
 # Answer 3 questions (task/status/blockers)
@@ -459,6 +485,7 @@ Are tasks independent? (different files)
 **Core Problem:** No systematic methodology for problem-solving with AI agents
 
 **Root Causes:**
+
 1. No blast radius estimation
 2. No requirements elicitation when unclear
 3. No stuck detection/pivot protocol
@@ -468,6 +495,7 @@ Are tasks independent? (different files)
 **Solution:** Combine agentic development (practical patterns) + requirements elicitation (systematic analysis)
 
 **Key Changes:**
+
 1. ✅ Estimate blast radius BEFORE starting
 2. ✅ Run requirements elicitation when unclear (15-30min)
 3. ✅ Stop work after 2 hours if stuck

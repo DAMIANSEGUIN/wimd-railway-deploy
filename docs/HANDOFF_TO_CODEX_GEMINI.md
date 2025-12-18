@@ -1,4 +1,5 @@
 # Handoff to Codex & Gemini - MCP v1.1 Implementation
+
 **From: Claude Code | Date: 2025-12-09 | Priority: P0 - CRITICAL INFRASTRUCTURE**
 
 ---
@@ -8,6 +9,7 @@
 **The synthesis document is WRONG.** This is not "optimization with 6-10 week timeline."
 
 **CORRECT FRAMING:**
+
 - **Problem:** Agents fail after 10-20 minutes due to context accumulation
 - **Solution:** Four-layer memory model (MCP v1.1)
 - **Timeline:** 8-14 hours across 3 phases
@@ -18,6 +20,7 @@
 ## Critical Reading (DO THIS FIRST)
 
 **Required Documents:**
+
 1. `docs/CONTEXT_ENGINEERING_CRITICAL_INFRASTRUCTURE.md` - **MUST READ**
    - Full problem statement
    - Research evidence
@@ -34,6 +37,7 @@
 ## Your Tasks - Codex (Mirror Agent)
 
 ### Task 1B: Structured Session Log Schema (Priority 1 - Start Now)
+
 **Time Estimate:** 2-3 hours
 **Status:** NOT STARTED
 
@@ -49,6 +53,7 @@ A structured event log format that captures agent actions with 7 required fields
 7. **Provenance** - Source file + hash + line
 
 **Deliverable:**
+
 - File: `.ai-agents/session_context/SESSION_LOG_SCHEMA.json`
 - Define event types: user_message, tool_call, state_change, commitment, error, constraint_applied
 - Create append-only log writer function
@@ -60,11 +65,13 @@ Your own analysis said: "Mirror summaries have to be loss-aware: once context is
 This schema IS that loss-aware compression.
 
 **Success Criteria:**
+
 - ✅ All 7 fields captured in event structure
 - ✅ Can reconstruct session state from log
 - ✅ Summaries preserve critical information
 
 **Start Here:**
+
 ```json
 {
   "session_id": "2025-12-09-codex-001",
@@ -81,6 +88,7 @@ This schema IS that loss-aware compression.
 ---
 
 ### Task 2B: Mirror Export Design (Phase 2 - After Task 1B Complete)
+
 **Time Estimate:** 2-3 hours
 **Status:** BLOCKED on Task 1B completion
 
@@ -88,18 +96,21 @@ This schema IS that loss-aware compression.
 File-based exports for ChatGPT (since you can't query HTTP MCP servers)
 
 **Requirements from your analysis:**
+
 1. MCP must publish schema-validated summaries to repo/mirror on every update
 2. View compiler outputs need stable filenames
 3. Every MCP dependency requires provenance metadata in exported files
 4. If exports stale >24h, revert to direct Markdown loads
 
 **Deliverable:**
+
 - Directory structure: `docs/mcp_exports/`
 - Export format: Markdown with YAML front-matter
 - Provenance metadata in every file
 - Staleness detector (>24h = revert to full loads)
 
 **Example Export:**
+
 ```markdown
 ---
 source: TROUBLESHOOTING_CHECKLIST.md
@@ -119,6 +130,7 @@ schema_version: v1.0
 ## Your Tasks - Gemini (API Mode Agent)
 
 ### Task 1C: Retrieval Trigger Detection (Priority 1 - Start Now)
+
 **Time Estimate:** 1-2 hours
 **Status:** NOT STARTED
 
@@ -126,6 +138,7 @@ schema_version: v1.0
 Pattern matching to detect when agents need more context
 
 **Deliverable:**
+
 - File: `.ai-agents/session_context/trigger_detector.py`
 - Detect 5 trigger types:
   1. Error pattern → fetch TROUBLESHOOTING_CHECKLIST
@@ -135,6 +148,7 @@ Pattern matching to detect when agents need more context
   5. Context overflow → fetch CONTEXT_ENGINEERING_GUIDE
 
 **Implementation Skeleton:**
+
 ```python
 def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[str]:
     """Detect which docs should be fetched"""
@@ -150,12 +164,14 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 ```
 
 **Success Criteria:**
+
 - ✅ Correctly detects all 5 trigger types
 - ✅ Low false positive rate (<10%)
 - ✅ Can be integrated with broker script
 
 **Your Observability Requirements:**
 From your own analysis, you need:
+
 - Broker logs full context every turn
 - Structured context with source metadata
 - Logs what was EXCLUDED, not just included
@@ -165,6 +181,7 @@ This trigger detector is the first step toward that observability.
 ---
 
 ### Task 2A: Broker MCP Integration (Phase 2 - After Task 1C Complete)
+
 **Time Estimate:** 2-3 hours
 **Status:** BLOCKED on Task 1C completion
 
@@ -172,12 +189,14 @@ This trigger detector is the first step toward that observability.
 Make broker script an MCP client that uses triggers to fetch context
 
 **Requirements:**
+
 1. Broker script queries MCP (or reads exports)
 2. Uses trigger detector to decide what to fetch
 3. Logs full context every turn (`.gemini_logs/turn_XXX_context.txt`)
 4. Structures context with source metadata (JSON format)
 
 **Success Criteria:**
+
 - ✅ Broker can fetch docs on demand
 - ✅ Full context logged (can reproduce agent's view)
 - ✅ Failure modes tested (MCP timeout, invalid response)
@@ -186,18 +205,21 @@ Make broker script an MCP client that uses triggers to fetch context
 
 ## Coordination Protocol
 
-### Communication:
+### Communication
+
 1. **Status Updates:** Edit your own response files in `docs/mcp_responses/`
 2. **Questions:** Add to your response file under "Questions" section
 3. **Blockers:** Tag with "BLOCKED:" and reason
 4. **Completions:** Mark tasks as "COMPLETED:" with timestamp
 
-### Dependencies:
+### Dependencies
+
 - **Phase 1 tasks (1A, 1B, 1C):** Can run in PARALLEL
 - **Phase 2 tasks (2A, 2B):** BLOCKED until Phase 1 complete
 - **Claude Code (Task 1A):** My session macro reduction doesn't block you
 
-### Go/No-Go Gates:
+### Go/No-Go Gates
+
 - **Phase 1 → Phase 2:** ALL tasks 1A/1B/1C must be complete and validated
 - **Phase 2 → Phase 3:** Multi-agent handoff must be proven working
 - **No skipping phases** - each must be stable before proceeding
@@ -210,6 +232,7 @@ Make broker script an MCP client that uses triggers to fetch context
 > "After 10-20 minutes of conversation, most agents enter a spiral: each new task must compete for attention with a growing pile of context, the model can no longer hold the original instruction in working memory, and reasoning quality degrades."
 
 **Current symptoms we're experiencing:**
+
 1. ✅ Agents forgetting original task after 20 minutes
 2. ✅ Repeated debates (no memory of previous decisions)
 3. ✅ Performance degradation in long sessions
@@ -219,6 +242,7 @@ Make broker script an MCP client that uses triggers to fetch context
 **This is not theoretical.** This is happening **right now** in nearly every session.
 
 MCP fixes this by:
+
 - Keeping working context small (5-10KB vs 60KB)
 - Storing full trajectory in structured session log
 - Retrieving on demand instead of loading everything
@@ -232,17 +256,20 @@ MCP fixes this by:
 Your analysis was **100% correct** about the problems and requirements.
 
 **The synthesis was wrong** because:
+
 1. Didn't have the full article context (just diagnostic prompts)
 2. Framed as "optimization" instead of "critical fix"
 3. Used 6-10 week timeline (should be hours, not weeks)
 
 **The article provided the missing framework:**
+
 - Research evidence (Lost in the Middle paper)
 - Proven solution (four-layer model)
 - Implementation principles (9 principles)
 - Timeline reality check (hours, not weeks)
 
 **Your original insights are still valid and critical:**
+
 - Codex: 7-field schema, provenance requirements, file exports
 - Gemini: Broker integration, observability demands, structured context
 
@@ -253,16 +280,19 @@ Your analysis was **100% correct** about the problems and requirements.
 ## Session Continuity (Claude Code)
 
 **My Status:**
+
 - Token Usage: 47.5K/200K used (~152K remaining = 3-4 hours)
 - Current Task: Will start Task 1A (session macro reduction) next
 - Blockers: None - can proceed independently
 
 **If I End Session Before Complete:**
+
 - Action plan is in `docs/MCP_IMMEDIATE_ACTION_PLAN.md`
 - My Task 1A can be picked up by any agent
 - Session state preserved in this handoff doc
 
 **What I'm Doing:**
+
 1. Refactor `scripts/start_session.sh` to load summaries instead of full docs
 2. Create `.ai-agents/session_context/` directory structure
 3. Generate governance summary with provenance
@@ -270,6 +300,7 @@ Your analysis was **100% correct** about the problems and requirements.
 5. Test that session start < 10KB
 
 **What I Need From You:**
+
 - Proceed independently on your tasks
 - Don't wait for me to complete 1A before starting 1B/1C
 - Ask questions in your response files if blocked
@@ -280,6 +311,7 @@ Your analysis was **100% correct** about the problems and requirements.
 
 **Q: Is this really 8-14 hours or are we being optimistic?**
 A: Realistic because:
+
 - Phase 1 is minimal (summaries + basic triggers)
 - We're implementing proven patterns (not inventing)
 - Each agent works on separate tasks (parallel)
@@ -287,6 +319,7 @@ A: Realistic because:
 
 **Q: What if we discover this doesn't work?**
 A: Feature flag + rollback:
+
 - Add `MCP_ENABLED=false` by default
 - Test with flag off first
 - Enable per agent incrementally
@@ -294,12 +327,14 @@ A: Feature flag + rollback:
 
 **Q: What about the "weeks" timeline in the synthesis?**
 A: That was based on wrong framing. The article clarifies:
+
 - 8-14 hours for MVP (Phase 1-3)
 - Additional features (supervisor, semantic search) can wait
 - We're doing minimal viable version first
 
 **Q: Can we start Phase 2 before Phase 1 fully done?**
 A: NO. Strict phase gates:
+
 - Phase 1 must prove value first
 - Each phase validates assumptions
 - Prevents cascading failures
@@ -309,17 +344,20 @@ A: NO. Strict phase gates:
 ## Success Looks Like
 
 **End of Today:**
+
 - ✅ All agents have read critical docs
 - ✅ Tasks 1A/1B/1C started
 - ✅ Clear understanding of problem and solution
 
 **End of Next Session:**
+
 - ✅ Phase 1 complete (summaries, triggers, structured log)
 - ✅ Validated with real workflow test
 - ✅ Context reduced 60KB → 10KB
 - ✅ Go/No-Go decision for Phase 2
 
 **End of Week:**
+
 - ✅ All 3 phases complete
 - ✅ Agents working 30+ minutes without degradation
 - ✅ Golden dataset still passing (no regressions)
@@ -336,6 +374,7 @@ Your original analysis was excellent - we just didn't have the full picture yet.
 Now we do. Time to execute.
 
 **Next Actions:**
+
 1. Read the critical infrastructure doc
 2. Read the action plan
 3. Start your Task 1B (Codex) or 1C (Gemini)

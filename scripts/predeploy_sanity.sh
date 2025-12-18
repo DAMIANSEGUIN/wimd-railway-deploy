@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 
 # Warn-only on missing secrets (avoid build-time failures)

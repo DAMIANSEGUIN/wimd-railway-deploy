@@ -34,6 +34,7 @@ These files have been superseded and are kept for historical reference only.
 ## Current Documentation
 
 **For all current protocols, refer to:**
+
 - **TEAM_PLAYBOOK.md** (Root) - Single source of truth
 - **.ai-agents/HANDOFF_PROTOCOL.md** - Agent handoff procedures
 - **SESSION_START.md** (Root) - Session initialization

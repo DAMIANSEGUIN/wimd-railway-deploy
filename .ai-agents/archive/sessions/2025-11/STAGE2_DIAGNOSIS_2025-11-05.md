@@ -1,7 +1,7 @@
 # Stage 2 Diagnosis – Production Auth/Chat Issue (2025-11-05)
 
-**Status:** 🔄 In Progress  
-**Assigned to:** Cursor (Evidence Capture) → CIT (Diagnosis) → Codex (Review)  
+**Status:** 🔄 In Progress
+**Assigned to:** Cursor (Evidence Capture) → CIT (Diagnosis) → Codex (Review)
 **Related:** `.ai-agents/STAGE2_ACTION_PLAN_2025-11-05.md`
 
 ---
@@ -25,17 +25,21 @@
 ✅ **SPA Redirect:** Fallback `/*` → `/index.html` present (line 67-69)
 
 ⚠️ **Security Headers:** Missing
+
 - Playbook includes: CSP, Referrer-Policy, HSTS, X-Content-Type-Options, X-Frame-Options, Permissions-Policy
 - Current config has none
 
 ⚠️ **Cache Control:** Missing
+
 - Playbook includes cache headers for `/assets/*` and `/:filename`
 - Current config has none
 
 ✅ **API Redirects:** Present (not in playbook, but needed for Railway backend)
+
 - `/health`, `/config`, `/prompts/*`, `/wimd`, `/wimd/*`, `/ob/*`, `/resume/*`, `/auth/*`
 
 ⚠️ **_redirects Fallback:** Missing
+
 - Playbook recommends `_redirects` file as fallback if Netlify ignores TOML
 - File does not exist in repository
 
@@ -199,7 +203,7 @@ _[Codex will coordinate Stage 3 actions]_
 
 **For manual execution in browser DevTools:**
 
-1. Open https://whatismydelta.com in Chrome/Firefox
+1. Open <https://whatismydelta.com> in Chrome/Firefox
 2. Open DevTools (F12 or Cmd+Option+I)
 3. Go to Console tab
 4. Run each command below and copy/paste results into "Evidence Captured" section:
@@ -235,18 +239,21 @@ typeof window.sendStrip
 ```
 
 **Network Tab:**
+
 1. Open Network tab in DevTools
 2. Try to submit a chat message
 3. Note: Does any network request appear? What URL? What status?
 4. Screenshot the Network tab
 
 **Console Logs:**
+
 1. Look for `[INIT]` logs
 2. Look for any error messages
 3. Copy all console output
 4. Screenshot console if errors present
 
 **Screenshots Needed:**
+
 - Console tab showing all logs
 - Network tab (if chat submission attempted)
 - Elements tab showing authModal element (if visible)

@@ -27,14 +27,15 @@ ROLLBACK_PATH:
   - Git tag: backup-20251203-pre-blockers
 """
 
-import anthropic
 import json
 import logging
-import time
 import os
+import time
 from typing import Dict, List
-from pydantic import BaseModel, Field, ValidationError
+
+import anthropic
 from fastapi import APIRouter, Header, HTTPException
+from pydantic import BaseModel, Field, ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +52,10 @@ router = APIRouter()
 # PYDANTIC MODELS
 # ===================================================================
 
+
 class ExperimentIdea(BaseModel):
     """Pydantic model for proposed experiments"""
+
     idea: str
     smallest_version: str
 
@@ -64,6 +67,7 @@ class PS101Context(BaseModel):
     Used for personalized coaching system prompt injection.
     Validated via Pydantic (Gemini's recommendation for LLM robustness).
     """
+
     problem_definition: str
     passions: List[str] = Field(default_factory=list)
     skills: List[str] = Field(default_factory=list)
@@ -77,6 +81,7 @@ class PS101Context(BaseModel):
 # ===================================================================
 # RETRY UTILITY (RESILIENCE FIX #2)
 # ===================================================================
+
 
 def retry_with_exponential_backoff(func, max_retries=MAX_RETRIES):
     """
@@ -102,11 +107,11 @@ def retry_with_exponential_backoff(func, max_retries=MAX_RETRIES):
     for attempt in range(max_retries + 1):
         try:
             return func()
-        except anthropic.RateLimitError as e:  # 429
+        except anthropic.RateLimitError:  # 429
             if attempt == max_retries:
                 logger.error(f"Rate limit exceeded after {max_retries} retries")
                 raise
-            backoff = min(INITIAL_BACKOFF * (2 ** attempt), MAX_BACKOFF)
+            backoff = min(INITIAL_BACKOFF * (2**attempt), MAX_BACKOFF)
             logger.warning(
                 f"Rate limit hit, retrying in {backoff}s (attempt {attempt+1}/{max_retries})"
             )
@@ -114,7 +119,7 @@ def retry_with_exponential_backoff(func, max_retries=MAX_RETRIES):
         except anthropic.APIStatusError as e:  # 5xx or other API errors
             if attempt == max_retries or e.status_code < 500:  # Don't retry 4xx (except 429 above)
                 raise
-            backoff = min(INITIAL_BACKOFF * (2 ** attempt), MAX_BACKOFF)
+            backoff = min(INITIAL_BACKOFF * (2**attempt), MAX_BACKOFF)
             logger.warning(
                 f"API error {e.status_code}, retrying in {backoff}s (attempt {attempt+1}/{max_retries})"
             )
@@ -124,7 +129,7 @@ def retry_with_exponential_backoff(func, max_retries=MAX_RETRIES):
             if attempt == max_retries:
                 logger.error(f"Request failed after {max_retries} retries: {e}")
                 raise
-            backoff = min(INITIAL_BACKOFF * (2 ** attempt), MAX_BACKOFF)
+            backoff = min(INITIAL_BACKOFF * (2**attempt), MAX_BACKOFF)
             logger.warning(
                 f"Request failed, retrying in {backoff}s (attempt {attempt+1}/{max_retries}): {e}"
             )
@@ -134,6 +139,7 @@ def retry_with_exponential_backoff(func, max_retries=MAX_RETRIES):
 # ===================================================================
 # CONTEXT EXTRACTION (with TIMEOUT FIX #1)
 # ===================================================================
+
 
 def extract_ps101_context_from_responses(ps101_responses: Dict[str, str]) -> PS101Context:
     """
@@ -198,17 +204,18 @@ Rules:
             model="claude-sonnet-4-20250514",
             max_tokens=1500,
             timeout=CLAUDE_API_TIMEOUT,  # ✅ RESILIENCE FIX #1: Timeout added
-            messages=[{"role": "user", "content": extraction_prompt}]
+            messages=[{"role": "user", "content": extraction_prompt}],
         )
 
     # Execute with retry logic
     try:
-        message = retry_with_exponential_backoff(call_claude_api)  # ✅ RESILIENCE FIX #2: Retry added
+        message = retry_with_exponential_backoff(
+            call_claude_api
+        )  # ✅ RESILIENCE FIX #2: Retry added
     except Exception as e:
         logger.error(f"Claude API call failed after retries: {e}", exc_info=True)
         raise HTTPException(
-            status_code=503,
-            detail="Context extraction service temporarily unavailable"
+            status_code=503, detail="Context extraction service temporarily unavailable"
         )
 
     # Parse JSON from response (handles markdown code blocks)
@@ -222,23 +229,18 @@ Rules:
     try:
         return PS101Context.model_validate_json(response_text.strip())
     except ValidationError as e:
-        logger.error(
-            f"LLM output validation failed: {e}",
-            extra={"response": response_text}
-        )
-        raise HTTPException(
-            status_code=422,
-            detail="Invalid context structure from AI model"
-        )
+        logger.error(f"LLM output validation failed: {e}", extra={"response": response_text})
+        raise HTTPException(status_code=422, detail="Invalid context structure from AI model")
 
 
 # ===================================================================
 # FASTAPI ENDPOINT (with AUTHENTICATION FIX)
 # ===================================================================
 
+
 @router.post("/extract-context")
 async def extract_context_endpoint(
-    user_id: str = Header(..., alias="X-User-ID")  # ✅ SECURITY FIX: Authentication required
+    user_id: str = Header(..., alias="X-User-ID"),  # ✅ SECURITY FIX: Authentication required
 ):
     """
     Extract structured context from completed PS101 responses.
@@ -268,12 +270,15 @@ async def extract_context_endpoint(
     # Fetch PS101 responses from database (✅ using sacred context manager pattern)
     with get_conn() as conn:
         cursor = conn.cursor()
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT step, prompt_index, response
             FROM ps101_responses
             WHERE user_id = %s
             ORDER BY step, prompt_index
-        """, (user_id,))
+        """,
+            (user_id,),
+        )
         responses = cursor.fetchall()
 
     if not responses:
@@ -288,14 +293,17 @@ async def extract_context_endpoint(
     # Store in user_contexts table (idempotent)
     with get_conn() as conn:
         cursor = conn.cursor()
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT INTO user_contexts (user_id, context_data, extracted_at)
             VALUES (%s, %s, NOW())
             ON CONFLICT (user_id)
             DO UPDATE SET
                 context_data = EXCLUDED.context_data,
                 extracted_at = NOW()
-        """, (user_id, context.model_dump_json()))
+        """,
+            (user_id, context.model_dump_json()),
+        )
         conn.commit()
 
     logger.info(f"Context extracted successfully for user {user_id}")

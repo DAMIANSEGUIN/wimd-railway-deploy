@@ -14,6 +14,7 @@ This document outlines the architecture for a "Broker" script. The broker's prim
 This system is a direct implementation of the requirements outlined in the MCP v1.1 Master Checklist, Section 2.1. It leverages the `trigger_detector.py` script created in Phase 1.
 
 The core goals of this architecture are:
+
 - To automate the retrieval of full documentation when a trigger is fired.
 - To provide the agent with just-in-time context, improving response quality without manually loading large documents at the start of a session.
 - To maintain a log of the context provided to the agent for debugging and analysis.
@@ -29,14 +30,14 @@ The data flow is simple and linear:
 | User | ----------------> | Broker | ---------------------> | Trigger Detector |
 +------+                   +--------+                        +------------------+
                                |                                      | 3. Return Triggers
-                               | 6. Agent Call                        | 
+                               | 6. Agent Call                        |
                                v                                      v
                            +-------+   5. Augmented Prompt   +----------------+
                            | Agent | <---------------------  | Document Store |
                            +-------+                         +----------------+
                                                                      ^
                                                                      | 4. Fetch Docs
-                                                                     | 
+                                                                     |
                                                                +--------+
                                                                | Broker |
                                                                +--------+
@@ -48,15 +49,16 @@ The data flow is simple and linear:
 
 The heart of the system is a Python script, `broker.py`.
 
-### Responsibilities:
-1.  **Entrypoint:** It will be the new entrypoint for handling user messages, replacing direct calls to the agent.
-2.  **Trigger Detection:** It will import `TriggerDetector` from `.ai-agents/session_context/trigger_detector.py`.
-3.  **Document Retrieval:** It will read the content of the files identified by the trigger detector.
-4.  **Prompt Augmentation:** It will construct a new, augmented prompt for the agent.
-5.  **Agent Invocation:** It will call the main agent with the augmented prompt.
-6.  **Logging:** It will log the full context sent to the agent for every turn.
+### Responsibilities
 
-### Proposed Implementation (`broker.py`):
+1. **Entrypoint:** It will be the new entrypoint for handling user messages, replacing direct calls to the agent.
+2. **Trigger Detection:** It will import `TriggerDetector` from `.ai-agents/session_context/trigger_detector.py`.
+3. **Document Retrieval:** It will read the content of the files identified by the trigger detector.
+4. **Prompt Augmentation:** It will construct a new, augmented prompt for the agent.
+5. **Agent Invocation:** It will call the main agent with the augmented prompt.
+6. **Logging:** It will log the full context sent to the agent for every turn.
+
+### Proposed Implementation (`broker.py`)
 
 ```python
 import datetime
@@ -79,10 +81,10 @@ class Broker:
     def process_message(self, user_message):
         # 1. Detect Triggers
         triggers = self.detector.detect_triggers(user_message)
-        
+
         # 2. Get Document Paths
         doc_paths = self.detector.get_document_paths(triggers)
-        
+
         # 3. Retrieve Document Content
         retrieved_docs = ""
         if doc_paths:
@@ -134,27 +136,29 @@ if __name__ == '__main__':
 ## 4. Specification: Agent & Trigger Detector Interface
 
 ### Agent Interface
+
 The broker will call the agent. This inverts the current model where the agent might call other tools. The agent must be adaptable to receive a pre-processed, augmented prompt. The interface will be a simple function call.
 
--   `agent.handle_message(prompt: str) -> str`
+- `agent.handle_message(prompt: str) -> str`
 
 The `prompt` will contain the original user message, prefixed with any retrieved documentation.
 
 ### Trigger Detector Interface
+
 The broker will use the existing `TriggerDetector` class and its methods as defined in `.ai-agents/session_context/trigger_detector.py`.
 
-1.  **Instantiation:**
+1. **Instantiation:**
     `detector = TriggerDetector()`
 
-2.  **Trigger Detection:**
+2. **Trigger Detection:**
     `triggers = detector.detect_triggers(user_message)`
-    -   **Input:** `user_message` (str)
-    -   **Output:** `List[str]` (e.g., `["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH"]`)
+    - **Input:** `user_message` (str)
+    - **Output:** `List[str]` (e.g., `["TROUBLESHOOTING_CHECKLIST", "DEPLOYMENT_TRUTH"]`)
 
-3.  **Document Path Mapping:**
+3. **Document Path Mapping:**
     `doc_paths = detector.get_document_paths(triggers)`
-    -   **Input:** `triggers` (List[str])
-    -   **Output:** `Dict[str, str]` (e.g., `{"TROUBLESHOOTING_CHECKLIST": "TROUBLESHOOTING_CHECKLIST.md"}`)
+    - **Input:** `triggers` (List[str])
+    - **Output:** `Dict[str, str]` (e.g., `{"TROUBLESHOOTING_CHECKLIST": "TROUBLESHOOTING_CHECKLIST.md"}`)
 
 ---
 
@@ -162,9 +166,9 @@ The broker will use the existing `TriggerDetector` class and its methods as defi
 
 As specified in the MCP Master Checklist, observability is key. The broker will be responsible for logging the *exact* context provided to the agent for each turn.
 
--   **Location:** `.gemini_logs/`
--   **Filename:** `turn_<YYYYMMDD_HHMMSS>_context.txt`
--   **Content:** The full, augmented prompt string sent to the agent.
+- **Location:** `.gemini_logs/`
+- **Filename:** `turn_<YYYYMMDD_HHMMSS>_context.txt`
+- **Content:** The full, augmented prompt string sent to the agent.
 
 This allows for perfect reproducibility of any agent interaction and is critical for debugging why an agent made a particular decision.
 

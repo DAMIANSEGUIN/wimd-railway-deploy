@@ -1,4 +1,5 @@
 # Deployment Success - Draggable Windows Feature
+
 **Date:** 2025-10-24
 **Feature:** Draggable Windows (Vanilla JS)
 **Status:** ✅ DEPLOYED TO PRODUCTION
@@ -19,27 +20,30 @@ Successfully deployed draggable windows functionality to production without requ
 
 **Deploy Time:** 1.371 seconds
 
-**Production URL:** https://whatismydelta.com
+**Production URL:** <https://whatismydelta.com>
 
 **Netlify Site:** resonant-crostata-90b706
 
-**Repository:** https://github.com/DAMIANSEGUIN/wimd-railway-deploy
+**Repository:** <https://github.com/DAMIANSEGUIN/wimd-railway-deploy>
 
 ---
 
 ## Root Cause Analysis: Git Divergence Confusion
 
 ### The Problem
+
 - Local repo has 13 commits ahead with `mosaic_ui/` structure
 - `railway-origin` remote pointed to different repo with `frontend/` structure
 - Attempted pull/rebase caused conflicts
 
 ### The Solution
+
 - **`railway-origin` is NOT for frontend deployment**
 - **Netlify deploys from `origin` (wimd-railway-deploy.git)**
 - **`railway-origin` is the backend API repo (separate project)**
 
 ### Architecture Clarity
+
 ```
 Frontend (Static HTML/JS)
 ├── Repo: wimd-railway-deploy.git (origin)
@@ -63,12 +67,14 @@ Backend (Python FastAPI)
 ### Draggable Windows (mosaic_ui/index.html:1592-1630)
 
 **Functionality:**
+
 - Vanilla JavaScript (no dependencies)
 - Mobile-aware (disabled on screens <768px)
 - Viewport bounds checking (prevents dragging off-screen)
 - Cursor feedback (move cursor on drag handle)
 
 **Implementation:**
+
 ```javascript
 const makeWindowDraggable = (el) => {
   if(!el || window.innerWidth < 768) return;
@@ -160,7 +166,8 @@ git push origin HEAD:main --force
 
 ## Production Status
 
-**Live Site:** https://whatismydelta.com
+**Live Site:** <https://whatismydelta.com>
+
 - ✅ Draggable windows deployed
 - ✅ Chat interface draggable on desktop (>768px)
 - ✅ Backend API functional (Railway)

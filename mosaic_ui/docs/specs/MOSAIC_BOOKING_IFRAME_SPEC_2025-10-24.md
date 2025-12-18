@@ -19,6 +19,7 @@ Replace the external link to Google Calendar with an embedded iframe that allows
 ## Requirements
 
 ### Functional Requirements
+
 1. **Embedded booking interface** - Users book sessions without leaving site
 2. **Modal display** - Booking appears in a modal overlay
 3. **Responsive design** - Works on desktop and mobile
@@ -27,6 +28,7 @@ Replace the external link to Google Calendar with an embedded iframe that allows
 6. **Deep integration** - Triggered from multiple UI locations (coach chat, results page, dashboard)
 
 ### Non-Functional Requirements
+
 - Fast loading (<2s)
 - No CORS issues
 - Mobile-friendly (responsive iframe)
@@ -39,33 +41,39 @@ Replace the external link to Google Calendar with an embedded iframe that allows
 ### Option 1: Modal Iframe (Recommended)
 
 **Pros**:
+
 - Overlay keeps user in context
 - Easy to dismiss
 - Professional appearance
 - Works on mobile
 
 **Cons**:
+
 - Google Calendar may not allow iframe embedding (CORS/X-Frame-Options)
 - Requires fallback logic
 
 ### Option 2: Inline Iframe
 
 **Pros**:
+
 - Always visible (no modal management)
 - Simpler implementation
 
 **Cons**:
+
 - Takes up permanent screen space
 - Less flexible placement
 
 ### Option 3: Sidebar Iframe (Draggable Window)
 
 **Pros**:
+
 - Combines with draggable windows feature
 - User can position as needed
 - Multi-task friendly
 
 **Cons**:
+
 - More complex
 - May obscure content
 
@@ -410,6 +418,7 @@ function openBooking() {
 Google Calendar **may** block iframe embedding with `X-Frame-Options: DENY` or `SAMEORIGIN`.
 
 **Detection**:
+
 ```javascript
 // Check if iframe is blocked
 bookingIframe.addEventListener('error', () => {
@@ -419,6 +428,7 @@ bookingIframe.addEventListener('error', () => {
 ```
 
 **Workaround**:
+
 - If blocked, automatically show fallback external link
 - Test with actual Google Calendar URL to confirm behavior
 
@@ -437,6 +447,7 @@ Google Calendar iframes typically work without CORS issues since you're embeddin
 ## Testing Checklist
 
 ### Functionality
+
 - [ ] Modal opens when clicking booking button
 - [ ] Iframe loads Google Calendar interface
 - [ ] User can complete booking within iframe
@@ -446,24 +457,28 @@ Google Calendar iframes typically work without CORS issues since you're embeddin
 - [ ] Fallback link shown if iframe blocked
 
 ### Responsive Design
+
 - [ ] Modal scales on mobile (<768px)
 - [ ] Iframe is scrollable on small screens
 - [ ] Buttons remain accessible
 - [ ] No horizontal overflow
 
 ### Integration Points
+
 - [ ] Booking button in coach chat works
 - [ ] Booking CTA on dashboard works
 - [ ] Booking link in navigation works
 - [ ] PS101 completion shows booking option
 
 ### Accessibility
+
 - [ ] Keyboard navigation works (Tab, Enter, Escape)
 - [ ] Screen readers announce modal correctly
 - [ ] Focus trapped within modal when open
 - [ ] Fallback link accessible
 
 ### Performance
+
 - [ ] Loading spinner appears immediately
 - [ ] Iframe loads within 10 seconds
 - [ ] No layout shift when iframe loads
@@ -474,16 +489,19 @@ Google Calendar iframes typically work without CORS issues since you're embeddin
 ## Placement Recommendations
 
 ### High-Priority Locations (Implement First)
+
 1. **Coach chat footer** - User already engaged with coaching
 2. **PS101 completion** - Natural next step after assessment
 3. **User dashboard** - Prominent CTA for new users
 
 ### Medium-Priority Locations
+
 4. **Navigation bar** - Always accessible
 5. **Job search results** - Offer help when stuck
 6. **Resume feedback page** - Transition point
 
 ### Low-Priority Locations
+
 7. **Settings page** - Administrative area
 8. **Help/Guide modal** - Support context
 

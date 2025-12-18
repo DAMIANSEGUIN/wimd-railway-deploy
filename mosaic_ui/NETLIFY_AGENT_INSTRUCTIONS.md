@@ -20,6 +20,7 @@ All files are located in the `mosaic_ui/` directory where you are currently work
 ## npm Packages Already Installed
 
 The required packages have been installed in the parent repository:
+
 - `react-draggable` ✅
 - `re-resizable` ✅
 
@@ -28,31 +29,38 @@ You may need to install them locally if they're not accessible from `mosaic_ui/`
 ## Implementation Summary
 
 ### Feature 1: Draggable Windows
+
 **Goal**: Make UI windows moveable and resizable
 
 **What to do**:
+
 1. Read the full spec in `docs/specs/mosaic_draggable_windows_spec.md`
 2. Create new component using the code provided in the spec
 3. Wrap PS101 coaching steps (or other UI elements) in the draggable component
 4. Add z-index management and mobile detection
 
 **Key files to modify**:
+
 - Create: Component for draggable windows (exact code in spec)
 - Modify: `index.html` or relevant JavaScript to use the new component
 
 ### Feature 2: Appointment Booking
+
 **Goal**: Add Google Calendar booking link
 
 **What to do**:
+
 1. Read the full spec in `docs/specs/mosaic_appointment_booking_spec.md`
 2. Add a button/link that opens: `https://calendar.app.google/EAnDSz2CcTtH849x6`
 3. Place it on the PS101 results page or user dashboard
 
 **Implementation options**:
+
 - **Simple link** (fastest): Opens booking page in new tab
 - **Embedded iframe** (better UX): Embeds booking directly on site
 
 **Key files to modify**:
+
 - Modify: `index.html` to add booking button/link
 
 ## Repository Information
@@ -64,14 +72,16 @@ You may need to install them locally if they're not accessible from `mosaic_ui/`
 
 ## Success Criteria
 
-### Draggable Windows:
+### Draggable Windows
+
 - [ ] Windows can be dragged by header
 - [ ] Windows can be resized from corners
 - [ ] Windows stay within viewport bounds
 - [ ] Works on desktop browsers
 - [ ] Gracefully disabled on mobile (<768px)
 
-### Booking:
+### Booking
+
 - [ ] Booking link accessible from Mosaic
 - [ ] Opens to correct Google Calendar page
 - [ ] User can complete booking flow

@@ -18,27 +18,32 @@
 ## 📁 Directory Structure
 
 ### Core Files (Always Read)
+
 - **START_HERE.md** - Single source of truth for latest status
 - **SESSION_START_PROTOCOL.md** - Mandatory session initialization checklist
 - **RESTART_INSTRUCTIONS.md** - Recovery procedures
 
 ### Session Management
+
 - **handoff_YYYYMMDD_HHMMSS.json** - Agent-to-agent handoff manifests
 - **session_log.txt** - Timestamped session start/end log
 - **handoff_log.txt** - Handoff receipt acknowledgments
 
 ### Status Reports (Date-Stamped)
+
 - **FINAL_STATUS_YYYY-MM-DD_*.md** - End-of-day status summaries
 - **CRITICAL_ISSUE_*.md** - Critical incident documentation
 - **SESSION_SUMMARY_YYYY-MM-DD.md** - Daily session summaries
 - **DEPLOYMENT_SNAPSHOT_*.md** - Deployment state snapshots
 
 ### Team Communication
+
 - **TEAM_NOTE_*.md** - Cross-agent team notifications
 - **STAGE*_*.md** - Multi-stage project coordination
 - **WELCOME_BACK_MESSAGE.md** - User return notifications
 
 ### Captures & Evidence
+
 - **CodexCapture_*/** - Browser DevTools captures (network, console, screenshots)
 
 ---
@@ -46,6 +51,7 @@
 ## 🔄 File Lifecycle
 
 ### 1. Session Start
+
 ```bash
 # AI agent starts session
 echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Session start: [AGENT_NAME]" >> session_log.txt
@@ -59,11 +65,13 @@ fi
 ```
 
 ### 2. During Session
+
 - Create status files as needed (CRITICAL_ISSUE_*, SESSION_SUMMARY_*)
 - Update START_HERE.md if major events occur
 - Log significant decisions in session_log.txt
 
 ### 3. Session End
+
 ```bash
 # Create handoff manifest (if requested)
 ./scripts/create_handoff_manifest.sh > .ai-agents/handoff_$(date +%Y%m%d_%H%M%S).json
@@ -77,6 +85,7 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Session end: [AGENT_NAME]" >> session_log
 ## 📋 File Naming Conventions
 
 ### Status Reports
+
 - **FINAL_STATUS_YYYY-MM-DD_[CONTEXT].md** - End-of-session summaries
   - Example: `FINAL_STATUS_2025-11-21_EVENING.md`
 
@@ -84,6 +93,7 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Session end: [AGENT_NAME]" >> session_log
   - Example: `CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md`
 
 ### Session Files
+
 - **SESSION_SUMMARY_YYYY-MM-DD.md** - Daily work summaries
   - Example: `SESSION_SUMMARY_2025-11-13.md`
 
@@ -91,10 +101,12 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Session end: [AGENT_NAME]" >> session_log
   - Example: `DEPLOYMENT_SNAPSHOT_2025-11-11.md`
 
 ### Handoffs
+
 - **handoff_YYYYMMDD_HHMMSS.json** - JSON handoff manifests
   - Example: `handoff_20251121_173338.json`
 
 ### Team Notes
+
 - **TEAM_NOTE_[TOPIC]_YYYY-MM-DD.md** - Cross-agent coordination
   - Example: `TEAM_NOTE_PS101_BUILD_CONTINUITY_2025-11-13.md`
 
@@ -103,6 +115,7 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Session end: [AGENT_NAME]" >> session_log
 ## 🔍 Finding Information
 
 ### Most Recent Status
+
 ```bash
 # Latest status file
 ls -t .ai-agents/FINAL_STATUS_* .ai-agents/CRITICAL_ISSUE_* 2>/dev/null | head -1
@@ -115,6 +128,7 @@ ls -t .ai-agents/handoff_*.json 2>/dev/null | head -1
 ```
 
 ### Specific Events
+
 ```bash
 # Files mentioning "Phase 1"
 grep -l "Phase 1" .ai-agents/*.md
@@ -127,6 +141,7 @@ ls -t .ai-agents/CRITICAL_ISSUE_*.md
 ```
 
 ### Session History
+
 ```bash
 # View session log
 cat .ai-agents/session_log.txt
@@ -143,12 +158,14 @@ tail -20 .ai-agents/session_log.txt
 ## ⚠️ Critical Alerts System
 
 ### How to Create Alert
+
 1. Update **START_HERE.md** "Latest Critical Event" section
 2. Create **CRITICAL_ISSUE_[NAME]_YYYY-MM-DD.md** with details
 3. Add alert to top of **SESSION_START_PROTOCOL.md** (if blocking)
 4. Create **TEAM_NOTE** if multiple agents need coordination
 
 ### How to Clear Alert
+
 1. Verify issue is resolved
 2. Update START_HERE.md status from ⚠️ to ✅
 3. Move alert from "Current" to "Resolved" section in SESSION_START_PROTOCOL
@@ -159,12 +176,14 @@ tail -20 .ai-agents/session_log.txt
 ## 📊 Health Check
 
 **This directory is healthy if:**
+
 - ✅ START_HERE.md updated within last 3 days
 - ✅ Latest handoff file exists (if multi-agent session)
 - ✅ session_log.txt has recent entries
 - ✅ No CRITICAL_ISSUE files with unresolved status
 
 **This directory needs attention if:**
+
 - ❌ START_HERE.md >7 days old
 - ❌ Multiple conflicting status files
 - ❌ Critical issues with no resolution documented
@@ -175,7 +194,9 @@ tail -20 .ai-agents/session_log.txt
 ## 🤝 Multi-Agent Coordination
 
 ### Handoff Protocol
+
 **Outgoing agent:**
+
 ```bash
 # Create handoff manifest
 ./scripts/create_handoff_manifest.sh > .ai-agents/handoff_$(date +%Y%m%d_%H%M%S).json
@@ -185,6 +206,7 @@ tail -20 .ai-agents/session_log.txt
 ```
 
 **Incoming agent:**
+
 ```bash
 # Read latest handoff
 cat $(ls -t .ai-agents/handoff_*.json | head -1)
@@ -196,13 +218,16 @@ echo "[$(date)] Received handoff from [AGENT]" >> .ai-agents/handoff_log.txt
 ```
 
 ### Team Notes
+
 Create TEAM_NOTE when:
+
 - Multiple agents working on same feature
 - Cross-agent coordination needed
 - Critical information affects all agents
 - Shared decision needs tracking
 
 Format:
+
 ```markdown
 # TEAM_NOTE_[TOPIC]_YYYY-MM-DD.md
 
@@ -227,6 +252,7 @@ Format:
 ## 🧹 Maintenance
 
 ### Weekly Cleanup
+
 ```bash
 # Archive files older than 30 days
 find .ai-agents -name "*.md" -mtime +30 -exec mv {} .ai-agents/archive/ \;
@@ -236,6 +262,7 @@ ls -t .ai-agents/handoff_*.json | tail -n +11 | xargs -I {} mv {} .ai-agents/arc
 ```
 
 ### Monthly Review
+
 - Verify START_HERE.md is current
 - Clear resolved alerts from SESSION_START_PROTOCOL
 - Archive CodexCapture folders >30 days
@@ -246,12 +273,14 @@ ls -t .ai-agents/handoff_*.json | tail -n +11 | xargs -I {} mv {} .ai-agents/arc
 ## 📖 Reference Documents
 
 **In Parent Directory:**
+
 - `../CLAUDE.md` - Architecture and feature status
 - `../TROUBLESHOOTING_CHECKLIST.md` - Pre-flight checks
 - `../SELF_DIAGNOSTIC_FRAMEWORK.md` - Error handling patterns
 - `../README.md` - Restart protocol and environment setup
 
 **In This Directory:**
+
 - `START_HERE.md` - Latest status and onboarding
 - `SESSION_START_PROTOCOL.md` - Mandatory session checklist
 - `RESTART_INSTRUCTIONS.md` - Recovery procedures
@@ -261,6 +290,7 @@ ls -t .ai-agents/handoff_*.json | tail -n +11 | xargs -I {} mv {} .ai-agents/arc
 ## 🎯 Success Metrics
 
 **This system is working if:**
+
 - ✅ New AI agents can start productive work in <5 minutes
 - ✅ No repeated questions about project history
 - ✅ Critical information surfaces automatically
@@ -268,6 +298,7 @@ ls -t .ai-agents/handoff_*.json | tail -n +11 | xargs -I {} mv {} .ai-agents/arc
 - ✅ Incidents are documented and don't repeat
 
 **This system needs improvement if:**
+
 - ❌ AI agents ask "where do I start?"
 - ❌ Same incidents happen repeatedly
 - ❌ Handoffs missing critical context

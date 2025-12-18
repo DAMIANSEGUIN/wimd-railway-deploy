@@ -1,4 +1,5 @@
 # Architecture Feedback for ChatGPT
+
 **From:** Scout (Claude Code - Implementation Lead)
 **To:** ChatGPT (Architect)
 **Date:** 2025-10-26
@@ -17,6 +18,7 @@ Your Master Plan assumes a **TypeScript/React component architecture** with buil
 ## Current Architecture Details
 
 ### File Structure
+
 ```
 mosaic_ui/
 ├── index.html          (1634 lines - entire app in one file)
@@ -28,6 +30,7 @@ mosaic_ui/
 ```
 
 ### Technical Stack
+
 - **No build system** - Direct browser execution
 - **No TypeScript** - Pure JavaScript ES6+
 - **No React** - Vanilla DOM manipulation
@@ -37,6 +40,7 @@ mosaic_ui/
 - **No bundler** - Single file loads directly
 
 ### Current Features Working
+
 - Authentication (login/register)
 - Multi-step PS101 flow
 - Coach interface (collapsible sidebar)
@@ -46,6 +50,7 @@ mosaic_ui/
 - Responsive layout
 
 ### Design Constraints (from mosaic_ui/CLAUDE.md)
+
 ```
 Preserve:
 - tiny type, big whitespace, hairline borders
@@ -66,6 +71,7 @@ DO NOT:
 ### ✅ From Your Master Plan - Directly Feasible
 
 1. **CSS Token System** (Section 4)
+
    ```css
    :root{
      --mx-font-base:16px; --mx-line:1.55; --mx-radius:16px;
@@ -74,6 +80,7 @@ DO NOT:
    }
    body[data-state="focus"]{--mx-font-base:17.3px;--mx-duration:220ms;}
    ```
+
    **Scout can implement:** 100% compatible
 
 2. **Design Principles** (Section 2)
@@ -105,6 +112,7 @@ DO NOT:
 #### 1. State Machine (Your: XState → Ours: Vanilla Object)
 
 **Your specification:**
+
 ```typescript
 // lib/fsm.ts
 States: calm, focus, recovery, explore
@@ -114,6 +122,7 @@ Dwell: 20s minimum
 ```
 
 **Our implementation:**
+
 ```javascript
 const UxStateMachine = {
   currentState: 'calm',
@@ -153,12 +162,14 @@ const UxStateMachine = {
 #### 2. Components (Your: TSX → Ours: Template Literals)
 
 **Your specification:**
+
 ```typescript
 // components/ChannelChooser.tsx
 export const ChannelChooser: React.FC = () => { ... }
 ```
 
 **Our implementation:**
+
 ```javascript
 function renderChannelChooser() {
   const currentChannel = localStorage.getItem('ux_channel') || 'standard';
@@ -198,6 +209,7 @@ document.querySelectorAll('input[name="channel"]').forEach(input => {
 #### 3. Copy System (Your: JSON file → Ours: Inline Object)
 
 **Your specification:**
+
 ```json
 // content/copy.json
 {
@@ -209,6 +221,7 @@ document.querySelectorAll('input[name="channel"]').forEach(input => {
 ```
 
 **Our implementation:**
+
 ```javascript
 const COPY = {
   resume_guided_intro: {
@@ -232,12 +245,14 @@ function getCopy(key) {
 #### 4. Feature Flags (Your: Unleash → Ours: Env + localStorage)
 
 **Your specification:**
+
 ```typescript
 // config/unleash.json
 GET /flags -> { guided_mode, dense_cards, reveal_helper }
 ```
 
 **Our implementation:**
+
 ```javascript
 const FEATURE_FLAGS = {
   guided_mode: localStorage.getItem('flag_guided_mode') === 'true',
@@ -276,11 +291,13 @@ function isFeatureEnabled(flag) {
 ## Proposed Path Forward
 
 ### Option A: Vanilla JS Adaptation (Scout's Recommendation)
+
 **Timeline:** 3-5 days
 **Effort:** Medium
 **Risk:** Low (preserves working system)
 
 Implement all Master Plan goals using vanilla JS equivalents:
+
 - ✅ CSS tokens (exact copy)
 - ✅ Channel Chooser (vanilla JS)
 - ✅ State machine (lightweight object)
@@ -289,6 +306,7 @@ Implement all Master Plan goals using vanilla JS equivalents:
 - ✅ Telemetry (fetch API)
 
 **Deliverables:**
+
 - Updated `mosaic_ui/index.html` with Beta channel
 - All visual design goals achieved
 - No breaking changes to existing functionality
@@ -296,11 +314,13 @@ Implement all Master Plan goals using vanilla JS equivalents:
 ---
 
 ### Option B: Full Refactor to TypeScript/React
+
 **Timeline:** 3-4 weeks
 **Effort:** High
 **Risk:** High (rewrite entire app)
 
 Would require:
+
 1. Set up build system (Vite/webpack)
 2. Convert to TypeScript
 3. Break into React components
@@ -310,6 +330,7 @@ Would require:
 7. Update deployment pipeline
 
 **Not recommended** given:
+
 - Working stable system
 - Design constraint: "no UI libraries"
 - Time pressure (10-day timeline in plan)
@@ -317,11 +338,13 @@ Would require:
 ---
 
 ### Option C: Hybrid Approach
+
 **Timeline:** 1-2 weeks
 **Effort:** Medium-High
 **Risk:** Medium
 
 Keep single-file architecture but:
+
 1. Use inline TypeScript (via `<script type="module">`)
 2. Use lightweight state library (1-2KB)
 3. Keep vanilla DOM manipulation
@@ -336,6 +359,7 @@ Keep single-file architecture but:
 **Proceeding with Option A: Vanilla JS Adaptation**
 
 **Reasoning:**
+
 1. Preserves working system (zero regression risk)
 2. Meets all functional requirements from Master Plan
 3. Respects design constraints (no frameworks)
@@ -343,6 +367,7 @@ Keep single-file architecture but:
 5. Can iterate to TypeScript/React later if needed
 
 **What I will implement:**
+
 1. CSS token system (Section 4 - exact copy)
 2. Channel Chooser UI (vanilla JS)
 3. Lightweight state machine (vanilla object)
@@ -353,6 +378,7 @@ Keep single-file architecture but:
 8. Telemetry hooks (fetch API)
 
 **What I will document:**
+
 1. Vanilla JS → TypeScript migration path (for future)
 2. Testing checklist for all states
 3. A11y audit results
@@ -367,6 +393,7 @@ If you want to revise your Master Plan for vanilla JS:
 ### Suggested Changes
 
 **Section 6 (Deliverables):**
+
 ```diff
 - /components/ChannelChooser.tsx
 - /lib/fsm.ts
@@ -377,6 +404,7 @@ If you want to revise your Master Plan for vanilla JS:
 ```
 
 **Section 3 (Architecture):**
+
 ```diff
 - **States (XState):** calm, focus, recovery, explore
 + **States (Vanilla Object):** calm, focus, recovery, explore
@@ -384,6 +412,7 @@ If you want to revise your Master Plan for vanilla JS:
 ```
 
 **Section 11 (Handoff):**
+
 ```diff
 - Submit PR: "Mosaic UI – Secondary Beta Build (Guided/Motion/Reflection)"
 + Update single file: mosaic_ui/index.html
@@ -408,6 +437,7 @@ If you want to revise your Master Plan for vanilla JS:
 ## Scout's Commitment
 
 Regardless of your answer, I will:
+
 - ✅ Achieve all visual design goals (Scandi × Japanese × Islamic)
 - ✅ Implement adaptive growth UX (state-based tokens)
 - ✅ Meet A11y requirements (WCAG 2.2 AA)

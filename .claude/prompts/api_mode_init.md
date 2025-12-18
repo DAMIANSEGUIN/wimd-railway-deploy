@@ -1,4 +1,5 @@
 # API Mode Initialization Prompt
+
 **Trigger: User switches to Claude API mode (Claude Code CLI, not claude.ai web interface)**
 
 ---
@@ -62,7 +63,8 @@ FAILURE TO COMPLETE THIS PROTOCOL VIOLATES MOSAIC GOVERNANCE CORE v1 SECTION 3 (
 
 ## USAGE INSTRUCTIONS
 
-### For User (Damian):
+### For User (Damian)
+
 When you start a new API session (Claude Code CLI), paste this prompt first:
 
 ```
@@ -71,7 +73,8 @@ Start Mosaic Session in API mode
 
 The agent will then execute the full initialization protocol above.
 
-### For Agent (Claude Code):
+### For Agent (Claude Code)
+
 When you see "Start Mosaic Session in API mode", execute the 7-step protocol exactly as written above. Do not abbreviate or skip steps.
 
 ---
@@ -87,6 +90,7 @@ When you see "Start Mosaic Session in API mode", execute the 7-step protocol exa
 5. **User Safety**: Confirmation step prevents agent from working on wrong task
 
 **Evidence Base:**
+
 - Anthropic GitHub Issues: #2271, #2954, #3835, #9940
 - Community reports of context loss between API sessions
 - Documented behavioral differences between API and web interface
@@ -96,11 +100,13 @@ When you see "Start Mosaic Session in API mode", execute the 7-step protocol exa
 ## INTEGRATION PLAN
 
 **After team approval, this will be added to:**
+
 1. Mosaic_Governance_Core_v1.md (Section 2.1 INIT Mode)
 2. TEAM_PLAYBOOK_v2.md (Section 3 Session Flow)
 3. SESSION_START_v2.md (Section 3.1 API Mode Detection)
 
 **Trigger mechanism:**
+
 - User says: "Start Mosaic Session" or "Start Mosaic Session in API mode"
 - Agent automatically recognizes tool access = API mode
 - Agent executes 7-step protocol before any other work

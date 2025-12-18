@@ -16,7 +16,7 @@ echo "====================="
 git log --oneline -5 2>/dev/null || echo "Not a git repo"
 
 echo ""
-echo "🔍 CURRENT STATUS:"  
+echo "🔍 CURRENT STATUS:"
 echo "=================="
 git status 2>/dev/null || echo "Not a git repo"
 

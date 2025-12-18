@@ -1,4 +1,5 @@
 # CODEX Note: AI Fallback & Auto-Recovery System
+
 **Date**: 2025-10-08
 **From**: Claude Code
 **To**: CODEX
@@ -9,6 +10,7 @@
 ## Issue Reported by Human
 
 User encountered error message:
+
 ```
 "No response available - CSV prompts not found and AI fallback disabled or failed"
 ```
@@ -22,6 +24,7 @@ User encountered error message:
 **File Modified**: `/feature_flags.json`
 
 **Change**:
+
 ```diff
      "AI_FALLBACK_ENABLED": {
 -      "enabled": false,
@@ -41,6 +44,7 @@ CODEX should be aware that an **automatic recovery system** was previously imple
 ### System Components
 
 **1. Monitoring System** (`api/monitoring.py:14-199`)
+
 - Tests prompt system with real prompts (not just API pings)
 - Logs failures to `prompt_health_log` table
 - Tracks failure rates over 24-hour windows
@@ -48,18 +52,21 @@ CODEX should be aware that an **automatic recovery system** was previously imple
 
 **2. Auto-Recovery Actions** (`api/monitoring.py:108-143`)
 When failures detected, system automatically:
+
 - Clears prompt selector cache (`DELETE FROM prompt_selector_cache`)
 - Enables AI fallback flag (`UPDATE feature_flags SET enabled=1 WHERE flag_name='AI_FALLBACK_ENABLED'`)
 - Re-tests system after recovery
 - Logs all recovery actions
 
 **3. Health Check Endpoints**
+
 - `/health` - Basic health check (503 status triggers Railway restart)
 - `/health/comprehensive` - Detailed monitoring with failure rates
 - `/health/recover` - Manual recovery trigger
 - `/health/prompts` - Prompt system specific health
 
 **4. Railway Auto-Restart** (`railway.toml`)
+
 - Configured to monitor `/health` endpoint
 - 503 HTTP status codes trigger container restart
 - Automatic recovery without manual intervention
@@ -71,6 +78,7 @@ When failures detected, system automatically:
 ✅ **CLAUDE.md Updated** (Lines 133-143)
 
 Section "Monitoring & Auto-Restart System" documents:
+
 - Railway health checks configuration
 - Automatic recovery procedures
 - Multi-layer monitoring endpoints
@@ -83,12 +91,16 @@ Section "Monitoring & Auto-Restart System" documents:
 ## Why This Matters for CODEX
 
 ### Expected Behavior
+
 When CSV prompts fail to load:
+
 1. **With AI_FALLBACK_ENABLED=true**: System falls back to AI responses (OpenAI/Claude)
 2. **With AI_FALLBACK_ENABLED=false**: System returns error message user saw
 
 ### Auto-Recovery Should Prevent This
+
 The monitoring system is designed to:
+
 - Detect when prompts fail
 - Auto-enable AI fallback
 - Clear stale cache
@@ -99,6 +111,7 @@ The monitoring system is designed to:
 **Hypothesis**: Auto-recovery works for **runtime failures** but not **initial configuration**.
 
 If `AI_FALLBACK_ENABLED` starts as `false`:
+
 - System behaves as configured (not a "failure")
 - No 503 status returned (just empty/error responses)
 - Health check may pass but prompt system returns errors
@@ -157,6 +170,7 @@ def test_prompt_system():
 ## Recommendations for CODEX
 
 ### 1. Deployment Checklist Enhancement
+
 Add feature flag validation to deployment process:
 
 ```bash
@@ -166,7 +180,9 @@ cat feature_flags.json | grep -A2 "AI_FALLBACK_ENABLED"
 ```
 
 ### 2. Health Check Enhancement
+
 Consider modifying `/health` endpoint to return 503 when:
+
 - AI fallback disabled AND CSV prompts unavailable
 - Would trigger Railway auto-restart
 - Forces system into recovery mode
@@ -174,6 +190,7 @@ Consider modifying `/health` endpoint to return 503 when:
 **File to modify**: `api/index.py` (health endpoint)
 
 ### 3. Feature Flag Monitoring
+
 Add feature flag state to health check response:
 
 ```python
@@ -188,6 +205,7 @@ Add feature flag state to health check response:
 ```
 
 ### 4. Alert on Flag Mismatch
+
 If production deployment has critical flags disabled, log warning:
 
 ```python
@@ -201,6 +219,7 @@ if not get_feature_flag("AI_FALLBACK_ENABLED"):
 ## Current System State
 
 ### Feature Flags (Post-Fix)
+
 ```json
 {
   "AI_FALLBACK_ENABLED": true,        // ✅ Now enabled
@@ -214,7 +233,9 @@ if not get_feature_flag("AI_FALLBACK_ENABLED"):
 ```
 
 ### CSV Prompts Status
+
 **Files Found**:
+
 - `data/prompts.csv` (275 prompts)
 - `data/prompts_clean.csv`
 - `data/prompts_fixed.csv`
@@ -222,6 +243,7 @@ if not get_feature_flag("AI_FALLBACK_ENABLED"):
 **Loading Mechanism**: `api/prompts_loader.py` reads from registry, converts CSV to JSON
 
 **Potential Issue**: CSV prompts may not be loading due to:
+
 - Registry not initialized
 - File path mismatch
 - JSON conversion failures
@@ -254,17 +276,20 @@ if not get_feature_flag("AI_FALLBACK_ENABLED"):
 ## Files for CODEX Review
 
 **Core System**:
+
 - `api/monitoring.py` - Auto-recovery system
 - `api/prompt_selector.py` - CSV→AI fallback logic
 - `api/index.py` - Health check endpoints
 - `railway.toml` - Auto-restart configuration
 
 **Configuration**:
+
 - `feature_flags.json` - Feature flag state (just modified)
 - `data/prompts.csv` - CSV prompt library
 - `api/prompts_loader.py` - CSV loading mechanism
 
 **Documentation**:
+
 - `CLAUDE.md` - Lines 133-143 (Monitoring section)
 - This file - Current status
 
@@ -273,12 +298,14 @@ if not get_feature_flag("AI_FALLBACK_ENABLED"):
 ## Action Items
 
 **For Claude Code** (Me):
+
 - ✅ Enable AI_FALLBACK_ENABLED flag
 - ✅ Deploy to Railway
 - ✅ Document system for CODEX
 - ⏳ Monitor deployment success
 
 **For CODEX** (If Assigned):
+
 - [ ] Test `/health/comprehensive` endpoint after deployment
 - [ ] Verify CSV prompt loading from `data/prompts.csv`
 - [ ] Review if health check should return 503 for disabled flags
@@ -286,6 +313,7 @@ if not get_feature_flag("AI_FALLBACK_ENABLED"):
 - [ ] Test actual prompt responses with real user queries
 
 **For Human**:
+
 - [ ] Verify deployment completed successfully
 - [ ] Test prompt system in production (visit whatismydelta.com)
 - [ ] Decide if CODEX should investigate CSV loading issue

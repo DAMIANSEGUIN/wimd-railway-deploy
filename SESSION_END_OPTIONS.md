@@ -3,6 +3,7 @@ Mosaic Session Termination Commands (Canonical Complete Set)
 Version 1.0 — Minimal Format
 
 **Document Metadata:**
+
 - Created: 2025-12-05 by User (Damian)
 - Last Updated: 2025-12-05 by User (Damian)
 - Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)

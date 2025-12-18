@@ -1,4 +1,5 @@
 # Production Communication Protocol
+
 **SSEW Framework for AI Team Updates**
 
 ---
@@ -14,15 +15,19 @@ In a production environment with multiple AI agents and a human coordinator, **e
 **Every update MUST follow this structure:**
 
 ### **S - Situation**
+
 What happened? What changed? State current reality in 1-2 sentences.
 
 ### **S - Solution**
+
 What did you do about it? What's the fix/decision/action taken?
 
 ### **E - Evidence**
+
 How do you know it worked? What proves the solution is valid?
 
 ### **W - Way Forward**
+
 What happens next? Who does what?
 
 ---
@@ -182,16 +187,19 @@ Blast radius check failed:
 ## Rules for SSEW Communication
 
 ### 1. **Situation = Facts Only**
+
 - No opinions, speculation, or assumptions
 - State what IS, not what you think it means
 - Include relevant timestamps, commit hashes, file paths
 
 ### 2. **Solution = Actions Taken**
+
 - List concrete changes made
 - Always include file paths and commit hashes
 - If no solution yet, say "BLOCKED" or "PAUSED"
 
 ### 3. **Evidence = Proof**
+
 - Commands you ran + output
 - Test results (pass/fail)
 - Health check responses
@@ -199,6 +207,7 @@ Blast radius check failed:
 - Never say "it should work" - show that it DOES work
 
 ### 4. **Way Forward = Clear Assignments**
+
 - Name specific agent(s)
 - Use verbs: START, PAUSE, RESUME, TEST, REVIEW
 - Point to exact documentation or file
@@ -209,12 +218,15 @@ Blast radius check failed:
 ## Anti-Patterns (DO NOT DO THIS)
 
 ### ❌ Vague Update
+
 ```
 "Fixed the bug. Should be good now. Let me know if issues."
 ```
+
 **Problem:** No situation context, no evidence, no file changes, no next action.
 
 ### ❌ Wall of Text
+
 ```
 "So I was looking at the session_end script and noticed it was using
 set -e which is a bash feature that makes scripts exit on any error
@@ -224,9 +236,11 @@ before it could write the JSON file so I added set +e around that
 part to disable the exit-on-error behavior temporarily and then
 re-enabled it after and now it seems to work better..."
 ```
+
 **Problem:** Buried the lead. Hard to extract action items. Use SSEW structure.
 
 ### ❌ Missing Way Forward
+
 ```
 # Bug Fixed - 2025-11-24
 
@@ -239,9 +253,11 @@ Fixed it (commit d3e131f)
 ## Evidence
 Tested, works now
 ```
+
 **Problem:** WHO does WHAT next? User has to ask.
 
 ### ❌ No Evidence
+
 ```
 ## Solution
 Updated the deployment script
@@ -249,6 +265,7 @@ Updated the deployment script
 ## Way Forward
 Should be safe to deploy now
 ```
+
 **Problem:** "Should be" is not evidence. Show test results.
 
 ---
@@ -256,6 +273,7 @@ Should be safe to deploy now
 ## When to Use SSEW
 
 **ALWAYS use SSEW for:**
+
 - Bug fixes
 - Feature completions
 - Deployments
@@ -264,6 +282,7 @@ Should be safe to deploy now
 - Status updates user requested
 
 **Can skip SSEW for:**
+
 - Quick clarification questions mid-session
 - Acknowledging instructions ("got it, starting now")
 - Internal agent coordination (if agents can communicate directly)
@@ -280,11 +299,13 @@ SSEW update = event notification (what changed and what to do about it)
 ```
 
 **When to update both:**
+
 1. Make code changes
 2. Update CURRENT_WORK.json via session_end.sh
 3. Send SSEW update to team (user shares it)
 
 **User's role:**
+
 - Receives SSEW updates from agents
 - Shares with other agents who need to know
 - Decides if action is needed or agents should continue
@@ -308,6 +329,7 @@ SSEW update = event notification (what changed and what to do about it)
 ## Summary
 
 **Every update needs 4 things:**
+
 1. **What happened** (Situation)
 2. **What you did** (Solution) + file paths + commits
 3. **Proof it worked** (Evidence)

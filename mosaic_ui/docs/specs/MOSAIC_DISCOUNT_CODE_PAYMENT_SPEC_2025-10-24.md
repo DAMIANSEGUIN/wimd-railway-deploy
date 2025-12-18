@@ -10,6 +10,7 @@
 ## Overview
 
 Build a unified access control system that:
+
 1. **Phase 1 (Beta)**: Requires discount codes for platform access
 2. **Phase 2 (Launch)**: Transitions to Stripe-powered paid subscriptions
 3. **Architecture**: Designed from the start to support both, with feature flag toggle
@@ -45,6 +46,7 @@ CREATE INDEX IF NOT EXISTS idx_users_stripe_customer ON users(stripe_customer_id
 ```
 
 **Subscription Tiers**:
+
 - `beta` - Beta users with discount codes (free forever)
 - `free` - Free trial users (limited access/time)
 - `basic` - Paid tier 1
@@ -52,6 +54,7 @@ CREATE INDEX IF NOT EXISTS idx_users_stripe_customer ON users(stripe_customer_id
 - `enterprise` - Paid tier 3
 
 **Subscription Status**:
+
 - `active` - Full access
 - `trialing` - In trial period
 - `past_due` - Payment failed, grace period
@@ -854,12 +857,14 @@ def create_user(
 ### Phase 1: Beta (Discount Codes Only)
 
 **Environment Variables**:
+
 ```bash
 PAYMENTS_ENABLED=false
 # No Stripe keys needed yet
 ```
 
 **Steps**:
+
 1. Run database migrations (add columns, create tables)
 2. Deploy backend with discount code endpoints
 3. Deploy frontend with discount modal
@@ -869,6 +874,7 @@ PAYMENTS_ENABLED=false
 ### Phase 2: Test Stripe Integration (Beta)
 
 **Environment Variables**:
+
 ```bash
 PAYMENTS_ENABLED=false
 STRIPE_SECRET_KEY=sk_test_...
@@ -877,6 +883,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
 **Steps**:
+
 1. Set up Stripe account in test mode
 2. Create products and prices in Stripe dashboard
 3. Deploy payment endpoints (but keep PAYMENTS_ENABLED=false)
@@ -887,6 +894,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 ### Phase 3: Production Launch
 
 **Environment Variables**:
+
 ```bash
 PAYMENTS_ENABLED=true
 STRIPE_SECRET_KEY=sk_live_...
@@ -897,6 +905,7 @@ STRIPE_PRICE_PRO_MONTHLY=price_...
 ```
 
 **Steps**:
+
 1. Switch Stripe to live mode
 2. Update environment variables
 3. Deploy with PAYMENTS_ENABLED=true
@@ -959,6 +968,7 @@ async function updateUIForSubscription() {
 ## Testing Checklist
 
 ### Phase 1: Discount Codes
+
 - [ ] Discount modal appears for new users
 - [ ] Valid code allows registration
 - [ ] Invalid code rejected
@@ -969,6 +979,7 @@ async function updateUIForSubscription() {
 - [ ] Usage counter increments
 
 ### Phase 2: Stripe Test Mode
+
 - [ ] Checkout session creates successfully
 - [ ] Test card payment succeeds
 - [ ] Subscription status updates in database
@@ -978,6 +989,7 @@ async function updateUIForSubscription() {
 - [ ] Customer portal accessible
 
 ### Phase 3: Production
+
 - [ ] Beta users unaffected by payments launch
 - [ ] New users get trial period
 - [ ] Trial expiration triggers subscription modal
@@ -991,6 +1003,7 @@ async function updateUIForSubscription() {
 ## Stripe Setup Checklist
 
 ### Test Mode Setup
+
 - [ ] Create Stripe account
 - [ ] Create products: Basic, Pro
 - [ ] Create prices: monthly/yearly for each
@@ -1000,6 +1013,7 @@ async function updateUIForSubscription() {
 - [ ] Verify webhook delivery
 
 ### Production Setup
+
 - [ ] Activate Stripe account (live mode)
 - [ ] Re-create products in live mode
 - [ ] Copy live price IDs
@@ -1081,12 +1095,14 @@ if __name__ == "__main__":
 ### Suggested Pricing Tiers
 
 **Basic - $29/month or $290/year** (save 17%)
+
 - Unlimited job searches
 - Resume optimization
 - AI career coaching
 - Email support
 
 **Pro - $79/month or $790/year** (save 17%)
+
 - Everything in Basic
 - Competitive intelligence
 - Company OSINT analysis
@@ -1094,6 +1110,7 @@ if __name__ == "__main__":
 - 2x 1-on-1 coaching sessions/month
 
 **Enterprise - Custom pricing**
+
 - Everything in Pro
 - Dedicated account manager
 - Custom integrations

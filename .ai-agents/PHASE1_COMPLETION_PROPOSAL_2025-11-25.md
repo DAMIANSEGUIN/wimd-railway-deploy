@@ -37,6 +37,7 @@ Current State: Huge index.html (4000+ lines, unmaintainable)
 ## WHAT PHASE 1 ACCOMPLISHED (Nov 21)
 
 **What Worked:**
+
 - ✅ Extracted `state.js` (270 lines) - session, user, trial management
 - ✅ Extracted `api.js` (235 lines) - API calls, config fetching
 - ✅ Created `main.js` (100 lines) - orchestrates initialization
@@ -46,6 +47,7 @@ Current State: Huge index.html (4000+ lines, unmaintainable)
 - ✅ No JavaScript errors
 
 **What Broke:**
+
 - ❌ UI non-functional (no login button, chat doesn't work)
 - ❌ IIFE code in index.html ignores the modules
 - ❌ Deployed extraction without integration
@@ -61,6 +63,7 @@ We deployed after Phase 1, before Phase 2.
 **Current State (phase1-incomplete branch):**
 
 **File:** `mosaic_ui/js/main.js` (EXISTS)
+
 ```javascript
 export async function initModules() {
   initState();
@@ -77,6 +80,7 @@ window.__WIMD_MODULES__ = {
 ```
 
 **File:** `mosaic_ui/index.html` IIFE (MISSING INTEGRATION)
+
 ```javascript
 // Current IIFE code:
 (async function() {
@@ -87,6 +91,7 @@ window.__WIMD_MODULES__ = {
 ```
 
 **What's Needed:**
+
 ```javascript
 // Fixed IIFE code (3 lines to add):
 (async function() {
@@ -108,10 +113,12 @@ window.__WIMD_MODULES__ = {
 ### Phase 2 Scope (Minimal)
 
 **Files to Modify:**
+
 1. `mosaic_ui/index.html` - Add 3-line integration call
 2. `frontend/index.html` - Same 3-line integration call
 
 **Changes Required:**
+
 ```javascript
 // At the very top of the IIFE, add:
 if (window.__WIMD_MODULES__) {
@@ -120,6 +127,7 @@ if (window.__WIMD_MODULES__) {
 ```
 
 **Testing Required:**
+
 1. Test locally with `local_dev_server.py` (already exists)
 2. Verify login button appears
 3. Verify chat works
@@ -127,6 +135,7 @@ if (window.__WIMD_MODULES__) {
 5. Verify all features from checklist
 
 **Risk Level:** LOW
+
 - Modules already tested and working
 - IIFE code unchanged (just add initialization call)
 - Can test locally before deploying
@@ -139,6 +148,7 @@ if (window.__WIMD_MODULES__) {
 ### Option A: Complete Phase 2 Now (RECOMMENDED)
 
 **Steps:**
+
 1. Switch to `phase1-incomplete` branch
 2. Add 3-line integration to index.html IIFE
 3. Test locally until all features work
@@ -146,6 +156,7 @@ if (window.__WIMD_MODULES__) {
 5. Delete "Phase 1 incomplete" warning
 
 **Pros:**
+
 - ✅ Breaks the loop - modularization complete
 - ✅ Future development easier (modular codebase)
 - ✅ Low risk (minimal code change)
@@ -153,10 +164,12 @@ if (window.__WIMD_MODULES__) {
 - ✅ Solves huge index.html problem permanently
 
 **Cons:**
+
 - ⏰ Delays login fix deployment by 1-2 hours
 - 🧪 Requires testing Phase 1 integration
 
 **Timeline:**
+
 - Integration: 30 minutes
 - Local testing: 30-60 minutes
 - Deployment: 15 minutes
@@ -167,22 +180,26 @@ if (window.__WIMD_MODULES__) {
 ### Option B: Deploy Login Fix First, Phase 2 Later
 
 **Steps:**
+
 1. Deploy current `main` branch (login fix + deployment fix)
 2. Let Railway auto-deploy
 3. Return to Phase 2 integration in next session
 
 **Pros:**
+
 - ✅ Login fix deployed immediately
 - ✅ Deployment process fix deployed
 - ✅ No risk to current working state
 
 **Cons:**
+
 - ❌ Stuck with huge index.html longer
 - ❌ Phase 1 branch gets stale
 - ❌ Loop continues (no progress on modularization)
 - ❌ Future development still difficult
 
 **Timeline:**
+
 - Deployment: 15 minutes
 - Phase 2: Deferred to future session
 
@@ -191,15 +208,18 @@ if (window.__WIMD_MODULES__) {
 ### Option C: Abandon Phase 1 (NOT RECOMMENDED)
 
 **Steps:**
+
 1. Delete `phase1-incomplete` branch
 2. Remove "Phase 1 incomplete" warning
 3. Accept huge index.html as permanent
 
 **Pros:**
+
 - ✅ Simplifies immediate situation
 - ✅ No incomplete work hanging around
 
 **Cons:**
+
 - ❌ Huge index.html remains (4000+ lines)
 - ❌ Future development stays difficult
 - ❌ Wasted effort (31 tests, 600+ lines extracted)
@@ -236,6 +256,7 @@ if (window.__WIMD_MODULES__) {
 ## QUESTIONS FOR GEMINI
 
 **Technical Review:**
+
 1. Does the proposed 3-line integration look correct?
 2. Are there any edge cases we should test?
 3. Should we add a feature flag for safety?
@@ -264,6 +285,7 @@ if (window.__WIMD_MODULES__) {
 **Status:** Reverted from main on Nov 21
 
 **Files Added:**
+
 ```
 mosaic_ui/js/state.js         (270 lines)
 mosaic_ui/js/api.js           (235 lines)
@@ -279,6 +301,7 @@ local_dev_server.py           (Python HTTP proxy for local testing)
 ```
 
 **Files Modified:**
+
 ```
 mosaic_ui/index.html          (added <script type="module" src="./js/main.js">)
 frontend/index.html           (same)
@@ -286,6 +309,7 @@ package.json                  (added "type": "module")
 ```
 
 **What Was NOT Changed:**
+
 - IIFE code in index.html (still has original initialization)
 - No removal of duplicate code (intentional - Phase 3)
 - No changes to UI rendering logic
@@ -296,6 +320,7 @@ package.json                  (added "type": "module")
 **File:** `mosaic_ui/index.html` and `frontend/index.html`
 
 **Current IIFE Start (line ~2100):**
+
 ```javascript
 (async function() {
   'use strict';
@@ -309,6 +334,7 @@ package.json                  (added "type": "module")
 ```
 
 **Proposed Change:**
+
 ```javascript
 (async function() {
   'use strict';
@@ -327,6 +353,7 @@ package.json                  (added "type": "module")
 ```
 
 **Why This Works:**
+
 1. `main.js` exports `window.__WIMD_MODULES__`
 2. Browser loads `main.js` as ES6 module before IIFE runs
 3. IIFE checks if modules exist
@@ -335,6 +362,7 @@ package.json                  (added "type": "module")
 6. Modules handle state/api, IIFE handles UI/interaction
 
 **Why This Is Safe:**
+
 - `window.__WIMD_MODULES__` only exists if modules loaded
 - If modules fail to load, IIFE continues normally
 - Backward compatible (works with or without modules)
@@ -343,6 +371,7 @@ package.json                  (added "type": "module")
 ### Test Plan
 
 **Local Testing Checklist:**
+
 ```bash
 # 1. Start local dev server
 python3 local_dev_server.py
@@ -377,12 +406,14 @@ open http://localhost:3000
 ## COMMIT STRATEGY
 
 If approved, we'll create **ONE commit** that includes:
+
 1. Phase 1 extraction (from `phase1-incomplete` branch)
 2. Phase 2 integration (3-line fix)
 3. Local testing verification
 4. Documentation updates
 
 **Commit Message Format:**
+
 ```
 feat: Complete Phase 1+2 Modularization with Integration
 
@@ -415,6 +446,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## ROLLBACK PLAN (If Integration Fails)
 
 **If local testing reveals issues:**
+
 1. DO NOT deploy
 2. Document issues found
 3. Create branch `phase2-debugging`
@@ -422,11 +454,14 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 5. Return to Phase 2 in next session
 
 **If deployed but production breaks:**
+
 1. Immediate revert:
+
    ```bash
    git revert HEAD
    git push origin main
    ```
+
 2. Railway auto-deploys reverted state (~3 minutes)
 3. Document failure in incident report
 4. Return to current state (huge index.html)
@@ -464,15 +499,18 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## REFERENCES
 
 **Evidence Files:**
+
 - `.ai-agents/CRITICAL_ISSUE_PHASE1_BREAKS_UI_2025-11-21.md` - What broke
 - `.ai-agents/FINAL_STATUS_2025-11-21_EVENING.md` - Full timeline
 - `phase1-incomplete` branch - Contains all Phase 1 work
 
 **Related Files:**
+
 - `DEPLOYMENT_TRUTH.md` - Deployment process (just fixed)
 - `TEAM_STATUS.json` - Current warnings about Phase 1
 
 **Commands to Review Code:**
+
 ```bash
 # See what Phase 1 changed
 git diff main..phase1-incomplete

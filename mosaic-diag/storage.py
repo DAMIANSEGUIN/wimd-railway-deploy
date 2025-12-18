@@ -19,9 +19,9 @@ DEPENDENCIES:
 
 import json
 import tempfile
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
-from datetime import datetime
 
 
 class Storage:
@@ -73,7 +73,7 @@ class Storage:
             return []
 
         incidents = []
-        with open(self.incidents_file, "r") as f:
+        with open(self.incidents_file) as f:
             for line in f:
                 line = line.strip()
                 if line:
@@ -91,10 +91,7 @@ class Storage:
         """
         # Write to temp file first
         with tempfile.NamedTemporaryFile(
-            mode="w",
-            dir=self.base_dir,
-            delete=False,
-            suffix=".tmp"
+            mode="w", dir=self.base_dir, delete=False, suffix=".tmp"
         ) as tmp:
             json.dump(data, tmp, indent=2, sort_keys=True)
             tmp_path = tmp.name
@@ -116,16 +113,19 @@ class Storage:
         if not filepath.exists():
             return default if default is not None else {}
 
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             return json.load(f)
 
     def read_roadmap(self) -> Dict[str, Any]:
         """Read roadmap.json"""
-        return self.read_json(self.roadmap_file, default={
-            "version": "2.0",
-            "last_updated": datetime.utcnow().isoformat(),
-            "future_issues": []
-        })
+        return self.read_json(
+            self.roadmap_file,
+            default={
+                "version": "2.0",
+                "last_updated": datetime.utcnow().isoformat(),
+                "future_issues": [],
+            },
+        )
 
     def write_roadmap(self, roadmap: Dict[str, Any]) -> None:
         """Write roadmap.json atomically"""
@@ -145,7 +145,7 @@ class Storage:
         filepath_map = {
             "check": self.check_suggestions_file,
             "doc": self.doc_suggestions_file,
-            "roadmap": self.roadmap_suggestions_file
+            "roadmap": self.roadmap_suggestions_file,
         }
 
         filepath = filepath_map.get(suggestion_type)
@@ -165,7 +165,7 @@ class Storage:
         filepath_map = {
             "check": self.check_suggestions_file,
             "doc": self.doc_suggestions_file,
-            "roadmap": self.roadmap_suggestions_file
+            "roadmap": self.roadmap_suggestions_file,
         }
 
         filepath = filepath_map.get(suggestion_type)

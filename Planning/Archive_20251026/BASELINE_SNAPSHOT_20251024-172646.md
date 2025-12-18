@@ -1,6 +1,7 @@
 # Baseline Snapshot - Fri 24 Oct 2025 17:26:46 EDT
 
 ## Git State
+
 ```
 interactive rebase in progress; onto cc9a2dc
 Last command done (1 command done):
@@ -15,60 +16,62 @@ You are currently rebasing branch 'main' on 'cc9a2dc'.
 
 Changes to be committed:
   (use "git restore --staged <file>..." to unstage)
-	deleted:    frontend/docs/CLAUDE_CODE_README.md
-	deleted:    frontend/docs/CODEX_HANDOVER_KIT.md
-	deleted:    frontend/docs/CODEX_HANDOVER_README.md
-	deleted:    frontend/docs/CODEX_INSTRUCTIONS.md
-	deleted:    frontend/docs/CONVERSATION_NOTES.md
-	deleted:    frontend/docs/CURSOR_TEAM_README.md
-	deleted:    frontend/docs/DEPLOY_STATUS_NOTE.md
-	deleted:    frontend/docs/DNS_CONFIGURATION.md
-	deleted:    frontend/docs/DNS_PROOF.md
-	deleted:    frontend/docs/HANDOFF_TO_BROWSER_2025-10-22.md
-	deleted:    frontend/docs/MOSAIC_ARCHITECTURE.md
-	deleted:    frontend/docs/OPERATIONS_MANUAL.md
-	deleted:    frontend/docs/OUTSOURCING_README.md
-	deleted:    frontend/docs/README.md
-	deleted:    frontend/docs/ROLLING_CHECKLIST.md
-	deleted:    frontend/docs/STRATEGIC_ACTION_PLAN.md
-	deleted:    frontend/docs/TROUBLESHOOTING_REPORT.md
+ deleted:    frontend/docs/CLAUDE_CODE_README.md
+ deleted:    frontend/docs/CODEX_HANDOVER_KIT.md
+ deleted:    frontend/docs/CODEX_HANDOVER_README.md
+ deleted:    frontend/docs/CODEX_INSTRUCTIONS.md
+ deleted:    frontend/docs/CONVERSATION_NOTES.md
+ deleted:    frontend/docs/CURSOR_TEAM_README.md
+ deleted:    frontend/docs/DEPLOY_STATUS_NOTE.md
+ deleted:    frontend/docs/DNS_CONFIGURATION.md
+ deleted:    frontend/docs/DNS_PROOF.md
+ deleted:    frontend/docs/HANDOFF_TO_BROWSER_2025-10-22.md
+ deleted:    frontend/docs/MOSAIC_ARCHITECTURE.md
+ deleted:    frontend/docs/OPERATIONS_MANUAL.md
+ deleted:    frontend/docs/OUTSOURCING_README.md
+ deleted:    frontend/docs/README.md
+ deleted:    frontend/docs/ROLLING_CHECKLIST.md
+ deleted:    frontend/docs/STRATEGIC_ACTION_PLAN.md
+ deleted:    frontend/docs/TROUBLESHOOTING_REPORT.md
 
 Unmerged paths:
   (use "git restore --staged <file>..." to unstage)
   (use "git add <file>..." to mark resolution)
-	added by them:   frontend/NETLIFY_AGENT_INSTRUCTIONS.md
-	both added:      frontend/NETLIFY_AGENT_TASK.md
-	added by them:   frontend/docs/specs/mosaic_appointment_booking_spec.md
-	added by them:   frontend/docs/specs/mosaic_booking_iframe_spec.md
-	added by them:   frontend/docs/specs/mosaic_discount_code_payment_spec.md
-	added by them:   frontend/docs/specs/mosaic_draggable_windows_spec.md
-	added by them:   frontend/docs/specs/mosaic_visual_depth_spec.md
-	added by them:   frontend/docs/specs/mosaic_window_enhancements_spec.md
+ added by them:   frontend/NETLIFY_AGENT_INSTRUCTIONS.md
+ both added:      frontend/NETLIFY_AGENT_TASK.md
+ added by them:   frontend/docs/specs/mosaic_appointment_booking_spec.md
+ added by them:   frontend/docs/specs/mosaic_booking_iframe_spec.md
+ added by them:   frontend/docs/specs/mosaic_discount_code_payment_spec.md
+ added by them:   frontend/docs/specs/mosaic_draggable_windows_spec.md
+ added by them:   frontend/docs/specs/mosaic_visual_depth_spec.md
+ added by them:   frontend/docs/specs/mosaic_window_enhancements_spec.md
 
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
-	.DS_Store
-	.claude-run/
-	.env
-	.netlify/
-	.netlify_site_id
-	.test-venv/
-	BASELINE_SNAPSHOT_20251024-172646.md
-	DEPLOYMENT_FAILSAFES_PROTOCOL.md
-	WIMD_STATE_DOCUMENTATION_2025-10-24.md
-	api/
-	last_run.log
-	scripts/
-	tests/
+ .DS_Store
+ .claude-run/
+ .env
+ .netlify/
+ .netlify_site_id
+ .test-venv/
+ BASELINE_SNAPSHOT_20251024-172646.md
+ DEPLOYMENT_FAILSAFES_PROTOCOL.md
+ WIMD_STATE_DOCUMENTATION_2025-10-24.md
+ api/
+ last_run.log
+ scripts/
+ tests/
 ```
 
 ## Current Branch & Commit
-- Branch: 
+
+- Branch:
 - Commit: cc9a2dc900b8925d4199afec054835840e9651c5
 - Message: Add Netlify Agent files to frontend directory
 
 Netlify Agent works from frontend/ directory, not repo root.
 Files now accessible at:
+
 - frontend/NETLIFY_AGENT_TASK.md
 - frontend/docs/specs/
 
@@ -76,6 +79,7 @@ Files now accessible at:
 Co-Authored-By: Claude <noreply@anthropic.com>
 
 ## Modified Files
+
 ```
 frontend/NETLIFY_AGENT_INSTRUCTIONS.md
 frontend/NETLIFY_AGENT_TASK.md
@@ -88,6 +92,7 @@ frontend/docs/specs/mosaic_window_enhancements_spec.md
 ```
 
 ## Staged Files
+
 ```
 frontend/NETLIFY_AGENT_INSTRUCTIONS.md
 frontend/NETLIFY_AGENT_TASK.md
@@ -117,6 +122,7 @@ frontend/docs/specs/mosaic_window_enhancements_spec.md
 ```
 
 ## Untracked Files
+
 ```
 .DS_Store
 .claude-run/lib/python3.12/site-packages/__pycache__/py.cpython-312.pyc
@@ -2717,23 +2723,28 @@ tests/__pycache__/test_rag_engine.cpython-37.pyc
 ```
 
 ## Critical File Checksums
+
 - index.html: 765f9f8bf2e4c87ae442d08898939b94f4dfe4a185feabe0fc1135ec705a8998  frontend/index.html
 - netlify.toml: c7abafd547aadb24d547a51fb8ed7ac3d2c543e43319c1fa28b5a543143a3872  frontend/netlify.toml
 - package.json: 96f318f5c22de561e6d6c7191883f50915717169d1e05601d977139b60920ace  package.json
 
 ## Deployment Status
+
 - Last Railway deploy: [Check Railway dashboard]
 - Last Netlify deploy: [Check Netlify dashboard]
 - Health check: {"ok":true,"timestamp":"2025-10-24T21:26:47.283470Z","checks":{"database":true,"prompt_system":true,"ai_fallback_enabled":true,"ai_available":true}}
 
 ## What's Being Attempted
+
 [To be filled by user]
 
 ## Expected Changes
+
 [To be filled by user]
 
 ## Rollback Plan
+
 ```bash
 git reset --hard cc9a2dc900b8925d4199afec054835840e9651c5
-# Or: git checkout 
+# Or: git checkout
 ```

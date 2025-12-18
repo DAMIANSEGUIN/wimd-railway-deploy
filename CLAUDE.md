@@ -1,25 +1,30 @@
 # Foundation & Mosaic Development Guide
 
 **🚨 MANDATORY FIRST ACTION ON EVERY SESSION:**
+
 ```bash
 Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
 ```
+
 **Read SESSION_RESUME_PROMPT.md BEFORE doing ANYTHING else. Contains critical session state and context.**
 
 **Document Metadata:**
+
 - Created: 2024-09-15 by Multiple Contributors
 - Last Updated: 2025-12-10 by Claude Code
 - Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
 - Status: ACTIVE - Primary development reference
 
 ## Architecture
+
 - Microservices architecture: Foundation (Safety & Evidence) + Mosaic (Career Transition Platform)
-- Production URL: https://whatismydelta.com (LIVE ✅)
+- Production URL: <https://whatismydelta.com> (LIVE ✅)
 - Backend API: Railway deployment at what-is-my-delta-site-production.up.railway.app
 - Frontend: Netlify deployment (resonant-crostata-90b706)
 - Repository: github.com/DAMIANSEGUIN/wimd-railway-deploy
 
 ## Deployment Status (v2.0 Phase 1-4+ - PRODUCTION)
+
 - ✅ Frontend: Fully deployed and functional
 - ✅ Backend API: Railway deployment operational
 - ✅ Authentication: Login/register/password reset flows working
@@ -43,6 +48,7 @@ Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SE
 **Last Verified:** 2025-11-25
 
 **✅ ALWAYS use wrapper scripts:**
+
 ```bash
 # Deploy frontend with verification
 ./scripts/deploy.sh netlify
@@ -61,16 +67,19 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 ```
 
 **❌ DO NOT use:**
+
 - `git push origin main` (use wrapper script)
 - `git push railway-origin main` (railway-origin is LEGACY)
 - `netlify deploy --prod` (use wrapper script)
 
 **How Railway Deploys:**
+
 - Railway watches `origin` (wimd-railway-deploy) via GitHub integration
 - Push to `origin` triggers Railway auto-deploy (2-5 minutes)
 - NO push to `railway-origin` needed (legacy remote, no write access)
 
 **Why wrapper scripts are required:**
+
 - Automated pre-deployment verification
 - Critical feature checks
 - Post-deployment verification
@@ -78,6 +87,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - Prevents false positive deployments
 
 ## API Endpoints
+
 - Health: `/health`, `/health/comprehensive`, `/health/recover`, `/health/prompts`, `/health/rag`, `/health/experiments`
 - Config: `/config`
 - Prompts: `/prompts/*`
@@ -94,6 +104,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - Domain Adjacent: `/domain-adjacent/discover`, `/domain-adjacent/health`
 
 ## Current Status (Updated: 2025-11-02 - PS101 v2 RESTORED + Comprehensive Diagnostic COMPLETE)
+
 - ✅ UI frontend: OPERATIONAL
 - ✅ Chat/Coach interface: OPERATIONAL
 - ✅ Backend API: OPERATIONAL (FastAPI on Railway)
@@ -111,7 +122,9 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - ✅ Cost controls: OPERATIONAL (usage tracking, daily/monthly limits, emergency stop)
 
 ## Job Sources Status (Updated: 2025-10-07)
+
 **All 12 Free Sources Implemented:**
+
 - ✅ **6 Direct API Sources** (production-ready):
   - RemoteOK (JSON API - api/job_sources/remoteok.py)
   - WeWorkRemotely (RSS feed - api/job_sources/weworkremotely.py)
@@ -130,6 +143,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 **Cost Savings:** $3,120-7,200/year by using free sources vs. paid APIs
 
 ## Outstanding Issues
+
 - ⚠️ **Testing Required**: All 12 job sources deployed but untested in production
   - Web scraping sources may need CSS selector adjustments
   - Need to verify real job data returns from all sources
@@ -141,6 +155,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
   - ⚠️ `EXPERIMENTS_ENABLED`: disabled (experiment engine)
 
 ## MANDATORY: Quality & Safety Controls
+
 **CRITICAL: Read these files at the start of EVERY session and before ANY code changes:**
 
 1. **`TROUBLESHOOTING_CHECKLIST.md`** - Pre-flight checks for all code changes
@@ -155,6 +170,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
    - Automated fix patterns with rollback procedures
 
 **Enforcement Mechanisms:**
+
 - Multi-layer checklist verification (system reminders + git hooks + output protocol)
 - Pre-commit hooks block dangerous patterns (context manager violations, SQLite syntax, silent exceptions)
 - Mandatory checklist output before code changes (audit trail)
@@ -167,6 +183,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
   - **NO EXCEPTIONS**: Validation cannot be skipped (technical, not cognitive enforcement)
 
 ## Import Patterns
+
 @issues.json
 @decision_matrix.csv
 @surface_presence.json
@@ -175,6 +192,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 @SELF_DIAGNOSTIC_FRAMEWORK.md
 
 ## Surface Presence Map
+
 ```json
 {
   "ui_frontend": true,
@@ -190,6 +208,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 ```
 
 ## Nate's Solution Ladder (Decision Matrix)
+
 1. Data ingestion & cleaning → Data Ops
 2. Storage & retrieval → Data Ops (+RAG if justified)
 3. Scoring/Ranking → Classical ML
@@ -203,13 +222,16 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 ## Diagnostic Reports & Implementation Protocols
 
 ### 📊 Latest Diagnostics (2025-11-02)
+
 - **Final Diagnostic:** `.ai-agents/FINAL_DIAGNOSTIC_20251102.md`
 - **Findings Summary:** `.ai-agents/FINDINGS_SUMMARY.md`
 - **Detailed Report:** `.ai-agents/DIAGNOSTIC_REPORT_20251102.md`
 - **System Health:** 🟢 GREEN - 92% feature completeness, 0% error rate
 
 ### 🛡️ Safety & Quality Protocols
+
 **Location:** `.ai-agents/` directory
+
 - **Session Start Protocol:** `SESSION_START_PROTOCOL.md` - Mandatory checklist for every AI agent
 - **Handoff Protocol:** `HANDOFF_PROTOCOL.md` - Agent-to-agent transition procedures
 - **AI Agent Prompt:** `AI_AGENT_PROMPT.md` - Copy/paste onboarding for new agents
@@ -217,7 +239,9 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - **Pre-commit Hooks:** `.git/hooks/pre-commit` - Blocks feature removal
 
 ### 📖 For Implementation Team
+
 **Essential Reading (in order):**
+
 1. `CLAUDE.md` (this file) - Architecture overview
 2. `TROUBLESHOOTING_CHECKLIST.md` - Error prevention & debugging
 3. `SELF_DIAGNOSTIC_FRAMEWORK.md` - Architecture-specific error handling
@@ -225,12 +249,14 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 5. `.ai-agents/FINAL_DIAGNOSTIC_20251102.md` - Current system state
 
 **Quick Links:**
+
 - Project documentation: `docs/README.md`
 - Deployment scripts: `scripts/` directory
-- Backend health: https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
-- Frontend: https://whatismydelta.com
+- Backend health: <https://what-is-my-delta-site-production.up.railway.app/health/comprehensive>
+- Frontend: <https://whatismydelta.com>
 
 ## Resolved Issues (v1.0 + v2.0 Phase 1-4)
+
 - ✅ **BLOCKER-UI-ASK**: Chat/coach interface now operational
 - ✅ **BLOCKER-API-BACKEND**: Backend deployed on Railway and connected
 - ✅ **Button functionality**: All Phase 1-3 interactive elements working
@@ -247,6 +273,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - ✅ **Contingency system** (2025-11-02): Pre-commit hooks + verification scripts now active
 
 ## Monitoring & Auto-Restart System
+
 - **Railway Health Checks**: Configured via `railway.toml` with `/health` endpoint monitoring
 - **Automatic Recovery**: System attempts cache clearing and flag reset on failure
 - **Multi-layer Monitoring**:
@@ -259,6 +286,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - **Auto-restart Triggers**: 503 HTTP status codes automatically trigger Railway container restart
 
 ## Technical Implementation Notes
+
 - Frontend uses vanilla JavaScript (ES6+) with IIFE pattern
 - Event listeners use null checks to prevent script crashes
 - Semantic search uses OpenAI embeddings with cosine similarity
@@ -272,6 +300,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - Trial timer persists across page refreshes via localStorage
 
 ## Known Limitations (v1.0)
+
 - No staging environment (direct to production deployment)
 - API keys stored in Railway environment variables (secure but not rotated)
 - CSV prompt library integration incomplete
@@ -279,6 +308,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - Browser requirement: Chrome 55+, Firefox 52+, Safari 10.1+, Edge 15+ (2017+)
 
 ## Foundation Integration Points
+
 - Safety layer: Data Ops + LLM for evidence validation (pending)
 - Evidence Bridge: Connect classical ML scoring with LLM generation (pending)
 - Governance: Eval traces for observability (pending)
@@ -289,16 +319,19 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 **⚠️ REQUIRED AFTER ANY CODE CHANGES:**
 
 1. **Run Verification Script:**
+
    ```bash
    ./scripts/verify_critical_features.sh
    ```
 
 2. **Test Backend Health:**
+
    ```bash
    curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
    ```
 
 3. **Run Comprehensive Diagnostic** (for major changes):
+
    ```bash
    # See .ai-agents/FINAL_DIAGNOSTIC_20251102.md for example
    # Test all endpoints, verify frontend features, document findings
@@ -314,7 +347,9 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 ---
 
 ## Recent Changes (2025-11-02)
+
 **PS101 v2 Restoration & Architecture Diagnostic:**
+
 1. **Incident Response**: Auth system accidentally removed in commit 890d2bc
 2. **Recovery**: Restored auth from commit 70b8392
 3. **Enhancement**: PS101 v2 enhancements merged with authenticated base
@@ -323,7 +358,9 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 6. **Status**: All critical features operational, 92% feature completeness
 
 ## Recent Changes (2025-10-07)
+
 **Phase 4 Recovery & Full Implementation:**
+
 1. **Clean Rollback**: Reverted to stable commit f439633 (pre-failed Cursor implementation)
 2. **RAG Engine Fixed**: Removed random fallback, now uses real OpenAI embeddings exclusively
 3. **All 12 Job Sources Implemented**:
@@ -334,6 +371,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 5. **Deployed to Production**: Pushed to Railway, health check confirms deployment successful
 
 ## Next Steps for v2.0 Phase 4+
+
 - ✅ **Phase 4 Implementation** (Claude Code): COMPLETE (2025-10-07)
 - ✅ **Phase 4 Deployment** (Claude Code): COMPLETE (2025-10-07)
 - 📋 **Immediate Next Steps**:

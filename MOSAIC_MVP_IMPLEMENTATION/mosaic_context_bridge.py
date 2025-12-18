@@ -12,25 +12,26 @@ Usage:
     # After PS101 completion:
     context = extract_ps101_context(user_ps101_responses)
     save_to_database(user_id, context)
-    
+
     # On every chat:
     system_prompt = build_coaching_system_prompt(user_context)
     # Pass system_prompt to Claude API call
 """
 
-import anthropic
 import json
-from typing import Dict, List, Optional
+from typing import Dict
+
+import anthropic
 
 
 def extract_ps101_context(ps101_responses: Dict[str, str]) -> Dict:
     """
     Transform raw PS101 responses into structured coaching context.
-    
+
     Args:
         ps101_responses: Dict with question numbers/names as keys, user answers as values
         Example: {"q1": "I feel stuck in my current role...", "q2": "...", ...}
-    
+
     Returns:
         Structured context dict for coaching injection:
         {
@@ -44,9 +45,9 @@ def extract_ps101_context(ps101_responses: Dict[str, str]) -> Dict:
             "key_quotes": List[str]
         }
     """
-    
+
     client = anthropic.Anthropic()
-    
+
     extraction_prompt = f"""Analyze these career reflection responses and extract structured context.
 
 <ps101_responses>
@@ -83,50 +84,48 @@ Rules:
     message = client.messages.create(
         model="claude-sonnet-4-20250514",
         max_tokens=1500,
-        messages=[
-            {"role": "user", "content": extraction_prompt}
-        ]
+        messages=[{"role": "user", "content": extraction_prompt}],
     )
-    
+
     # Parse JSON from response
     response_text = message.content[0].text
-    
+
     # Handle potential markdown code blocks
     if "```json" in response_text:
         response_text = response_text.split("```json")[1].split("```")[0]
     elif "```" in response_text:
         response_text = response_text.split("```")[1].split("```")[0]
-    
+
     return json.loads(response_text.strip())
 
 
 def build_coaching_system_prompt(user_context: Dict) -> str:
     """
     Build the system prompt for context-aware coaching.
-    
+
     Args:
         user_context: The structured context from extract_ps101_context()
-    
+
     Returns:
         System prompt string to pass to Claude API
     """
-    
+
     # Handle empty or missing context gracefully
     if not user_context:
         return _get_fallback_prompt()
-    
+
     # Format experiments list
     experiments_formatted = ""
-    for exp in user_context.get('proposed_experiments', []):
-        idea = exp.get('idea', 'Unnamed experiment')
-        smallest = exp.get('smallest_version', 'Not defined')
+    for exp in user_context.get("proposed_experiments", []):
+        idea = exp.get("idea", "Unnamed experiment")
+        smallest = exp.get("smallest_version", "Not defined")
         experiments_formatted += f"- {idea} (smallest test: {smallest})\n"
-    
+
     # Format key quotes
     quotes_formatted = ""
-    for quote in user_context.get('key_quotes', []):
+    for quote in user_context.get("key_quotes", []):
         quotes_formatted += f'"{quote}"\n'
-    
+
     return f"""You are a career coach with deep knowledge of this specific person. They completed structured self-reflection and here's what they discovered:
 
 PROBLEM THEY'RE SOLVING:
@@ -210,18 +209,18 @@ async def extract_context_endpoint(user_id: str, db: Session = Depends(get_db)):
     '''
     # Fetch PS101 responses from your database
     ps101 = db.query(PS101Response).filter_by(user_id=user_id).first()
-    
+
     if not ps101:
         raise HTTPException(status_code=404, detail="PS101 not completed")
-    
+
     # Extract structured context
     context = extract_ps101_context(ps101.responses)
-    
+
     # Store it (assuming JSON field on user model)
     user = db.query(User).filter_by(id=user_id).first()
     user.coaching_context = context
     db.commit()
-    
+
     return {"status": "extracted", "context": context}
 
 
@@ -231,13 +230,13 @@ async def coaching_chat_endpoint(request: ChatRequest, db: Session = Depends(get
     Chat endpoint with context injection.
     '''
     user = db.query(User).filter_by(id=request.user_id).first()
-    
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     # Build context-aware system prompt
     system_prompt = build_coaching_system_prompt(user.coaching_context or {})
-    
+
     # Call Claude with context
     client = anthropic.Anthropic()
     response = client.messages.create(
@@ -246,7 +245,7 @@ async def coaching_chat_endpoint(request: ChatRequest, db: Session = Depends(get
         system=system_prompt,
         messages=[{"role": m.role, "content": m.content} for m in request.messages]
     )
-    
+
     return {"response": response.content[0].text}
 """
 
@@ -267,15 +266,15 @@ if __name__ == "__main__":
         "q7": "I sometimes doubt whether my museum skills transfer to other fields.",
         "q8": "I'm passionate about helping people find their path, especially mid-career professionals.",
         "q9": "My secret power might be combining physical/spatial thinking with people skills.",
-        "q10": "I want to build something that helps others navigate career change using AI."
+        "q10": "I want to build something that helps others navigate career change using AI.",
     }
-    
+
     print("Extracting context from sample PS101...")
     context = extract_ps101_context(sample_ps101)
     print("\nExtracted Context:")
     print(json.dumps(context, indent=2))
-    
-    print("\n" + "="*50)
+
+    print("\n" + "=" * 50)
     print("Generated Coaching System Prompt:")
-    print("="*50)
+    print("=" * 50)
     print(build_coaching_system_prompt(context))

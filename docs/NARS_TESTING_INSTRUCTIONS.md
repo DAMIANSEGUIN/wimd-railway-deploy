@@ -1,4 +1,5 @@
 # TESTING INSTRUCTIONS FOR NARs - MOSAIC MVP
+
 **CRITICAL: Railway deployment is broken. Fix this FIRST.**
 
 ---
@@ -10,6 +11,7 @@ Railway is serving **9-day-old code** (commit `96e711c1` from Dec 3, 2025).
 The `/api/ps101/extract-context` endpoint exists in GitHub (commit `a968e9a`) but **is NOT deployed**.
 
 **Proof:**
+
 ```bash
 curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context
 # Returns: 404 (WRONG - should be 422)
@@ -22,7 +24,8 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 ### Step 1: Reconnect GitHub Integration
 
 **Railway Dashboard:**
-1. Go to: https://railway.app
+
+1. Go to: <https://railway.app>
 2. Project: `wimd-career-coaching`
 3. Service: `what-is-my-delta-site`
 4. **Settings** tab → **Source** section
@@ -53,9 +56,10 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 
 ### Test 1: User Registration
 
-**URL:** https://whatismydelta.com
+**URL:** <https://whatismydelta.com>
 
 **Steps:**
+
 1. Click "Register" or "Sign Up"
 2. Email: `test+nars_$(date +%s)@example.com`
 3. Password: `TestPass123!`
@@ -64,6 +68,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **Expected:** Redirect to dashboard, user logged in
 
 **If fails:**
+
 - Check Network tab for `/auth/register` response
 - Check Railway logs: `railway logs | grep -i auth`
 
@@ -72,22 +77,26 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **Complete all 10 questions** with ANY answers (content doesn't matter for this test)
 
 **After Question 10:**
+
 1. Open browser console (F12 → Console tab)
 2. Look for: `"Context extraction successful"`
 3. Check Network tab for `/api/ps101/extract-context` request
 4. Should be **200 OK** (not 404)
 
 **If 404:**
+
 - Railway still on old code
 - Go back to "Fix Railway First" section
 
 **If 503:**
+
 - Check `CLAUDE_API_KEY` is set in Railway variables
 - Check Railway logs for Claude API errors
 
 ### Test 3: Personalized Coaching
 
 **After PS101 complete:**
+
 1. Go to Chat/Coach interface
 2. Send: "What should I do next?"
 3. **Response should reference your PS101 answers**
@@ -96,6 +105,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
    - Suggests experiments you listed
 
 **If generic (not personalized):**
+
 - Context extraction failed
 - Check Railway logs: `railway logs | grep -i "context\|extract"`
 - Check database: `railway run psql $DATABASE_URL -c "SELECT COUNT(*) FROM user_contexts;"`
@@ -109,6 +119,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **Cause:** Railway redeployed same old commit
 
 **Fix:**
+
 1. Railway Dashboard → Deployments
 2. Check commit hash of active deployment
 3. If it's `96e711c1` → not the latest code
@@ -120,6 +131,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **Error:** `ERROR: Package 'bandit' requires a different Python: 3.7.5 not in '>=3.8'`
 
 **Fix:**
+
 ```bash
 git commit --no-verify -m "your message"
 git push origin main
@@ -155,20 +167,22 @@ After completing all tests:
 ## QUICK REFERENCE
 
 **Production:**
-- Frontend: https://whatismydelta.com
-- Backend: https://what-is-my-delta-site-production.up.railway.app
-- Health: https://what-is-my-delta-site-production.up.railway.app/health
+
+- Frontend: <https://whatismydelta.com>
+- Backend: <https://what-is-my-delta-site-production.up.railway.app>
+- Health: <https://what-is-my-delta-site-production.up.railway.app/health>
 
 **GitHub Repo:**
-https://github.com/DAMIANSEGUIN/wimd-railway-deploy
+<https://github.com/DAMIANSEGUIN/wimd-railway-deploy>
 
 **Key Files:**
+
 - Full testing guide: `docs/TESTING_HANDOFF_2025-12-12.md`
 - Deployment truth: `DEPLOYMENT_TRUTH.md`
 - Troubleshooting: `TROUBLESHOOTING_CHECKLIST.md`
 
 **Railway Dashboard:**
-https://railway.app/project/wimd-career-coaching
+<https://railway.app/project/wimd-career-coaching>
 
 ---
 

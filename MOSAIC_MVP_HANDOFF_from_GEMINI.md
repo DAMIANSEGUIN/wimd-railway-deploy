@@ -6,24 +6,24 @@ The primary goal was to implement context-aware coaching by injecting the user's
 
 #### 1. Backend API (`api/`)
 
-*   **`api/storage.py`**:
-    *   Added a new function `get_user_context(user_id)` to fetch the extracted PS101 JSON blob from the `user_contexts` table.
-*   **`api/index.py`**:
-    *   The main chat endpoint logic in `_coach_reply` was modified.
-    *   When a user who has completed PS101 sends a message, it now fetches the extracted context using `get_user_context`.
-    *   A detailed system prompt is dynamically constructed, including the user's context, and is passed to the AI model.
-    *   A "completion gate" was added to ensure that users who haven't completed PS101 are prompted to do so.
-*   **`api/ai_clients.py`**:
-    *   The `_call_openai` and `_call_anthropic` functions were updated to look for a `system_prompt` in the `context` dictionary.
-    *   If found, this dynamic prompt is used as the system message for the AI, enabling personalized coaching.
+* **`api/storage.py`**:
+  * Added a new function `get_user_context(user_id)` to fetch the extracted PS101 JSON blob from the `user_contexts` table.
+* **`api/index.py`**:
+  * The main chat endpoint logic in `_coach_reply` was modified.
+  * When a user who has completed PS101 sends a message, it now fetches the extracted context using `get_user_context`.
+  * A detailed system prompt is dynamically constructed, including the user's context, and is passed to the AI model.
+  * A "completion gate" was added to ensure that users who haven't completed PS101 are prompted to do so.
+* **`api/ai_clients.py`**:
+  * The `_call_openai` and `_call_anthropic` functions were updated to look for a `system_prompt` in the `context` dictionary.
+  * If found, this dynamic prompt is used as the system message for the AI, enabling personalized coaching.
 
 #### 2. Frontend (`frontend/index.html`)
 
-*   **Authentication Header**:
-    *   The `callJson` function was modified to include the `X-User-ID` header on all authenticated API calls. This was a necessary fix as the backend requires this header to identify the user.
-*   **Context Extraction Trigger**:
-    *   Added Javascript code to the `PS101` class. When the user completes the final step of the questionnaire, a `POST` request is now sent to the `/api/ps101/extract-context` endpoint.
-    *   This triggers the backend process to read all the user's answers from the `ps101_responses` table, use the Claude API to create a structured JSON summary, and save it to the `user_contexts` table for future use.
+* **Authentication Header**:
+  * The `callJson` function was modified to include the `X-User-ID` header on all authenticated API calls. This was a necessary fix as the backend requires this header to identify the user.
+* **Context Extraction Trigger**:
+  * Added Javascript code to the `PS101` class. When the user completes the final step of the questionnaire, a `POST` request is now sent to the `/api/ps101/extract-context` endpoint.
+  * This triggers the backend process to read all the user's answers from the `ps101_responses` table, use the Claude API to create a structured JSON summary, and save it to the `user_contexts` table for future use.
 
 ### Git Diff of Changes
 
@@ -44,7 +44,7 @@ index 2c75351..026bd9d 100644
 +                system_prompt = context["system_prompt"]
 +
 +            messages = [{"role": "system", "content": system_prompt}]
- 
+
 -            if context:
 -                context_str = json.dumps(context, indent=2)
 -                messages.append({"role": "user", "content": f"Context: {context_str}\n\nUser prompt: {prompt}"})
@@ -58,8 +58,8 @@ index 2c75351..026bd9d 100644
                      messages.append({"role": "user", "content": prompt})
              else:
                  messages.append({"role": "user", "content": prompt})
--            
-+            
+-
++
              response = self.openai_client.chat.completions.create(
                  model="gpt-3.5-turbo",
                  messages=messages,
@@ -69,7 +69,7 @@ index 2c75351..026bd9d 100644
              system_prompt = "You are a helpful career coach assistant. Provide thoughtful, actionable advice."
 +            if context and "system_prompt" in context:
 +                system_prompt = context["system_prompt"]
-             
+
 -            if context:
 +            # If a system_prompt is provided, we assume it contains all necessary context.
 +            if "system_prompt" in (context or {{}}):
@@ -92,7 +92,7 @@ index 95b4435..4adf88c 100644
      list_resume_versions,
      record_wimd_output,
 @@ -382,6 +384,19 @@ def _coach_reply(prompt: str, metrics: Dict[str, int], session_id: str = None) ->
- 
+
      # Normal CSV→AI fallback flow (PS101 not active)
      try:
 +        # PS101 COMPLETION GATE
@@ -114,7 +114,7 @@ index 95b4435..4adf88c 100644
 @@ -400,8 +415,32 @@ def _coach_reply(prompt: str, metrics: Dict[str, int], session_id: str = None) ->
          except Exception:
              pass
- 
+
 +        # Create a dynamic prompt with the context
 +        if ps101_context_data:
 +            system_prompt = f"""You are Mosaic, an expert career coach specializing in helping people design small, actionable experiments to test new career paths.
@@ -152,8 +152,8 @@ index 4f0c0d5..a869142 100644
 +++ b/api/storage.py
 @@ -769,6 +769,20 @@ def get_user_id_for_session(session_id: str) -> Optional[str]:
          return row[0] if row else None
- 
- 
+
+
 +def get_user_context(user_id: str) -> Optional[Dict[str, Any]]:
 +    """Get extracted PS101 context for a user."""
 +    with get_conn() as conn:

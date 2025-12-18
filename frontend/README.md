@@ -2,13 +2,15 @@
 
 This is the production version with dynamic widget switching for A/B testing different chat solutions.
 
-## Widget Testing URLs:
+## Widget Testing URLs
+
 - `https://what-is-my-delta.vercel.app/` → Clean (no widget)
 - `https://what-is-my-delta.vercel.app/?widget=crisp` → Crisp chat only
-- `https://what-is-my-delta.vercel.app/?widget=tidio` → Tidio chat only  
+- `https://what-is-my-delta.vercel.app/?widget=tidio` → Tidio chat only
 - `https://what-is-my-delta.vercel.app/?widget=tawk` → Tawk.to chat only
 
-## Features:
+## Features
+
 - 8-prompt coaching flow (simplified from 10-step)
 - Dynamic widget loading without conflicts
 - Widget tracking in analytics

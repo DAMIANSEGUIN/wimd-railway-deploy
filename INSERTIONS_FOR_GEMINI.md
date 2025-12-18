@@ -1,13 +1,16 @@
 # INSERTIONS_FOR_GEMINI.md
+
 Mosaic Governance – Gemini Insertion Package (Deliverable A)
 ===========================================================
 
 Purpose
 -------
+
 This file provides insertion-ready blocks to repair or update Mosaic governance documents
 when an AI agent (Gemini, Claude, Codex, ChatGPT) has lost architectural or governance context.
 
 Each block includes:
+
 - Target filename
 - Target section anchor
 - Markdown content to insert
@@ -26,23 +29,23 @@ Use: copy individual blocks into the appropriate files in the LOCAL workspace, t
 
 The Mosaic system operates on a three-layer repository model:
 
-1. LOCAL AUTHORITATIVE WORKSPACE  
-   - Location: /Users/damianseguin/AI_Workspace/WIMD-Railway_Deploy_Project  
-   - Contains the real, editable files.  
-   - Edited by Gemini (Terminal), Claude (Terminal), Codex (Cursor), and human.  
+1. LOCAL AUTHORITATIVE WORKSPACE
+   - Location: /Users/damianseguin/AI_Workspace/WIMD-Railway_Deploy_Project
+   - Contains the real, editable files.
+   - Edited by Gemini (Terminal), Claude (Terminal), Codex (Cursor), and human.
 
-2. GDRIVE MASTER REPOSITORY (Authoritative Cloud Copy)  
-   - The single cloud source of truth for governance and documentation.  
-   - Mirrors the local workspace using the scheduled google-drive-sync.sh service.  
-   - Used by ChatGPT (web) to access and maintain continuity across sessions.  
+2. GDRIVE MASTER REPOSITORY (Authoritative Cloud Copy)
+   - The single cloud source of truth for governance and documentation.
+   - Mirrors the local workspace using the scheduled google-drive-sync.sh service.
+   - Used by ChatGPT (web) to access and maintain continuity across sessions.
 
-3. GDRIVE CONSULTING MIRROR (LLM Consumption Layer)  
-   - Contains a clean, structured mirror of all documents needed by LLMs.  
-   - Purpose: prevent ChatGPT/Gemini/Claude from accidentally modifying the Master.  
-   - Always overwritten by the sync process; cannot diverge.  
+3. GDRIVE CONSULTING MIRROR (LLM Consumption Layer)
+   - Contains a clean, structured mirror of all documents needed by LLMs.
+   - Purpose: prevent ChatGPT/Gemini/Claude from accidentally modifying the Master.
+   - Always overwritten by the sync process; cannot diverge.
 
-Governance Principle:  
-Local ➜ Master ➜ Mirror is a one-directional, controlled flow.  
+Governance Principle:
+Local ➜ Master ➜ Mirror is a one-directional, controlled flow.
 Mirror ➜ Master or Mirror ➜ Local flows are explicitly forbidden.
 
 This section defines the canonical architecture for all future Mosaic, WIMD, PS101, and OpportunityBridge operations.
@@ -59,26 +62,26 @@ This section defines the canonical architecture for all future Mosaic, WIMD, PS1
 ```markdown
 ### 2.4 Repo Synchronization & Drift Governance
 
-A. Scheduled Sync  
-- Sync script path: /Users/damianseguin/.local/bin/google-drive-sync.sh  
-- Trigger: LaunchAgents at 12:00, 18:00, 21:00 daily.  
-- Function:  
-  1. Push LOCAL → GDrive Master  
-  2. Push LOCAL → GDrive Consulting Mirror  
+A. Scheduled Sync
+- Sync script path: /Users/damianseguin/.local/bin/google-drive-sync.sh
+- Trigger: LaunchAgents at 12:00, 18:00, 21:00 daily.
+- Function:
+  1. Push LOCAL → GDrive Master
+  2. Push LOCAL → GDrive Consulting Mirror
 
-B. Manual Sync Protocol (Session Mode)  
-When updating governance files or any architectural documentation, human operator runs:  
-    /Users/damianseguin/.local/bin/google-drive-sync.sh  
+B. Manual Sync Protocol (Session Mode)
+When updating governance files or any architectural documentation, human operator runs:
+    /Users/damianseguin/.local/bin/google-drive-sync.sh
 This ensures all LLMs receive the updated state immediately.
 
-C. Drift Detection Rule  
-If Mirror differs from Master, Mirror is always assumed stale.  
+C. Drift Detection Rule
+If Mirror differs from Master, Mirror is always assumed stale.
 Mirror must be overwritten from LOCAL during the next sync cycle.
 
-D. AI Access Rule  
-- ChatGPT Web: Reads from Consulting Mirror only.  
-- Gemini Terminal: Reads/writes LOCAL only.  
-- Claude Terminal: Reads/writes LOCAL only.  
+D. AI Access Rule
+- ChatGPT Web: Reads from Consulting Mirror only.
+- Gemini Terminal: Reads/writes LOCAL only.
+- Claude Terminal: Reads/writes LOCAL only.
 - Codex (Cursor): Reads/writes LOCAL only.
 
 Agents MUST NOT directly write to GDrive. Only the sync service performs cloud writes.
@@ -95,19 +98,19 @@ Agents MUST NOT directly write to GDrive. Only the sync service performs cloud w
 ```markdown
 ## FAST GUIDE: Which Repo Do I Use?
 
-LOCAL (edit here):  
+LOCAL (edit here):
   /Users/damianseguin/AI_Workspace/WIMD-Railway_Deploy_Project
 
-GDRIVE MASTER (authoritative cloud):  
+GDRIVE MASTER (authoritative cloud):
   Located in Google Drive under Mosaic/Master
 
-GDRIVE CONSULTING MIRROR (LLM-only):  
+GDRIVE CONSULTING MIRROR (LLM-only):
   Located in Google Drive under Mosaic/Consulting_Mirror
 
-Manual Sync (run anytime):  
-  /Users/damianseguin/.local/bin/google-drive-sync.sh  
+Manual Sync (run anytime):
+  /Users/damianseguin/.local/bin/google-drive-sync.sh
 
-Core Rule: Only LOCAL is editable.  
+Core Rule: Only LOCAL is editable.
 All other copies are generated via sync.
 ```
 

@@ -5,8 +5,9 @@ Hi Claude,
 This is a note to inform you that I've completed Phase 1 Task 1C: Implement Trigger Detector.
 
 The following files have been created and are ready for your use:
-*   `.ai-agents/session_context/trigger_detector.py`: The core module.
-*   `tests/test_trigger_detector.py`: The test script.
+
+* `.ai-agents/session_context/trigger_detector.py`: The core module.
+* `tests/test_trigger_detector.py`: The test script.
 
 The detector was validated against the golden dataset (`.ai-agents/test_data/TRIGGER_TEST_DATASET.json`) and passed with **100% precision** and a **0% false positive rate**.
 

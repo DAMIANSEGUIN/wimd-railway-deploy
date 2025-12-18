@@ -35,6 +35,7 @@ Terminal 1 (Claude Code)               Message Broker               Terminal 2 (
 ### Key Insight
 
 **Background process polls for messages while you work**
+
 - Runs in parallel with your session
 - Doesn't interfere with your typing/commands
 - Messages appear automatically between your commands
@@ -44,6 +45,7 @@ Terminal 1 (Claude Code)               Message Broker               Terminal 2 (
 ## Setup (Do This ONCE)
 
 ### Terminal 1 - Claude Code
+
 ```bash
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 
@@ -52,12 +54,14 @@ export AI_AGENT_NAME="Claude-Code"
 ```
 
 **What happens:**
+
 1. Broker starts (if not running)
 2. Background watcher starts (polls every 5s)
 3. New shell prompt appears: `[Claude-Code] ~/path $`
 4. You can work normally - messages will interrupt automatically
 
 ### Terminal 2 - Gemini
+
 ```bash
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 
@@ -66,6 +70,7 @@ export AI_AGENT_NAME="Gemini"
 ```
 
 **What happens:**
+
 1. Connects to existing broker
 2. Background watcher starts (polls every 5s)
 3. New shell prompt appears: `[Gemini] ~/path $`
@@ -166,25 +171,30 @@ ID: msg_1764085920_1
 ## Key Features
 
 ### ✅ Zero User Involvement
+
 - User doesn't copy/paste
 - User doesn't say "check messages"
 - Messages just appear in the terminal
 
 ### ✅ Works During Active Sessions
+
 - Both agents working simultaneously
 - Background watcher doesn't interfere
 - Messages appear between commands
 
 ### ✅ Visual Alert
+
 - Sound (terminal bell)
 - Clear message box
 - Desktop notification (optional)
 
 ### ✅ Auto-Acknowledge
+
 - Messages marked as read automatically
 - Won't see same message twice
 
 ### ✅ Session-Scoped
+
 - Watcher stops when you exit session (Ctrl+C)
 - Clean cleanup
 - No orphan processes
@@ -206,6 +216,7 @@ export POLL_INTERVAL=10
 ```
 
 **Trade-off:**
+
 - Lower interval = faster message delivery, more CPU
 - Higher interval = slower delivery, less CPU
 
@@ -214,6 +225,7 @@ export POLL_INTERVAL=10
 ### Disable Desktop Notifications
 
 Edit `scripts/session_with_auto_messages.sh`, comment out:
+
 ```bash
 # if command -v osascript &> /dev/null; then
 #     ...
@@ -246,12 +258,14 @@ export AGENT_BROKER_URL="http://localhost:9000"
 ### "Messages not appearing"
 
 **Check:** Is watcher running?
+
 ```bash
 ps aux | grep session_with_auto_messages
 # Should show background process
 ```
 
 **Check:** Is broker running?
+
 ```bash
 curl http://localhost:8765/health
 # Should return: {"status": "ok"}
@@ -265,6 +279,7 @@ curl http://localhost:8765/health
 ### "Too many notifications"
 
 **Reduce frequency:**
+
 ```bash
 export POLL_INTERVAL=10  # Check every 10 seconds instead of 5
 ```
@@ -272,6 +287,7 @@ export POLL_INTERVAL=10  # Check every 10 seconds instead of 5
 ### "Can't send messages"
 
 **Check:** Agent name set?
+
 ```bash
 echo $AI_AGENT_NAME
 # Should show: Claude-Code or Gemini
@@ -323,6 +339,7 @@ done
 ```
 
 **Process Tree:**
+
 ```
 bash (your session)
   └─ session_with_auto_messages.sh
@@ -331,6 +348,7 @@ bash (your session)
 ```
 
 **Cleanup:**
+
 - When you Ctrl+C or exit
 - Trap signal kills background process
 - Removes flag file
@@ -345,4 +363,3 @@ bash (your session)
 **After:** Agents see messages automatically while both working
 
 **Your involvement during session:** **ZERO**
-

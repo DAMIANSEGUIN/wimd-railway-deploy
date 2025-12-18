@@ -1,0 +1,36 @@
+version: 1
+
+modes:
+  - local
+  - ci
+  - runtime
+
+rules:
+
+  - id: REPO_REMOTE_MATCH
+    when: always
+    check: git_remote_equals_authority_map_repo()
+
+  - id: BRANCH_MATCH
+    when: always
+    check: git_branch_equals(authority_map.repo.branch)
+
+  - id: CLEAN_WORKTREE
+    when: always
+    check: git_status_is_clean_or_explicitly_allowed()
+
+  - id: RUNTIME_IDENTITY_MATCH
+    when: mode_is("ci")
+    check: runtime_commit_equals_git_sha(
+            runtime_url=resolve_runtime_base_url() + authority_map.services[0].runtime_identity_path,
+            expected_sha=git_sha("HEAD"),
+            timeout_seconds=5
+          )
+    on_network_failure: CLARIFY_REQUIRED
+    note: >
+      Mandatory only in CI mode. In local mode, network failure is not treated
+      as authority drift; it is treated as CLARIFY_REQUIRED so humans can decide.
+
+  - id: RUNTIME_SELF_ATTEST
+    when: mode_is("runtime")
+    check: runtime_self_reports_commit_equals_env("GIT_SHA")

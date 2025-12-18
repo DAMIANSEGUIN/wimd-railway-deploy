@@ -1,4 +1,5 @@
 # 🔴 RESTART INSTRUCTIONS - READ THIS FIRST
+
 **Date:** 2025-11-21 5:15 PM
 **Status:** SESSION STOPPED - Browser cache issue blocking verification
 
@@ -26,6 +27,7 @@
 ## 🚨 Current Situation
 
 ### What Happened
+
 1. Phase 1 modularization completed successfully (code extraction)
 2. Deployed without Phase 2 integration
 3. **Result: UI completely broken** (no login, chat non-functional)
@@ -33,12 +35,14 @@
 5. **New problem: Browser cache won't clear**
 
 ### Current Status
+
 - ✅ Code rolled back in git (commit 1fc4010)
 - ✅ Work saved in branch `phase1-incomplete`
 - ✅ Documentation complete
 - ❌ **Browser still showing broken cached version**
 
 ### Why Browser Won't Update
+
 - Aggressive caching by Chromium
 - Hard refresh (Cmd+Shift+R) not working
 - Server restart with no-cache headers attempted
@@ -50,6 +54,7 @@
 ## 🎯 What Needs to Happen
 
 ### Option 1: Clear Browser Data (RECOMMENDED)
+
 1. Open Chromium
 2. Settings → Privacy and Security → Clear Browsing Data
 3. Select "Cached images and files"
@@ -59,13 +64,15 @@
 7. Navigate to localhost:3000
 
 ### Option 2: Use Different Browser
+
 1. Open Safari or Chrome (not Chromium)
 2. Navigate to localhost:3000
 3. Test if site works there
 4. If yes, Chromium cache is the issue
 
 ### Option 3: Use Production Site
-1. Navigate to https://whatismydelta.com
+
+1. Navigate to <https://whatismydelta.com>
 2. Test if production site works
 3. This bypasses local cache issues entirely
 
@@ -92,12 +99,14 @@ Branch with Phase 1 work: phase1-incomplete
 ## 🔧 Server Status
 
 ### Local Proxy Server
+
 - Port: 3000
 - PID: 65788 (check with: `ps -p 65788`)
 - Log: `/tmp/dev_server.log`
 - Stop: `kill 65788`
 
 ### What It Does
+
 - Serves static files from `mosaic_ui/`
 - Proxies API calls to Railway production
 - Should have no-cache headers (latest restart)
@@ -125,6 +134,7 @@ User shared new captures - check:
 `~/Downloads/CodexAgentCaptures/` (latest timestamp)
 
 Look for:
+
 - Network requests to `/js/main.js` (should be 404 after rollback)
 - Console errors
 - Screenshot of current state
@@ -133,7 +143,8 @@ Look for:
 
 ## ✅ Success Criteria
 
-### Site is working when:
+### Site is working when
+
 - [ ] Login button visible
 - [ ] Chat input works
 - [ ] "Start with questions" button works
@@ -163,13 +174,15 @@ Look for:
 
 ## 📝 Next Steps After Verification
 
-### If Site Works:
+### If Site Works
+
 1. Push rollback commits to GitHub
 2. Close Phase 1 as "incomplete - needs integration"
 3. Document lesson learned
 4. Move on to other work
 
-### If Site Still Broken:
+### If Site Still Broken
+
 1. Check what's actually in `mosaic_ui/index.html`
 2. Verify no module imports remain
 3. Check for any lingering Phase 1 files

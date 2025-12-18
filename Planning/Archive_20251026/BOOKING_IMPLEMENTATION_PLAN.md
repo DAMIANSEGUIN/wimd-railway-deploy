@@ -1,4 +1,5 @@
 # Booking Implementation Plan - Full Feature
+
 **Date:** 2025-10-25
 **Scope:** Phase 1 + Phase 2 Combined (Free + Paid Sessions)
 **Estimated Time:** 8-10 hours
@@ -20,11 +21,13 @@
 ### Payment Integration Cost Analysis
 
 **Stripe Fees:**
+
 - **Transaction fee:** 2.9% + $0.30 per transaction
 - **Setup cost:** $0 (free account)
 - **Monthly fee:** $0 (pay-per-transaction only)
 
 **Example Costs:**
+
 - $150 USD session → Stripe takes $4.65 → You receive $145.35
 - $500 USD package → Stripe takes $14.80 → You receive $485.20
 
@@ -39,7 +42,8 @@
 ### Prerequisites (Before Coding)
 
 **1. Google Cloud Setup (15 minutes)**
-- [ ] Go to https://console.cloud.google.com
+
+- [ ] Go to <https://console.cloud.google.com>
 - [ ] Create new project: "WIMD-Booking"
 - [ ] Enable Google Calendar API
 - [ ] Create service account: "wimd-booking-service"
@@ -47,7 +51,8 @@
 - [ ] Share your Google Calendar with service account email (Editor permission)
 
 **2. Stripe Setup (10 minutes)**
-- [ ] Go to https://stripe.com
+
+- [ ] Go to <https://stripe.com>
 - [ ] Create account (free)
 - [ ] Get API keys: Dashboard → Developers → API keys
   - Publishable key (starts with `pk_test_...`)
@@ -58,7 +63,9 @@
   - 3-Session Package: $500 USD / $500 CAD
 
 **3. Environment Variables**
+
 - [ ] Add to Railway (or .env for local):
+
 ```bash
 # Google Calendar
 GOOGLE_SERVICE_ACCOUNT_KEY='{"type":"service_account",...}'
@@ -328,6 +335,7 @@ Create migration files and run them on PostgreSQL.
 ### Step 2: Google Calendar Service (1 hour)
 
 `/api/google_calendar_service.py`:
+
 - Load service account credentials
 - Create event with phone call details
 - Update event (reschedule)
@@ -337,6 +345,7 @@ Create migration files and run them on PostgreSQL.
 ### Step 3: Stripe Service (1.5 hours)
 
 `/api/stripe_service.py`:
+
 - Create PaymentIntent for single session ($150)
 - Create PaymentIntent for package ($500)
 - Handle currency (USD vs CAD based on user location)
@@ -346,6 +355,7 @@ Create migration files and run them on PostgreSQL.
 ### Step 4: Notification Service (1 hour)
 
 `/api/notification_service.py`:
+
 - Email: Booking confirmation, reminder, cancellation
 - SMS: Wire Twilio but disable (`TWILIO_SMS_ENABLED=false`)
 - In-app: Create notification record in database
@@ -354,6 +364,7 @@ Create migration files and run them on PostgreSQL.
 ### Step 5: Booking API (2 hours)
 
 `/api/booking.py`:
+
 - Implement all endpoints listed above
 - Validation logic (promo code, availability, payment)
 - Transaction handling (payment → calendar → database)
@@ -362,6 +373,7 @@ Create migration files and run them on PostgreSQL.
 ### Step 6: Frontend Modal (2.5 hours)
 
 `/mosaic_ui/js/booking-modal.js` + `/mosaic_ui/css/booking-modal.css`:
+
 - Modal HTML structure
 - Session type selector (Free / Paid Single / Paid Package)
 - Promo code input (shows if Free selected)
@@ -397,11 +409,13 @@ Create migration files and run them on PostgreSQL.
 ## Cost Breakdown
 
 ### Free Services
+
 - **Google Calendar API:** Free (up to 1M requests/day)
 - **Stripe account:** Free setup
 - **Railway PostgreSQL:** Free tier (sufficient for bookings)
 
 ### Paid/Transaction-Based
+
 - **Stripe fees:** 2.9% + $0.30 per transaction
   - $150 session = $4.65 fee
   - $500 package = $14.80 fee
@@ -410,6 +424,7 @@ Create migration files and run them on PostgreSQL.
   - Recommend: Enable only if high demand
 
 ### Total Setup Cost: $0
+
 ### Monthly Cost: $0 (only transaction fees)
 
 ---
@@ -417,11 +432,13 @@ Create migration files and run them on PostgreSQL.
 ## Next Actions
 
 ### Immediate (You Need to Do)
+
 1. **Google Cloud:** Create project, enable Calendar API, create service account, share calendar
 2. **Stripe:** Create account, get test API keys
 3. **Railway:** Add environment variables
 
 ### Then I Will
+
 1. Create database migrations
 2. Implement backend services (Google Calendar, Stripe, Notifications)
 3. Implement booking API endpoints
@@ -430,6 +447,7 @@ Create migration files and run them on PostgreSQL.
 6. Deploy to production
 
 **Ready to start?**
+
 - Share service account JSON key (as environment variable format)
 - Share Stripe API keys (test mode first)
 - Confirm your Google Calendar email
@@ -439,4 +457,3 @@ Create migration files and run them on PostgreSQL.
 
 **Estimated Total Time: 8-10 hours**
 **Estimated Total Cost: $0 setup + transaction fees**
-

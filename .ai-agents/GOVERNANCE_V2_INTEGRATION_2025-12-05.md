@@ -69,7 +69,7 @@ The following files now reference the new governance system:
 
 ## 🎯 ACTION REQUIRED: What You Must Do
 
-### For Your Next Session Start:
+### For Your Next Session Start
 
 **YOU MUST READ THESE FILES IN ORDER:**
 
@@ -92,7 +92,7 @@ The following files now reference the new governance system:
    - Use the correct termination command when ending sessions
    - Proper handoff procedures for multi-agent work
 
-### Quick Start Command:
+### Quick Start Command
 
 ```bash
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
@@ -119,6 +119,7 @@ You MUST explicitly declare your mode and operate within its constraints:
 ### 2. Stop-On-Ambiguity Rule
 
 If you are uncertain about:
+
 - File paths
 - Project scope
 - Environment state
@@ -129,6 +130,7 @@ You MUST **STOP** and **ASK** - do NOT guess or assume.
 ### 3. No Unverified Path Rule
 
 You MUST NOT use any file path until it has been:
+
 - Explicitly verified by reading/checking
 - Confirmed by repository inspection
 - Validated in the current session
@@ -136,6 +138,7 @@ You MUST NOT use any file path until it has been:
 ### 4. Receive Before Acting
 
 At session start, you MUST:
+
 1. Restate your understanding of the project
 2. Restate the current NEXT_TASK
 3. Declare your intended mode (BUILD or DIAGNOSE)
@@ -144,6 +147,7 @@ At session start, you MUST:
 ### 5. Session Termination Commands
 
 When ending a session, use the appropriate command:
+
 - `SESSION_END` - Standard termination
 - `SESSION_HARD_STOP` - Strict boundary (no new tasks)
 - `SESSION_HANDOFF` - Multi-agent handoff
@@ -162,6 +166,7 @@ When ending a session, use the appropriate command:
 - No broken references detected
 
 **Verification Command:**
+
 ```bash
 ls -la *.md | grep -E "(Mosaic_Governance|TEAM_PLAYBOOK_v2|SESSION_START_v2|SESSION_END)"
 ```
@@ -171,6 +176,7 @@ ls -la *.md | grep -E "(Mosaic_Governance|TEAM_PLAYBOOK_v2|SESSION_START_v2|SESS
 ## 💡 Why This Matters
 
 **Previous issues caused by lack of governance:**
+
 - Agents starting work without understanding project state
 - Code changes without verification
 - Guessing file paths and breaking things
@@ -178,6 +184,7 @@ ls -la *.md | grep -E "(Mosaic_Governance|TEAM_PLAYBOOK_v2|SESSION_START_v2|SESS
 - Inconsistent behavior across sessions
 
 **Governance v2 solves these by:**
+
 - Enforcing explicit mode declarations
 - Requiring verification before action
 - Standardizing session start/end procedures
@@ -188,14 +195,16 @@ ls -la *.md | grep -E "(Mosaic_Governance|TEAM_PLAYBOOK_v2|SESSION_START_v2|SESS
 
 ## 📝 Notes for Specific Agents
 
-### For Gemini (Terminal):
+### For Gemini (Terminal)
+
 - You are the **Senior Software Engineer & Planning Lead**
 - Your sessions MUST start with INIT mode
 - Follow SESSION_START_v2.md protocol exactly
 - When planning, declare your mode clearly
 - Use SESSION_HANDOFF when passing work to other agents
 
-### For Codex (Cursor):
+### For Codex (Cursor)
+
 - You are the **Local Implementation Engineer**
 - Before writing ANY code, enter BUILD mode properly
 - Run preflight checks (verify paths, environment)
@@ -207,6 +216,7 @@ ls -la *.md | grep -E "(Mosaic_Governance|TEAM_PLAYBOOK_v2|SESSION_START_v2|SESS
 ## 🔗 Related Documentation
 
 **Read after governance files:**
+
 - `TROUBLESHOOTING_CHECKLIST.md` - Error prevention
 - `SELF_DIAGNOSTIC_FRAMEWORK.md` - Error handling patterns
 - `CLAUDE.md` - Architecture overview
@@ -217,11 +227,13 @@ ls -la *.md | grep -E "(Mosaic_Governance|TEAM_PLAYBOOK_v2|SESSION_START_v2|SESS
 ## ❓ Questions?
 
 If you have questions about the new governance system:
+
 1. Re-read the relevant governance file
 2. Check SESSION_START_v2.md for clarification
 3. Ask the user for guidance if still unclear
 
 **DO NOT:**
+
 - Ignore the governance files
 - Use the old v1 files
 - Operate without declaring your mode
@@ -232,10 +244,12 @@ If you have questions about the new governance system:
 ## 📈 API Usage Note
 
 This integration session used:
+
 - **Tokens used:** 71,522 / 200,000 (35.8%)
 - **Estimated cost:** ~$0.21
 
 The new governance system should actually **reduce** token usage over time by:
+
 - Preventing wasted work from wrong assumptions
 - Reducing back-and-forth clarification
 - Stopping errors before they happen

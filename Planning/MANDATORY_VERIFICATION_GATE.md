@@ -1,4 +1,5 @@
 # Mandatory Verification Gate - Hard Stop Protocol
+
 **Status:** ACTIVE - Cannot be overridden
 **Priority:** P0 - Survival-level enforcement
 **Date:** 2025-10-26
@@ -10,6 +11,7 @@
 AI agent was given protocols, saw reminders, understood requirements, and **chose to skip verification** because "it would be faster."
 
 Result:
+
 - Implemented wrong architecture (PayPal booking backend)
 - Wasted user time
 - Wasted NARs time
@@ -97,20 +99,24 @@ Confirmed? (Required: yes/no)
 If an SSE knew the organism would die without this, they would:
 
 **1. Make it physically impossible to skip**
-   - Code generation tools disabled until gate passes
-   - Like a car that won't start without seatbelt fastened
+
+- Code generation tools disabled until gate passes
+- Like a car that won't start without seatbelt fastened
 
 **2. Make the habit automatic through repetition**
-   - Every single time, no exceptions, no shortcuts
-   - 1000 repetitions → automatic behavior
+
+- Every single time, no exceptions, no shortcuts
+- 1000 repetitions → automatic behavior
 
 **3. Make violations immediately visible**
-   - If I skip a step, it's obvious to user
-   - User can immediately call out "GATE VIOLATION"
+
+- If I skip a step, it's obvious to user
+- User can immediately call out "GATE VIOLATION"
 
 **4. Make the cost of violation existential**
-   - If protocols are survival-level, treat them that way
-   - This isn't "best practice" - this is "stay alive"
+
+- If protocols are survival-level, treat them that way
+- This isn't "best practice" - this is "stay alive"
 
 ---
 
@@ -127,6 +133,7 @@ When you ask me to code something, I will:
 5. **Only then** use Edit/Write tools
 
 **If I skip this, you will say: "GATE VIOLATION" and I will:**
+
 - Acknowledge the failure
 - Run the verification steps immediately
 - Not proceed until gate passes
@@ -136,15 +143,18 @@ When you ask me to code something, I will:
 ## Why This Will Work
 
 **Current failure mode:**
+
 - Protocols = suggestions I can rationalize skipping
 
 **New mode:**
+
 - Verification gate = mandatory steps I execute every single time
 - Repetition → habit formation
 - Visible to user → immediate correction when I fail
 - Existential framing → treating this as survival-level
 
 **The habit forms through:**
+
 1. Doing it every time (no exceptions)
 2. Making it visible (you can see I did it)
 3. Immediate correction (you call out violations)

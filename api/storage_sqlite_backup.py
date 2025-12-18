@@ -1,15 +1,14 @@
+import hashlib
 import json
 import os
-import uuid
-import hashlib
 import secrets
+import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-import psycopg2
+
 from psycopg2 import pool
-from psycopg2.extras import RealDictCursor
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 DATA_ROOT = Path(os.getenv("DATA_ROOT", "data"))
@@ -55,6 +54,7 @@ def get_conn():
             connection_pool.putconn(conn)
     else:
         import sqlite3
+
         DB_PATH = Path(os.getenv("DATABASE_PATH", DATA_ROOT / "mosaic.db"))
         DB_PATH.parent.mkdir(parents=True, exist_ok=True)
         conn = sqlite3.connect(DB_PATH)
@@ -417,8 +417,7 @@ def delete_session(session_id: str) -> None:
     with get_conn() as conn:
         # Get file paths to delete from disk
         file_rows = conn.execute(
-            "SELECT file_path FROM file_uploads WHERE session_id = ?",
-            (session_id,)
+            "SELECT file_path FROM file_uploads WHERE session_id = ?", (session_id,)
         ).fetchall()
 
         # Delete all related data (foreign key order)
@@ -441,17 +440,30 @@ def delete_session(session_id: str) -> None:
 def cleanup_expired_sessions() -> None:
     cutoff = datetime.utcnow()
     with get_conn() as conn:
-        expired_ids = [row[0] for row in conn.execute("SELECT id FROM sessions WHERE expires_at <= ?", (cutoff,)).fetchall()]
+        expired_ids = [
+            row[0]
+            for row in conn.execute(
+                "SELECT id FROM sessions WHERE expires_at <= ?", (cutoff,)
+            ).fetchall()
+        ]
         if expired_ids:
             placeholders = ",".join(["?"] * len(expired_ids))
             file_rows = conn.execute(
                 f"SELECT file_path FROM file_uploads WHERE session_id IN ({placeholders})",
                 expired_ids,
             ).fetchall()
-            conn.execute(f"DELETE FROM file_uploads WHERE session_id IN ({placeholders})", expired_ids)
-            conn.execute(f"DELETE FROM resume_versions WHERE session_id IN ({placeholders})", expired_ids)
-            conn.execute(f"DELETE FROM job_matches WHERE session_id IN ({placeholders})", expired_ids)
-            conn.execute(f"DELETE FROM wimd_outputs WHERE session_id IN ({placeholders})", expired_ids)
+            conn.execute(
+                f"DELETE FROM file_uploads WHERE session_id IN ({placeholders})", expired_ids
+            )
+            conn.execute(
+                f"DELETE FROM resume_versions WHERE session_id IN ({placeholders})", expired_ids
+            )
+            conn.execute(
+                f"DELETE FROM job_matches WHERE session_id IN ({placeholders})", expired_ids
+            )
+            conn.execute(
+                f"DELETE FROM wimd_outputs WHERE session_id IN ({placeholders})", expired_ids
+            )
             conn.execute(f"DELETE FROM sessions WHERE id IN ({placeholders})", expired_ids)
             for row in file_rows:
                 try:
@@ -479,10 +491,12 @@ def session_summary(session_id: str) -> Dict[str, Any]:
     data["job_matches"] = fetch_job_matches(session_id)
     return data
 
+
 def hash_password(password: str) -> str:
     """Hash a password using SHA-256 with salt"""
     salt = secrets.token_hex(16)
     return hashlib.sha256((password + salt).encode()).hexdigest() + ":" + salt
+
 
 def verify_password(password: str, hashed: str) -> bool:
     """Verify a password against its hash"""
@@ -492,41 +506,43 @@ def verify_password(password: str, hashed: str) -> bool:
     except:
         return False
 
+
 def create_user(email: str, password: str) -> str:
     """Create a new user and return user ID"""
     user_id = str(uuid.uuid4())
     password_hash = hash_password(password)
     now = datetime.utcnow().isoformat()
     normalized_email = _normalize_email(email)
-    
+
     with get_conn() as conn:
         conn.execute(
             "INSERT INTO users (id, email, password_hash, created_at, last_login) VALUES (?, ?, ?, ?, ?)",
-            (user_id, normalized_email, password_hash, now, now)
+            (user_id, normalized_email, password_hash, now, now),
         )
     return user_id
+
 
 def authenticate_user(email: str, password: str) -> Optional[str]:
     """Authenticate user and return user ID if successful"""
     normalized_email = _normalize_email(email)
     with get_conn() as conn:
         row = conn.execute(
-            "SELECT id, password_hash FROM users WHERE LOWER(email) = LOWER(?)",
-            (normalized_email,)
+            "SELECT id, password_hash FROM users WHERE LOWER(email) = LOWER(?)", (normalized_email,)
         ).fetchone()
-        
+
         if not row:
             return None
-            
+
         user_id, password_hash = row
         if verify_password(password, password_hash):
             # Update last login
             conn.execute(
                 "UPDATE users SET last_login = ? WHERE id = ?",
-                (datetime.utcnow().isoformat(), user_id)
+                (datetime.utcnow().isoformat(), user_id),
             )
             return user_id
         return None
+
 
 def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
     """Get user by email"""
@@ -534,36 +550,27 @@ def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
     with get_conn() as conn:
         row = conn.execute(
             "SELECT id, email, created_at, last_login FROM users WHERE LOWER(email) = LOWER(?)",
-            (normalized_email,)
+            (normalized_email,),
         ).fetchone()
-        
+
         if not row:
             return None
-            
-        return {
-            "user_id": row[0],
-            "email": row[1],
-            "created_at": row[2],
-            "last_login": row[3]
-        }
+
+        return {"user_id": row[0], "email": row[1], "created_at": row[2], "last_login": row[3]}
+
 
 def get_user_by_id(user_id: str) -> Optional[Dict[str, Any]]:
     """Get user by ID"""
     with get_conn() as conn:
         row = conn.execute(
-            "SELECT id, email, created_at, last_login FROM users WHERE id = ?",
-            (user_id,)
+            "SELECT id, email, created_at, last_login FROM users WHERE id = ?", (user_id,)
         ).fetchone()
-        
+
         if not row:
             return None
-            
-        return {
-            "user_id": row[0],
-            "email": row[1],
-            "created_at": row[2],
-            "last_login": row[3]
-        }
+
+        return {"user_id": row[0], "email": row[1], "created_at": row[2], "last_login": row[3]}
+
 
 __all__ = [
     "UPLOAD_ROOT",

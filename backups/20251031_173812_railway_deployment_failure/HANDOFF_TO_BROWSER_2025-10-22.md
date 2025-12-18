@@ -1,4 +1,5 @@
 # Handoff to Browser (Developer Agent)
+
 **From**: Claude Code CLI (Senior Systems Engineer)
 **To**: Claude Code Browser (Senior Developer)
 **Date**: 2025-10-22
@@ -18,14 +19,17 @@ Implement two new features for Mosaic platform:
 ## What CLI Already Did
 
 ✅ **Packages installed** in `~/projects/mosaic-platform`:
+
 - `react-draggable` (11 packages added)
 - `re-resizable`
 
 ✅ **Specs created**:
+
 - `~/Downloads/Planning/strategy_desktop/project_briefs/mosaic_draggable_windows_spec.md`
 - `~/Downloads/Planning/strategy_desktop/project_briefs/mosaic_appointment_booking_spec.md`
 
 ✅ **Repository location**: `~/projects/mosaic-platform`
+
 - Remote: `https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git`
 - Branch: `main`
 
@@ -38,6 +42,7 @@ Implement two new features for Mosaic platform:
 **Read full spec**: `mosaic_draggable_windows_spec.md`
 
 **Quick version**:
+
 1. Create `src/components/DraggableWindow.jsx` (code in spec)
 2. Wrap PS101 coaching steps (or other key UI) in `<DraggableWindow>`
 3. Add z-index management (clicked window comes to front)
@@ -46,10 +51,12 @@ Implement two new features for Mosaic platform:
 6. Deploy to Netlify
 
 **Packages already installed**:
+
 - `react-draggable`
 - `re-resizable`
 
 **Example usage** (from spec):
+
 ```jsx
 <DraggableWindow
   title="What Is My Delta?"
@@ -68,6 +75,7 @@ Implement two new features for Mosaic platform:
 **Read full spec**: `mosaic_appointment_booking_spec.md`
 
 **Quick version**:
+
 1. Add booking button/link to PS101 results page (or user dashboard)
 2. Use this URL: `https://calendar.app.google/EAnDSz2CcTtH849x6`
 3. Choose implementation:
@@ -80,6 +88,7 @@ Implement two new features for Mosaic platform:
 **Phase 2**: Embedded iframe (if desired)
 
 **Example code** (from spec):
+
 ```jsx
 <a
   href="https://calendar.app.google/EAnDSz2CcTtH849x6"
@@ -98,11 +107,13 @@ Implement two new features for Mosaic platform:
 **Location**: `~/projects/mosaic-platform`
 
 **Current deployment**:
+
 - **Backend**: Railway (`what-is-my-delta-site-production.up.railway.app`)
 - **Frontend**: Netlify (`www.whatismydelta.com`)
 - **Auto-deploy**: Push to `main` branch triggers deploy
 
 **Environment**:
+
 - Node.js project (React frontend, FastAPI backend)
 - Frontend in `src/` or similar
 - Already has PS101 coaching flow implemented
@@ -125,11 +136,13 @@ Implement two new features for Mosaic platform:
 ## Files You'll Likely Modify
 
 **For draggable windows**:
+
 - `src/components/DraggableWindow.jsx` (NEW - create this)
 - `src/components/PS101Results.jsx` or similar (wrap in DraggableWindow)
 - `src/pages/Dashboard.jsx` or similar (if exists)
 
 **For booking**:
+
 - `src/components/PS101Results.jsx` or similar (add button)
 - `src/pages/Dashboard.jsx` or similar (if exists)
 - `src/components/BookingButton.jsx` (NEW - optional)
@@ -139,6 +152,7 @@ Implement two new features for Mosaic platform:
 ## Questions/Blockers?
 
 If you encounter issues:
+
 1. Check the full specs in `~/Downloads/Planning/strategy_desktop/project_briefs/`
 2. Check infrastructure docs: `~/Downloads/Planning/systems_cli/INFRASTRUCTURE_CONFIG.md`
 3. Ask CLI (me) for help with:
@@ -151,14 +165,16 @@ If you encounter issues:
 
 ## Success Criteria
 
-### Draggable Windows:
+### Draggable Windows
+
 - [ ] Windows can be dragged by header
 - [ ] Windows can be resized
 - [ ] Windows stay in viewport bounds
 - [ ] Works on desktop (Chrome, Firefox, Safari)
 - [ ] Disabled/adapted for mobile
 
-### Booking:
+### Booking
+
 - [ ] User can access booking link from Mosaic
 - [ ] Link opens Google Calendar appointment page
 - [ ] User can successfully book appointment

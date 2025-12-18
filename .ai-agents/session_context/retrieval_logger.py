@@ -7,7 +7,7 @@ Logs all document retrievals triggered by MCP system
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 
 
 class RetrievalLogger:
@@ -29,7 +29,7 @@ class RetrievalLogger:
         user_message: str = None,
         agent_response: str = None,
         retrieval_time_ms: float = 0,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ):
         """
         Log a document retrieval event
@@ -55,15 +55,15 @@ class RetrievalLogger:
             "retrieval_time_ms": retrieval_time_ms,
             "context_snippet": {
                 "user_message": user_message[:200] if user_message else None,
-                "agent_response": agent_response[:200] if agent_response else None
+                "agent_response": agent_response[:200] if agent_response else None,
             },
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
 
         # Append to session log
         log_file = self.log_dir / f"{self.current_session}.jsonl"
-        with open(log_file, 'a') as f:
-            f.write(json.dumps(event) + '\n')
+        with open(log_file, "a") as f:
+            f.write(json.dumps(event) + "\n")
 
     def get_session_retrievals(self, session_id: str) -> List[Dict[str, Any]]:
         """Get all retrievals for a session"""
@@ -73,7 +73,7 @@ class RetrievalLogger:
             return []
 
         retrievals = []
-        with open(log_file, 'r') as f:
+        with open(log_file) as f:
             for line in f:
                 if line.strip():
                     retrievals.append(json.loads(line))
@@ -85,11 +85,7 @@ class RetrievalLogger:
         retrievals = self.get_session_retrievals(session_id)
 
         if not retrievals:
-            return {
-                "session_id": session_id,
-                "total_retrievals": 0,
-                "error": "No retrievals found"
-            }
+            return {"session_id": session_id, "total_retrievals": 0, "error": "No retrievals found"}
 
         trigger_counts = {}
         total_docs = 0
@@ -110,11 +106,7 @@ class RetrievalLogger:
                 document_frequency[doc] = document_frequency.get(doc, 0) + 1
 
         # Sort documents by frequency
-        most_retrieved = sorted(
-            document_frequency.items(),
-            key=lambda x: x[1],
-            reverse=True
-        )[:10]
+        most_retrieved = sorted(document_frequency.items(), key=lambda x: x[1], reverse=True)[:10]
 
         return {
             "session_id": session_id,
@@ -125,7 +117,7 @@ class RetrievalLogger:
             "trigger_breakdown": trigger_counts,
             "most_retrieved_docs": [
                 {"document": doc, "count": count} for doc, count in most_retrieved
-            ]
+            ],
         }
 
     def get_all_sessions(self) -> List[str]:
@@ -144,34 +136,26 @@ def main():
     # Log some test retrievals
     logger.log_retrieval(
         trigger_type="error",
-        documents_retrieved=[
-            "TROUBLESHOOTING_CHECKLIST.md",
-            "SELF_DIAGNOSTIC_FRAMEWORK.md"
-        ],
+        documents_retrieved=["TROUBLESHOOTING_CHECKLIST.md", "SELF_DIAGNOSTIC_FRAMEWORK.md"],
         user_message="Deployment failed with 500 error",
         retrieval_time_ms=45.3,
-        metadata={"trigger_keywords": ["failed", "error"]}
+        metadata={"trigger_keywords": ["failed", "error"]},
     )
 
     logger.log_retrieval(
         trigger_type="deployment",
-        documents_retrieved=[
-            "DEPLOYMENT_TRUTH.md",
-            "scripts/deploy.sh"
-        ],
+        documents_retrieved=["DEPLOYMENT_TRUTH.md", "scripts/deploy.sh"],
         user_message="How do I deploy to Railway?",
         retrieval_time_ms=32.1,
-        metadata={"trigger_keywords": ["deploy", "railway"]}
+        metadata={"trigger_keywords": ["deploy", "railway"]},
     )
 
     logger.log_retrieval(
         trigger_type="database",
-        documents_retrieved=[
-            "SELF_DIAGNOSTIC_FRAMEWORK.md"
-        ],
+        documents_retrieved=["SELF_DIAGNOSTIC_FRAMEWORK.md"],
         user_message="PostgreSQL connection failed",
         retrieval_time_ms=28.7,
-        metadata={"trigger_keywords": ["postgresql", "connection"]}
+        metadata={"trigger_keywords": ["postgresql", "connection"]},
     )
 
     # Get stats
@@ -182,11 +166,11 @@ def main():
     print(f"   Total Retrievals: {stats['total_retrievals']}")
     print(f"   Total Documents: {stats['total_documents_fetched']}")
     print(f"   Avg Time: {stats['avg_time_ms']} ms")
-    print(f"\n🔍 Trigger Breakdown:")
-    for trigger, count in stats['trigger_breakdown'].items():
+    print("\n🔍 Trigger Breakdown:")
+    for trigger, count in stats["trigger_breakdown"].items():
         print(f"   {trigger}: {count}")
-    print(f"\n📄 Most Retrieved Docs:")
-    for doc_info in stats['most_retrieved_docs']:
+    print("\n📄 Most Retrieved Docs:")
+    for doc_info in stats["most_retrieved_docs"]:
         print(f"   {doc_info['document']}: {doc_info['count']}x")
 
     print("\n✅ Retrieval logger test complete")

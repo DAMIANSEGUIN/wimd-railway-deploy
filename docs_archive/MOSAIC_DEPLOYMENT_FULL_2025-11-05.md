@@ -1,6 +1,7 @@
 # Mosaic Production Deployment & Troubleshooting Package — 2025‑11‑05
 
 This single file contains everything required for the current Mosaic deployment on Netlify:
+
 - Netlify configuration (`netlify.toml`)
 - SPA redirect fallback (`_redirects`)
 - Environment sanity checklist

@@ -1,7 +1,9 @@
 # Mosaic Platform Troubleshooting Checklist
+
 **Custom Dashboard Filter for Claude Code**
 
 **Document Metadata:**
+
 - Created: 2025-11-02 by Claude Code
 - Last Updated: 2025-12-06 by Claude Code
 - Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
@@ -12,6 +14,7 @@
 ## 🏷️ LAST KNOWN WORKING VERSION
 
 **Latest Functional Deployment:**
+
 - **Git Tag:** `prod-2025-11-18`
 - **Commit:** `31d099c`
 - **Status:** Production deployed to Railway/Netlify
@@ -19,11 +22,13 @@
 - **To Create New Tag:** `git tag prod-YYYY-MM-DD` (after verified deployment)
 
 **Check Current Production Tag:**
+
 ```bash
 git describe --tags --abbrev=0
 ```
 
 **List All Production Tags:**
+
 ```bash
 git tag -l "prod-*" --sort=-version:refname | head -5
 ```
@@ -532,6 +537,7 @@ LONG TERM:
 ## Checklist Summary (Print This)
 
 **Before Every Code Change:**
+
 ```
 □ Read SELF_DIAGNOSTIC_FRAMEWORK.md
 □ Context manager pattern? (with get_conn() as conn:)
@@ -543,6 +549,7 @@ LONG TERM:
 ```
 
 **Before Every Deploy:**
+
 ```
 □ Run ./pre_deploy_check.sh
 □ Golden dataset tests pass?
@@ -553,6 +560,7 @@ LONG TERM:
 ```
 
 **After Every Deploy:**
+
 ```
 □ Monitor logs 5 minutes
 □ Check /health endpoint
@@ -562,6 +570,7 @@ LONG TERM:
 ```
 
 **When Things Break:**
+
 ```
 □ Get full error message from logs
 □ Classify error (INFRA/DATA/MODEL/PROMPT/INTEGRATION)

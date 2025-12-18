@@ -1,4 +1,5 @@
 # DOWNLOADS FOLDER INVENTORY & CLEANUP PLAN
+
 **Date**: 2025-10-07
 **Phase**: 1 - Workspace Foundation
 **Status**: AWAITING APPROVAL
@@ -9,6 +10,7 @@
 
 **Current State**: 27 duplicate/related project folders consuming disk space and creating confusion
 **Primary Issues**:
+
 - Multiple WIMD project copies (6+)
 - Multiple Mosaic/RRT integration folders (10+)
 - Old job data CSV files (7 files, ~5MB total from August)
@@ -88,6 +90,7 @@
 ### LOOSE FILES TO ARCHIVE
 
 #### Old Job Data CSVs (August 2025)
+
 ```
 jobleads_batch_20250825_134031_with_header.csv (936KB)
 jobleads_batch_20250825_134031_data.csv (936KB)
@@ -97,10 +100,12 @@ jobleads_batch_20250825_124848_with_header.csv (811KB)
 jobleads_batch_20250825_124848_data.csv (811KB)
 jobleads_batch_20250825_123236.csv (714KB)
 ```
+
 **Total**: ~5MB of old job data
 **Action**: ARCHIVE to `~/Archives/Pre-Recovery-2025-10-07/Job-data-Aug2025/`
 
 #### Old Prompt CSVs (August 2025)
+
 ```
 Prompt_lastgood_cleaned_with_category_AI.csv (140KB)
 Prompt_lastgood_FLATTENED2COL_with_categories.csv (136KB)
@@ -109,19 +114,23 @@ Prompt_lastgood_FLATTENED2COL_with_categories_TAILCLEAN.csv (135KB)
 Prompt_lastgood_finalmerged_STRICTQUOTE.csv (132KB)
 Prompt.csv (132KB)
 ```
+
 **Total**: ~810KB of prompt data
 **Action**: ARCHIVE to `~/Archives/Pre-Recovery-2025-10-07/Prompts-legacy/`
 
 #### Old Zip Archives
+
 ```
 WIMD_PUBLIC_TEST.zip (190KB)
 ResumeRewrite_FullPackage.zip (147KB)
 Foundation_Vault.zip (136KB)
 ```
+
 **Total**: ~473KB
 **Action**: DELETE (contents already exist as folders or obsolete)
 
 #### Miscellaneous Files
+
 ```
 PHASE_3_DEPLOYMENT_COMPLETE.md (6KB, 2025-10-03)
 CLAUDE.md (5KB, 2025-10-03)
@@ -130,6 +139,7 @@ delta-feedback.json (175B, 2025-10-01)
 delta-feedback (1).json (175B, 2025-10-01)
 Damian (212KB, 2025-09-18) - unclear what this is
 ```
+
 **Action**: ARCHIVE to `~/Archives/Pre-Recovery-2025-10-07/Misc/` (review Damian file before archiving)
 
 ---
@@ -175,6 +185,7 @@ Damian (212KB, 2025-09-18) - unclear what this is
 ## IMPACT SUMMARY
 
 ### Space Savings
+
 - **Folders archived**: ~3.1MB
 - **CSV files archived**: ~5.8MB
 - **Zip files deleted**: ~473KB
@@ -182,11 +193,13 @@ Damian (212KB, 2025-09-18) - unclear what this is
 - **Total space reclaimed**: ~9.6MB
 
 ### Clutter Reduction
+
 - **Before**: 27 project-related folders + 20+ loose files
 - **After**: 2 active project folders + current work files
 - **Reduction**: ~70% of items removed from Downloads
 
 ### Performance Impact
+
 - Reduced Finder indexing overhead
 - Faster spotlight searches
 - Cleaner working environment
@@ -197,11 +210,13 @@ Damian (212KB, 2025-09-18) - unclear what this is
 ## EXECUTION PLAN
 
 ### Step 1: Create Archive Directory
+
 ```bash
 mkdir -p ~/Archives/Pre-Recovery-2025-10-07/{WIMD-backups,Mosaic-old-versions,Tools-legacy,Job-data-Aug2025,Prompts-legacy,Misc}
 ```
 
 ### Step 2: Move WIMD Backups
+
 ```bash
 cd ~/Downloads
 mv WIMD_PUBLIC_TEST ~/Archives/Pre-Recovery-2025-10-07/WIMD-backups/
@@ -212,6 +227,7 @@ mv WIMD-Railway-Deploy-Backup-20250919-005711 ~/Archives/Pre-Recovery-2025-10-07
 ```
 
 ### Step 3: Move Mosaic Old Versions
+
 ```bash
 mv Mosaic ~/Archives/Pre-Recovery-2025-10-07/Mosaic-old-versions/
 mv "Mosaic Launcher.app" ~/Archives/Pre-Recovery-2025-10-07/Mosaic-old-versions/
@@ -225,6 +241,7 @@ mv "RRT_Mosaic_Integration_Starter (4)" ~/Archives/Pre-Recovery-2025-10-07/Mosai
 ```
 
 ### Step 4: Move Legacy Tools
+
 ```bash
 mv OpportunityBridge ~/Archives/Pre-Recovery-2025-10-07/Tools-legacy/
 mv jsm_csv_runner ~/Archives/Pre-Recovery-2025-10-07/Tools-legacy/
@@ -239,6 +256,7 @@ mv ai_partner_finder-1 ~/Archives/Pre-Recovery-2025-10-07/Tools-legacy/
 ```
 
 ### Step 5: Move Old CSV Data
+
 ```bash
 mv jobleads_batch_*.csv ~/Archives/Pre-Recovery-2025-10-07/Job-data-Aug2025/
 mv Prompt*.csv ~/Archives/Pre-Recovery-2025-10-07/Prompts-legacy/
@@ -246,6 +264,7 @@ mv Prompt_lastgood* ~/Archives/Pre-Recovery-2025-10-07/Prompts-legacy/
 ```
 
 ### Step 6: Delete Duplicate Zips
+
 ```bash
 rm WIMD_PUBLIC_TEST.zip
 rm ResumeRewrite_FullPackage.zip
@@ -253,6 +272,7 @@ rm Foundation_Vault.zip
 ```
 
 ### Step 7: Move Miscellaneous Files
+
 ```bash
 mv PHASE_3_DEPLOYMENT_COMPLETE.md ~/Archives/Pre-Recovery-2025-10-07/Misc/
 mv CLAUDE.md ~/Archives/Pre-Recovery-2025-10-07/Misc/
@@ -262,6 +282,7 @@ mv Damian ~/Archives/Pre-Recovery-2025-10-07/Misc/  # Review this first
 ```
 
 ### Step 8: Verification
+
 ```bash
 # Confirm only active projects remain
 ls -la ~/Downloads/WIMD-Railway-Deploy-Project

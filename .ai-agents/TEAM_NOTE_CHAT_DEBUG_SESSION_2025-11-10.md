@@ -9,34 +9,41 @@
 ## Session Timeline
 
 ### 1. Initial Problem (from Codex notes)
+
 - **Issue:** Chat window opens but doesn't respond to messages
 - **Root cause:** `sendMsg` variable declared but never assigned DOM element
 - **Codex fix:** Added `sendMsg = $('#sendMsg')` in Phase 2.5
 
 ### 2. Claude_Code Session Start
+
 - Ran SESSION_START_PROTOCOL
 - Verified critical features present
 - Archived old urgent files
 - Reviewed Codex's sendMsg fix
 
 ### 3. First Deployment (fe4121d)
+
 - Deployed Codex's sendMsg fix
 - User tested: "chat window now does not even open"
 - **New problem:** Worse than before - chat broke completely
 
 ### 4. Root Cause Analysis
+
 Claude_Code identified: `chatGuard()` function added by Codex blocks `sendStrip()` if chat variables not ready. BUT event listeners attached at module level BEFORE chat variables initialized.
 
 ### 5. Second Fix (6d01cf2)
+
 - Moved `coachSend`/`coachAsk` event listeners INTO Phase 2.5
 - Should run AFTER chat/chatLog initialized
 - Deployed
 
 ### 6. User Test Result
+
 - "chat is not working and no new window appears"
 - Still broken
 
 ### 7. Debug Logging Added (148805e)
+
 - Added console.log to Phase 2.5 to see if elements found
 - Added console.log when event handlers fire
 - **NOT DEPLOYED** - User stopped to loop in Codex
@@ -48,6 +55,7 @@ Claude_Code identified: `chatGuard()` function added by Codex blocks `sendStrip(
 ### Code Structure
 
 **Module-level declarations (outside initApp):**
+
 ```javascript
 // Line ~1245
 let chat = null;
@@ -77,6 +85,7 @@ async function sendStrip() {
 ```
 
 **Phase 2.5 (inside initApp):**
+
 ```javascript
 // Line ~2093
 chat = $('#chat');
@@ -109,6 +118,7 @@ if (coachAsk) {
 **Actual behavior:** Nothing happens
 
 **Possible causes:**
+
 1. `coachAsk`/`coachSend` are null (DOM not ready when assigned at module level)
 2. Event listeners not attaching (if elements null, `if` blocks skip)
 3. `sendStrip()` being called but `chatGuard()` failing (chat/chatLog still null)
@@ -137,12 +147,13 @@ if (coachAsk) {
 ### Immediate Actions
 
 1. **Deploy debug logging (commit 148805e)**
+
    ```bash
    ./scripts/deploy.sh netlify
    ```
 
 2. **Get browser console output from user**
-   - Open https://whatismydelta.com
+   - Open <https://whatismydelta.com>
    - F12 to open console
    - Type question in ask field
    - Press Enter
@@ -200,12 +211,14 @@ if (coachAsk) {
 ## Claude_Code Retrospective
 
 **What went wrong:**
+
 - Fixed code logically but didn't verify with user between deployments
 - Made assumptions about module-level vs Phase 2.5 execution timing
 - Needed browser console output much earlier
 - Got into "keep trying fixes" mode instead of "gather data" mode
 
 **What went right:**
+
 - Followed SESSION_START_PROTOCOL correctly
 - Used wrapper scripts for deployment
 - Documented all changes with clear commit messages

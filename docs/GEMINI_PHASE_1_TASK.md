@@ -1,4 +1,5 @@
 # Gemini - Phase 1 Task 1C: Trigger Detector Implementation
+
 **Priority:** P0 - Critical for MCP functionality
 **Estimated Time:** 1-2 hours
 **Status:** Ready to start
@@ -8,6 +9,7 @@
 ## Context
 
 Phase 1 Task 1A (Claude Code) is COMPLETE:
+
 - ✅ Session start script now outputs summaries (4.9KB) instead of full docs (30KB)
 - ✅ 84% context reduction achieved
 - ✅ Retrieval triggers defined in `.ai-agents/session_context/RETRIEVAL_TRIGGERS.md`
@@ -311,6 +313,7 @@ python3 tests/test_trigger_detector.py
 4. **Document changes** - Note what patterns were adjusted
 
 **Common adjustments:**
+
 - Add more keywords to patterns
 - Make patterns more specific (e.g., `\btest\b` vs `test`)
 - Adjust word boundaries
@@ -378,6 +381,7 @@ After you complete Task 1C:
 If blocked or have questions:
 
 1. **Document in checklist:**
+
    ```markdown
    - [ ] ⛔ Task description (BLOCKED: reason)
    ```
@@ -393,17 +397,21 @@ If blocked or have questions:
 ## Files Reference
 
 **Your golden dataset (already created):**
+
 - `.ai-agents/test_data/TRIGGER_TEST_DATASET.json`
 
 **Retrieval triggers map (reference):**
+
 - `.ai-agents/session_context/RETRIEVAL_TRIGGERS.md`
 
 **Files to create:**
+
 - `.ai-agents/session_context/trigger_detector.py`
 - `tests/test_trigger_detector.py`
 - `.ai-agents/validation/TRIGGER_DETECTION_RESULTS.md` (after testing)
 
 **Files to update:**
+
 - `docs/MCP_V1_1_MASTER_CHECKLIST.md` (mark complete)
 - `docs/mcp_responses/GEMINI_RESPONSES.md` (document work)
 

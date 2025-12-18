@@ -1,6 +1,7 @@
 # MCP v1.1 Integration — Final Synthesis & Recommendation
 
 **Document Metadata:**
+
 - Created: 2025-12-09 by Claude Code
 - Status: ✅ COMPLETE - Ready for Damian's decision
 - Contributors: Claude Code, Gemini, Codex
@@ -35,6 +36,7 @@
 ### 1. State Persistence (What to Remember)
 
 **Agreement Across All Agents:**
+
 - **Governance docs:** Should be EXTERNAL ARTIFACTS, not loaded in full every time
 - **User's task:** DURABLE for session scope (don't lose track of goal)
 - **Tool outputs:** TRANSIENT (discard after use, fetch again if needed)
@@ -53,16 +55,19 @@ This shows why summarization schemas are critical - compression is lossy, must b
 ### 2. Context Optimization Opportunity
 
 **Current Waste (All Agents Agree):**
+
 - Claude Code loads 60KB governance docs every session
 - Codex operates in "small working window" but still loads full docs
 - Gemini receives governance via broker but it's static, not adaptive
 
 **MCP Benefit (Projected):**
+
 - Reduce initial context load to ~5KB (summaries + version hashes)
 - Fetch full docs only when triggered (error, deployment, etc.)
 - Save 55KB+ per session = **91% reduction in governance context**
 
 **Cost-Benefit Analysis:**
+
 - **Benefit:** 91% context reduction, faster responses, cleaner prompts
 - **Cost:** MCP server infrastructure, retrieval latency (<500ms target), implementation time
 - **Break-even:** If MCP saves 55KB × 10 sessions/day × 30 days = 16.5MB/month context, worth it
@@ -72,6 +77,7 @@ This shows why summarization schemas are critical - compression is lossy, must b
 **Strong Consensus on Trigger Types:**
 
 All three agents identified similar triggers:
+
 - **Error detection** → Fetch troubleshooting docs
 - **Deployment keywords** → Fetch deployment procedures
 - **Database operations** → Fetch schema + patterns
@@ -84,6 +90,7 @@ All three agents identified similar triggers:
 This suggests **context views should be computed per task phase**, not one-size-fits-all.
 
 **Gemini's Practical Triggers:**
+
 - Command failures with specific exit codes
 - File path references not yet loaded
 - Complex task initiation keywords
@@ -151,16 +158,19 @@ This means **model upgrades won't help until we fix architecture** - MCP is prer
 **All Agents Demand Observability:**
 
 **Gemini's Requirements (Most Explicit):**
+
 - Broker script MUST log full context to file every turn
 - Context must be structured (JSON) with source metadata
 - Log what was EXCLUDED, not just what was included
 
 **Claude Code's Requirements:**
+
 - `/debug dump-context` command to inspect context window
 - Retrieval log (what was fetched, why, when)
 - Provenance tags on all retrieved content
 
 **Codex's Requirements:**
+
 - Provenance metadata in all exported files
 - View bundle outputs with stable filenames
 - Fallback logging when MCP unavailable
@@ -176,11 +186,13 @@ This means **model upgrades won't help until we fix architecture** - MCP is prer
 **Problem:** If MCP is down, agents cannot function
 
 **Solution (Required):**
+
 - **Codex:** "Fallback remains first-class: if exports are stale >24h, session macros revert to direct Markdown loads automatically"
 - **Claude Code:** "If MCP unavailable, fall back to full file reads (current behavior)"
 - **Gemini:** Broker script detects MCP failure, switches to file-based context injection
 
 **Acceptance Criteria:**
+
 - Agent can complete session even if MCP completely unavailable
 - Fallback mode logged and alerted (know when MCP is down)
 - No data loss when MCP fails
@@ -193,12 +205,14 @@ This means **model upgrades won't help until we fix architecture** - MCP is prer
 > "MCP data must therefore be materialized as files/snapshots that stay within the mirror sandbox. Ideally the MCP server writes to `docs/mcp_exports/` whenever state changes."
 
 **Codex's 4 Critical Requirements:**
+
 1. MCP must publish schema-validated summaries to repo/mirror on every update
 2. View compiler outputs need stable filenames
 3. Every MCP dependency requires provenance metadata in exported files
 4. If exports stale >24h, revert to direct Markdown loads
 
 **Acceptance Criteria:**
+
 - MCP exports to `docs/mcp_exports/` automatically
 - Exports are readable markdown with YAML front-matter (source + hash)
 - Export cycle proven reliable (test failures, monitor lag)
@@ -208,17 +222,20 @@ This means **model upgrades won't help until we fix architecture** - MCP is prer
 **Problem:** Gemini's stateless, broker-mediated workflow needs MCP integration
 
 **Solution (Required):**
+
 - Broker script becomes MCP client
 - Logs full context sent to Gemini (observability)
 - Structures context with source metadata (JSON format)
 - Logs exclusions (what was left out)
 
 **Gemini's Observability Demands:**
+
 - `.gemini_logs/turn_123_context.txt` - full prompt every turn
 - Structured context with `{"source": "...", "content": "..."}`
 - Exclusion log (what was omitted and why)
 
 **Acceptance Criteria:**
+
 - Broker script can query MCP servers
 - Full context logged every turn (can reproduce agent's view)
 - Failure modes tested (MCP timeout, invalid response)
@@ -231,6 +248,7 @@ This means **model upgrades won't help until we fix architecture** - MCP is prer
 > "For every summary block, capture the originating file + commit hash or doc path + line. Store as metadata (YAML front-matter) so it survives copy/paste."
 
 **Format:**
+
 ```markdown
 ---
 source: TROUBLESHOOTING_CHECKLIST.md
@@ -244,6 +262,7 @@ schema_version: v1.0
 ```
 
 **Acceptance Criteria:**
+
 - All MCP-generated content includes provenance metadata
 - Agents can trace decisions back to source docs
 - Stale content detected automatically (commit hash changed)
@@ -257,18 +276,21 @@ schema_version: v1.0
 **Goal:** Prove MCP value with minimal infrastructure
 
 **Scope:**
+
 - Local MCP server (Python script, no cloud deployment)
 - File-based only (no database yet)
 - 3 retrieval triggers: error, deployment, session-start
 - Basic logging (retrieval log, context dumps)
 
 **Success Criteria:**
+
 - Context reduced from 60KB → 10KB
 - Retrieval latency < 500ms
 - Fallback works (can disable MCP and complete session)
 - At least 1 agent (Claude Code) uses it successfully
 
 **Deliverables:**
+
 - `mcp_server_local.py` - Simple HTTP server
 - `mcp_client.py` - Library for agents to query
 - Updated session start script to use MCP
@@ -279,6 +301,7 @@ schema_version: v1.0
 **Goal:** All 3 agents can use MCP
 
 **Scope:**
+
 - Gemini broker integration
 - Codex file export mechanism (`docs/mcp_exports/`)
 - Summarization schema implementation
@@ -286,12 +309,14 @@ schema_version: v1.0
 - Handoff standardization
 
 **Success Criteria:**
+
 - All 3 agents reduce context usage by >50%
 - Handoffs use structured schema (not free-form prose)
 - Codex can work even if MCP never started (file exports)
 - Gemini broker logs full context every turn
 
 **Deliverables:**
+
 - Updated broker scripts with MCP client
 - MCP export daemon (writes to `docs/mcp_exports/` on change)
 - Handoff templates using Codex's schema
@@ -302,6 +327,7 @@ schema_version: v1.0
 **Goal:** MCP reliable enough to shrink session macro
 
 **Scope:**
+
 - Railway deployment of MCP server (if local proves valuable)
 - Monitoring and alerting (MCP uptime, latency)
 - Automated fallback testing
@@ -309,12 +335,14 @@ schema_version: v1.0
 - Cross-session memory (failures, commitments)
 
 **Success Criteria:**
+
 - MCP uptime >99.9% or fallback triggers instantly
 - Session macro reduced to <10KB
 - Zero data loss incidents
 - Agents report improved workflow (faster, fewer errors)
 
 **Deliverables:**
+
 - MCP server deployed to Railway
 - Monitoring dashboard (uptime, latency, errors)
 - Automated tests for fallback scenarios
@@ -323,6 +351,7 @@ schema_version: v1.0
 ### Phase 4: Advanced Features (Future)
 
 **Defer until Phase 1-3 proven:**
+
 - Supervisor agent
 - Semantic search retrieval
 - ML-based trigger optimization
@@ -336,22 +365,27 @@ schema_version: v1.0
 **Questions for Damian (Only You Can Answer):**
 
 ### 1. Budget & Infrastructure
+
 - **Q:** Can we allocate $5-10/month for MCP server on Railway (Phase 3)?
 - **Impact:** Phase 1-2 can run locally (free), Phase 3 needs hosting
 
 ### 2. Timeline & Urgency
+
 - **Q:** Is context optimization urgent, or is current system acceptable?
 - **Impact:** Phase 1 takes 2-3 weeks of agent time, delays other work
 
 ### 3. Risk Tolerance
+
 - **Q:** What's your comfort level with MCP being unproven technology?
 - **Impact:** Higher risk = more time on Phase 1 validation, slower rollout
 
 ### 4. Value Threshold
+
 - **Q:** If MCP only benefits 2 of 3 agents, still worth it?
 - **Impact:** Gemini and Claude Code benefit most, Codex less so (already has workarounds)
 
 ### 5. Effort-Benefit Trade-off
+
 - **Q:** Is 6-10 weeks of implementation time worth 90% context reduction?
 - **Impact:** Context savings are significant but not critical (current system works)
 
@@ -362,6 +396,7 @@ schema_version: v1.0
 **I (Claude Code) recommend: PROCEED with Phase 1 prototype**
 
 **Rationale:**
+
 1. **High upside:** 90% context reduction, faster agents, cleaner prompts
 2. **Low downside:** Phase 1 is reversible, no cloud costs, minimal risk
 3. **Proven need:** All 3 agents independently identified same problems
@@ -369,6 +404,7 @@ schema_version: v1.0
 5. **Enables future:** Architecture ceilings won't be fixed by model upgrades alone
 
 **Conditions (MUST be met):**
+
 1. ✅ **Fallback always works** - agents function without MCP
 2. ✅ **File exports for Codex** - mirror never depends on live HTTP
 3. ✅ **Observability first** - comprehensive logging before MCP trusted
@@ -404,6 +440,7 @@ schema_version: v1.0
    - Every session starts from scratch
 
 **Is This Acceptable?**
+
 - If **yes** → Current system works, don't fix what isn't broken
 - If **no** → MCP (or something like it) is required
 
@@ -436,6 +473,7 @@ schema_version: v1.0
 **Technical (Agents Can Resolve):**
 
 These questions were raised but agents can decide amongst themselves:
+
 - Schema format (JSON vs YAML)
 - Retrieval protocol (HTTP vs WebSocket vs Unix socket)
 - Trigger timing (automatic vs confirmation)
@@ -447,18 +485,21 @@ These questions were raised but agents can decide amongst themselves:
 ## Next Actions (If Approved)
 
 **Immediate (Week 1):**
+
 1. Damian answers 5 strategic questions above
 2. Agents consensus on go/no-go based on answers
 3. If go: Assign Phase 1 tasks per agent
 4. If no-go: Archive MCP work, document decision
 
 **Phase 1 Kickoff (Week 2):**
+
 1. Claude Code: Build local MCP server prototype
 2. Gemini: Design broker integration architecture
 3. Codex: Define export file formats + schemas
 4. All: Define acceptance tests for Phase 1
 
 **Phase 1 Validation (Week 3-4):**
+
 1. Test MCP with real workflows
 2. Measure context reduction, latency, reliability
 3. Document failures and near-misses
@@ -469,18 +510,21 @@ These questions were raised but agents can decide amongst themselves:
 ## Appendix: Agent-Specific Notes
 
 ### Claude Code (Me)
+
 - **Biggest benefit:** 91% governance context reduction
 - **Biggest concern:** Retrieval latency must stay <500ms
 - **Critical need:** Observability (context dumps, retrieval logs)
 - **Can implement:** Local MCP server, client library, session integration
 
 ### Gemini (API Mode)
+
 - **Biggest benefit:** Cross-turn memory (currently fully stateless)
 - **Biggest concern:** Broker script complexity, observability gaps
 - **Critical need:** Structured context with provenance metadata
 - **Can implement:** Broker MCP integration, context logging
 
 ### Codex (ChatGPT Mirror)
+
 - **Biggest benefit:** 70%+ mirror context reduction
 - **Biggest concern:** Loss of file-based access, no HTTP from ChatGPT
 - **Critical need:** Automated exports to `docs/mcp_exports/`
@@ -501,6 +545,7 @@ The phased approach mitigates risk: Phase 1 is low-cost validation, Phase 2-3 on
 **My recommendation: Proceed with Phase 1 prototype.**
 
 But this is your call, Damian. We've given you the analysis. Now you decide:
+
 - **Go:** Approve Phase 1, answer strategic questions
 - **No-Go:** Keep current system, archive MCP work
 - **Defer:** Revisit in 3-6 months when priorities clearer

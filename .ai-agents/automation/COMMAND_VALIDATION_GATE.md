@@ -1,4 +1,5 @@
 # Command Validation Gate
+
 **Mandatory Pre-Delivery Validation for All Commands**
 
 ---
@@ -8,31 +9,38 @@
 Before providing ANY command to the user, it MUST pass ALL checks:
 
 ### ✅ Check 1: Directory Paths Are Absolute
+
 - ❌ BAD: `./scripts/test.sh`
 - ✅ GOOD: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/test.sh`
 
 ### ✅ Check 2: Files Exist
+
 - Test with: `[ -f "/path/to/file" ] && echo "EXISTS" || echo "MISSING"`
 - Only provide commands for files that exist
 
 ### ✅ Check 3: Scripts Are Executable
+
 - Test with: `[ -x "/path/to/script.sh" ] && echo "EXECUTABLE" || echo "NOT EXECUTABLE"`
 - If not executable, include: `chmod +x /path/to/script.sh &&`
 
 ### ✅ Check 4: Bash Syntax Is Valid
+
 - Test with: `bash -n /path/to/script.sh`
 - Fix any syntax errors before providing
 
 ### ✅ Check 5: Commands Are Tested
+
 - Actually run the command in a test environment
 - Verify it produces expected output
 - Catch errors before user sees them
 
 ### ✅ Check 6: Error Handling Included
+
 - Every command must have: `|| echo "ERROR: [helpful message]"`
 - Or: `set -e` for scripts that should fail fast
 
 ### ✅ Check 7: Current Working Directory Is Clear
+
 - If command requires specific directory: `cd /absolute/path &&`
 - Or: Use absolute paths throughout
 
@@ -144,14 +152,17 @@ chmod +x /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/te
 ```
 
 **Expected Output:**
+
 ```
 [show what success looks like]
 ```
 
 **If Error:**
+
 ```bash
 [exact command to diagnose]
 ```
+
 ```
 
 ---
@@ -161,6 +172,7 @@ chmod +x /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/te
 Before sending ANY response with commands, verify:
 
 ```
+
 □ All paths are absolute (no ./ or ../)
 □ All files tested to exist ([ -f path ])
 □ All scripts tested as executable ([ -x path ])
@@ -170,6 +182,7 @@ Before sending ANY response with commands, verify:
 □ Working directory is explicit (cd /path or absolute paths)
 □ Expected output is documented
 □ Troubleshooting commands provided
+
 ```
 
 **If ANY checkbox fails → DO NOT DELIVER → Fix first**

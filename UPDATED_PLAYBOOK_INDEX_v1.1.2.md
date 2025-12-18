@@ -1,10 +1,13 @@
 # PLAYBOOK INDEX — v1.1.2
+
 **Document Metadata:**
+
 - Created: 2025-12-06
 - Last Updated: 2025-12-06
 - Status: ACTIVE
 
 Documents:
+
 - META_GOVERNANCE_CANON_MVP_v1.0.md
 - GLOBAL_META_INSTRUCTION_v2.0.md
 - MOSAIC_META_PROMPT_TEMPLATE_MVP_v1.0.md

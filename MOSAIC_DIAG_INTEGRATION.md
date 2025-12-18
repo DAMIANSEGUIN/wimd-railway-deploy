@@ -73,6 +73,7 @@ fi
 ```
 
 **This prevents:**
+
 - BUILD_ID loop (Blocker #1B)
 - Deploying with uncommitted changes
 - Branch configuration mismatches
@@ -90,15 +91,19 @@ fi
 ```bash
 python3 mosaic-diag/cli.py preflight all
 ```
+
 If checks fail, review output before proceeding.
 
 **□ 3. Review recent blockers:**
+
 ```bash
 python3 mosaic-diag/cli.py incidents --limit 5
 ```
+
 Know what patterns to avoid.
 
 **□ 4. Read `TEAM_PLAYBOOK.md` Section 2 (Current Sprint Status) - 2 minutes**
+
 ```
 
 **This prevents:**
@@ -126,6 +131,7 @@ Know what patterns to avoid.
 3. **Add prevention to TEAM_PLAYBOOK.md** if applicable
 
 **This enables:**
+
 - Pattern detection (recurrence tracking)
 - Data-driven prioritization
 - Automated prevention suggestions (future phase)
@@ -173,6 +179,7 @@ jobs:
 ```
 
 **This prevents:**
+
 - Deploying broken code
 - Environment mismatches
 - Configuration drift
@@ -186,6 +193,7 @@ jobs:
 **My Assessment: YES - Architecture review recommended**
 
 **Reasons:**
+
 1. **New system integration** - Affects deployment workflow
 2. **Cross-team impact** - All agents will use this
 3. **Data persistence** - JSONL storage patterns should be validated
@@ -218,22 +226,26 @@ jobs:
 ## Rollout Plan
 
 **Phase 1: Testing (Now - Week 1)**
+
 - [x] System implemented and working
 - [ ] Gemini architecture review
 - [ ] Human user tests locally
 - [ ] Document any issues found
 
 **Phase 2: Advisory Mode (Week 2)**
+
 - [ ] Add to SESSION_START.md (non-blocking)
 - [ ] Agents run preflight, log results, but don't block work
 - [ ] Collect incident data for 1 week
 
 **Phase 3: Blocking Mode (Week 3)**
+
 - [ ] Add to `scripts/deploy.sh` (blocks deployment if critical checks fail)
 - [ ] Add to CI/CD pipeline
 - [ ] Become canonical workflow
 
 **Phase 4: Prognostic Engine (Future)**
+
 - [ ] Implement recurrence detection
 - [ ] Implement clustering (Phase 2 of spec)
 - [ ] Generate automated suggestions
@@ -243,11 +255,13 @@ jobs:
 ## Success Metrics
 
 **After 1 week:**
+
 - [ ] 10+ incidents logged
 - [ ] 0 duplicate Python environment issues (Blocker #2A/2B)
 - [ ] 0 BUILD_ID loop incidents (Blocker #1B)
 
 **After 1 month:**
+
 - [ ] 50+ incidents logged
 - [ ] 3+ new preflight checks added based on patterns
 - [ ] 20% reduction in blocker time lost
@@ -272,10 +286,12 @@ mosaic-diag/
 ```
 
 **Also Created:**
+
 - `RECURRING_BLOCKERS.md` - Blocker pattern analysis
 - `MOSAIC_DIAG_INTEGRATION.md` - This document
 
 **Modified:**
+
 - `TEAM_PLAYBOOK.md` - Added Section 4 (Local Dev Setup), Communication Protocol
 
 ---
@@ -283,18 +299,21 @@ mosaic-diag/
 ## Next Actions
 
 **For User:**
+
 1. Review this document
 2. Test mosaic-diag locally (run commands above)
 3. Decide: Should Gemini review before rollout?
 4. If yes: Share this document + `mosaic-diag/` directory with Gemini
 
 **For Gemini (if review requested):**
+
 1. Review architecture (storage, checks, incidents)
 2. Validate integration points
 3. Identify risks/edge cases
 4. Approve rollout or request changes
 
 **For Claude Code (me):**
+
 1. Wait for feedback
 2. Address any issues found
 3. Proceed with rollout per plan

@@ -1,7 +1,8 @@
 # Team Note – Stage 2 Action Plan Ready
-**Date:** 2025-11-05  
-**From:** Cursor (Team Coordinator)  
-**To:** All Team Members  
+
+**Date:** 2025-11-05
+**From:** Cursor (Team Coordinator)
+**To:** All Team Members
 **Status:** ✅ Ready for execution
 
 ---
@@ -17,6 +18,7 @@ Stage 2 instructions are now documented and ready for team execution:
 ## Assignments
 
 ✅ **Cursor** – Live DevTools Capture
+
 - Capture production DevTools evidence (console logs, network activity, state inspection)
 - Document findings in `.ai-agents/STAGE2_DIAGNOSIS_2025-11-05.md`
 - Include screenshots/logs for all diagnostic checks
@@ -26,6 +28,7 @@ Stage 2 instructions are now documented and ready for team execution:
 ---
 
 ✅ **CIT** – Stage 2 Diagnosis Author
+
 - Use Cursor's evidence to build Stage 2 document
 - Include hypothesis list, falsifiers, and updated diagnosis
 - Request Codex approval before any coding changes
@@ -35,6 +38,7 @@ Stage 2 instructions are now documented and ready for team execution:
 ---
 
 ✅ **Codex** – Oversight
+
 - Review Stage 2 submission
 - Decide next steps (hotfix, env correction, further analysis)
 - Coordinate Stage 3 actions
@@ -46,6 +50,7 @@ Stage 2 instructions are now documented and ready for team execution:
 ## Important Notes
 
 ⚠️ **ChatGPT Hotfix Parked**
+
 - ChatGPT's inline snippet (modal visibility + fetch wrapper) is **deferred** until Stage 2 confirms root cause
 - Revisit after Codex oversight sign-off
 - No code changes until Stage 2 diagnosis is approved
@@ -53,6 +58,7 @@ Stage 2 instructions are now documented and ready for team execution:
 ---
 
 ✅ **Status Update Format**
+
 - All status updates follow revised troubleshooting framework format:
   - `✅` Completed actions
   - `⚠️` Warnings/issues
@@ -81,4 +87,3 @@ Stage 2 instructions are now documented and ready for team execution:
 ---
 
 **Next Action:** Cursor begins DevTools capture per Stage 2 action plan
-

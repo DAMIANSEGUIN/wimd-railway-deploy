@@ -6,9 +6,9 @@ Tests graceful degradation when MCP components fail
 
 import json
 import sys
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any
+from pathlib import Path
+from typing import Any, Dict
 
 
 def test_missing_mcp_files() -> Dict[str, Any]:
@@ -20,13 +20,10 @@ def test_missing_mcp_files() -> Dict[str, Any]:
     required_files = [
         ".ai-agents/session_context/GOVERNANCE_SUMMARY.md",
         ".ai-agents/session_context/TROUBLESHOOTING_SUMMARY.md",
-        ".ai-agents/session_context/RETRIEVAL_TRIGGERS.md"
+        ".ai-agents/session_context/RETRIEVAL_TRIGGERS.md",
     ]
 
-    fallback_files = [
-        "CLAUDE.md",
-        "TROUBLESHOOTING_CHECKLIST.md"
-    ]
+    fallback_files = ["CLAUDE.md", "TROUBLESHOOTING_CHECKLIST.md"]
 
     missing = []
     for filepath in required_files:
@@ -73,7 +70,7 @@ def test_corrupt_session_log() -> Dict[str, Any]:
     sessions_dir.mkdir(parents=True, exist_ok=True)
 
     # Write invalid JSON
-    with open(test_log, 'w') as f:
+    with open(test_log, "w") as f:
         f.write("{invalid json here\n")
         f.write("not a valid jsonl format\n")
 
@@ -83,6 +80,7 @@ def test_corrupt_session_log() -> Dict[str, Any]:
     try:
         sys.path.insert(0, str(Path(__file__).parent.parent / "session_context"))
         from session_logger import SessionLogger
+
         logger = SessionLogger()
 
         # Attempt to read corrupt session
@@ -98,7 +96,7 @@ def test_corrupt_session_log() -> Dict[str, Any]:
             event_type="user_message",
             agent="test",
             source="test",
-            data={"message": "test"}
+            data={"message": "test"},
         )
 
         if success:
@@ -164,6 +162,7 @@ def test_missing_schema_file() -> Dict[str, Any]:
         try:
             sys.path.insert(0, str(Path(__file__).parent.parent / "session_context"))
             from session_logger import SessionLogger
+
             logger = SessionLogger()
             print("   ❌ FAIL: SessionLogger should require schema")
             return {"status": "fail", "should_fail_without_schema": True}
@@ -176,12 +175,13 @@ def test_missing_schema_file() -> Dict[str, Any]:
         print(f"   ✅ Schema file exists: {schema_file}")
 
         # Temporarily rename schema
-        backup_name = schema_file.with_suffix('.json.backup')
+        backup_name = schema_file.with_suffix(".json.backup")
         schema_file.rename(backup_name)
 
         try:
             sys.path.insert(0, str(Path(__file__).parent.parent / "session_context"))
             from session_logger import SessionLogger
+
             logger = SessionLogger()
             print("   ❌ FAIL: Should fail without schema")
             result = {"status": "fail", "should_fail_without_schema": True}
@@ -231,10 +231,7 @@ def run_all_tests() -> Dict[str, Any]:
     print("MCP FAILURE MODE TESTING")
     print("=" * 60)
 
-    results = {
-        "timestamp": datetime.utcnow().isoformat() + "Z",
-        "tests": {}
-    }
+    results = {"timestamp": datetime.utcnow().isoformat() + "Z", "tests": {}}
 
     # Run tests
     results["tests"]["missing_mcp_files"] = test_missing_mcp_files()
@@ -264,7 +261,7 @@ def run_all_tests() -> Dict[str, Any]:
     results_file = Path(".ai-agents/validation/FAILURE_MODE_TEST_RESULTS.json")
     results_file.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(results_file, 'w') as f:
+    with open(results_file, "w") as f:
         json.dumps(results, indent=2)
 
     print(f"\n   Results saved: {results_file}")

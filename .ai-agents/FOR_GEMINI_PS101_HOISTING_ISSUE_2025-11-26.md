@@ -18,6 +18,7 @@
 ## Technical Details
 
 ### Console Error
+
 ```
 [INIT] Initialization error: ReferenceError:
 handleStepAnswerInput is not defined
@@ -30,6 +31,7 @@ handleStepAnswerInput is not defined
 **File:** `mosaic_ui/index.html`
 
 **Line 2590-2591:** Function is used
+
 ```javascript
 const textarea = document.getElementById('step-answer');
 if (textarea) {
@@ -39,6 +41,7 @@ if (textarea) {
 ```
 
 **Line 3759:** Function is defined (~1200 lines later)
+
 ```javascript
 function handleStepAnswerInput(e) {
   const step = PS101State.getCurrentStep();
@@ -64,35 +67,44 @@ During Phase 1 modularization, code was reorganized but function definitions wer
 ## Proposed Solutions
 
 ### Option 1: Move Function Definition (Simple)
+
 Move `handleStepAnswerInput` definition from line 3759 to before line 2590.
 
 **Pros:**
+
 - Simple, minimal change
 - Fixes immediate issue
 
 **Cons:**
+
 - Doesn't address architectural question
 - May have other similar issues
 
 ### Option 2: Hoist All PS101 Functions (Comprehensive)
+
 Review all PS101 functions and ensure proper hoisting order.
 
 **Pros:**
+
 - Prevents similar issues
 - Better architecture
 
 **Cons:**
+
 - More work
 - Need to review entire PS101 code structure
 
 ### Option 3: Module Refactor (Long-term)
+
 Complete the Phase 1 modularization by moving PS101 functions to separate module.
 
 **Pros:**
+
 - Proper separation of concerns
 - Prevents hoisting issues
 
 **Cons:**
+
 - Larger scope
 - Delays fix
 
@@ -101,6 +113,7 @@ Complete the Phase 1 modularization by moving PS101 functions to separate module
 ## Current State
 
 ### Backup Created
+
 **Location:** `backups/pre-ps101-fix_20251126_220704Z/`
 **Reference:** `.ai-agents/CURRENT_BACKUP_REFERENCE.md`
 **Commit:** c8f1fd3
@@ -108,11 +121,13 @@ Complete the Phase 1 modularization by moving PS101 functions to separate module
 Safe to experiment with fixes.
 
 ### Testing Environment
-- Local server running: http://localhost:3000/ (PID 57948)
+
+- Local server running: <http://localhost:3000/> (PID 57948)
 - CodexCapture active in Chromium
 - User has verified issue with screenshots
 
 ### Files Affected
+
 - `mosaic_ui/index.html` - Needs fix
 - `frontend/index.html` - Will need same fix
 
@@ -139,6 +154,7 @@ Safe to experiment with fixes.
 ## What I Can Do
 
 Once you provide architectural guidance, I can:
+
 - Implement the fix in `mosaic_ui/index.html`
 - Apply to `frontend/index.html`
 - Test locally with CodexCapture

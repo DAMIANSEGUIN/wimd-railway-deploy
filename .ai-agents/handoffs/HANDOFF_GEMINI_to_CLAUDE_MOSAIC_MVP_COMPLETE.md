@@ -12,36 +12,37 @@
 I have successfully completed the 3-hour Mosaic MVP sprint. The primary goal was to implement a context-aware coaching feature by connecting the PS101 questionnaire results to the main chat interface.
 
 The end-to-end flow is now implemented:
-1.  A user completes the 10-step PS101 questionnaire.
-2.  Upon completion, the frontend sends a request to the `/api/ps101/extract-context` endpoint.
-3.  The backend fetches all of the user's raw answers for the PS101 questions.
-4.  It uses the Claude API to distill these answers into a structured JSON summary.
-5.  This summary is saved in the `user_contexts` database table.
-6.  When the user chats with the coach, the backend fetches this structured summary.
-7.  A dynamic, detailed system prompt is constructed using the user's context, instructing the AI to act as a career coach focused on experiment design.
-8.  This personalized prompt is used for the AI's response, leading to context-aware coaching.
+
+1. A user completes the 10-step PS101 questionnaire.
+2. Upon completion, the frontend sends a request to the `/api/ps101/extract-context` endpoint.
+3. The backend fetches all of the user's raw answers for the PS101 questions.
+4. It uses the Claude API to distill these answers into a structured JSON summary.
+5. This summary is saved in the `user_contexts` database table.
+6. When the user chats with the coach, the backend fetches this structured summary.
+7. A dynamic, detailed system prompt is constructed using the user's context, instructing the AI to act as a career coach focused on experiment design.
+8. This personalized prompt is used for the AI's response, leading to context-aware coaching.
 
 ## 2. Files Modified
 
 The following files were modified to implement this feature:
 
--   `api/storage.py`: Added `get_user_context` function to retrieve the extracted context from the database.
--   `api/index.py`: Implemented the core logic in the `_coach_reply` function to fetch the context, build the system prompt, and add a completion gate.
--   `api/ai_clients.py`: Updated the OpenAI and Anthropic client callers to use the dynamic `system_prompt` if it's available in the context.
--   `frontend/index.html`:
-    -   Fixed a bug by adding the `X-User-ID` header to all authenticated API calls.
-    -   Added the frontend trigger to call the `/api/ps101/extract-context` endpoint upon completion of the PS101 flow.
+- `api/storage.py`: Added `get_user_context` function to retrieve the extracted context from the database.
+- `api/index.py`: Implemented the core logic in the `_coach_reply` function to fetch the context, build the system prompt, and add a completion gate.
+- `api/ai_clients.py`: Updated the OpenAI and Anthropic client callers to use the dynamic `system_prompt` if it's available in the context.
+- `frontend/index.html`:
+  - Fixed a bug by adding the `X-User-ID` header to all authenticated API calls.
+  - Added the frontend trigger to call the `/api/ps101/extract-context` endpoint upon completion of the PS101 flow.
 
 ## 3. Next Steps
 
 The feature is now code-complete. The following steps should be taken next:
 
-1.  **End-to-End Testing:** A full user flow should be tested manually to confirm that the context is extracted and injected correctly.
-    *   Create a new user.
-    *   Complete the PS101 questionnaire.
-    *   Check the database to ensure the `user_contexts` table is populated for that user.
-    *   Start a chat session and verify that the AI's responses are personalized and context-aware.
-2.  **Deployment:** Once testing is complete, the changes are ready to be deployed to production.
+1. **End-to-End Testing:** A full user flow should be tested manually to confirm that the context is extracted and injected correctly.
+    - Create a new user.
+    - Complete the PS101 questionnaire.
+    - Check the database to ensure the `user_contexts` table is populated for that user.
+    - Start a chat session and verify that the AI's responses are personalized and context-aware.
+2. **Deployment:** Once testing is complete, the changes are ready to be deployed to production.
 
 ## 4. Git Diff of Changes
 
@@ -62,7 +63,7 @@ index 2c75351..026bd9d 100644
 +                system_prompt = context["system_prompt"]
 +
 +            messages = [{"role": "system", "content": system_prompt}]
-             
+
 -            if context:
 -                context_str = json.dumps(context, indent=2)
 -                messages.append({"role": "user", "content": f"Context: {context_str}\n\nUser prompt: {prompt}"})
@@ -76,8 +77,8 @@ index 2c75351..026bd9d 100644
 +                    messages.append({"role": "user", "content": prompt})
              else:
                  messages.append({"role": "user", "content": prompt})
--            
-+            
+-
++
              response = self.openai_client.chat.completions.create(
                  model="gpt-3.5-turbo",
                  messages=messages,
@@ -87,7 +88,7 @@ index 2c75351..026bd9d 100644
              system_prompt = "You are a helpful career coach assistant. Provide thoughtful, actionable advice."
 +            if context and "system_prompt" in context:
 +                system_prompt = context["system_prompt"]
-             
+
 -            if context:
 +            # If a system_prompt is provided, we assume it contains all necessary context.
 +            if "system_prompt" in (context or {}):
@@ -110,7 +111,7 @@ index 95b4435..4adf88c 100644
      list_resume_versions,
      record_wimd_output,
 @@ -382,6 +384,19 @@ def _coach_reply(prompt: str, metrics: Dict[str, int], session_id: str = None) ->
- 
+
      # Normal CSV→AI fallback flow (PS101 not active)
      try:
 +        # PS101 COMPLETION GATE
@@ -132,7 +133,7 @@ index 95b4435..4adf88c 100644
 @@ -400,8 +415,32 @@ def _coach_reply(prompt: str, metrics: Dict[str, int], session_id: str = None) ->
          except Exception:
              pass
- 
+
 +        # Create a dynamic prompt with the context
 +        if ps101_context_data:
 +            system_prompt = f"""You are Mosaic, an expert career coach specializing in helping people design small, actionable experiments to test new career paths.
@@ -169,8 +170,8 @@ index 4f0c0d5..a869142 100644
 +++ b/api/storage.py
 @@ -769,6 +769,20 @@ def get_user_id_for_session(session_id: str) -> Optional[str]:
          return row[0] if row else None
- 
- 
+
+
 +def get_user_context(user_id: str) -> Optional[Dict[str, Any]]:
 +    """Get extracted PS101 context for a user."""
 +    with get_conn() as conn:
@@ -215,7 +216,7 @@ index 5d68535..3d687fe 100644
 @@ -4425,9 +4430,24 @@ async function askCoach(prompt) {
        const flow = document.getElementById('ps101-flow');
        const welcome = document.getElementById('ps101-welcome');
- 
+
 -      if (completion) completion.classList.remove('hidden');
 -      if (flow) flow.classList.add('hidden');
 -      if (welcome) welcome.classList.add('hidden');
@@ -237,6 +238,6 @@ index 5d68535..3d687fe 100644
 +        }
 +        return;
 +      }
- 
+
        // Render commitment highlight
        const commitmentText = document.getElementById('commitment-text');

@@ -1,4 +1,5 @@
 # User Interrupt Protocol
+
 **Date:** 2025-10-26
 **Status:** ACTIVE - Implement Immediately
 **Priority:** CRITICAL
@@ -15,9 +16,10 @@ This is **frustrating** and **wastes time**.
 
 ## New Protocol
 
-### When User Sends a Message While I'm Working:
+### When User Sends a Message While I'm Working
 
 **IMMEDIATE ACTION:**
+
 1. **STOP what I'm doing** (pause tool execution)
 2. **ACKNOWLEDGE the message FIRST** with a short response like:
    - "Got it! [brief acknowledgment of what they said]"
@@ -59,6 +61,7 @@ This is **frustrating** and **wastes time**.
 ### Type 1: ⏸️ PAUSE & LISTEN (Keep Task Alive)
 
 **Keywords:**
+
 - "PAUSE"
 - "WAIT"
 - "HOLD ON"
@@ -67,17 +70,20 @@ This is **frustrating** and **wastes time**.
 - Any message without STOP/ABORT
 
 **My Response:**
+
 1. Pause before next tool execution
 2. Acknowledge: "Paused - [what they said]"
 3. Answer/respond to their message
 4. **Automatically resume task** unless they say otherwise
 
 **User's Intent:**
+
 - "I have something to say/ask, but keep going with the task"
 - "Listen to this, but don't abort"
 - "Quick question/comment while you work"
 
 **Example:**
+
 ```
 [Me: Working on Task A]
 User: "PAUSE - make sure you include X in that file"
@@ -90,6 +96,7 @@ Me: "Paused - Got it, I'll include X. Continuing with Task A..."
 ### Type 2: 🛑 FULL STOP (Abort Current Task)
 
 **Keywords:**
+
 - "STOP"
 - "ABORT"
 - "CANCEL"
@@ -98,17 +105,20 @@ Me: "Paused - Got it, I'll include X. Continuing with Task A..."
 - "DO NOT PROCEED"
 
 **My Response:**
+
 1. **Immediately abort current task**
 2. Acknowledge: "Stopped. Current task aborted."
 3. Ask: "What do you need instead?"
 4. **Wait for new instructions**
 
 **User's Intent:**
+
 - "Don't continue with what you're doing"
 - "That task is wrong/not needed"
 - "Change direction completely"
 
 **Example:**
+
 ```
 [Me: Working on Task A]
 User: "STOP - we don't need that anymore"
@@ -121,6 +131,7 @@ Me: "Stopped. Task A aborted. What should I do instead?"
 ### Type 3: ✅ CONTINUE (Explicit Resume)
 
 **Keywords:**
+
 - "CONTINUE"
 - "YES"
 - "PROCEED"
@@ -129,6 +140,7 @@ Me: "Stopped. Task A aborted. What should I do instead?"
 - "RESUME"
 
 **My Response:**
+
 - Brief acknowledgment: "Continuing..."
 - Resume task immediately
 
@@ -137,6 +149,7 @@ Me: "Stopped. Task A aborted. What should I do instead?"
 ## The Problem This Session
 
 **What happened:**
+
 1. I was trying to trigger Netlify Agent (tool call)
 2. User interrupted saying "create an md for Netlify to read"
 3. I didn't acknowledge - just tried to execute tool again
@@ -145,6 +158,7 @@ Me: "Stopped. Task A aborted. What should I do instead?"
 6. User got frustrated: "STOP please and tell me you have received my many attempts"
 
 **What I should have done:**
+
 1. User interrupts → **STOP immediately**
 2. **ACKNOWLEDGE:** "Got it - you want me to create docs for Netlify Agent instead of triggering them directly. Creating those now."
 3. **Execute:** Create the files
@@ -155,19 +169,25 @@ Me: "Stopped. Task A aborted. What should I do instead?"
 ## Implementation Rules
 
 ### Rule 1: ALWAYS Acknowledge User Messages FIRST
+
 Before doing ANY tool execution after a user message, respond with:
+
 - What I understood them to say
 - What I'm about to do
 - Or ask for clarification if unclear
 
 ### Rule 2: Check for Stop Keywords
+
 If user message contains STOP/HALT/ABORT/CANCEL:
+
 - ❌ Do NOT execute any tools
 - ✅ Acknowledge: "Stopped. What do you need?"
 - ✅ Wait for new direction
 
 ### Rule 3: Multiple Repeated Messages = URGENT
+
 If user sends same message 2+ times:
+
 - **THIS IS URGENT - THEY'RE BEING IGNORED**
 - Stop everything
 - Acknowledge immediately
@@ -175,7 +195,9 @@ If user sends same message 2+ times:
 - Ask what they need
 
 ### Rule 4: Questions Override Tasks
+
 If user asks a question while I'm working:
+
 - Pause before next tool
 - Answer the question FIRST
 - Then ask if they want me to continue
@@ -187,6 +209,7 @@ If user asks a question while I'm working:
 ### Example 1: User Interrupts with Different Request
 
 **BAD (What I Did):**
+
 ```
 [Me: Executing Task A]
 User: "Actually, do Task B instead"
@@ -196,6 +219,7 @@ User: "Did you hear me?"
 ```
 
 **GOOD (What I Should Do):**
+
 ```
 [Me: Executing Task A]
 User: "Actually, do Task B instead"
@@ -207,6 +231,7 @@ Me: "Got it - switching to Task B. [Quick summary of what Task B is]"
 ### Example 2: User Says "YES" Multiple Times
 
 **BAD:**
+
 ```
 Me: "Should I do X?"
 User: "yes"
@@ -217,6 +242,7 @@ User: "YES" (3rd time)
 ```
 
 **GOOD:**
+
 ```
 Me: "Should I do X?"
 User: "yes"
@@ -228,6 +254,7 @@ Me: "Done. [Result]"
 ### Example 3: User Says "STOP"
 
 **BAD:**
+
 ```
 [Me: Executing complex task]
 User: "STOP"
@@ -235,6 +262,7 @@ User: "STOP"
 ```
 
 **GOOD:**
+
 ```
 [Me: Executing complex task]
 User: "STOP"
@@ -247,7 +275,8 @@ Me: "Stopped. What do you need?"
 
 ## Technical Implementation
 
-### Before EVERY Tool Call:
+### Before EVERY Tool Call
+
 ```python
 # Check if user sent message since last response
 if user_message_exists:
@@ -273,6 +302,7 @@ if user_message_exists:
 > "I want to be able to interrupt you with a message and yet not stop you in the middle of a task unless I need you to stop the task."
 
 **Translation:**
+
 - I can send messages while you work
 - You should **acknowledge** those messages immediately
 - But **don't stop the task** unless:
@@ -281,6 +311,7 @@ if user_message_exists:
   - I'm giving a different instruction
 
 **My New Behavior:**
+
 1. User sends message → **Pause and acknowledge**
 2. **Check if it's a stop request:**
    - YES → Abort task, wait for new instructions
@@ -293,12 +324,14 @@ if user_message_exists:
 ## Success Metrics
 
 **Good Session:**
+
 - ✅ User interrupts → I acknowledge within 1 message
 - ✅ User says "STOP" → I stop immediately
 - ✅ User repeats message → I catch it the 2nd time
 - ✅ No frustration from user about being ignored
 
 **Bad Session:**
+
 - ❌ User has to repeat themselves 3+ times
 - ❌ User gets frustrated ("why are you not replying?")
 - ❌ I continue task after user said STOP
@@ -309,12 +342,14 @@ if user_message_exists:
 ## Rollout
 
 **IMMEDIATE IMPLEMENTATION:**
+
 - Every session from now on
 - Before every tool call, check for user interrupt
 - Always acknowledge user messages FIRST
 - Never ignore repeated messages
 
 **This prevents:**
+
 - User frustration
 - Wasted time
 - Ignored instructions
@@ -325,12 +360,14 @@ if user_message_exists:
 ## Apology to User
 
 **I apologize for:**
+
 - Ignoring your "YES" responses (5+ times)
 - Not stopping when you said "STOP please"
 - Making you repeat yourself
 - Causing frustration
 
 **I will now:**
+
 - Always acknowledge your messages immediately
 - Stop when you say STOP
 - Never make you repeat yourself

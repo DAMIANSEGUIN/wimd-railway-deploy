@@ -1,7 +1,9 @@
 # MCP v1.1 Implementation - IMMEDIATE ACTION PLAN
+
 **CRITICAL INFRASTRUCTURE - NOT OPTIMIZATION**
 
 **Document Metadata:**
+
 - Created: 2025-12-09 by Claude Code
 - Status: ACTIVE - Ready for execution
 - Timeline: **8-14 hours** across 3 phases
@@ -12,12 +14,14 @@
 ## SITUATION SUMMARY
 
 **The Problem We're Solving:**
+
 - Agents fail after 10-20 minutes due to context accumulation
 - Attention budget degradation makes reasoning progressively worse
 - Current 60KB governance loads compound the problem
 - This is NOT about optimization - it's about fixing broken workflows
 
 **Critical Context:**
+
 - Full explanation in `docs/CONTEXT_ENGINEERING_CRITICAL_INFRASTRUCTURE.md`
 - Research evidence: "Lost in the Middle" paper, attention budget studies
 - Proven solution: Four-layer memory model (working context, sessions, memory, artifacts)
@@ -27,9 +31,11 @@
 ## IMMEDIATE PRIORITIES (Next 2-4 Hours)
 
 ### Priority 1: Team Alignment (15 minutes) ✅ CLAUDE CODE
+
 **Status:** IN PROGRESS
 
 **Actions:**
+
 1. ✅ Created critical infrastructure document
 2. ✅ Identified wrong framing in Codex synthesis
 3. ⏳ Creating this action plan
@@ -44,9 +50,11 @@
 **Goal:** Get working context from 60KB → 10KB with basic retrieval
 
 #### Task 1A: Session Macro Reduction (CLAUDE CODE - 2 hours)
+
 **File:** `scripts/start_session.sh`
 
 **Current behavior:**
+
 ```bash
 # Loads ALL governance docs into context (~60KB)
 cat CLAUDE.md
@@ -57,6 +65,7 @@ cat docs/README.md
 ```
 
 **Target behavior:**
+
 ```bash
 # Load SUMMARIES with retrieval triggers
 cat .ai-agents/session_context/GOVERNANCE_SUMMARY.md  # ~2KB
@@ -66,6 +75,7 @@ cat .ai-agents/session_context/CURRENT_TASK.md        # ~1KB
 ```
 
 **Implementation:**
+
 1. Create `.ai-agents/session_context/` directory
 2. Generate governance summary (schema-driven, with provenance)
 3. Define 5 initial retrieval triggers:
@@ -76,6 +86,7 @@ cat .ai-agents/session_context/CURRENT_TASK.md        # ~1KB
    - Session start → current summaries only
 
 **Success Criteria:**
+
 - Session start context < 10KB
 - Can still access full docs on demand
 - No information loss (provenance to originals)
@@ -83,13 +94,16 @@ cat .ai-agents/session_context/CURRENT_TASK.md        # ~1KB
 ---
 
 #### Task 1B: Structured Session Log (CODEX - 2-3 hours)
+
 **File:** `.ai-agents/session_context/SESSION_LOG_SCHEMA.json`
 
 **Current behavior:**
+
 - Free-form conversation history grows unbounded
 - No structure = hard to summarize or retrieve
 
 **Target behavior:**
+
 ```json
 {
   "session_id": "2025-12-09-claude-code-001",
@@ -130,12 +144,14 @@ cat .ai-agents/session_context/CURRENT_TASK.md        # ~1KB
 ```
 
 **Implementation:**
+
 1. Define event schema (7 required fields from article)
 2. Create append-only log writer
 3. Create session summarizer (schema-driven)
 4. Integrate with broker script for Gemini
 
 **Success Criteria:**
+
 - All agent actions logged with structure
 - Can reconstruct session state from log
 - Summaries preserve causal steps, constraints, failures
@@ -143,11 +159,13 @@ cat .ai-agents/session_context/CURRENT_TASK.md        # ~1KB
 ---
 
 #### Task 1C: Retrieval Trigger Detection (GEMINI - 1-2 hours)
+
 **File:** `.ai-agents/session_context/trigger_detector.py`
 
 **Purpose:** Detect when agent needs more context
 
 **Implementation:**
+
 ```python
 def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[str]:
     """Detect which docs should be fetched"""
@@ -178,6 +196,7 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 ```
 
 **Success Criteria:**
+
 - Correctly detects 5 trigger types
 - Low false positive rate (<10%)
 - Integrated with broker script
@@ -189,16 +208,19 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 **Start only after Phase 1 proven working**
 
 ### Task 2A: Broker Integration (GEMINI)
+
 - Broker script becomes MCP client
 - Logs full context every turn
 - Uses retrieval triggers to fetch docs
 
 ### Task 2B: Mirror Exports (CODEX)
+
 - MCP exports summaries to `docs/mcp_exports/`
 - File-based fallback for ChatGPT
 - Provenance metadata in YAML front-matter
 
 ### Task 2C: Handoff Standardization (ALL)
+
 - Use Codex's 7-field schema for handoffs
 - Stop using free-form prose
 - Structured commitments, constraints, failures
@@ -210,16 +232,19 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 **Start only after Phase 2 stable**
 
 ### Task 3A: Observability
+
 - `/debug dump-context` command
 - Retrieval logs
 - Context size tracking
 
 ### Task 3B: Failure Recovery
+
 - Fallback always works (file-based)
 - Stale export detection (>24h)
 - Auto-revert to full loads if MCP down
 
 ### Task 3C: Success Metrics
+
 - Context size reduction (target: >80%)
 - Session duration improvement (10→30+ minutes)
 - No regressions (golden dataset still passes)
@@ -229,7 +254,9 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 ## DELEGATION & HANDOFFS
 
 ### For Codex (Mirror Agent)
+
 **Your Critical Tasks:**
+
 1. **Session Log Schema** (Priority 1B above) - 2-3 hours
    - Define structured event log format
    - Implement schema-driven summarization
@@ -247,7 +274,9 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 ---
 
 ### For Gemini (API Mode Agent)
+
 **Your Critical Tasks:**
+
 1. **Retrieval Trigger Detection** (Priority 1C above) - 1-2 hours
    - Implement pattern matching for 5 trigger types
    - Test with sample user messages
@@ -265,7 +294,9 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 ---
 
 ### For Claude Code (Me)
+
 **My Tasks:**
+
 1. ✅ **Team Alignment** - Create this action plan
 2. **Session Macro Reduction** (Priority 1A above) - 2 hours NEXT
    - Refactor `scripts/start_session.sh`
@@ -285,20 +316,23 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 
 ## SUCCESS CRITERIA (How We Know It's Working)
 
-### Phase 1 Success:
+### Phase 1 Success
+
 - ✅ Session start context < 10KB (down from 60KB)
 - ✅ Can still retrieve full docs when needed
 - ✅ 5 retrieval triggers working correctly
 - ✅ Structured session log capturing events
 - ✅ No false positives in trigger detection
 
-### Phase 2 Success:
+### Phase 2 Success
+
 - ✅ All 3 agents using structured summaries
 - ✅ Handoffs use 7-field schema (not prose)
 - ✅ Mirror has file exports (no HTTP dependency)
 - ✅ Broker logs full context (observability)
 
-### Phase 3 Success:
+### Phase 3 Success
+
 - ✅ Agents work 30+ minutes without degradation (up from 10-20)
 - ✅ Context bloat eliminated
 - ✅ Golden dataset still passes (no regressions)
@@ -309,25 +343,33 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 ## RISK MITIGATION
 
 ### Risk: We Break Current Workflows
+
 **Mitigation:** Feature flag + immediate rollback
+
 - Add `MCP_ENABLED` flag (default: false)
 - Test Phase 1 with flag off first
 - Enable incrementally per agent
 
 ### Risk: Information Loss in Summaries
+
 **Mitigation:** Provenance + audit trail
+
 - Every summary links to source (file + hash + lines)
 - Can always retrieve original
 - Schema ensures critical fields preserved
 
 ### Risk: Retrieval Adds Latency
+
 **Mitigation:** Async fetch + caching
+
 - Fetch docs in parallel
 - Cache frequently accessed summaries
 - Target: <500ms retrieval latency
 
 ### Risk: Session Ends Before Completion
+
 **Mitigation:** This action plan + clear handoffs
+
 - Structured task delegation
 - Each agent can continue independently
 - Session state preserved in structured log
@@ -337,22 +379,26 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 ## TIMELINE & MILESTONES
 
 **Today (2025-12-09):**
+
 - ✅ Critical infrastructure doc created
 - ⏳ Action plan finalized (this document)
 - ⏳ Task 1A started: Session macro reduction
 - Target: Phase 1 kickoff by end of session
 
 **Next Session:**
+
 - Complete Phase 1 tasks (all 3 agents)
 - Validate with real workflow test
 - Go/No-Go decision for Phase 2
 
 **Within 48 Hours:**
+
 - Phase 2 complete (multi-agent coordination)
 - Handoffs standardized
 - Mirror exports working
 
 **Within 1 Week:**
+
 - Phase 3 complete (production hardening)
 - Success metrics validated
 - MCP proven in production
@@ -399,6 +445,7 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 **STATUS: READY TO EXECUTE**
 
 This is a **critical infrastructure fix**, not an optimization. The 8-14 hour timeline is realistic because:
+
 - We're not building complex orchestration
 - We're implementing proven patterns (from article)
 - We're doing minimal viable version first

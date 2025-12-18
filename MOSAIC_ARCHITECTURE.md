@@ -3,6 +3,7 @@
 ## **COMPLETE SYSTEM OVERVIEW**
 
 ### **Platform Components**
+
 - **Mosaic**: Umbrella product name
 - **WIMD (What Is My Delta)**: Delta analysis service (deployed)
 - **Opportunity Bridge (OB)**: Job matching and application system
@@ -10,6 +11,7 @@
 - **Mosaic UI**: Frontend interface (Vercel deployment)
 
 ### **Current Status**
+
 - **Backend**: FastAPI deployed on Railway (`https://what-is-my-delta-site-production.up.railway.app`)
 - **Frontend**: Mosaic UI demo (needs production deployment)
 - **Database**: SQLite with auto-cleanup (30-day expiry)
@@ -69,6 +71,7 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 ## **DETAILED USER EXPERIENCE FLOW**
 
 ### **Phase 1: Landing & Onboarding**
+
 ```
 1. User visits whatismydelta.com
    ↓
@@ -82,6 +85,7 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 ```
 
 ### **Phase 2: WIMD Analysis**
+
 ```
 6. Chat with coach (POST /wimd)
    ├── Values exploration
@@ -109,6 +113,7 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 ```
 
 ### **Phase 3: Opportunity Bridge**
+
 ```
 10. User clicks "Explore Opportunities"
     ↓
@@ -129,6 +134,7 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 ```
 
 ### **Phase 4: Resume Rewrite**
+
 ```
 14. User selects job to apply for
     ↓
@@ -152,6 +158,7 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 ```
 
 ### **Phase 5: Application & Follow-up**
+
 ```
 18. User applies with optimized resume
     ↓
@@ -173,6 +180,7 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 ## **ARCHITECTURE SUPPORT FOR USER EXPERIENCE**
 
 ### **Frontend (Mosaic UI)**
+
 - **Single-page application** (no page reloads)
 - **Progressive disclosure** (reveal complexity gradually)
 - **Auto-save** (prevent data loss)
@@ -180,6 +188,7 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 - **Loading states** (clear feedback)
 
 ### **Backend (FastAPI)**
+
 - **Session-based authentication** (no login required)
 - **Auto-cleanup** (30-day expiry)
 - **File handling** (upload, process, store)
@@ -187,12 +196,14 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 - **Job matching** (skills, values, goals)
 
 ### **Database (SQLite)**
+
 - **Minimal schema** (sessions, data, files)
 - **Auto-expiry** (privacy protection)
 - **Export functionality** (user control)
 - **Performance optimization** (indexed queries)
 
 ### **Storage (Railway)**
+
 - **File uploads** (resumes, documents)
 - **Version control** (resume iterations)
 - **Cleanup jobs** (storage management)
@@ -205,6 +216,7 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 ### **API Endpoints Required**
 
 #### **WIMD Service**
+
 ```python
 POST /wimd                    # Chat endpoint for coach interactions
 POST /wimd/upload             # File upload handling (resumes, documents)
@@ -213,6 +225,7 @@ GET  /wimd/metrics           # Get user metrics (clarity, action, momentum)
 ```
 
 #### **Opportunity Bridge Service**
+
 ```python
 GET  /ob/opportunities        # Get job matches based on WIMD output
 POST /ob/apply               # Submit job application
@@ -221,6 +234,7 @@ GET  /ob/status              # Get application status
 ```
 
 #### **Resume Rewrite Service**
+
 ```python
 POST /resume/rewrite         # Create canonical resume from WIMD data
 POST /resume/customize       # Customize resume for specific job
@@ -291,6 +305,7 @@ CREATE TABLE file_uploads (
 ### **Frontend Integration Points**
 
 #### **Mosaic UI Updates Required**
+
 ```javascript
 // Update askCoach function
 async function askCoach(prompt) {
@@ -341,18 +356,21 @@ async function rewriteResume(jobId) {
 ## **PRIVACY & STORAGE STRATEGY**
 
 ### **Privacy-First Approach**
+
 - **No permanent user data** (30-day auto-expiry)
 - **Session-based only** (no accounts required)
 - **User-controlled data** (export/import functionality)
 - **No behavioral tracking** (privacy-focused)
 
 ### **Storage Management**
+
 - **Railway Pro**: 8GB storage limit
 - **Auto-cleanup**: Daily cleanup of expired sessions
 - **File compression**: Optimize stored data
 - **Monitoring**: Alert when approaching limits
 
 ### **Data Flow**
+
 ```
 User Input → Session Storage → Auto-Expiry (30 days) → User Export
      ↓              ↓              ↓              ↓
@@ -364,12 +382,14 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 ## **SUCCESS METRICS**
 
 ### **User Experience Success**
+
 - **Completes WIMD analysis** (chat + upload)
 - **Sees relevant job matches** (OB integration)
 - **Creates optimized resume** (Resume Rewrite tool)
 - **Takes action** (applies to jobs)
 
 ### **Technical Success**
+
 - **All endpoints respond** < 2 seconds
 - **File uploads complete** < 30 seconds
 - **Database queries** < 1 second
@@ -377,6 +397,7 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 - **Auto-cleanup working** effectively
 
 ### **Business Success**
+
 - **Users complete journey** (analysis → jobs)
 - **Users apply to jobs** (real outcomes)
 - **Users return** (engagement)
@@ -387,6 +408,7 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 ## **IMPLEMENTATION ROADMAP**
 
 ### **Phase 1: Backend Extensions**
+
 - Implement missing API endpoints
 - Add SQLite database schema
 - Add error handling and validation
@@ -394,6 +416,7 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 - Add session management
 
 ### **Phase 2: Frontend Integration**
+
 - Update Mosaic UI with real API calls
 - Add job matching interface
 - Add resume rewrite functionality
@@ -401,6 +424,7 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 - Add user feedback mechanisms
 
 ### **Phase 3: Testing & Deployment**
+
 - Create comprehensive integration tests
 - Deploy frontend to Vercel
 - Test complete user journey
@@ -408,6 +432,7 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 - Storage monitoring
 
 ### **Phase 4: Maintenance & Scaling**
+
 - Monitor storage usage and cleanup
 - Handle user feedback and improvements
 - Scale system as needed
@@ -418,18 +443,21 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 ## **ERROR HANDLING & RECOVERY**
 
 ### **User Experience Errors**
+
 - **Chat timeout** → Retry button + error message
 - **Upload fails** → Clear error + retry option
 - **No jobs found** → Alternative suggestions
 - **Session lost** → Auto-recovery + export option
 
 ### **Technical Errors**
+
 - **API 404** → Fallback UI + contact support
 - **Database error** → Graceful degradation
 - **Rate limit** → Queue system + user notification
 - **CORS issues** → Preflight handling
 
 ### **Recovery Actions**
+
 - **Retry mechanisms** for failed operations
 - **Fallback options** for critical features
 - **User notification** for system issues
@@ -440,12 +468,14 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 ## **DEPLOYMENT ARCHITECTURE**
 
 ### **Current Deployment**
+
 - **Backend**: Railway (`what-is-my-delta-site-production.up.railway.app`)
 - **Frontend**: Mosaic UI demo (needs Vercel deployment)
 - **Domain**: `whatismydelta.com` (custom domain setup)
 - **Database**: SQLite (Railway filesystem)
 
 ### **Target Deployment**
+
 - **Backend**: Railway Pro (8GB storage)
 - **Frontend**: Vercel (static hosting)
 - **Domain**: `whatismydelta.com` (custom domain)
@@ -457,12 +487,14 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 ## **MONITORING & MAINTENANCE**
 
 ### **System Monitoring**
+
 - **Storage usage** (alert at 80% capacity)
 - **Response times** (alert if > 2 seconds)
 - **Error rates** (alert if > 5%)
 - **User sessions** (track active users)
 
 ### **Maintenance Tasks**
+
 - **Daily cleanup** (expired sessions)
 - **Weekly optimization** (database maintenance)
 - **Monthly review** (performance analysis)
@@ -473,12 +505,14 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 ## **SECURITY CONSIDERATIONS**
 
 ### **Data Protection**
+
 - **No permanent storage** (30-day expiry)
 - **Session-based authentication** (no passwords)
 - **File upload validation** (type, size limits)
 - **CORS configuration** (domain restrictions)
 
 ### **Privacy Compliance**
+
 - **GDPR compliance** (data minimization)
 - **User control** (export/delete rights)
 - **Transparent processing** (clear data usage)
@@ -489,12 +523,14 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 ## **SCALING STRATEGY**
 
 ### **Current Capacity**
+
 - **Railway Free**: 1GB storage, 512MB RAM
 - **Target**: Railway Pro (8GB storage, 8GB RAM)
 - **Users**: 100-1000 concurrent sessions
 - **Storage**: 20-85MB per user session
 
 ### **Future Scaling**
+
 - **External storage** (S3/Cloudinary) if needed
 - **Database optimization** (indexing, queries)
 - **CDN integration** (static assets)
@@ -505,6 +541,7 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 ## **INTEGRATION POINTS**
 
 ### **WIMD → OB Handoff**
+
 ```python
 # Data flow from WIMD to Opportunity Bridge
 wimd_data = {
@@ -526,6 +563,7 @@ def find_opportunities(wimd_data):
 ```
 
 ### **OB → Resume Rewrite Handoff**
+
 ```python
 # Data flow from OB to Resume Rewrite
 job_requirements = {
@@ -549,24 +587,28 @@ def create_customized_resume(wimd_data, job_requirements):
 ## **TESTING STRATEGY**
 
 ### **Unit Testing**
+
 - **API endpoints** (individual function testing)
 - **Database operations** (CRUD operations)
 - **File handling** (upload, processing, storage)
 - **Error scenarios** (failure handling)
 
 ### **Integration Testing**
+
 - **End-to-end user journey** (WIMD → OB → Resume)
 - **API integration** (frontend ↔ backend)
 - **Database integration** (data persistence)
 - **File processing** (upload → analysis → storage)
 
 ### **Performance Testing**
+
 - **Response times** (API endpoints)
 - **File uploads** (large file handling)
 - **Database queries** (query optimization)
 - **Concurrent users** (load testing)
 
 ### **User Experience Testing**
+
 - **Interface functionality** (UI interactions)
 - **Error handling** (graceful failures)
 - **Loading states** (user feedback)
@@ -577,12 +619,14 @@ def create_customized_resume(wimd_data, job_requirements):
 ## **DOCUMENTATION REQUIREMENTS**
 
 ### **Technical Documentation**
+
 - **API specifications** (endpoint documentation)
 - **Database schema** (table relationships)
 - **Deployment guide** (setup instructions)
 - **Troubleshooting guide** (common issues)
 
 ### **User Documentation**
+
 - **User guide** (how to use the platform)
 - **FAQ** (common questions)
 - **Support contact** (help resources)
@@ -595,6 +639,7 @@ def create_customized_resume(wimd_data, job_requirements):
 This architecture provides a complete, scalable, and privacy-focused platform for the Mosaic system. The implementation follows a clear roadmap with specific deliverables, success criteria, and maintenance requirements. The system is designed to be simple for users while providing powerful functionality for career development and job matching.
 
 > **Ops Snapshot – 2025-09-29**
+>
 > - Netlify (`resonant-crostata-90b706`) serves the Mosaic UI at `https://www.whatismydelta.com` (apex redirects to `www`).
 > - Railway service `what-is-my-delta-site` hosts the FastAPI backend at `https://what-is-my-delta-site-production.up.railway.app`.
 > - `PUBLIC_SITE_ORIGIN` → `https://www.whatismydelta.com`; `PUBLIC_API_BASE` → Railway origin.

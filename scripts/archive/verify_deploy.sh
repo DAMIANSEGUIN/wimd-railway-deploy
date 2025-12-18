@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 API_BASE="${1:?Usage: $0 https://your-api-domain}"
 fail(){ echo "[FAIL] $1"; exit 1; }

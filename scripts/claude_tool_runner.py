@@ -3,11 +3,13 @@
 scripts/claude_tool_runner.py
 Runs any tool Claude asks for and immediately returns the tool_result block.
 """
+
 import os
 import shlex
 import subprocess
-from pathlib import Path
 from getpass import getpass
+from pathlib import Path
+
 from anthropic import Anthropic
 
 KEY_FILE = Path.home() / ".claude_tool_runner_key"
@@ -43,6 +45,7 @@ def resolve_api_key() -> str:
     _persist_api_key(entered)
     return entered
 
+
 def run_command(command_str: str) -> str:
     if not command_str:
         return "(no command provided)"
@@ -64,6 +67,7 @@ def run_command(command_str: str) -> str:
             f"STDOUT:\\n{exc.stdout.strip() or '(empty)'}\\n"
             f"STDERR:\\n{exc.stderr.strip() or '(empty)'}"
         )
+
 
 def dispatch_to_claude(history, client):
     response = client.messages.create(
@@ -103,10 +107,13 @@ def dispatch_to_claude(history, client):
             return dispatch_to_claude(history, client)
     return response
 
+
 if __name__ == "__main__":
     api_key = resolve_api_key()
     if not api_key:
-        raise SystemExit("Claude API key required. Export CLAUDE_API_KEY or enter it when prompted.")
+        raise SystemExit(
+            "Claude API key required. Export CLAUDE_API_KEY or enter it when prompted."
+        )
 
     client = Anthropic(api_key=api_key)
     conversation = [

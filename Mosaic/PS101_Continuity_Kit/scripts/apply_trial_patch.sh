@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 SNIPPET="trial_mode_snippet.html"
 HTMLS=( "frontend/index.html" "mosaic_ui/index.html" )

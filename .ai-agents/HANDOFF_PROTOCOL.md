@@ -18,17 +18,21 @@ Before ending session, outgoing agent MUST:
 **MANDATORY FIRST ACTIONS - Before ANY code changes:**
 
 1. **Read handoff manifest:**
+
    ```bash
    cat .ai-agents/handoff_*.json | tail -1
    ```
 
 2. **Verify critical features:**
+
    ```bash
    ./scripts/verify_critical_features.sh
    ```
+
    - If this fails: STOP. Do not proceed. Escalate to human.
 
 3. **Acknowledge critical features:**
+
    ```
    I confirm the following features are present and MUST BE PRESERVED:
    - Authentication UI (authModal, loginForm, registerForm)
@@ -95,6 +99,7 @@ If primary agent crashes/unavailable:
 Document all handoffs in: `.ai-agents/handoff_log.txt`
 
 Format:
+
 ```
 [TIMESTAMP] [OUTGOING_AGENT] → [INCOMING_AGENT]
 Reason: [Why handoff occurred]

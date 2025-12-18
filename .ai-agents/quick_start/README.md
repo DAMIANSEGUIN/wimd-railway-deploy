@@ -1,4 +1,5 @@
 # Quick Start Commands Index
+
 **Fast access to common testing and deployment tasks**
 
 ---
@@ -10,6 +11,7 @@
 ```
 
 This runs all automated checks:
+
 - Backend health
 - Context extraction endpoint
 - Frontend reachability

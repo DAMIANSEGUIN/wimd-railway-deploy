@@ -1,4 +1,5 @@
 # Google Calendar Booking Integration - Requirements Elicitation
+
 **Date:** 2025-10-25
 **Phase:** Requirements Analysis (ELICIT, DON'T INVENT)
 **Status:** Awaiting User Clarification
@@ -8,12 +9,14 @@
 ## Phase 1: Initial Analysis
 
 ### What IS Specified
+
 - **Feature:** Google Calendar booking integration
 - **Context:** WIMD/Mosaic platform (career coaching + job search)
 - **UI Location:** mosaic_ui/index.html (frontend already has coach interface)
 - **Backend:** Railway FastAPI deployment (what-is-my-delta-site-production.up.railway.app)
 
 ### What IS NOT Specified
+
 - Booking scenarios (1-on-1 coaching? Group sessions? Events?)
 - Calendar provider scope (Google only? Outlook? iCal?)
 - User flow (embedded? redirect? modal?)
@@ -31,6 +34,7 @@
 ### 1. **User Experience & Behavior**
 
 **GAPS:**
+
 - [ ] Who initiates booking? (User books coach session? Coach schedules with user?)
 - [ ] Where does booking UI appear? (Dedicated page? Modal in chat? External link?)
 - [ ] Pre-booking flow? (Must be logged in? Trial users allowed?)
@@ -38,6 +42,7 @@
 - [ ] Mobile responsiveness required?
 
 **ASSUMPTIONS TO VALIDATE:**
+
 - Booking is user-initiated (user schedules time with coach)
 - Booking appears as button/link in chat or guide interface
 - Requires authentication (no anonymous bookings)
@@ -45,6 +50,7 @@
 ### 2. **Data & State Management**
 
 **GAPS:**
+
 - [ ] Store appointments in database? (Or just create calendar event?)
 - [ ] Data schema:
   - User ID
@@ -58,12 +64,14 @@
 - [ ] Historical appointments tracking?
 
 **ASSUMPTIONS TO VALIDATE:**
+
 - Need to store appointments in PostgreSQL for tracking
 - One-way sync (create calendar event, don't sync back)
 
 ### 3. **Interfaces & Integration**
 
 **GAPS:**
+
 - [ ] Google Calendar API:
   - Which API endpoints? (Events: insert, list, update, delete?)
   - Authentication method? (OAuth 2.0? Service account?)
@@ -78,6 +86,7 @@
   - Or rely on Google Calendar's built-in notifications?
 
 **ASSUMPTIONS TO VALIDATE:**
+
 - Use Google Calendar API with OAuth 2.0
 - Auto-generate Google Meet link with event
 - Rely on Google Calendar notifications (no custom emails yet)
@@ -85,6 +94,7 @@
 ### 4. **Security & Privacy**
 
 **GAPS:**
+
 - [ ] OAuth consent flow:
   - Request minimal scopes (calendar.events only?)
   - Store tokens securely (encrypted in DB?)
@@ -99,6 +109,7 @@
   - Can coaches see all appointments?
 
 **ASSUMPTIONS TO VALIDATE:**
+
 - Use Google OAuth 2.0 with calendar.events scope
 - Store encrypted tokens in PostgreSQL
 - Users can only manage their own appointments
@@ -106,6 +117,7 @@
 ### 5. **Performance & Scale**
 
 **GAPS:**
+
 - [ ] Expected booking volume? (10/day? 100/day? 1000/day?)
 - [ ] Availability lookup performance:
   - Real-time calendar availability check?
@@ -114,6 +126,7 @@
 - [ ] Acceptable latency? (< 2 seconds for booking confirmation?)
 
 **ASSUMPTIONS TO VALIDATE:**
+
 - Low volume initially (< 50 bookings/day)
 - Real-time availability check acceptable
 - 2-3 second latency acceptable
@@ -121,6 +134,7 @@
 ### 6. **Business Logic & Rules**
 
 **GAPS:**
+
 - [ ] Availability logic:
   - Fixed coach availability hours? (9AM-5PM EST?)
   - Dynamic availability (coach sets their own hours?)
@@ -139,6 +153,7 @@
   - Rescheduling rules?
 
 **ASSUMPTIONS TO VALIDATE:**
+
 - Coach has fixed availability (configurable in admin)
 - 24-hour minimum advance notice
 - 30-day maximum future booking
@@ -149,6 +164,7 @@
 ### 7. **Reliability & Operations**
 
 **GAPS:**
+
 - [ ] Error handling:
   - What if Google Calendar API is down?
   - What if user's calendar is full?
@@ -162,6 +178,7 @@
   - Idempotent operations?
 
 **ASSUMPTIONS TO VALIDATE:**
+
 - Graceful degradation (show error, don't crash)
 - Log all API errors to Railway
 - Idempotent: check if appointment exists before creating
@@ -169,6 +186,7 @@
 ### 8. **Testing & Validation**
 
 **GAPS:**
+
 - [ ] Test accounts:
   - Need test Google Calendar account?
   - Sandbox environment for OAuth?
@@ -179,6 +197,7 @@
 - [ ] User acceptance criteria?
 
 **ASSUMPTIONS TO VALIDATE:**
+
 - Test with personal Google account initially
 - Manual testing for MVP
 - Automated tests for production
@@ -190,6 +209,7 @@
 ### Questions for Product Owner (User - Damian)
 
 #### Booking Scenarios & User Flow
+
 1. **Who books whom?**
    - Is this user booking time with a coach?
    - Or coach scheduling sessions with user?
@@ -218,6 +238,7 @@
    - Limit on number of sessions?
 
 #### Business Rules
+
 6. **Availability model?**
    - Fixed availability (e.g., weekdays 9AM-5PM EST)?
    - Dynamic availability (coach sets their schedule)?
@@ -246,6 +267,7 @@
 ### Questions for Engineering (Technical Decisions)
 
 #### Integration Approach
+
 11. **Google Calendar API authentication?**
     - OAuth 2.0 with user consent flow? (User authorizes access to their calendar)
     - Service account? (Backend creates events on coach's calendar)
@@ -267,6 +289,7 @@
     - Manual availability configuration (no calendar integration)?
 
 #### Technical Implementation
+
 15. **Frontend framework?**
     - Continue vanilla JS in mosaic_ui/index.html?
     - Or use external library (FullCalendar.js, Calendly embed)?
@@ -303,18 +326,21 @@
 ### CRITICAL Risks (Block Implementation)
 
 **RISK 1: Scope Ambiguity**
+
 - **Issue:** Don't know who is booking whom, or what user flow looks like
 - **Impact:** Can't design UI or API without this clarity
 - **Severity:** CRITICAL
 - **Mitigation:** User must answer questions 1-5 before proceeding
 
 **RISK 2: OAuth Complexity**
+
 - **Issue:** Google OAuth 2.0 consent flow is complex for users unfamiliar with it
 - **Impact:** High drop-off if users confused by Google permission screen
 - **Severity:** HIGH
 - **Mitigation:** Start with service account (simpler) if only coach calendar needs updating
 
 **RISK 3: Data Consistency**
+
 - **Issue:** If storing in both DB and Google Calendar, sync issues possible
 - **Impact:** Appointment created in calendar but not DB (or vice versa)
 - **Severity:** HIGH
@@ -323,18 +349,21 @@
 ### HIGH Risks (Needs Assumptions to Proceed)
 
 **RISK 4: Timezone Bugs**
+
 - **Issue:** Timezone conversions are notoriously error-prone
 - **Impact:** User books 2PM EST but calendar shows 2PM PST (wrong time)
 - **Severity:** HIGH
 - **Mitigation:** Store UTC, use robust library (Luxon.js), extensive timezone testing
 
 **RISK 5: Availability Calculation**
+
 - **Issue:** Real-time availability lookup can be slow or inaccurate
 - **Impact:** User sees slot as available, but booking fails due to race condition
 - **Severity:** MEDIUM
 - **Mitigation:** Lock slot during booking process, or pre-compute availability
 
 **RISK 6: Email Service Dependency**
+
 - **Issue:** WIMD currently has no email service (SendGrid/AWS SES pending)
 - **Impact:** No confirmation emails unless relying on Google Calendar's emails
 - **Severity:** MEDIUM
@@ -343,12 +372,14 @@
 ### MEDIUM Risks (Create Uncertainty)
 
 **RISK 7: Mobile UX**
+
 - **Issue:** Calendar picker may not be mobile-friendly in vanilla JS
 - **Impact:** Poor mobile booking experience
 - **Severity:** MEDIUM
 - **Mitigation:** Use mobile-responsive date/time picker library
 
 **RISK 8: API Rate Limits**
+
 - **Issue:** Google Calendar API has quotas (varies by account type)
 - **Impact:** Bookings fail if quota exceeded
 - **Severity:** MEDIUM
@@ -357,12 +388,14 @@
 ### LOW Risks (Can Resolve Later)
 
 **RISK 9: Cancellation Policy Enforcement**
+
 - **Issue:** No automated enforcement of 24-hour cancellation policy (if required)
 - **Impact:** Users cancel last-minute without penalty
 - **Severity:** LOW
 - **Mitigation:** Acceptable for MVP, add policy enforcement later
 
 **RISK 10: Multi-Coach Scalability**
+
 - **Issue:** If adding multiple coaches later, availability logic becomes complex
 - **Impact:** Current design may not scale to multiple coaches
 - **Severity:** LOW
@@ -375,12 +408,14 @@
 ### Implementation Readiness: 🔴 BLOCKED - Missing Critical Requirements
 
 **Cannot proceed until clarified:**
+
 1. User flow and booking scenario (questions 1-5)
 2. Business rules (questions 6-10)
 3. Technical authentication approach (question 11-12)
 
 **Suggested Next Step:**
 User (Damian) provides answers to questions 1-12, then we can:
+
 - Design UI mockup
 - Define API endpoints
 - Create implementation plan with accurate blast radius estimate
@@ -392,6 +427,7 @@ User (Damian) provides answers to questions 1-12, then we can:
 ### Assumptions for Initial Implementation (To Be Validated)
 
 **User Flow:**
+
 1. Authenticated user clicks "Book a Coaching Session" in chat interface
 2. Calendar picker shows next 30 days
 3. User selects date, sees available time slots (30 or 60 min)
@@ -401,6 +437,7 @@ User (Damian) provides answers to questions 1-12, then we can:
 7. Both user and coach receive Google Calendar email invitations
 
 **Business Rules:**
+
 - Single coach (Damian's calendar)
 - Fixed availability: Weekdays 9AM-5PM EST
 - 30 or 60-minute sessions
@@ -410,6 +447,7 @@ User (Damian) provides answers to questions 1-12, then we can:
 - Cancellation allowed up to 24 hours before
 
 **Technical Implementation:**
+
 - Google Calendar API with service account (coach's calendar only)
 - Store appointments in PostgreSQL (`appointments` table)
 - Vanilla JS calendar picker UI in mosaic_ui/index.html
@@ -419,6 +457,7 @@ User (Damian) provides answers to questions 1-12, then we can:
 - Rely on Google Calendar's email notifications (no custom emails)
 
 **Out of Scope for MVP:**
+
 - Multi-coach scheduling
 - Dynamic availability (coach sets their own hours)
 - Recurring appointments
@@ -435,6 +474,7 @@ User (Damian) provides answers to questions 1-12, then we can:
 **If MVP scope above is confirmed:**
 
 **Files to Create (3-5 new files):**
+
 - `/api/booking.py` - Booking API endpoints
 - `/api/google_calendar.py` - Google Calendar API integration
 - `/mosaic_ui/booking.html` - Booking interface (or modal in index.html)
@@ -442,6 +482,7 @@ User (Damian) provides answers to questions 1-12, then we can:
 - `/data/migrations/add_appointments_table.sql` - Database schema
 
 **Files to Modify (2-3 existing files):**
+
 - `/mosaic_ui/index.html` - Add "Book Session" button/link
 - `/api/index.py` - Register booking routes
 - `requirements.txt` - Add `google-api-python-client`, `google-auth`
@@ -455,6 +496,7 @@ User (Damian) provides answers to questions 1-12, then we can:
 ## Next Action Required
 
 **User (Damian) to provide answers to questions 1-12**, specifically:
+
 - Booking scenario (user books coach? coach books user?)
 - UI location (where does booking button appear?)
 - Session types and duration

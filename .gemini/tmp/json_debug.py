@@ -4,7 +4,7 @@ from pathlib import Path
 file_path = Path(".ai-agents/test_data/TRIGGER_TEST_DATASET.json")
 
 try:
-    with open(file_path, 'r') as f:
+    with open(file_path) as f:
         content = f.read()
     data = json.loads(content)
     print("JSON parsed successfully!")

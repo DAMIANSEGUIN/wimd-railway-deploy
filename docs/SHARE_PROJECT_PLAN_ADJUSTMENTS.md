@@ -6,7 +6,9 @@
 **Re:** Critical action items from PS101 v2 review + Codex operational notes
 
 ### ✅ Latest Update (2025-10-31)
+
 **Codex corrections applied** to main document:
+
 - Fixed non-existent test/script references
 - Marked TODOs for net-new work (validate_data_quality.py, rotate_api_key.sh)
 - Corrected OPERATIONS_MANUAL to expand existing section (not create duplicate)
@@ -20,6 +22,7 @@
 **`docs/PROJECT_PLAN_ADJUSTMENTS.md`**
 
 This consolidated action plan integrates:
+
 - ✅ Claude Code's PS101 v2 technical review findings
 - ✅ Codex's operational gap analysis
 - ✅ Updated checklists with ownership assignments
@@ -30,6 +33,7 @@ This consolidated action plan integrates:
 ## 🎯 Key Points to Review
 
 ### 1. **PS101 v2 Status** (Section 1)
+
 - ✅ Code complete, matches canonical spec
 - 🚨 **3 blocking issues** need 2.5-4 hours to fix before deployment
 - 📋 Detailed fixes documented in `docs/CURSOR_FIXES_REQUIRED.md`
@@ -38,36 +42,45 @@ This consolidated action plan integrates:
 **Deadline:** 2025-11-01
 
 ### 2. **Operational Gaps** (Section 2)
+
 Three critical documentation gaps identified:
 
 **Gap #1: Checklist Ownership**
+
 - SHARE_WITH_MOSAIC_TEAM.md has all items unchecked
 - No owners, no deadlines, unclear status
 - **Owner:** Codex | **Deadline:** 2025-11-01
 
 **Gap #2: API Key Management**
+
 - No rotation process documented
 - No security/revocation procedure
 - **Owner:** Codex | **Deadline:** 2025-11-02
 
 **Gap #3: Success Metrics Validation**
+
 - Claims <2s response, >90% quality, >99% uptime
 - No measurement methodology defined
 - **Owner:** Codex | **Deadline:** 2025-11-02
 
 ### 3. **Action Plan** (Section 3)
+
 Phased approach with owners and deadlines:
 
 **Phase 1 (This Week):** Unblock deployment + close critical gaps
+
 - Total: ~7-10 hours across team
 
 **Phase 2 (Next Sprint):** Complete features + strengthen operations
+
 - Total: ~30 hours
 
 **Phase 3 (Sprint 3):** Full maturity
+
 - Total: ~40+ hours
 
 ### 4. **Decision Points** (Section 6)
+
 **4 decisions needed from Damian:**
 
 1. **Inline forms vs modals** for obstacle/action collection
@@ -87,14 +100,18 @@ Phased approach with owners and deadlines:
    - Needed by: 2025-11-05
 
 ### 5. **Risk Assessment** (Section 7)
+
 **High-risk items flagged:**
+
 - 🚨 PS101 v2 prompt() dialogs (UX/accessibility issue)
 - 🚨 No API key rotation plan (security risk)
 - 🚨 Web scraping untested (user-facing features may break)
 - 🚨 No monitoring = can't detect outages
 
 ### 6. **Updated Checklists with Ownership** (Section 5)
+
 All checklists now have:
+
 - ✅ Current status (Done / In Progress / Not Started)
 - 👤 Owner assignments
 - 📅 Deadlines
@@ -105,18 +122,21 @@ All checklists now have:
 ## ✅ Immediate Next Actions
 
 ### For Damian (5 minutes)
+
 - [ ] Read Executive Summary (Section: EXECUTIVE SUMMARY)
 - [ ] Review Decision Points (Section 6)
 - [ ] Make 4 key decisions
 - [ ] Assign backend team owners
 
 ### For Cursor (2.5-4 hours)
+
 - [ ] Read `docs/CURSOR_FIXES_REQUIRED.md` (detailed implementation guide)
 - [ ] Implement PS101 v2 fixes (Issues #1, #2, #3)
 - [ ] Run testing checklist (14 scenarios)
 - [ ] Commit changes (wait for Damian approval before deploy)
 
 ### For Codex (3-4 hours)
+
 - [ ] Read full PROJECT_PLAN_ADJUSTMENTS.md
 - [ ] Audit SHARE_WITH_MOSAIC_TEAM.md checklist statuses
 - [ ] Assign owners and deadlines to unchecked items
@@ -124,6 +144,7 @@ All checklists now have:
 - [ ] Define success metrics validation methodology
 
 ### For Backend Team (TBD)
+
 - [ ] Awaiting owner assignment
 - [ ] Priority: End-to-end testing of job sources
 - [ ] Next: Implement rate limiting + monitoring
@@ -163,6 +184,7 @@ Day 2 (2025-11-02):
 5. **`SESSION_START_README.md`** (Claude Code startup guide)
 
 **Supporting docs:**
+
 - `docs/PS101_CANONICAL_SPEC_V2.md` (Product spec)
 - `docs/IMPLEMENTATION_SUMMARY_PS101_V2.md` (Technical summary)
 - `TROUBLESHOOTING_CHECKLIST.md` (Safety protocols)
@@ -172,6 +194,7 @@ Day 2 (2025-11-02):
 ## 🎯 Success Criteria
 
 **Phase 1 complete when:**
+
 - [ ] PS101 v2 deployed to production (no blockers)
 - [ ] All checklists have owners + deadlines
 - [ ] API key management documented
@@ -206,6 +229,7 @@ Day 2 (2025-11-02):
 **When:** Immediate action needed (Phase 1 targets 2025-11-02)
 
 **Who:**
+
 - Cursor (implementation)
 - Codex (documentation/process)
 - Damian (decisions/approval)

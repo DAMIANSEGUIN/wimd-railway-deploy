@@ -9,6 +9,7 @@
 There are several different implementations of the main `claude()` prompter function.
 
 ### Implementation A
+
 ```python
 @prompter
 def claude(
@@ -18,6 +19,7 @@ def claude(
 ```
 
 ### Implementation B
+
 ```python
 @prompter
 def claude(
@@ -27,6 +29,7 @@ def claude(
 ```
 
 ### Implementation C
+
 ```python
 @prompter
 def claude(
@@ -48,6 +51,7 @@ def claude(
 There are two different `Claude` classes, one using Vertex AI and one using a direct Anthropic client.
 
 ### Class A: Vertex AI Integration
+
 ```python
 class Claude(AnthropicVertex):
     """A Claude prompter that uses the Anthropic Vertex SDK."""
@@ -74,6 +78,7 @@ class Claude(AnthropicVertex):
 ```
 
 ### Class B: Direct Client Integration
+
 ```python
 class Claude(LLM[ClaudeRequest, str]):
     def __init__(
@@ -98,6 +103,7 @@ class Claude(LLM[ClaudeRequest, str]):
 ## 3. Supporting Code and Models
 
 ### `ClaudeRequest` Model
+
 ```python
 class ClaudeRequest(BaseModel):
     model: str
@@ -107,6 +113,7 @@ class ClaudeRequest(BaseModel):
 ```
 
 ### `claude_llm()` Factory Function
+
 ```python
 def claude_llm(
     model: str = "claude-3-opus-20240229",
@@ -120,6 +127,7 @@ def claude_llm(
 ```
 
 ### `to_claude_role()` Helper Function
+
 ```python
 def to_claude_role(role: Literal["system", "user", "assistant"]) -> str:
     """Convert a role to the format expected by Claude."""
@@ -129,6 +137,7 @@ def to_claude_role(role: Literal["system", "user", "assistant"]) -> str:
 ```
 
 ### `test_match_claude_family()` Test Function
+
 ```python
 @pytest.mark.parametrize(
     ("model_name", "expected"),
@@ -151,6 +160,7 @@ def test_match_claude_family(model_name: str, expected: bool):
 ## 4. Related Information
 
 ### Claude API Grading Benchmark
+
 ```
 **Claude API Grading Benchmark**
 
@@ -161,6 +171,7 @@ def test_match_claude_family(model_name: str, expected: bool):
 ```
 
 ### Magentic-UI
+
 ```
 Magentic-UI
 

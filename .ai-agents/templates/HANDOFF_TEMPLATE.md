@@ -1,4 +1,5 @@
 # Agent Handoff - Structured Template
+
 **MCP v1.1 Standardized Handoff Protocol**
 
 **From:** [Agent Name]
@@ -14,18 +15,21 @@
 **What decisions led to this handoff?**
 
 ### Step 1: [Initial Analysis/Request]
+
 - **Decision:** [What was decided]
 - **Reasoning:** [Why this decision was made]
 - **Alternatives Considered:** [Other options that were evaluated]
 - **Chosen Because:** [Why this path was selected]
 
 ### Step 2: [Implementation Approach]
+
 - **Decision:** [What was decided]
 - **Reasoning:** [Why this decision was made]
 - **Alternatives Considered:** [Other options]
 - **Chosen Because:** [Rationale]
 
 ### Step 3: [Next Steps/Handoff]
+
 - **Decision:** [Why handing off / what's next]
 - **Reasoning:** [Why handoff is happening now]
 
@@ -36,6 +40,7 @@
 **What constraints governed this work?**
 
 ### Mandatory Constraints
+
 - **Constraint:** [e.g., "Use context manager pattern for DB operations"]
   - **Source:** `TROUBLESHOOTING_CHECKLIST.md:line 234`
   - **Applied:** [Yes/No]
@@ -47,6 +52,7 @@
   - **How:** [Specific implementation detail]
 
 ### Recommended Constraints
+
 - **Constraint:** [Optional pattern followed]
   - **Source:** [Document reference]
   - **Applied:** [Yes/No]
@@ -59,6 +65,7 @@
 **Track all attempts, even failures**
 
 ### Attempt 1: [Description]
+
 - **Tried:** [What was attempted]
 - **Failed Because:** [Root cause]
 - **Error:** [Error message if applicable]
@@ -66,6 +73,7 @@
 - **Learned:** [What this taught us]
 
 ### Attempt 2: [Description]
+
 - **Tried:** [What was attempted]
 - **Failed Because:** [Root cause]
 - **Error:** [Error message if applicable]
@@ -79,6 +87,7 @@
 **What is still pending?**
 
 ### Commitment 1: [Deliverable Description]
+
 - **Status:** [pending / in_progress / blocked / completed]
 - **Due By:** [Timeline if applicable]
 - **Dependencies:** [What this depends on]
@@ -86,6 +95,7 @@
 - **Completion Criteria:** [How to verify it's done]
 
 ### Commitment 2: [Deliverable Description]
+
 - **Status:** [pending / in_progress / blocked / completed]
 - **Due By:** [Timeline if applicable]
 - **Dependencies:** [What this depends on]
@@ -128,12 +138,14 @@
 **Track all dependency relationships**
 
 ### Depends On (Blockers)
+
 - **Event/Task ID:** [evt_abc123 or task_2.3]
   - **Description:** [What this is]
   - **Status:** [complete / in_progress / pending]
   - **Blocks:** [What is blocked by this]
 
 ### Blocks (Downstream Impact)
+
 - **Event/Task ID:** [evt_def456 or task_3.1]
   - **Description:** [What will be unblocked]
   - **Waiting For:** [What it needs from this handoff]
@@ -145,6 +157,7 @@
 **Where did all information come from?**
 
 ### Session Summary
+
 ```json
 {
   "source": "session_20251210_1400",
@@ -156,6 +169,7 @@
 ```
 
 ### Files Referenced
+
 | File | Commit | Lines | Last Modified | Purpose |
 |------|--------|-------|---------------|---------|
 | `TROUBLESHOOTING_CHECKLIST.md` | `31d099c` | 1-673 | 2025-12-06 | Error prevention patterns |
@@ -163,6 +177,7 @@
 | `.ai-agents/scripts/check_gates.py` | `current` | 1-190 | 2025-12-09 | Gate checking logic |
 
 ### External Information
+
 - **Source:** [API call, user input, etc.]
 - **Retrieved:** [Timestamp]
 - **Confidence:** [0-1 scale]
@@ -175,19 +190,23 @@
 **What was accomplished?**
 
 ### Files Created
+
 - `[file_path]` - [Purpose and key content]
 - `[file_path]` - [Purpose and key content]
 
 ### Files Modified
+
 - `[file_path]` - [What changed and why]
 - `[file_path]` - [What changed and why]
 
 ### Tests Performed
+
 - [x] Test 1: [Description] - ✅ PASSED
 - [x] Test 2: [Description] - ✅ PASSED
 - [ ] Test 3: [Description] - ⏳ PENDING
 
 ### Verification Status
+
 - [x] Code runs without errors
 - [x] Tests pass
 - [x] Documentation updated
@@ -201,15 +220,18 @@
 **What should happen next?**
 
 ### Immediate (Next 30 minutes)
+
 1. [Action 1] - [Who should do this]
 2. [Action 2] - [Who should do this]
 3. [Action 3] - [Who should do this]
 
 ### Short Term (Next Session)
+
 1. [Action 1] - [Who should do this]
 2. [Action 2] - [Who should do this]
 
 ### Blocked/Waiting
+
 - **Waiting For:** [What is needed]
 - **Who Provides:** [Person/agent responsible]
 - **When Needed:** [Timeline]
@@ -221,11 +243,13 @@
 **How to continue this work?**
 
 ### For Next Agent
+
 1. **Read these files first:**
    - [File 1] - [Why important]
    - [File 2] - [Why important]
 
 2. **Check gate status:**
+
    ```bash
    python3 .ai-agents/scripts/check_gates.py [agent_name]
    ```
@@ -235,11 +259,13 @@
 4. **Start with:** [Specific first action]
 
 ### Context to Load
+
 - Load session log: `.ai-agents/sessions/[session_id].jsonl`
 - Review failures: Section 3 above
 - Check dependencies: Section 6 above
 
 ### Verification Before Starting
+
 - [ ] Git status clean (or changes understood)
 - [ ] Environment variables set
 - [ ] Tests passing
@@ -252,6 +278,7 @@
 **What needs clarification?**
 
 ### Open Questions
+
 1. **Q:** [Question about approach/decision]
    - **Context:** [Why this matters]
    - **Options:** [Possible answers]
@@ -263,6 +290,7 @@
    - **Needs Input From:** [Who can answer]
 
 ### Assumptions Made
+
 - **Assumption:** [What was assumed]
   - **Confidence:** [High/Medium/Low]
   - **Should Verify:** [Yes/No]
@@ -290,6 +318,7 @@
 **How to undo this work if needed**
 
 ### Rollback Command
+
 ```bash
 git revert [commit_hash]
 # OR
@@ -297,10 +326,12 @@ git checkout [previous_commit]
 ```
 
 ### What Gets Reverted
+
 - [File 1] → [Previous state]
 - [File 2] → [Previous state]
 
 ### Side Effects of Rollback
+
 - [Impact 1]
 - [Impact 2]
 

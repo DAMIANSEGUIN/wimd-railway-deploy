@@ -3,6 +3,7 @@
 **Issue:** New Railway deployments failing with "service unavailable" errors during health checks.
 
 **Current Status:**
+
 - ✅ Old deployment: Healthy and serving requests
 - ❌ New deployment: Failing health checks repeatedly (12+ attempts)
 
@@ -13,6 +14,7 @@
 **Go to:** Railway Dashboard → Your Service → Deployments → Latest Failed Deployment
 
 **Look for:**
+
 - **Build Logs:** Did the build succeed?
 - **Deploy Logs:** What errors appear during startup?
 - **Health Check Logs:** What response is `/health` returning?
@@ -20,19 +22,23 @@
 ### 2. Common Causes
 
 #### A. Health Check Timing Issue
+
 **Symptom:** Health checks failing before prompt system is ready
 
 **Evidence to look for:**
+
 ```
 INFO: "GET /health HTTP/1.1" 503 Service Unavailable
 ```
 
 **Check deploy logs for:**
+
 - Is `SERVICE_READY.set()` called?
 - Does startup complete successfully?
 - What does `get_prompt_health()` return?
 
 #### B. Prompt System Not Ready
+
 **Symptom:** `fallback_enabled=False` AND `ai_available=False` during health check
 
 **Root cause:** Health check runs AFTER `SERVICE_READY.set()` but BEFORE prompt system is fully initialized.
@@ -40,15 +46,18 @@ INFO: "GET /health HTTP/1.1" 503 Service Unavailable
 **Fix needed:** Health check should have longer grace period or check should be more lenient during first few minutes.
 
 #### C. Database Connection Issue
+
 **Symptom:** Database connectivity check failing
 
 **Evidence:**
+
 - `"database": false` in health check response
 - Connection errors in deploy logs
 
 ### 3. Possible Solutions
 
 #### Option 1: Extend Grace Period
+
 Modify health check to accept "initializing" status longer:
 
 ```python
@@ -58,14 +67,17 @@ Modify health check to accept "initializing" status longer:
 ```
 
 #### Option 2: Make Health Check More Lenient During Deployment
+
 Accept health check as "ok" if SERVICE_READY is not set (current behavior), OR if less than 2 minutes since startup.
 
 #### Option 3: Fix Prompt Health Check
+
 Ensure `get_prompt_health()` returns correct values immediately after startup.
 
 ### 4. Debugging Steps
 
 1. **Enable Health Debug Logging:**
+
    ```bash
    # In Railway environment variables
    HEALTH_DEBUG=true
@@ -73,6 +85,7 @@ Ensure `get_prompt_health()` returns correct values immediately after startup.
 
 2. **Check Startup Sequence:**
    Look in deploy logs for:
+
    ```
    Starting up...
    ✅ Feature flags synced to database
@@ -83,11 +96,13 @@ Ensure `get_prompt_health()` returns correct values immediately after startup.
 
 3. **Check Health Check Responses:**
    Look for health check attempts in deploy logs:
+
    ```
    INFO: "GET /health HTTP/1.1" 503 Service Unavailable
    ```
-   
+
    What is the response body? Should see:
+
    ```json
    {
      "ok": false,
@@ -113,7 +128,7 @@ STARTUP_TIME = time.time()
 def health():
     if not SERVICE_READY.is_set():
         return {"ok": True, "status": "initializing"}
-    
+
     # Grace period: first 2 minutes after startup, always pass
     if time.time() - STARTUP_TIME < 120:
         return {
@@ -122,7 +137,7 @@ def health():
             "checks": {"grace_period": True},
             "timestamp": datetime.utcnow().isoformat() + "Z"
         }
-    
+
     # ... rest of health check logic
 ```
 
@@ -137,4 +152,3 @@ def health():
 
 **Last Updated:** 2025-11-01
 **Status:** Awaiting Railway dashboard review
-

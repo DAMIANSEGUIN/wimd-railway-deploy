@@ -1,8 +1,9 @@
 /Users/damianseguin/homebrew/Library/Homebrew/cmd/shellenv.sh: line 18: /bin/ps: Operation not permitted
+
 # NOTE FOR CLAUDE CODE – 2025-11-24 – PHASE 1 BLOCKAGE BREAK
 
-**Role:** Infrastructure & Deployment Engineer  
-**Priority:** HIGH – 3‑week blockage, external pressure to resolve today  
+**Role:** Infrastructure & Deployment Engineer
+**Priority:** HIGH – 3‑week blockage, external pressure to resolve today
 
 ---
 
@@ -19,6 +20,7 @@ From project root:
 7. `.ai-agents/handoff_20251123_214407_inprogress.json`
 
 These give you:
+
 - The Phase 1 rollback timeline and root cause (modules extracted but not integrated).
 - Current system status (STABLE after rollback).
 - What the terminal SSE did on 2025‑11‑23 (safe hook + verification hardening).
@@ -67,10 +69,12 @@ You can rely on these as your starting point.
 From a machine with real network access:
 
 1. Run the improved verifier against production:
+
    ```bash
    cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
    DEPLOY_URL=https://whatismydelta.com ./scripts/verify_deployment_improved.sh
    ```
+
 2. Treat any **CRITICAL** failures (auth/PS101 missing, site unreachable) as the top priority.
    - If found, open/update an incident file under `.ai-agents/` and stop any Phase 1 work until resolved.
 
@@ -80,9 +84,11 @@ From a machine with real network access:
    - No `<script type="module" src="./js/main.js">` on production.
    - Auth modal + PS101 present.
 2. Verify Railway backend health:
+
    ```bash
    curl https://what-is-my-delta-site-production.up.railway.app/health
    ```
+
 3. Confirm no auto‑deploy or branch configuration points to `phase1-incomplete` or other experimental branches.
 
 ### C. Coordinate to Unblock Phase 1 (Without Deploying It Yet)
@@ -95,10 +101,12 @@ Work with Codex‑in‑Cursor / implementation:
 2. **Exercise modules locally with `USE_MODULES = true`**:
    - On a local copy (not production), flip `USE_MODULES` to `true`.
    - Run:
+
      ```bash
      ./scripts/verify_critical_features.sh
      ./scripts/verify_deployment_improved.sh
      ```
+
    - Manually verify:
      - Login/register UI.
      - Chat works.
@@ -115,9 +123,9 @@ When you’re done with today’s push, document outcomes in a new file, for exa
 - `.ai-agents/FINAL_STATUS_2025-11-24_PHASE1_UNBLOCKED.md`
 
 Include:
+
 - Production health status.
 - Whether Phase 1 modules are now safe behind the `USE_MODULES` path.
 - Any remaining risks or TODOs before enabling modules in production.
 
 This note plus the session snapshot give you everything you need to move immediately; no further clarification from the user should be required to proceed within the existing guardrails.
-

@@ -43,6 +43,7 @@ if not success:
 ## Required Fields
 
 Every event MUST have:
+
 - `event_id`: Auto-generated unique ID
 - `timestamp`: Auto-generated ISO 8601 timestamp
 - `event_type`: One of the types above
@@ -53,6 +54,7 @@ Every event MUST have:
 ## Optional Fields (Highly Recommended)
 
 ### Causal Steps
+
 **Track reasoning and decision-making:**
 
 ```python
@@ -70,6 +72,7 @@ causal_steps=[
 ```
 
 ### Active Constraints
+
 **Document governance rules in effect:**
 
 ```python
@@ -83,6 +86,7 @@ active_constraints=[
 ```
 
 ### Failure Ledger
+
 **Track what didn't work:**
 
 ```python
@@ -97,6 +101,7 @@ failure_ledger=[
 ```
 
 ### Open Commitments
+
 **Track pending promises:**
 
 ```python
@@ -110,6 +115,7 @@ open_commitments=[
 ```
 
 ### Key Entities
+
 **Map shorthand to full references:**
 
 ```python
@@ -123,6 +129,7 @@ key_entities={
 ```
 
 ### Dependencies
+
 **Track event relationships:**
 
 ```python
@@ -339,26 +346,31 @@ success = manager.restore_session("old_session_id")
 ## Best Practices
 
 ### 1. Log Liberally
+
 - Log every significant event
 - Better too much data than too little
 - Logs are append-only, cheap to store
 
 ### 2. Always Include Causal Steps
+
 - Helps understand why decisions were made
 - Critical for debugging
 - Future agents benefit from reasoning
 
 ### 3. Track Failures Explicitly
+
 - Don't hide what didn't work
 - Failure ledger prevents repeated mistakes
 - Other agents learn from failures
 
 ### 4. Document Constraints
+
 - Make governance explicit
 - Show which rules applied
 - Helps validate compliance
 
 ### 5. Track Commitments
+
 - Make promises explicit
 - Track status clearly
 - Prevents dropped deliverables
@@ -370,11 +382,13 @@ success = manager.restore_session("old_session_id")
 All events are validated against `SESSION_LOG_SCHEMA.json` before writing.
 
 **If validation fails:**
+
 - Event is rejected
 - Error message returned
 - No partial writes (atomic)
 
 **Common validation errors:**
+
 - Missing required fields
 - Invalid event_type
 - Malformed timestamp
@@ -385,6 +399,7 @@ All events are validated against `SESSION_LOG_SCHEMA.json` before writing.
 ## File Format
 
 Logs are stored as **JSONL** (JSON Lines):
+
 - One event per line
 - Newline-delimited JSON
 - Append-only (never modified)
@@ -393,6 +408,7 @@ Logs are stored as **JSONL** (JSON Lines):
 **Location:** `.ai-agents/sessions/<session_id>.jsonl`
 
 **Example:**
+
 ```
 {"event_id":"evt_abc123","timestamp":"2025-12-10T12:00:00Z","event_type":"user_message",...}
 {"event_id":"evt_def456","timestamp":"2025-12-10T12:01:00Z","event_type":"tool_call",...}
@@ -404,6 +420,7 @@ Logs are stored as **JSONL** (JSON Lines):
 ## Integration with MCP
 
 Session logging is used by:
+
 - **Broker** - Logs retrieval requests
 - **Trigger Detector** - Logs trigger events
 - **Agents** - Log their actions and decisions

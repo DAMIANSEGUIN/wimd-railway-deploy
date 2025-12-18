@@ -1,4 +1,5 @@
 # Mosaic Project Documentation Audit
+
 **Date**: 2025-12-05
 **Auditor**: Claude Code (Sonnet 4.5)
 **Purpose**: Complete inventory of all governance, protocol, and execution documents for ChatGPT diagnostic review
@@ -459,6 +460,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 **Location**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/session_backups/`
 
 **Recent Backups**:
+
 - `2025-12-04_21-12-41/` (Latest - Current code version)
 - `2025-12-04_21-12-32/`
 - `2025-12-03_22-35-39/`
@@ -466,6 +468,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 - `2025-12-03_22-33-40/`
 
 Each backup contains:
+
 - Python API files snapshot
 - Configuration files (JSON)
 - Critical system state
@@ -520,6 +523,7 @@ Each backup contains:
 **Risk**: If local files are not backed up to Google Drive, ChatGPT will not have access to them for diagnostic review.
 
 **Required Actions**:
+
 1. Verify Google Drive sync status for `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/`
 2. If not synced: Create a Google Drive backup of the entire canonical project
 3. Document the Google Drive path for all governance files
@@ -530,6 +534,7 @@ Each backup contains:
 **Issue**: At least 15 duplicate directory structures exist across the filesystem.
 
 **Locations**:
+
 - `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/` (CANONICAL)
 - `/Users/damianseguin/wimd-railway-local/` (Legacy)
 - `/Users/damianseguin/Downloads/AI_Workspace/WIMD-Railway-Deploy-Project/` (Duplicate)
@@ -540,6 +545,7 @@ Each backup contains:
 **Impact**: "Multiple filename confusion" issue documented in TECH_DEBT_TRACKING.md
 
 **Recommendation**: Archive or delete all non-canonical copies, leaving only:
+
 - Canonical: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/`
 - Google Drive sync location (to be determined)
 
@@ -548,6 +554,7 @@ Each backup contains:
 **Issue**: 8+ documents marked as "SUPERSEDED" by TEAM_PLAYBOOK.md v2.0.0 are still in the root directory.
 
 **Superseded Files**:
+
 - `OPERATIONS_MANUAL.md` (in root and docs/)
 - `CODEX_INSTRUCTIONS.md` (in docs/)
 - `CODEX_HANDOVER_KIT.md` (in docs/)
@@ -770,6 +777,7 @@ Each backup contains:
    - Verify ChatGPT has access to the Google Drive location
 
 2. **If Not Synced - Create Manual Backup**
+
    ```bash
    # Create timestamped backup for Google Drive upload
    cd /Users/damianseguin/AI_Workspace

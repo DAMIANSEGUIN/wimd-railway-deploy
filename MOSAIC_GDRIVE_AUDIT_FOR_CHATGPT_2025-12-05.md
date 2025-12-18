@@ -1,4 +1,5 @@
 # Mosaic Project Documentation Audit - Google Drive Paths
+
 **Date**: 2025-12-05
 **For**: ChatGPT Diagnostic Review
 **Purpose**: Complete file inventory with Google Drive access paths
@@ -9,11 +10,13 @@
 ## 🔗 HOW TO ACCESS THESE FILES
 
 **All file paths in this document are relative to Google Drive root:**
+
 ```
 Google Drive > WIMD-Railway-Deploy-Project/
 ```
 
 **Example**: When you see `TEAM_PLAYBOOK.md`, the full path is:
+
 ```
 Google Drive > WIMD-Railway-Deploy-Project > TEAM_PLAYBOOK.md
 ```
@@ -253,12 +256,14 @@ WIMD-Railway-Deploy-Project/
 **Current Blocker**: Pushes to `origin/main` do not trigger Railway deployment
 
 **Investigation Needed**:
+
 - Check GitHub webhook configuration
 - Verify Railway GitHub integration status
 - Review Railway deployment logs
 - Check if manual deploys work via Railway CLI
 
 **Documentation**:
+
 - `RAILWAY_AUTO_DEPLOY_DIAGNOSTIC.md` (if in GDrive)
 - `TEAM_PLAYBOOK.md` Section 2 lists this as BLOCKING ISSUE #4
 
@@ -270,6 +275,7 @@ WIMD-Railway-Deploy-Project/
 ### 3. MVP Day 1 Critical Blockers (RESOLVED)
 
 **All 3 blockers from Gemini's review resolved**:
+
 1. ✅ Security vulnerability (authentication added)
 2. ✅ Resilience flaw (timeout/retry added)
 3. ✅ Schema version mismatch (resolved)
@@ -281,6 +287,7 @@ WIMD-Railway-Deploy-Project/
 ### Step 1: Read Foundation Documents (30 min)
 
 Read in this order:
+
 1. TEAM_PLAYBOOK.md (comprehensive protocol)
 2. SESSION_START.md (session initialization)
 3. TROUBLESHOOTING_CHECKLIST.md (error patterns)
@@ -303,6 +310,7 @@ Read:
 ### Step 4: Identify Execution Issues (Time varies)
 
 Focus areas:
+
 - **Protocol Amnesia**: Are AI agents reading TEAM_PLAYBOOK.md first?
 - **Regeneration Loops**: Are agents repeating same failed actions?
 - **Exception Handling**: Are errors caught and logged per SELF_DIAGNOSTIC_FRAMEWORK?
@@ -312,16 +320,19 @@ Focus areas:
 ### Step 5: Check Specific Problem Areas
 
 **If deployment issues**:
+
 - Read: RAILWAY_AUTO_DEPLOY_DIAGNOSTIC.md
 - Check: GitHub webhook status
 - Verify: Railway integration active
 
 **If agent coordination issues**:
+
 - Read: AI_TEAM_METHODOLOGY.md
 - Check: Handoff protocols being followed
 - Verify: Session state preservation
 
 **If code quality issues**:
+
 - Read: TROUBLESHOOTING_CHECKLIST.md "Code Pattern Filters"
 - Check: Context manager pattern usage
 - Verify: PostgreSQL syntax (not SQLite)
@@ -331,6 +342,7 @@ Focus areas:
 ## 🔍 KEY QUESTIONS FOR DIAGNOSIS
 
 **Protocol Adherence**:
+
 1. Are AI agents reading TEAM_PLAYBOOK.md at session start?
 2. Are agents following SESSION_START.md gate system?
 3. Are sacred coding patterns (context manager, PostgreSQL syntax) enforced?
@@ -362,6 +374,7 @@ Focus areas:
 **Important files that may be missing from GDrive**:
 
 From Root:
+
 - RESTART_PROTOCOL_README.md
 - CRITICAL_RESTART_CONTEXT.md
 - HANDOFF_TO_NEW_SESSION.md
@@ -374,6 +387,7 @@ From Root:
 - NOTE_FOR_CODEX.md
 
 From Planning:
+
 - MANDATORY_VERIFICATION_GATE.md
 - NAR_TASK_PROTOCOL.md
 - NETLIFY_AGENT_PROTOCOL.md
@@ -390,6 +404,7 @@ From Planning:
 Execution integrity issues in a multi-AI-agent software development team working on the Mosaic career coaching platform.
 
 **Known Issues**:
+
 1. GitHub → Railway auto-deploy not triggering (BLOCKING)
 2. Past incidents of protocol amnesia (agents not reading docs)
 3. Past incidents of regeneration loops (repeating failed actions)
@@ -397,6 +412,7 @@ Execution integrity issues in a multi-AI-agent software development team working
 
 **Your Goal**:
 Identify root causes of execution failures and recommend systemic fixes to prevent:
+
 - AI agents ignoring protocols
 - Deployment automation breakage
 - Error handling gaps
@@ -404,6 +420,7 @@ Identify root causes of execution failures and recommend systemic fixes to preve
 - Code quality regressions
 
 **Tools You Have**:
+
 - Complete documentation set in Google Drive
 - 3 comprehensive audits from today
 - Historical handoff documents
@@ -411,6 +428,7 @@ Identify root causes of execution failures and recommend systemic fixes to preve
 - Troubleshooting checklists with error patterns
 
 **Start Here**:
+
 1. Read TEAM_PLAYBOOK.md (56 KB - comprehensive)
 2. Read this audit file for file locations
 3. Read GEMINI_DAY_1_REVIEW.md for recent context

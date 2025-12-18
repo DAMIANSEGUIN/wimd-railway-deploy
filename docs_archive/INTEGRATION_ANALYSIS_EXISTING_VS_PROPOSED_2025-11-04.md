@@ -1,6 +1,7 @@
 # INTEGRATION ANALYSIS: Proposed Framework vs Existing Systems
-**Date:** 2025-11-04  
-**Analysis:** Claude Code (SSE)  
+
+**Date:** 2025-11-04
+**Analysis:** Claude Code (SSE)
 **Purpose:** Identify gaps, ambiguities, and integration requirements
 
 ---
@@ -8,13 +9,16 @@
 ## EXISTING ENFORCEMENT SYSTEMS
 
 ### 1. SESSION_START_PROTOCOL.md
+
 **Current Function:**
+
 - Mandatory checklist run at start of every session
 - Verifies PS101 continuity kit alignment
 - Checks critical feature presence
 - Logs compliance in session_log.txt
 
 **Integration Point with Proposal:**
+
 - Maps to **Stage 1: Define Current State**
 - Session Start Protocol = Pre-troubleshooting baseline verification
 
@@ -23,6 +27,7 @@
 ❌ No clear rule: "New troubleshooting session = Run SESSION_START_PROTOCOL first"
 
 **Fix Required:**
+
 ```markdown
 ## STAGE 0: SESSION INITIALIZATION (NEW)
 
@@ -38,13 +43,16 @@ Only proceed to Stage 1 after SESSION_START_PROTOCOL passes.
 ---
 
 ### 2. Pre-Push Verification (scripts/pre_push_verification.sh)
+
 **Current Function:**
+
 - Git pre-push hook
 - Verifies line count baseline (3875 lines)
 - Checks critical features present
 - Blocks push if verification fails
 
 **Integration Point with Proposal:**
+
 - Maps to **Stage 5: Implementation Checkpoints**
 - Pre-push = Automated checkpoint before git push
 
@@ -54,6 +62,7 @@ Only proceed to Stage 1 after SESSION_START_PROTOCOL passes.
 ❌ Unclear which script runs when
 
 **Fix Required:**
+
 ```markdown
 ## STAGE 5: IMPLEMENTATION WITH CHECKPOINTS (REVISED)
 
@@ -81,12 +90,15 @@ After each code change, run checkpoints IN ORDER:
 ---
 
 ### 3. verify_critical_features.sh
+
 **Current Function:**
+
 - Comprehensive feature presence check
 - Tests: Auth modal, PS101 state, chat, navigation
 - Returns pass/fail with detailed output
 
 **Integration Point with Proposal:**
+
 - Maps to **Stage 6: Verification**
 - Critical features check = Final acceptance test
 
@@ -95,6 +107,7 @@ After each code change, run checkpoints IN ORDER:
 ❌ Risk of manual "looks good" instead of automated verification
 
 **Fix Required:**
+
 ```markdown
 ## STAGE 6: VERIFICATION & DOCUMENTATION (REVISED)
 
@@ -104,31 +117,39 @@ After each code change, run checkpoints IN ORDER:
    ```bash
    ./scripts/verify_critical_features.sh
    ```
+
    Must return exit 0, all features present.
 
 2. **Live Deployment Check:**
+
    ```bash
    ./scripts/verify_live_deployment.sh https://whatismydelta.com/
    ```
+
    Must return HTTP 200, BUILD_ID matches commit.
 
 3. **Regression Test Suite:**
+
    ```bash
    ./scripts/regression_tests.sh
    ```
+
    All historical tests pass.
 
 **Manual Verification Steps:**
+
 - [ ] User can access site without login wall
 - [ ] Chat button opens chat panel
 - [ ] Trial mode auto-starts (check console logs)
 
 **Documentation:**
+
 - Update CLAUDE.md status section
 - Add entry to .verification_audit.log
 - Create retrospective in .ai-agents/retrospectives/
 
 Only mark Stage 6 complete if ALL verifications pass.
+
 ```
 
 ---
@@ -178,21 +199,25 @@ For deployments specifically, follow this order:
 ---
 
 ### 5. Operating Rule #8 (Documentation Discipline)
+
 **Current Function:**
+
 - All docs updated before task completion
 - Changes documented in status files
 - Audit trail required
 
 **Integration Point with Proposal:**
+
 - Maps to **Stage 6: Verification & Documentation**
 - Operating Rule #8 = Enforcement of Stage 6 documentation requirements
 
 **Gap Identified:**
-✅ Proposal Stage 6 mentions "Documentation updated?" 
+✅ Proposal Stage 6 mentions "Documentation updated?"
 ⚠️ But doesn't specify WHICH docs (CLAUDE.md? audit log? session log?)
 ❌ Risk: Agent marks Stage 6 complete with incomplete docs
 
 **Fix Required:**
+
 ```markdown
 ## STAGE 6: VERIFICATION & DOCUMENTATION (REVISED)
 
@@ -212,6 +237,7 @@ MUST update ALL of the following:
 ```
 
 **Rule:** Stage 6 CANNOT be marked complete until all docs updated.
+
 ```
 
 ---
@@ -247,12 +273,14 @@ node Mosaic/PS101_Continuity_Kit/inject_build_id.js
 ```
 
 After injection:
+
 ```bash
 # Verify BUILD_ID present
 grep "BUILD_ID:$BUILD_ID" mosaic_ui/index.html || exit 1
 ```
 
 **Rule:** Every deployment MUST have BUILD_ID injected before push.
+
 ```
 
 **Stage 6 addition:**
@@ -266,14 +294,17 @@ grep "BUILD_ID:$BUILD_ID" mosaic_ui/index.html || exit 1
 ## AMBIGUITIES & LOGICAL GAPS
 
 ### Gap 1: Multiple DOMContentLoaded Listeners
+
 **Issue:** Current codebase has 4 DOMContentLoaded listeners (lines 2021, 2264, 2289, 3515).
 
 **Ambiguity:**
+
 - Which one is the trial mode initialization?
 - Do they conflict?
 - Should they be consolidated?
 
 **Resolution Required:**
+
 ```markdown
 ## STAGE 3: ZERO-SHOT STRUCTURED ANALYSIS (ENHANCEMENT)
 
@@ -292,8 +323,10 @@ grep -n "addEventListener.*DOMContentLoaded" mosaic_ui/index.html
 ```
 
 **Decision Rule:**
+
 - If multiple listeners found, document purpose of each in Stage 3
 - If purpose overlaps, consolidate in Stage 4 solution
+
 ```
 
 ---
@@ -326,15 +359,19 @@ GOOD (specific, testable):
 
 **Format:**
 ```
+
 DESIRED OUTCOME (User Journey):
+
 1. [Action] → [Expected Result] → [How to Verify]
 2. [Action] → [Expected Result] → [How to Verify]
 ...
 
 Acceptance Criteria:
+
 - [ ] All actions succeed without errors
 - [ ] Console shows expected logs
 - [ ] LocalStorage contains expected keys
+
 ```
 
 **Rule:** Desired Outcome must be decomposable into step-by-step test plan.
@@ -343,14 +380,17 @@ Acceptance Criteria:
 ---
 
 ### Gap 3: When to Rollback vs When to Fix Forward
+
 **Issue:** Proposal mentions rollback but unclear when to use it.
 
 **Ambiguity:**
+
 - Rollback to last commit? Last known good? Specific tag?
 - If Stage 5 checkpoint fails, rollback or fix forward?
 - Who decides rollback vs iterate?
 
 **Resolution Required:**
+
 ```markdown
 ## STAGE 5: IMPLEMENTATION WITH CHECKPOINTS (ENHANCEMENT)
 
@@ -359,6 +399,7 @@ Acceptance Criteria:
 After checkpoint failure:
 
 ```
+
 IF checkpoint fails:
   └─> IF this is first failure:
       └─> Analyze error with Chain-of-Verification
@@ -367,15 +408,16 @@ IF checkpoint fails:
           └─> IF error is complex (logic bug, unexpected behavior):
               └─> Rollback to pre-action snapshot
               └─> Return to Stage 3 for re-analysis
-  
+
   └─> IF this is second consecutive failure on same action:
       └─> MANDATORY rollback to last known good
       └─> Escalate to Codex for Stage 4 re-approval
-      
+
   └─> IF this is third failure (even after rollback):
       └─> STOP troubleshooting
       └─> Document failure in escalation report
       └─> Recommend external review or alternative approach
+
 ```
 
 **Rollback Targets:**
@@ -387,14 +429,17 @@ IF checkpoint fails:
 ---
 
 ### Gap 4: Token Budget Enforcement
+
 **Issue:** Proposal sets token budgets but no enforcement mechanism.
 
 **Ambiguity:**
+
 - Who tracks tokens? Agent self-reports?
 - What happens if budget exceeded mid-stage?
 - Can budget be reallocated between stages?
 
 **Resolution Required:**
+
 ```markdown
 ## TOKEN BUDGET MANAGEMENT (ENFORCEMENT)
 
@@ -402,13 +447,17 @@ IF checkpoint fails:
 
 At start of each stage, agent logs:
 ```
+
 [STAGE X START] Token budget: Y remaining (Z used so far)
+
 ```
 
 At end of each stage, agent logs:
 ```
+
 [STAGE X END] Token usage: A tokens (B% of stage budget)
 Total session usage: C tokens (D% of 15k budget)
+
 ```
 
 **Enforcement Rules:**
@@ -436,14 +485,17 @@ Total session usage: C tokens (D% of 15k budget)
 ---
 
 ### Gap 5: Conflict Between "Batched Approvals" and "Oversight Checkpoints"
+
 **Issue:** RULE 1 says "one permission per session" but framework has checkpoints at Stage 2, 4, 5.
 
 **Ambiguity:**
+
 - Does "one permission" mean batch approval for entire 6-stage plan?
 - Or does it mean "no micro-approvals within a stage"?
 - Does Codex checkpoint override batched approval?
 
 **Resolution Required:**
+
 ```markdown
 ## BATCHED APPROVALS CLARIFICATION
 
@@ -469,6 +521,7 @@ Total session usage: C tokens (D% of 15k budget)
 
 **Example Flow:**
 ```
+
 Session Start:
   Agent: "SESSION PLAN: [6 stages]. APPROVED?"
   User: "APPROVED"
@@ -498,6 +551,7 @@ Stage 5 - Checkpoint 2:
 Stage 6:
   Agent: [All verification passed]
   [Session complete, NO final approval needed]
+
 ```
 
 **Token Savings:**
@@ -513,6 +567,7 @@ Stage 6:
 To align proposed framework with existing systems:
 
 **Immediate Changes to Proposal:**
+
 - [ ] Add Stage 0: SESSION_START_PROTOCOL execution
 - [ ] Stage 5: Reference existing pre_push_verification.sh
 - [ ] Stage 5: Add PS101 BUILD_ID injection step
@@ -523,16 +578,19 @@ To align proposed framework with existing systems:
 - [ ] Resolve batched approval vs oversight checkpoint ambiguity
 
 **New Scripts to Create:**
+
 - [ ] `.ai-agents/checkpoint_validator.sh` (subset of pre_push_verification.sh)
 - [ ] `scripts/verify_documentation_discipline.sh` (checks Operating Rule #8)
 - [ ] `scripts/regression_tests.sh` (evolutionary test suite)
 - [ ] `.ai-agents/templates/STAGE_1_TEMPLATE.md` (Current State → Desired Outcome)
 
 **Existing Scripts to Update:**
+
 - [ ] `scripts/pre_push_verification.sh` - Add reference to checkpoint_validator.sh
 - [ ] `scripts/deploy.sh` - Ensure PS101 BUILD_ID injection included
 
 **Documentation to Create:**
+
 - [ ] `.ai-agents/config.json` - Framework mode flag (strict/standard/fast)
 - [ ] `.ai-agents/known_issues.json` - Current issue patterns
 - [ ] `.ai-agents/templates/RETROSPECTIVE_TEMPLATE.md`
@@ -542,6 +600,7 @@ To align proposed framework with existing systems:
 ## LOGICAL GAPS SUMMARY
 
 **Critical Gaps (MUST fix before adoption):**
+
 1. ❌ No Stage 0 for SESSION_START_PROTOCOL
 2. ❌ Duplicate validation scripts (checkpoint vs pre_push)
 3. ❌ Missing PS101 continuity in Stage 5
@@ -564,12 +623,14 @@ To align proposed framework with existing systems:
 **Do NOT adopt proposal as-is.**
 
 **Instead:**
+
 1. Create REVISED_PROPOSAL.md addressing critical gaps 1-5
 2. Get Codex approval on revised version
 3. Implement integration checklist items
 4. THEN adopt for current production issue
 
 **Alternative (Fast Track):**
+
 - Adopt "FAST" mode for current issue (skip full 6-stage process)
 - Use existing TROUBLESHOOTING_CHECKLIST.md instead
 - Fix the JavaScript execution issue using current tools
@@ -579,8 +640,8 @@ To align proposed framework with existing systems:
 
 **ANALYSIS COMPLETE**
 
-**Next Action:** 
+**Next Action:**
+
 - Share this analysis with Codex
 - Codex decides: Revise proposal first OR use existing tools for current issue
 - User confirms approach before proceeding
-

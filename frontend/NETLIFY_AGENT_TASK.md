@@ -12,11 +12,13 @@ Implement two features for the Mosaic platform:
 ## File Locations
 
 **Implementation specs**:
+
 - `docs/specs/mosaic_draggable_windows_spec.md` - Complete spec for draggable windows
 - `docs/specs/mosaic_appointment_booking_spec.md` - Complete spec for booking integration
 - `docs/HANDOFF_TO_BROWSER_2025-10-22.md` - Full handoff document with context
 
 **Dependencies already installed**:
+
 - `react-draggable` ✅
 - `re-resizable` ✅
 
@@ -46,6 +48,7 @@ See `package.json` for confirmation.
    - Bounded dragging (windows stay within viewport)
 
 **Test**:
+
 - Windows drag smoothly when clicking header
 - Windows resize from corners
 - Windows don't disappear off-screen
@@ -63,13 +66,16 @@ See `package.json` for confirmation.
 **Implementation** (choose one):
 
 ### Option A: Simple Link (Recommended for Phase 1)
+
 Add a button/link that opens booking page in new tab.
 
 **Where to add**:
+
 - PS101 results page (after completing coaching flow)
 - User dashboard (if exists)
 
 **Code**:
+
 ```jsx
 <a
   href="https://calendar.app.google/EAnDSz2CcTtH849x6"
@@ -82,9 +88,11 @@ Add a button/link that opens booking page in new tab.
 ```
 
 ### Option B: Embedded iframe (Better UX)
+
 Embed booking directly in the site.
 
 **Code**:
+
 ```jsx
 <iframe
   src="https://calendar.app.google/EAnDSz2CcTtH849x6"
@@ -96,6 +104,7 @@ Embed booking directly in the site.
 ```
 
 **Test**:
+
 - Link opens to Google Calendar appointment page
 - User can successfully book appointment
 - No console errors
@@ -104,14 +113,16 @@ Embed booking directly in the site.
 
 ## Success Criteria
 
-### Draggable Windows:
+### Draggable Windows
+
 - [ ] Windows can be dragged by clicking header
 - [ ] Windows can be resized from corners
 - [ ] Windows stay within viewport bounds
 - [ ] Works in Chrome, Firefox, Safari
 - [ ] Disabled or adapted for mobile devices
 
-### Booking:
+### Booking
+
 - [ ] Booking link accessible from Mosaic site
 - [ ] Link opens to correct Google Calendar page
 - [ ] User can complete booking flow

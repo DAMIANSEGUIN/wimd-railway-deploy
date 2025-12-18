@@ -1,12 +1,15 @@
 # Agent Task: Fix Railway Health Check 503 Failure
 
 ## Objective
+
 Fix the Railway deployment health check that returns 503 despite successful application startup, preventing deployment of fixes to production.
 
 ## Context
+
 Railway deployment (commit 80155006) builds and starts successfully with all components initialized, but `/health` endpoint returns 503 causing deployment failure. The old deployment (Oct 6, commit a583d26a) remains active.
 
 ## Evidence of Successful Startup
+
 ```
 ✅ OpenAI client initialized
 ✅ Anthropic client initialized
@@ -19,15 +22,18 @@ INFO: Application startup complete.
 ```
 
 ## Evidence of Health Check Failure
+
 ```
 INFO: "GET /health HTTP/1.1" 503 Service Unavailable
 [14 attempts, all failed with 503]
 ```
 
 ## Root Cause Hypothesis
+
 Health check logic in `api/index.py:420-459` requires EITHER `fallback_enabled=True` OR `ai_available=True`, but despite successful initialization, the health check is seeing both as False.
 
 Possible causes:
+
 1. AI client global instances are None at health check time despite initialization logs
 2. Database feature flag value not persisting from migration
 3. Feature flag check returning cached/stale value
@@ -141,6 +147,7 @@ def debug_system_state():
 ```
 
 3. **Commit and push diagnostic changes**:
+
 ```bash
 git add api/index.py
 git commit -m "Add health check diagnostic logging and debug endpoint"
@@ -153,7 +160,8 @@ git push railway-origin main
 
 ### Phase 2: Apply Fix Based on Diagnostic Results
 
-#### If `fallback_enabled` is 0 (integer) instead of True/False:
+#### If `fallback_enabled` is 0 (integer) instead of True/False
+
 The issue is type coercion. The database returns 0/1 but Python evaluates `0 or False` as False.
 
 **Fix**: Edit `api/prompt_selector.py` line 32 to force boolean conversion:
@@ -173,7 +181,8 @@ def _check_feature_flag(self, flag_name: str) -> bool:
         return False
 ```
 
-#### If `ai_available` is False despite initialization:
+#### If `ai_available` is False despite initialization
+
 The AI client manager's health check is failing.
 
 **Fix**: Edit `api/ai_clients.py` line 183 to check for actual client objects, not just None:
@@ -213,7 +222,8 @@ def get_health_status(self) -> Dict[str, Any]:
     return status
 ```
 
-#### If both are False due to initialization timing:
+#### If both are False due to initialization timing
+
 The global instances are created before startup hooks run.
 
 **Fix**: Use lazy initialization pattern. Edit `api/ai_clients.py` to remove global instance creation at line 202:
@@ -260,6 +270,7 @@ def health():
 ```
 
 Commit with clear message:
+
 ```bash
 git commit -m "TEMPORARY: Bypass health check to unblock deployment - investigate after"
 git push railway-origin main
@@ -273,18 +284,21 @@ After applying fixes:
 
 1. **Check deployment succeeds** - Railway build and health check pass
 2. **Test production endpoint**:
+
    ```bash
    curl https://whatismydelta.com/health
    # Should return: {"ok": true, ...}
    ```
 
 3. **Test debug endpoint**:
+
    ```bash
    curl https://whatismydelta.com/debug/system-state
    # Should show: ai_available: true, fallback_enabled: true
    ```
 
 4. **Test actual prompt system**:
+
    ```bash
    curl https://whatismydelta.com/health/prompts
    # Should show: fallback_enabled: 1, openai.available: true
@@ -322,6 +336,7 @@ Or manually rollback via Railway dashboard to commit a583d26a.
 ## Files to Modify
 
 Priority order:
+
 1. `api/index.py` (lines 420-471) - Health check endpoint + debug endpoint
 2. `api/prompt_selector.py` (line 32) - Feature flag boolean conversion
 3. `api/ai_clients.py` (lines 179-200) - Health status check logic

@@ -7,9 +7,11 @@ The Competitive Intelligence Engine provides strategic analysis for job search o
 ## Core Components
 
 ### 1. Company Analysis
+
 **Endpoint**: `GET /intelligence/company/{company_name}`
 
 Analyzes target companies to understand:
+
 - **Pain Points**: What challenges the company is facing
 - **Key Priorities**: What the company values most
 - **Hiring Patterns**: How they typically hire
@@ -18,11 +20,13 @@ Analyzes target companies to understand:
 - **Growth Indicators**: Where they're heading
 
 **Example Request**:
+
 ```bash
 curl "http://localhost:8000/intelligence/company/Google?industry=Technology"
 ```
 
 **Example Response**:
+
 ```json
 {
   "company_name": "Google",
@@ -71,11 +75,13 @@ curl "http://localhost:8000/intelligence/company/Google?industry=Technology"
 ```
 
 ### 2. Competitive Positioning Strategy
+
 **Endpoint**: `POST /intelligence/positioning`
 
 Develops how to position yourself against other candidates:
 
 **Example Request**:
+
 ```bash
 curl -X POST "http://localhost:8000/intelligence/positioning" \
   -H "Content-Type: application/json" \
@@ -87,6 +93,7 @@ curl -X POST "http://localhost:8000/intelligence/positioning" \
 ```
 
 **Example Response**:
+
 ```json
 {
   "target_role": "Software Engineer",
@@ -125,11 +132,13 @@ curl -X POST "http://localhost:8000/intelligence/positioning" \
 ```
 
 ### 3. Strategic Resume Targeting
+
 **Endpoint**: `POST /intelligence/resume-targeting`
 
 Creates targeted resume strategies based on company analysis:
 
 **Example Request**:
+
 ```bash
 curl -X POST "http://localhost:8000/intelligence/resume-targeting" \
   -H "Content-Type: application/json" \
@@ -141,6 +150,7 @@ curl -X POST "http://localhost:8000/intelligence/resume-targeting" \
 ```
 
 **Example Response**:
+
 ```json
 {
   "company_name": "Google",
@@ -185,15 +195,18 @@ curl -X POST "http://localhost:8000/intelligence/resume-targeting" \
 ```
 
 ### 4. AI-Powered Job Search Prompts
+
 **Endpoint**: `POST /intelligence/ai-prompts`
 
 Generates AI prompts for:
+
 - Resume rewriting
 - Cover letter writing
 - Interview preparation
 - Networking strategies
 
 **Example Request**:
+
 ```bash
 curl -X POST "http://localhost:8000/intelligence/ai-prompts" \
   -H "Content-Type: application/json" \
@@ -205,6 +218,7 @@ curl -X POST "http://localhost:8000/intelligence/ai-prompts" \
 ```
 
 **Example Response**:
+
 ```json
 {
   "resume_rewrite_prompt": "Rewrite this resume to target Google for a Software Engineer position...",
@@ -217,6 +231,7 @@ curl -X POST "http://localhost:8000/intelligence/ai-prompts" \
 ## Integration with Job Search
 
 ### Enhanced Job Search with Intelligence
+
 The competitive intelligence engine integrates with the job search system to provide:
 
 1. **Company-Specific Job Filtering**: Filter jobs by companies you've analyzed
@@ -227,29 +242,34 @@ The competitive intelligence engine integrates with the job search system to pro
 ### Workflow Example
 
 1. **Analyze Target Company**:
+
    ```bash
    curl "http://localhost:8000/intelligence/company/Google"
    ```
 
 2. **Develop Positioning Strategy**:
+
    ```bash
    curl -X POST "http://localhost:8000/intelligence/positioning" \
      -d '{"company_name": "Google", "target_role": "Software Engineer"}'
    ```
 
 3. **Create Resume Targeting**:
+
    ```bash
    curl -X POST "http://localhost:8000/intelligence/resume-targeting" \
      -d '{"company_name": "Google", "target_role": "Software Engineer"}'
    ```
 
 4. **Generate AI Prompts**:
+
    ```bash
    curl -X POST "http://localhost:8000/intelligence/ai-prompts" \
      -d '{"company_name": "Google", "target_role": "Software Engineer"}'
    ```
 
 5. **Search Jobs with Intelligence**:
+
    ```bash
    curl "http://localhost:8000/jobs/search/rag?query=software engineer&location=San Francisco"
    ```
@@ -265,6 +285,7 @@ curl "http://localhost:8000/health/intelligence"
 ```
 
 **Response**:
+
 ```json
 {
   "status": "operational",
@@ -278,24 +299,28 @@ curl "http://localhost:8000/health/intelligence"
 ## Use Cases
 
 ### 1. Targeted Resume Writing
+
 - Analyze company pain points
 - Develop positioning strategy
 - Create targeted resume content
 - Optimize keywords and focus areas
 
 ### 2. Strategic Job Applications
+
 - Understand company culture and priorities
 - Align your value proposition with their needs
 - Address specific challenges they're facing
 - Position against competitive threats
 
 ### 3. Interview Preparation
+
 - Research company challenges and priorities
 - Prepare examples that address their pain points
 - Develop questions about their strategic challenges
 - Position your unique value proposition
 
 ### 4. Networking Strategy
+
 - Understand company culture and values
 - Find common ground for conversations
 - Prepare value-driven outreach messages

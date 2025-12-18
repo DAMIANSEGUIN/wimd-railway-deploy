@@ -1,7 +1,7 @@
 # Railway Deployment Fix - Diagnostic Note
 
-**Date:** 2025-11-01  
-**For:** Netlify Agent Runners  
+**Date:** 2025-11-01
+**For:** Netlify Agent Runners
 **Status:** 🔴 URGENT - Railway deployments blocked
 
 ---
@@ -9,6 +9,7 @@
 ## Issue Summary
 
 Railway deployments are failing with error:
+
 ```
 /bin/bash: line 1: python: command not found
 ```
@@ -20,6 +21,7 @@ This prevents all new code deployments. The old deployment remains healthy, but 
 ## Diagnostic Document Location
 
 **Full diagnostic note and repair instructions:**
+
 - **File:** `docs/NETLIFY_AGENT_RAILWAY_DEPLOYMENT_FIX.md`
 - **Exact Path:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/docs/NETLIFY_AGENT_RAILWAY_DEPLOYMENT_FIX.md`
 - **Cover Note:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/FOR_NETLIFY_AGENT_RAILWAY_FIX.md`
@@ -57,4 +59,3 @@ This prevents all new code deployments. The old deployment remains healthy, but 
 ---
 
 **Next Step:** Open `docs/NETLIFY_AGENT_RAILWAY_DEPLOYMENT_FIX.md` and follow the diagnostic steps.
-

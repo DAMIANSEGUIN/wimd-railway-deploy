@@ -55,10 +55,10 @@ CREATE TRIGGER IF NOT EXISTS update_usage_summary
 AFTER INSERT ON usage_tracking
 BEGIN
     INSERT OR REPLACE INTO usage_summary (
-        date, operation, request_count, total_cost, 
+        date, operation, request_count, total_cost,
         success_count, failure_count, avg_response_time, updated_at
     )
-    SELECT 
+    SELECT
         DATE(NEW.created_at) as date,
         NEW.operation,
         COUNT(*) as request_count,
@@ -67,8 +67,8 @@ BEGIN
         SUM(CASE WHEN success = 0 THEN 1 ELSE 0 END) as failure_count,
         AVG(response_time) as avg_response_time,
         CURRENT_TIMESTAMP as updated_at
-    FROM usage_tracking 
-    WHERE DATE(created_at) = DATE(NEW.created_at) 
+    FROM usage_tracking
+    WHERE DATE(created_at) = DATE(NEW.created_at)
     AND operation = NEW.operation
     GROUP BY DATE(created_at), operation;
 END;

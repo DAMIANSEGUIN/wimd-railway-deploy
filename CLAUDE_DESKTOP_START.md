@@ -9,6 +9,7 @@
 ## 📂 Git Repository
 
 **Clone or open:**
+
 ```bash
 git clone https://github.com/DAMIANSEGUIN/wimd-railway-deploy
 cd wimd-railway-deploy
@@ -16,6 +17,7 @@ git checkout phase1-incomplete
 ```
 
 **Local path (if already cloned):**
+
 ```
 /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 ```
@@ -68,15 +70,18 @@ git checkout phase1-incomplete
 ## 🔑 Key Information
 
 ### Production URLs
-- **Frontend:** https://whatismydelta.com (Netlify) - ✅ Healthy
-- **Backend:** https://what-is-my-delta-site-production.up.railway.app (Railway) - ✅ Healthy
+
+- **Frontend:** <https://whatismydelta.com> (Netlify) - ✅ Healthy
+- **Backend:** <https://what-is-my-delta-site-production.up.railway.app> (Railway) - ✅ Healthy
 
 ### Current Branch
+
 - **Branch:** `phase1-incomplete`
 - **Status:** 30 uncommitted files
 - **Remote:** `origin` (auto-deploys to Railway on push to main)
 
 ### Deployment Commands
+
 ```bash
 # ALWAYS use wrapper scripts (never raw git push):
 ./scripts/deploy.sh netlify    # Deploy frontend
@@ -88,6 +93,7 @@ git checkout phase1-incomplete
 ```
 
 ### Critical Rules
+
 - ❌ Never use `git push origin main` directly
 - ❌ Never use `netlify deploy --prod` directly
 - ✅ Always use `./scripts/deploy.sh` wrapper
@@ -98,20 +104,23 @@ git checkout phase1-incomplete
 ## 🏗️ Architecture Quick Reference
 
 **Stack:**
+
 - Frontend: Vanilla JS on Netlify
 - Backend: FastAPI on Railway
 - Database: PostgreSQL (Railway managed)
 - Domain: whatismydelta.com
 
 **Key Files:**
+
 - `mosaic_ui/index.html` - Main frontend (4000+ lines, needs modularization)
 - `frontend/index.html` - Mirror of mosaic_ui
 - `api/index.py` - FastAPI backend
 - `api/storage.py` - Database operations
 
 **Current Issue:**
+
 - `mosaic_ui/index.html` has PS101 hoisting bug (line ~2530 vs ~3759)
-- Login works for new users, fails for existing user (damian.seguin@gmail.com)
+- Login works for new users, fails for existing user (<damian.seguin@gmail.com>)
 
 ---
 
@@ -130,6 +139,7 @@ git checkout phase1-incomplete
 With Claude Desktop's persistent context, you don't need to re-read everything each session. You'll build understanding as you work.
 
 **Key advantages:**
+
 - ✅ Continuous conversation across sessions
 - ✅ Remember previous discussions about PS101, login, Phase 1
 - ✅ No need for extensive handoff documentation
@@ -140,6 +150,7 @@ With Claude Desktop's persistent context, you don't need to re-read everything e
 ## 🎬 First Action
 
 **Suggested first command:**
+
 ```bash
 # Navigate to project and check status
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project

@@ -1,4 +1,5 @@
 # Self-Diagnostic Framework for Mosaic Platform
+
 **Architecture-Specific Error Prevention & Auto-Triage System**
 
 ---
@@ -6,6 +7,7 @@
 ## System Architecture Overview
 
 **Stack:**
+
 - **Orchestration:** None (single FastAPI monolith)
 - **Model Serving:** Direct API calls (OpenAI GPT-4, Anthropic Claude via Python clients)
 - **Infrastructure:** Railway (backend), Netlify (frontend), PostgreSQL (database)
@@ -20,7 +22,9 @@
 ## Error Taxonomy (Mosaic-Specific)
 
 ### 1. Infrastructure Errors
+
 **Railway-Specific:**
+
 - `RAILWAY_DEPLOY_FAILED` - Build or deploy crash
 - `RAILWAY_DB_EPHEMERAL` - SQLite fallback active (PostgreSQL failed)
 - `RAILWAY_ENV_VAR_MISSING` - DATABASE_URL, OPENAI_API_KEY, etc. not set
@@ -28,6 +32,7 @@
 - `RAILWAY_RESTART_LOOP` - Container crash looping
 
 **Database:**
+
 - `PG_CONNECTION_FAILED` - PostgreSQL connection pool initialization failed
 - `PG_SSL_REQUIRED` - Missing sslmode in DATABASE_URL
 - `PG_AUTH_FAILED` - Invalid credentials in DATABASE_URL
@@ -35,57 +40,72 @@
 - `SQLITE_FALLBACK_ACTIVE` - Using ephemeral SQLite instead of PostgreSQL
 
 **API Rate Limits:**
+
 - `OPENAI_RATE_LIMIT` - 429 from OpenAI
 - `ANTHROPIC_RATE_LIMIT` - 429 from Anthropic
 - `OPENAI_QUOTA_EXCEEDED` - Monthly quota hit
 
 ### 2. Data Errors
+
 **Session/State:**
+
 - `SESSION_ORPHANED` - Session exists but user deleted
 - `SESSION_EXPIRED` - TTL exceeded
 - `PS101_STATE_CORRUPT` - prompt_index > len(prompts)
 - `USER_DATA_NULL` - session.user_data is NULL when expected
 
 **File Upload:**
+
 - `UPLOAD_PATH_MISSING` - file_path in DB but file doesn't exist on disk
 - `UPLOAD_SIZE_EXCEEDED` - File > limit (not currently enforced)
 
 **Schema Drift:**
+
 - `MISSING_COLUMN` - SQLite→PostgreSQL migration incomplete
 - `TYPE_MISMATCH` - JSON field not parseable
 
 ### 3. Model/LLM Errors
+
 **OpenAI:**
+
 - `OPENAI_INVALID_KEY` - API key rejected
 - `OPENAI_MODEL_NOT_FOUND` - Model name wrong/deprecated
 - `OPENAI_CONTEXT_OVERFLOW` - Prompt > max_tokens
 - `OPENAI_TIMEOUT` - Request timeout (>120s default)
 
 **Anthropic:**
+
 - `ANTHROPIC_INVALID_KEY` - API key rejected
 - `ANTHROPIC_RATE_LIMIT` - Too many requests
 - `ANTHROPIC_CONTENT_FILTERED` - Safety filter blocked response
 
 **Quality:**
+
 - `PROMPT_SELECTOR_FAIL` - No match found, fell back to generic
 - `EMBEDDING_GENERATION_FAILED` - OpenAI embeddings error
 - `RERANKER_UNAVAILABLE` - CrossEncoder model load failed (currently mocked)
 
 ### 4. Prompt/Tooling Errors
+
 **JSON Parsing:**
+
 - `PS101_STEP_MALFORMED` - JSON parse error in ps101_steps.json
 - `PROMPT_CSV_CORRUPT` - CSV parse error in prompts.csv
 
 **Tool Call Issues:**
+
 - Not applicable (no function calling yet)
 
 ### 5. Integration Errors
+
 **Third-Party APIs:**
+
 - Job sources (12 external APIs/scrapers) - individual error codes per source
 - `LINKEDIN_SCRAPE_BLOCKED` - Anti-bot detection
 - `GREENHOUSE_API_DOWN` - HTTP 5xx
 
 **Authentication:**
+
 - `AUTH_INVALID_CREDENTIALS` - Password hash mismatch
 - `AUTH_USER_NOT_FOUND` - Email not in users table
 - `AUTH_SESSION_INVALID` - Session ID not found
@@ -360,7 +380,7 @@ class PlaybookExecutor:
 
 ## Automated Context Gathering
 
-### On Error, Auto-Attach:
+### On Error, Auto-Attach
 
 ```python
 # api/error_context.py

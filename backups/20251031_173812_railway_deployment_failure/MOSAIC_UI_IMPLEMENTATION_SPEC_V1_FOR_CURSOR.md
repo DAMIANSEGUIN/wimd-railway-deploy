@@ -1,4 +1,5 @@
 # Mosaic PS101 UI Implementation Specification v1.0
+
 **For Cursor Implementation - Vanilla JavaScript Single-File Architecture**
 
 **Created:** 2025-10-30
@@ -27,6 +28,7 @@
 ### What This Spec Delivers
 
 A complete, implementable specification for the PS101 7-step guided coaching interface that:
+
 - ✅ Works in vanilla JavaScript ES6+ (no frameworks, no build tools)
 - ✅ Preserves Peripheral Calm aesthetic (Scandi × Japanese × Islamic)
 - ✅ Integrates with existing backend (`POST /wimd/ask`)
@@ -37,6 +39,7 @@ A complete, implementable specification for the PS101 7-step guided coaching int
 ### Success Criteria
 
 **User Experience:**
+
 - Users complete PS101 flow intuitively (no confusion)
 - Progress feels encouraging, not pressuring
 - Users can review/edit previous answers easily
@@ -44,6 +47,7 @@ A complete, implementable specification for the PS101 7-step guided coaching int
 - Calm, supportive, non-bureaucratic feel
 
 **Technical:**
+
 - Zero framework dependencies
 - Single HTML file (`frontend/index.html`)
 - Works with existing API contracts
@@ -53,12 +57,14 @@ A complete, implementable specification for the PS101 7-step guided coaching int
 ### Core Design Decisions
 
 Based on comprehensive documentation review, these decisions optimize for:
+
 - Self-efficacy building (not dependency creation)
 - Simplicity over complexity (solo developer maintenance)
 - Calm, focused user experience (Peripheral Calm aesthetic)
 - Incremental enhancement (preserve what works)
 
 **Key Decisions:**
+
 1. **Flow Structure:** Single-screen step progression (not wizard, not accordion)
 2. **Progress Indication:** Minimal step counter + subtle visual timeline
 3. **Navigation:** Forward/back buttons with smart validation
@@ -75,6 +81,7 @@ Based on comprehensive documentation review, these decisions optimize for:
 **Source:** `work_playbooks.md` lines 140-232, `mosaic_brief.md`, `CHATGPT_UI_DESIGN_BRIEF_PS101.md`
 
 #### Step 1: WIMD - What Is My Delta?
+
 **Question:** "Describe your current situation in 2-3 sentences. What's the gap between where you are and where you want to be?"
 
 **Coaching Stance:** Reflective listening, non-judgmental
@@ -83,6 +90,7 @@ Based on comprehensive documentation review, these decisions optimize for:
 **Output:** Clear delta statement (problem/gap/challenge)
 
 #### Step 2: What Matters Most?
+
 **Question:** "Of all the aspects of this situation, what matters MOST to you? What's at the core of this?"
 
 **Coaching Stance:** Prioritization, focus
@@ -91,6 +99,7 @@ Based on comprehensive documentation review, these decisions optimize for:
 **Output:** Prioritized focus (avoid solving everything at once)
 
 #### Step 3: What Do I Know?
+
 **Question:** "What facts do you already have? What's definitely true about this situation?"
 
 **Coaching Stance:** Evidence-based, separating facts from assumptions
@@ -99,6 +108,7 @@ Based on comprehensive documentation review, these decisions optimize for:
 **Output:** Evidence base (what's known/verified)
 
 #### Step 4: What Do I Need to Know?
+
 **Question:** "What information are you missing? What would you need to know to move forward?"
 
 **Coaching Stance:** Identifying gaps, research questions
@@ -107,6 +117,7 @@ Based on comprehensive documentation review, these decisions optimize for:
 **Output:** Research questions, data needs
 
 #### Step 5: What Are My Options?
+
 **Question:** "Given what you know, what are at least 3 different ways you could approach this?"
 
 **Coaching Stance:** Divergent thinking, avoiding binary choices
@@ -115,6 +126,7 @@ Based on comprehensive documentation review, these decisions optimize for:
 **Output:** Multiple pathways (not just A or B)
 
 #### Step 6: What's the Experiment?
+
 **Question:** "Which option can you test first, in the smallest/safest way, to gather real data?"
 
 **Coaching Stance:** Low-stakes action, learning orientation
@@ -123,6 +135,7 @@ Based on comprehensive documentation review, these decisions optimize for:
 **Output:** Testable hypothesis (not full commitment)
 
 #### Step 7: What's the Next Commitment?
+
 **Question:** "What specific action will you take, by when, to run this experiment?"
 
 **Coaching Stance:** Action-oriented, time-bound accountability
@@ -133,6 +146,7 @@ Based on comprehensive documentation review, these decisions optimize for:
 ### Quality Checks (Post-Completion)
 
 After Step 7, system confirms:
+
 - ✅ User can articulate problem clearly (Step 1)
 - ✅ User has specific next action (Step 7)
 - ✅ User has timeline for follow-up
@@ -145,6 +159,7 @@ After Step 7, system confirms:
 ### Flow Structure: Single-Screen Step Progression
 
 **Rationale:**
+
 - Maintains focus on one question at a time
 - Reduces cognitive load (Peripheral Calm principle)
 - Easy to implement in vanilla JS
@@ -152,6 +167,7 @@ After Step 7, system confirms:
 - Supports back/forward navigation
 
 **Layout Pattern:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Header: "What Is My Delta — Career Coaching"              │
@@ -189,6 +205,7 @@ After Step 7, system confirms:
 ### ASCII Diagrams - Key States
 
 #### State 1: Welcome / Entry to PS101
+
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │  What Is My Delta                                            │
@@ -214,6 +231,7 @@ After Step 7, system confirms:
 ```
 
 #### State 2: Active Step (Step 3 Example)
+
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │  Step 3 of 7: What Do I Know?                                │
@@ -248,6 +266,7 @@ After Step 7, system confirms:
 ```
 
 #### State 3: Completion Summary
+
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │  PS101 Complete — Your Action Plan                           │
@@ -283,6 +302,7 @@ After Step 7, system confirms:
 ### Progress Indication
 
 **Visual Design:**
+
 ```
 Step 1 of 7: What Is My Delta?
 
@@ -294,6 +314,7 @@ Step 1 of 7: What Is My Delta?
 ```
 
 **HTML Structure:**
+
 ```html
 <div class="ps101-progress" role="navigation" aria-label="PS101 Progress">
   <div class="progress-header">
@@ -312,6 +333,7 @@ Step 1 of 7: What Is My Delta?
 ```
 
 **CSS (Using Peripheral Calm Tokens):**
+
 ```css
 .ps101-progress {
   max-width: var(--max);
@@ -394,6 +416,7 @@ Step 1 of 7: What Is My Delta?
 ### Navigation Controls
 
 **HTML:**
+
 ```html
 <div class="ps101-nav">
   <button class="nav-btn nav-back quiet" id="ps101-back" aria-label="Go back to previous step">
@@ -407,6 +430,7 @@ Step 1 of 7: What Is My Delta?
 ```
 
 **CSS:**
+
 ```css
 .ps101-nav {
   display: flex;
@@ -489,6 +513,7 @@ Step 1 of 7: What Is My Delta?
 ```
 
 **CSS:**
+
 ```css
 .previous-answers {
   margin-bottom: 32px;
@@ -619,6 +644,7 @@ function updateChatContextualPrompts(currentStep) {
 ```
 
 **Add Suggestions to Chat Drawer:**
+
 ```html
 <aside class="chat" id="chat" role="dialog" aria-labelledby="chatTitle">
   <header>
@@ -641,6 +667,7 @@ function updateChatContextualPrompts(currentStep) {
 ```
 
 **CSS for Suggestions:**
+
 ```css
 .chat-suggestions {
   padding: 8px 12px;
@@ -677,6 +704,7 @@ function updateChatContextualPrompts(currentStep) {
 **Purpose:** Main wrapper for PS101 flow, replaces or enhances existing module
 
 **HTML Structure:**
+
 ```html
 <section id="ps101-flow" class="ps101-container" aria-label="PS101 Coaching Flow">
   <!-- Progress indicator -->
@@ -731,6 +759,7 @@ function updateChatContextualPrompts(currentStep) {
 ```
 
 **CSS:**
+
 ```css
 .ps101-container {
   max-width: var(--max);
@@ -840,6 +869,7 @@ function updateChatContextualPrompts(currentStep) {
 **Purpose:** First screen users see when starting PS101
 
 **HTML:**
+
 ```html
 <div class="ps101-welcome" id="ps101-welcome">
   <div class="welcome-content">
@@ -877,6 +907,7 @@ function updateChatContextualPrompts(currentStep) {
 ```
 
 **CSS:**
+
 ```css
 .ps101-welcome {
   max-width: 640px;
@@ -975,6 +1006,7 @@ function updateChatContextualPrompts(currentStep) {
 **Purpose:** Final screen after completing all 7 steps
 
 **HTML:**
+
 ```html
 <div class="ps101-completion" id="ps101-completion">
   <div class="completion-header">
@@ -1059,6 +1091,7 @@ function updateChatContextualPrompts(currentStep) {
 ```
 
 **CSS:**
+
 ```css
 .ps101-completion {
   max-width: var(--max);
@@ -1244,6 +1277,7 @@ function updateChatContextualPrompts(currentStep) {
 **Existing Endpoint: `POST /wimd/ask`**
 
 **Request Format:**
+
 ```json
 {
   "prompt": "User's answer to current step question",
@@ -1253,6 +1287,7 @@ function updateChatContextualPrompts(currentStep) {
 ```
 
 **Response Format:**
+
 ```json
 {
   "result": {
@@ -1265,6 +1300,7 @@ function updateChatContextualPrompts(currentStep) {
 **Session State Storage:**
 
 Backend already supports `session.user_data` JSONB field:
+
 ```json
 {
   "ps101": {
@@ -1288,6 +1324,7 @@ Backend already supports `session.user_data` JSONB field:
 **Progress Persistence:**
 
 Table: `wimd_outputs`
+
 ```sql
 INSERT INTO wimd_outputs (user_id, step_number, response_text, clarity_score, created_at)
 VALUES ($1, $2, $3, $4, NOW())
@@ -1954,9 +1991,11 @@ function validateCurrentStep() {
 ## Implementation Phases
 
 ### Phase 1: Core PS101 Flow (Week 1)
+
 **Estimated effort: 3-5 days**
 
 **Deliverables:**
+
 - ✅ Welcome screen with start/continue
 - ✅ 7-step progression (forward/back navigation)
 - ✅ Progress indicator (dots + step counter)
@@ -1966,6 +2005,7 @@ function validateCurrentStep() {
 - ✅ Auto-save to localStorage
 
 **Testing:**
+
 - User can start PS101 flow
 - User can navigate forward/back
 - Progress saves on refresh
@@ -1973,9 +2013,11 @@ function validateCurrentStep() {
 - Validation prevents skipping steps
 
 ### Phase 2: Backend Integration & Previous Answers (Week 2)
+
 **Estimated effort: 3-4 days**
 
 **Deliverables:**
+
 - ✅ Auto-save to backend (`POST /wimd/ask`)
 - ✅ Load state from backend on auth
 - ✅ Previous answers display (expandable)
@@ -1984,15 +2026,18 @@ function validateCurrentStep() {
 - ✅ Self-assessment ratings
 
 **Testing:**
+
 - Answers persist across devices (if logged in)
 - User can review/edit previous answers
 - Completion screen shows all answers
 - Ratings save correctly
 
 ### Phase 3: Chat Integration & Polish (Week 3)
+
 **Estimated effort: 2-3 days**
 
 **Deliverables:**
+
 - ✅ Contextual prompts per step in chat
 - ✅ Coaching hints (expandable)
 - ✅ Download summary (JSON/PDF)
@@ -2001,6 +2046,7 @@ function validateCurrentStep() {
 - ✅ Mobile responsiveness
 
 **Testing:**
+
 - Chat suggestions change per step
 - Hints provide useful guidance
 - Download/email work correctly
@@ -2008,9 +2054,11 @@ function validateCurrentStep() {
 - Transitions feel calm (not jarring)
 
 ### Phase 4: Accessibility & Edge Cases (Week 4)
+
 **Estimated effort: 2-3 days**
 
 **Deliverables:**
+
 - ✅ WCAG 2.2 AA compliance
 - ✅ Keyboard navigation (Tab, Enter, Escape)
 - ✅ Screen reader support (ARIA labels)
@@ -2019,6 +2067,7 @@ function validateCurrentStep() {
 - ✅ Edge cases (incomplete sessions, timeouts)
 
 **Testing:**
+
 - Keyboard-only navigation works
 - Screen reader announces correctly
 - Focus indicators visible
@@ -2032,6 +2081,7 @@ function validateCurrentStep() {
 ### WCAG 2.2 AA Compliance
 
 **Keyboard Navigation:**
+
 - ✅ All interactive elements reachable via Tab
 - ✅ Logical tab order (top to bottom, left to right)
 - ✅ Enter/Space activates buttons
@@ -2039,6 +2089,7 @@ function validateCurrentStep() {
 - ✅ Arrow keys navigate progress dots (optional)
 
 **Screen Readers:**
+
 - ✅ ARIA labels on all inputs
 - ✅ ARIA live regions for auto-save notifications
 - ✅ ARIA current="step" on active progress dot
@@ -2046,6 +2097,7 @@ function validateCurrentStep() {
 - ✅ Hidden elements marked aria-hidden="true"
 
 **Visual:**
+
 - ✅ Focus indicators visible (2px outline, high contrast)
 - ✅ Color contrast ratios ≥4.5:1 (text/background)
 - ✅ No color-only indicators (use text + color)
@@ -2145,6 +2197,7 @@ a:focus {
 **From README_UI_SKIN.txt and current index.html:**
 
 **Colors:**
+
 ```css
 :root {
   --fg: #000;              /* Foreground text */
@@ -2165,6 +2218,7 @@ body {
 ```
 
 **Shadows (Subtle Depth):**
+
 ```css
 box-shadow:
   0 2px 6px rgba(0,0,0,0.06),
@@ -2172,11 +2226,13 @@ box-shadow:
 ```
 
 **Transitions (Calm, Purposeful):**
+
 ```css
 transition: all 0.2s ease; /* Not too fast, not too slow */
 ```
 
 **Typography:**
+
 ```css
 font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 font-size: 12px; /* Base, scale up for headings */
@@ -2184,6 +2240,7 @@ line-height: 1.75; /* Generous breathing room */
 ```
 
 **Whitespace (Generous):**
+
 ```css
 /* Prefer more spacing than less */
 margin: 32px 0; /* Not 16px */
@@ -2192,6 +2249,7 @@ gap: 16px;      /* Not 8px */
 ```
 
 **Hover States (Subtle Lift):**
+
 ```css
 .quiet:hover,
 .nav-btn:hover,
@@ -2209,16 +2267,19 @@ gap: 16px;      /* Not 8px */
 ### Animation Philosophy
 
 **Duration:**
+
 - Fast interactions: 150ms (button clicks)
 - Medium interactions: 200ms (hover states, focus)
 - Slow interactions: 300ms (screen transitions)
 
 **Easing:**
+
 - `ease` - Default (natural acceleration/deceleration)
 - `ease-out` - Screen exits
 - `ease-in-out` - Smooth transitions
 
 **When to Animate:**
+
 - ✅ Hover states (lift, shadow change)
 - ✅ Focus states (outline appearance)
 - ✅ Progress indicator (dot state changes)
@@ -2228,6 +2289,7 @@ gap: 16px;      /* Not 8px */
 - ❌ Navigation (instant, not slide)
 
 **Respect User Preferences:**
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -2245,6 +2307,7 @@ gap: 16px;      /* Not 8px */
 ### Manual Testing Checklist
 
 **Functional Testing:**
+
 - [ ] User can start PS101 flow from welcome screen
 - [ ] User can navigate forward through all 7 steps
 - [ ] User can navigate backward to previous steps
@@ -2263,6 +2326,7 @@ gap: 16px;      /* Not 8px */
 - [ ] Start Over button resets state
 
 **Integration Testing:**
+
 - [ ] Answers save to backend (check `wimd_outputs` table)
 - [ ] State loads from backend on page refresh (if authenticated)
 - [ ] localStorage fallback works (if not authenticated)
@@ -2272,6 +2336,7 @@ gap: 16px;      /* Not 8px */
 - [ ] Existing features still work (auth, file upload, trial timer)
 
 **Visual Testing:**
+
 - [ ] Progress dots styled correctly (completed/active/future)
 - [ ] Hover states work on all interactive elements
 - [ ] Focus indicators visible on keyboard nav
@@ -2282,6 +2347,7 @@ gap: 16px;      /* Not 8px */
 - [ ] Shadows subtle (not heavy)
 
 **Responsive Testing:**
+
 - [ ] Layout works on desktop (>980px)
 - [ ] Layout works on tablet (768-980px)
 - [ ] Layout works on mobile (<768px)
@@ -2292,6 +2358,7 @@ gap: 16px;      /* Not 8px */
 - [ ] No horizontal scroll on mobile
 
 **Accessibility Testing:**
+
 - [ ] Keyboard-only navigation works (Tab, Enter, Escape)
 - [ ] Screen reader announces progress ("Step 2 of 7")
 - [ ] Screen reader announces current step question
@@ -2303,6 +2370,7 @@ gap: 16px;      /* Not 8px */
 - [ ] ARIA live regions announce dynamic content
 
 **Error Handling:**
+
 - [ ] Network failure shows error message
 - [ ] Backend timeout handled gracefully
 - [ ] Invalid session shows login prompt
@@ -2463,6 +2531,7 @@ describe('Existing Features', () => {
 ### User Experience Goals
 
 **Clarity:**
+
 - [ ] User understands what PS101 is from welcome screen
 - [ ] User knows where they are in flow (progress indicator)
 - [ ] User knows what to do (clear question, helpful hint)
@@ -2470,6 +2539,7 @@ describe('Existing Features', () => {
 - [ ] User can review previous answers easily
 
 **Encouragement:**
+
 - [ ] Progress indicator feels encouraging (not pressuring)
 - [ ] Questions feel conversational (not interrogative)
 - [ ] Interface guides (doesn't control)
@@ -2477,6 +2547,7 @@ describe('Existing Features', () => {
 - [ ] User feels supported (coaching hints, chat available)
 
 **Usability:**
+
 - [ ] User can complete flow in 15-30 minutes
 - [ ] User can edit previous answers without confusion
 - [ ] User can pause and resume (state persists)
@@ -2486,6 +2557,7 @@ describe('Existing Features', () => {
 ### Technical Goals
 
 **Architecture:**
+
 - [ ] Zero framework dependencies
 - [ ] Single HTML file (frontend/index.html)
 - [ ] Works with existing API contracts
@@ -2493,12 +2565,14 @@ describe('Existing Features', () => {
 - [ ] Follows existing IIFE patterns
 
 **Performance:**
+
 - [ ] Page load <2 seconds (no added bloat)
 - [ ] Transitions smooth (60fps, no jank)
 - [ ] Auto-save doesn't block UI
 - [ ] Network failures handled gracefully
 
 **Accessibility:**
+
 - [ ] WCAG 2.2 AA compliant
 - [ ] Keyboard navigation works
 - [ ] Screen reader announces correctly
@@ -2506,6 +2580,7 @@ describe('Existing Features', () => {
 - [ ] Works with 200% text zoom
 
 **Quality:**
+
 - [ ] No console errors
 - [ ] No visual regressions
 - [ ] No functional regressions
@@ -2515,6 +2590,7 @@ describe('Existing Features', () => {
 ### Product Goals
 
 **Alignment:**
+
 - [ ] Matches Peripheral Calm aesthetic perfectly
 - [ ] Supports self-efficacy model (user-driven)
 - [ ] Integrates with existing coach/chat
@@ -2522,6 +2598,7 @@ describe('Existing Features', () => {
 - [ ] Ready for MVP validation (10+ beta users)
 
 **Metrics (to track after launch):**
+
 - [ ] PS101 completion rate >60%
 - [ ] Clarity score increase ≥3 points (1-10)
 - [ ] Action score ≥7 (likelihood of follow-through)
@@ -2535,12 +2612,14 @@ describe('Existing Features', () => {
 ### Decision 1: Single-Screen Step Progression
 
 **Options Considered:**
+
 - Wizard flow (full screen per step)
 - Sidebar navigation (all steps visible)
 - Accordion (expand/collapse)
 - Single-screen progression (chosen)
 
 **Rationale:**
+
 - Maintains focus on one question at a time (Peripheral Calm principle)
 - Reduces cognitive load (user sees one clear task)
 - Easy to implement in vanilla JS (no complex routing)
@@ -2550,12 +2629,14 @@ describe('Existing Features', () => {
 ### Decision 2: Minimal Progress Indicator
 
 **Options Considered:**
+
 - Progress bar (horizontal/vertical)
 - Breadcrumbs with step names
 - Visual timeline with icons
 - Simple dots (chosen)
 
 **Rationale:**
+
 - Dots are calm, not bureaucratic
 - Takes minimal space (doesn't dominate)
 - Clickable for navigation (completed steps)
@@ -2565,12 +2646,14 @@ describe('Existing Features', () => {
 ### Decision 3: Keep Existing Chat Drawer
 
 **Options Considered:**
+
 - Remove chat (PS101 only)
 - Side panel (always visible)
 - Mode toggle (guided vs. chat)
 - Keep bottom drawer + enhance (chosen)
 
 **Rationale:**
+
 - Bottom drawer already works (preserve what's good)
 - Contextual prompts make it PS101-aware (adds value)
 - User can choose when to ask for help (self-efficacy)
@@ -2580,12 +2663,14 @@ describe('Existing Features', () => {
 ### Decision 4: Expandable Previous Answers
 
 **Options Considered:**
+
 - Always visible (sidebar/timeline)
 - Hidden unless editing
 - Modal popup
 - Expandable summary (chosen)
 
 **Rationale:**
+
 - Available but not distracting (user controls visibility)
 - Doesn't clutter current step
 - Easy to review/edit (clear action buttons)
@@ -2595,11 +2680,13 @@ describe('Existing Features', () => {
 ### Decision 5: No Adaptive UI (Yet)
 
 **Options Considered:**
+
 - State machine with telemetry (detect struggle)
 - Dynamic UI morphing (calm/focus/recovery)
 - Static, simple UI (chosen)
 
 **Rationale:**
+
 - MVP scope - validate foundation first
 - Conflicts with self-efficacy (system shouldn't intervene)
 - Adds complexity (React/XState/telemetry)
@@ -2613,6 +2700,7 @@ describe('Existing Features', () => {
 ### 1. PS101 Step Count Clarification
 
 **Issue:** Documentation shows 3 different versions:
+
 - Source doc (Oct 2): "10-step PS101"
 - Project brief (Oct 22): "7-step framework"
 - Current implementation: 3 questions
@@ -2660,6 +2748,7 @@ describe('Existing Features', () => {
 ### Breakdown by Phase
 
 **Phase 1: Core PS101 Flow**
+
 - HTML structure: 4 hours
 - CSS styling: 4 hours
 - JavaScript state management: 6 hours
@@ -2668,6 +2757,7 @@ describe('Existing Features', () => {
 - Total: **21 hours (3 days)**
 
 **Phase 2: Backend Integration & Previous Answers**
+
 - Backend API calls: 4 hours
 - State loading: 3 hours
 - Previous answers UI: 4 hours
@@ -2676,6 +2766,7 @@ describe('Existing Features', () => {
 - Total: **19 hours (2.5 days)**
 
 **Phase 3: Chat Integration & Polish**
+
 - Contextual prompts: 3 hours
 - Coaching hints: 2 hours
 - Download/email: 3 hours
@@ -2684,6 +2775,7 @@ describe('Existing Features', () => {
 - Total: **16 hours (2 days)**
 
 **Phase 4: Accessibility & Edge Cases**
+
 - ARIA labels: 3 hours
 - Keyboard navigation: 4 hours
 - Screen reader testing: 3 hours
@@ -2694,12 +2786,14 @@ describe('Existing Features', () => {
 **Overall Estimate: 74 hours (10 working days / 2 calendar weeks)**
 
 **Assumptions:**
+
 - Cursor AI assistance reduces manual coding time by ~30%
 - Existing patterns (IIFE, event delegation) speed implementation
 - No major refactoring needed (preserves current architecture)
 - Backend API endpoints work as documented
 
 **Risk Factors:**
+
 - Backend API issues: +2-3 days
 - Unexpected browser compatibility: +1-2 days
 - Accessibility fixes: +1-2 days
@@ -2717,6 +2811,7 @@ describe('Existing Features', () => {
 `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/docs/MOSAIC_UI_IMPLEMENTATION_SPEC_V1_FOR_CURSOR.md`
 
 **Related files to include in Cursor workspace:**
+
 - `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/frontend/index.html` (current working implementation)
 - `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/CLAUDE.md` (architecture context)
 - `/Users/damianseguin/AI_Workspace/Planning/strategy_desktop/context_library/work_playbooks.md` (PS101 coaching playbook)
@@ -2730,6 +2825,7 @@ describe('Existing Features', () => {
 **Status:** Complete and ready for Cursor implementation
 
 **Next Steps:**
+
 1. User reviews spec and confirms decisions
 2. User resolves ambiguities (if any)
 3. User opens Cursor in WIMD-Railway-Deploy-Project workspace

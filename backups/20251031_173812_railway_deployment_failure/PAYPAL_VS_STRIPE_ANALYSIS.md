@@ -1,4 +1,5 @@
 # PayPal vs Stripe Analysis - Coaching Session Payments
+
 **Date:** 2025-10-25
 **Use Case:** One-time coaching session payments ($150 single, $500 package)
 
@@ -9,6 +10,7 @@
 **Recommendation:** ✅ **Use Stripe** (despite user's PayPal setup)
 
 **Key Reasons:**
+
 1. **Better developer experience** - Modern API, excellent documentation
 2. **Lower international fees** - 1.5% vs PayPal's 3-4% currency conversion
 3. **Identical domestic fees** - Both 2.9% + $0.30
@@ -34,6 +36,7 @@
 | **Monthly Fee** | $0 | $0 |
 
 **Example Costs:**
+
 - $150 USD session (domestic):
   - Stripe: $4.65 fee → $145.35 net
   - PayPal: $4.65 fee → $145.35 net
@@ -63,6 +66,7 @@
 **Code Comparison:**
 
 **Stripe (Modern):**
+
 ```python
 import stripe
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
@@ -87,6 +91,7 @@ def stripe_webhook(request):
 ```
 
 **PayPal (Current SDK):**
+
 ```python
 import paypalrestsdk
 
@@ -133,6 +138,7 @@ if payment.execute({"payer_id": payer_id}):
 ### Checkout Flow
 
 **Stripe:**
+
 1. User clicks "Book Session"
 2. Modal opens with Stripe Elements (card form embedded on your site)
 3. User enters card details directly on your site
@@ -140,6 +146,7 @@ if payment.execute({"payer_id": payer_id}):
 5. Booking confirmed immediately
 
 **PayPal:**
+
 1. User clicks "Book Session"
 2. Redirected to PayPal.com
 3. User logs into PayPal account (or creates one)
@@ -166,6 +173,7 @@ if payment.execute({"payer_id": payer_id}):
 | **Webhook Security** | ✅ Signature verification | ✅ Signature verification |
 
 **Estimated Implementation Time:**
+
 - Stripe: **2-3 hours** (simple Payment Intent flow)
 - PayPal: **3-4 hours** (redirect + execute flow)
 
@@ -190,6 +198,7 @@ if payment.execute({"payer_id": payer_id}):
 **Critical Feature: Auto-charge 50% penalty**
 
 **Stripe:**
+
 ```python
 # Save card on first payment
 intent = stripe.PaymentIntent.create(
@@ -247,16 +256,19 @@ Requires Billing Agreement setup - more complex, user must explicitly approve re
 If you already have PayPal credentials and want to ship faster:
 
 **Phase 1: Launch with PayPal** (3-4 hours)
+
 - Use existing PayPal credentials
 - Implement Orders v2 API (NOT deprecated v1)
 - Ship booking system quickly
 
 **Phase 2: Add Stripe** (2-3 hours later)
+
 - Run both payment providers in parallel
 - Let users choose PayPal or Stripe at checkout
 - Monitor which users prefer
 
 **Phase 3: Sunset PayPal** (if Stripe performs better)
+
 - Disable PayPal for new bookings
 - Keep for existing subscriptions/refunds
 
@@ -266,20 +278,23 @@ If you already have PayPal credentials and want to ship faster:
 
 ## Final Recommendation
 
-### ✅ Use Stripe If:
+### ✅ Use Stripe If
+
 - You want the best developer experience
 - You expect international customers (currency conversion savings)
 - You want simplest automatic penalty charging (50% fee)
 - You want fastest checkout flow (no redirect)
 - You're okay spending 1 hour setting up Stripe account
 
-### ✅ Use PayPal If:
+### ✅ Use PayPal If
+
 - You already have production PayPal credentials ready
 - You want to ship 1 hour faster (skip Stripe setup)
 - Your customers strongly prefer PayPal (older demographic)
 - You're willing to accept slightly worse DX
 
-### ✅ Use Both If:
+### ✅ Use Both If
+
 - You want to maximize conversion (some users trust PayPal more)
 - You're willing to maintain two integrations (+2 hours)
 - You want to A/B test payment providers
@@ -289,6 +304,7 @@ If you already have PayPal credentials and want to ship faster:
 ## Implementation Recommendation for Your Use Case
 
 **Given:**
+
 - You have PayPal already set up
 - You want to ship fast
 - You need 50% automatic penalty charging
@@ -296,6 +312,7 @@ If you already have PayPal credentials and want to ship faster:
 **Recommended Path:**
 
 **Option A: Stripe Only (Best Long-Term)**
+
 1. Set up Stripe account (15 min)
 2. Get test API keys (5 min)
 3. Implement Stripe Payment Intents (2 hours)
@@ -305,6 +322,7 @@ If you already have PayPal credentials and want to ship faster:
 **Total Time: ~3 hours**
 
 **Option B: PayPal First, Stripe Later (Fastest to MVP)**
+
 1. Use existing PayPal credentials (0 min setup)
 2. Implement PayPal Orders v2 API (3 hours)
 3. Ship booking system
@@ -313,6 +331,7 @@ If you already have PayPal credentials and want to ship faster:
 **Total Time: ~3 hours**
 
 **Option C: Dual Integration (Maximum Flexibility)**
+
 1. Set up both providers (30 min)
 2. Implement payment abstraction layer (1 hour)
 3. Implement Stripe (2 hours)
@@ -340,29 +359,36 @@ If you already have PayPal credentials and want to ship faster:
 ## Next Steps
 
 **If choosing Stripe:**
-1. Create Stripe account: https://dashboard.stripe.com/register
+
+1. Create Stripe account: <https://dashboard.stripe.com/register>
 2. Get test API keys: Dashboard → Developers → API keys
 3. Add to Railway environment variables:
+
    ```
    STRIPE_PUBLISHABLE_KEY=pk_test_...
    STRIPE_SECRET_KEY=sk_test_...
    ```
+
 4. Install Stripe SDK: `pip install stripe`
 5. Implement `/api/stripe_service.py` (I can do this next)
 
 **If choosing PayPal:**
+
 1. Locate your PayPal API credentials (Client ID + Secret)
 2. Confirm they're for **live mode** (not sandbox)
 3. Add to Railway environment variables:
+
    ```
    PAYPAL_CLIENT_ID=...
    PAYPAL_CLIENT_SECRET=...
    PAYPAL_MODE=live
    ```
+
 4. Install PayPal SDK: `pip install paypalrestsdk` (deprecated) OR use Orders v2 API with `requests`
 5. Implement `/api/paypal_service.py` (I can do this next)
 
 **If choosing both:**
+
 1. Do both setups above
 2. Create payment abstraction layer: `/api/payment_service.py`
 3. Implement both providers
@@ -371,7 +397,7 @@ If you already have PayPal credentials and want to ship faster:
 ---
 
 **What's your preference?**
+
 - Stripe only? (Recommended)
 - PayPal only? (Faster to ship if you have credentials)
 - Both? (Maximum flexibility but more complex)
-

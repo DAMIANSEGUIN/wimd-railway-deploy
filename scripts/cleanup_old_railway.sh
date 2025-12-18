@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 
 # Guarded cleanup helper for old Railway resources.
@@ -93,4 +93,3 @@ case "$choice" in
     echo "Bye."
     ;;
 esac
-

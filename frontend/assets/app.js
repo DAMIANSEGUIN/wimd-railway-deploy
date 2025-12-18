@@ -3,7 +3,7 @@
 
   const params = new URLSearchParams(location.search);
   const state = {
-    prompts: [], idx: 0, answers: {}, 
+    prompts: [], idx: 0, answers: {},
     variant: params.get('variant')||'A',
     widget: params.get('widget')||'none',
     queue: { answers: [], prompts: [] }

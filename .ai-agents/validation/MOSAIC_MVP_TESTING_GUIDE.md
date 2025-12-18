@@ -1,4 +1,5 @@
 # Mosaic MVP Testing Guide
+
 **Complete Testing Procedures with Exact URLs and Commands**
 
 **Date:** 2025-12-10
@@ -10,11 +11,13 @@
 ## Quick Start - Chrome with CodexCapture
 
 **Command to open Chrome with CodexCapture:**
+
 ```bash
 open -a "Google Chrome" --args --load-extension=/path/to/codexcapture https://whatismydelta.com
 ```
 
 **Or if CodexCapture is already installed:**
+
 ```bash
 open -a "Google Chrome" https://whatismydelta.com
 ```
@@ -23,9 +26,9 @@ open -a "Google Chrome" https://whatismydelta.com
 
 ## Production URLs
 
-**Frontend:** https://whatismydelta.com
-**Backend API:** https://what-is-my-delta-site-production.up.railway.app
-**Health Check:** https://what-is-my-delta-site-production.up.railway.app/health
+**Frontend:** <https://whatismydelta.com>
+**Backend API:** <https://what-is-my-delta-site-production.up.railway.app>
+**Health Check:** <https://what-is-my-delta-site-production.up.railway.app/health>
 
 ---
 
@@ -34,11 +37,13 @@ open -a "Google Chrome" https://whatismydelta.com
 **Purpose:** Verify backend is running and database connected
 
 **Command:**
+
 ```bash
 curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3 -m json.tool
 ```
 
 **Expected Response:**
+
 ```json
 {
     "ok": true,
@@ -53,11 +58,13 @@ curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3
 ```
 
 **Success Criteria:**
+
 - ✅ "ok": true
 - ✅ "database": true (means PostgreSQL connected, not SQLite)
 - ✅ HTTP 200 status
 
 **If Failed:**
+
 - Check Railway logs: `railway logs | head -100`
 - Check for PostgreSQL connection errors
 - Verify DATABASE_URL is set
@@ -69,6 +76,7 @@ curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3
 **Purpose:** Confirm /api/ps101/extract-context endpoint is registered
 
 **Command:**
+
 ```bash
 # This will return 401/422 (expected - requires auth), not 404
 curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context \
@@ -77,16 +85,19 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 ```
 
 **Expected Response:**
+
 ```
 < HTTP/2 422
 {"detail":[{"type":"missing","loc":["header","x-user-id"],"msg":"Field required"...
 ```
 
 **Success Criteria:**
+
 - ✅ HTTP 422 (Unprocessable Entity - missing X-User-ID header)
 - ❌ HTTP 404 would mean endpoint not registered
 
 **If HTTP 404:**
+
 - Endpoint not registered correctly
 - Check router prefix in api/index.py
 - Verify api/ps101.py is imported
@@ -100,6 +111,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **Steps:**
 
 1. **Open browser:**
+
    ```bash
    open https://whatismydelta.com
    ```
@@ -119,6 +131,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
    - Navigation menu
 
 **Success Criteria:**
+
 - ✅ Page loads (not blank)
 - ✅ No 404 errors
 - ✅ Auth UI present
@@ -130,7 +143,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 
 **Purpose:** Create test account for PS101 flow
 
-**URL:** https://whatismydelta.com
+**URL:** <https://whatismydelta.com>
 
 **Steps:**
 
@@ -149,16 +162,19 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
    - Console should log user_id
 
 **Success Criteria:**
+
 - ✅ Registration succeeds
 - ✅ User logged in
 - ✅ Can see user email in UI
 
 **If Failed:**
+
 - Check Network tab for /auth/register errors
 - Check Railway logs for auth errors
 - Verify users table exists in database
 
 **Capture Test User Credentials:**
+
 ```
 Email: ____________________
 Password: ____________________
@@ -171,7 +187,7 @@ User ID (from console): ____________________
 
 **Purpose:** Complete PS101 to trigger context extraction
 
-**URL:** https://whatismydelta.com (after logging in)
+**URL:** <https://whatismydelta.com> (after logging in)
 
 **Steps:**
 
@@ -229,18 +245,21 @@ User ID (from console): ____________________
    - Should see: "Context extraction successful: ..."
 
 **Success Criteria:**
+
 - ✅ All 10 questions answered
 - ✅ PS101 marked complete
 - ✅ Console shows context extraction triggered
 - ✅ Console shows extraction successful (no errors)
 
 **If Context Extraction Failed:**
+
 - Check Network tab for POST /api/ps101/extract-context
 - Check response status (should be 200)
 - Check Railway logs for extraction errors
 - Verify CLAUDE_API_KEY is set
 
 **Debugging Commands:**
+
 ```bash
 # Check if context was saved to database
 # (Requires Railway shell or psql access)
@@ -257,11 +276,13 @@ railway logs | grep -i "extract\|context\|claude"
 **Purpose:** Test context extraction endpoint directly
 
 **Prerequisites:**
+
 - User account created (Test 4)
 - PS101 completed (Test 5)
 - User ID known (from console or database)
 
 **Command:**
+
 ```bash
 # Replace USER_ID with actual user_id from Test 4
 USER_ID="replace-with-actual-user-id"
@@ -273,6 +294,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 ```
 
 **Expected Response:**
+
 ```json
 {
     "problem_definition": "I'm stuck in a corporate job and want to transition to freelance consulting in AI/ML",
@@ -316,12 +338,14 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 ```
 
 **Success Criteria:**
+
 - ✅ HTTP 200 status
 - ✅ Valid JSON response
 - ✅ All fields present (problem_definition, passions, skills, etc.)
 - ✅ Content matches PS101 answers (approximately - LLM may paraphrase)
 
 **If Failed:**
+
 - HTTP 404: Endpoint not registered (check router prefix)
 - HTTP 401/422: Missing or invalid X-User-ID header
 - HTTP 404 "PS101 not completed": User hasn't completed PS101
@@ -336,6 +360,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **Steps:**
 
 1. **Create NEW test account** (or use account without PS101):
+
    ```
    Email: test+no_ps101_$(date +%s)@example.com
    Password: TestPass123!
@@ -352,11 +377,13 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
    - OR: "It looks like you're not logged in. Please log in and complete the PS101 questionnaire for a personalized experience."
 
 **Success Criteria:**
+
 - ✅ Chat blocked for user without PS101
 - ✅ Helpful message shown (not generic error)
 - ✅ No crash or white screen
 
 **If Failed:**
+
 - Chat allows message without PS101: Completion gate not working
 - Generic error: Check completion gate logic in api/index.py:387-397
 
@@ -367,6 +394,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **Purpose:** Verify context-aware coaching with dynamic system prompt
 
 **Prerequisites:**
+
 - User account with PS101 completed (from Test 5)
 - Context extracted successfully (from Test 6)
 
@@ -390,6 +418,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
    - Should focus on actionable next steps
 
 **Expected Response Example:**
+
 ```
 I hear you want to transition from corporate to freelance AI/ML consulting.
 Given your strength in explaining complex concepts simply and your passion
@@ -401,18 +430,21 @@ admire. What would you say in that first message?
 ```
 
 **Success Criteria:**
+
 - ✅ Response is personalized (references PS101 context)
 - ✅ No mention of "PS101" in response
 - ✅ Actionable suggestions
 - ✅ Uses key quotes or specific details from answers
 
 **If Generic (Not Personalized):**
+
 - Check Network tab for POST /wimd/ask
 - Verify request includes session_id
 - Check Railway logs for context retrieval
 - Verify user_contexts table has data for this user
 
 **Debugging Commands:**
+
 ```bash
 # Check if context is in database
 railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contexts WHERE user_id = 'USER_ID_HERE';"
@@ -442,11 +474,13 @@ railway logs | grep -i "system_prompt\|ps101\|context"
    - Should include: `X-Session-ID: <session_id>`
 
 **Success Criteria:**
+
 - ✅ X-User-ID header present
 - ✅ X-User-ID matches logged-in user
 - ✅ X-Session-ID header present
 
 **If Missing:**
+
 - Check frontend/index.html:1970-1977 for header logic
 - Verify currentUser object has userId property
 - Check browser console for errors
@@ -474,6 +508,7 @@ railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contex
 ```
 
 **Success Criteria:**
+
 - ✅ Users exist in users table
 - ✅ PS101 responses saved (10 rows per user)
 - ✅ user_contexts has extracted data
@@ -490,6 +525,7 @@ railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contex
 **Steps:**
 
 1. **Temporarily set CLAUDE_API_KEY to invalid value:**
+
    ```bash
    railway variables --set CLAUDE_API_KEY=sk-ant-invalid-test-key
    ```
@@ -506,11 +542,13 @@ railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contex
    - Error logged in Railway logs
 
 5. **Restore correct API key:**
+
    ```bash
    railway variables --set CLAUDE_API_KEY=sk-ant-api03-<actual-key>
    ```
 
 **Success Criteria:**
+
 - ✅ Graceful error handling (no crash)
 - ✅ Error message logged
 - ✅ User informed of failure
@@ -544,6 +582,7 @@ railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contex
    - Verify context still applied
 
 **Success Criteria:**
+
 - ✅ Full flow completes without errors
 - ✅ Each step works as expected
 - ✅ Context persists across messages
@@ -577,6 +616,7 @@ railway logs | grep -i "claude\|anthropic" --color=always
 ```
 
 **Success Criteria:**
+
 - ✅ No unexpected errors in logs
 - ✅ Health endpoint consistently returns ok: true
 - ✅ Context extraction events logged
@@ -645,6 +685,7 @@ railway logs | grep -i "claude\|anthropic" --color=always
 ## Quick Reference Card
 
 **Production URLs:**
+
 ```
 Frontend:  https://whatismydelta.com
 Backend:   https://what-is-my-delta-site-production.up.railway.app
@@ -652,6 +693,7 @@ Health:    https://what-is-my-delta-site-production.up.railway.app/health
 ```
 
 **Key Commands:**
+
 ```bash
 # Health check
 curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3 -m json.tool
@@ -667,6 +709,7 @@ railway run psql $DATABASE_URL -c "SELECT COUNT(*) FROM user_contexts;"
 ```
 
 **Test Credentials Template:**
+
 ```
 Email: test+mosaic_[timestamp]@example.com
 Password: TestPass123!

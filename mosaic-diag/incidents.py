@@ -16,14 +16,15 @@ DEPENDENCIES:
 - Project: storage.py, classifiers.py
 """
 
-from dataclasses import dataclass, asdict
-from typing import Dict, List, Any, Optional
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class IncidentCategory(Enum):
     """Incident categories (from RECURRING_BLOCKERS.md)"""
+
     DEPLOYMENT = "deployment"
     ENVIRONMENT = "environment"
     PERMISSIONS = "permissions"
@@ -33,10 +34,11 @@ class IncidentCategory(Enum):
 
 class IncidentSeverity(Enum):
     """Incident severity levels"""
+
     CRITICAL = "critical"  # Blocks all work
-    HIGH = "high"          # Blocks current task
-    MEDIUM = "medium"      # Workaround exists
-    LOW = "low"            # Annoying but not blocking
+    HIGH = "high"  # Blocks current task
+    MEDIUM = "medium"  # Workaround exists
+    LOW = "low"  # Annoying but not blocking
 
 
 @dataclass
@@ -46,6 +48,7 @@ class IncidentRecord:
 
     Maps to RECURRING_BLOCKERS.md structure.
     """
+
     incident_id: str
     timestamp: str
     category: str
@@ -78,7 +81,7 @@ class IncidentLogger:
         symptom: str,
         root_cause: Optional[str] = None,
         context: Optional[Dict[str, Any]] = None,
-        resolution: Optional[str] = None
+        resolution: Optional[str] = None,
     ) -> IncidentRecord:
         """
         Log a new incident.
@@ -107,7 +110,7 @@ class IncidentLogger:
             linked_docs=[],
             linked_checks=[],
             resolution=resolution,
-            prevention_added=False
+            prevention_added=False,
         )
 
         # Save to storage
@@ -119,7 +122,7 @@ class IncidentLogger:
         self,
         category: Optional[str] = None,
         severity: Optional[str] = None,
-        limit: Optional[int] = None
+        limit: Optional[int] = None,
     ) -> List[Dict[str, Any]]:
         """
         List incidents with optional filters.
@@ -161,10 +164,7 @@ class IncidentLogger:
             Count of matching incidents
         """
         incidents = self.storage.read_incidents()
-        return sum(
-            1 for i in incidents
-            if symptom_pattern.lower() in i.get("symptom", "").lower()
-        )
+        return sum(1 for i in incidents if symptom_pattern.lower() in i.get("symptom", "").lower())
 
     def mark_prevention_added(self, incident_id: str) -> None:
         """
@@ -187,19 +187,19 @@ class IncidentLogger:
         if updated:
             # Rewrite entire file (atomic)
             import tempfile
+
             with tempfile.NamedTemporaryFile(
-                mode="w",
-                dir=self.storage.base_dir,
-                delete=False,
-                suffix=".jsonl"
+                mode="w", dir=self.storage.base_dir, delete=False, suffix=".jsonl"
             ) as tmp:
                 for incident in incidents:
                     import json
+
                     tmp.write(json.dumps(incident) + "\n")
                 tmp_path = tmp.name
 
             # Atomic replace
             from pathlib import Path
+
             Path(tmp_path).replace(self.storage.incidents_file)
 
 
@@ -211,14 +211,13 @@ def format_incidents_human(incidents: List[Dict[str, Any]]) -> str:
     lines.append("=" * 60)
 
     for incident in incidents:
-        severity_icon = {
-            "critical": "🔴",
-            "high": "🟠",
-            "medium": "🟡",
-            "low": "🟢"
-        }.get(incident.get("severity", ""), "⚪")
+        severity_icon = {"critical": "🔴", "high": "🟠", "medium": "🟡", "low": "🟢"}.get(
+            incident.get("severity", ""), "⚪"
+        )
 
-        lines.append(f"\n{severity_icon} [{incident.get('incident_id')}] {incident.get('category', 'unknown').upper()}")
+        lines.append(
+            f"\n{severity_icon} [{incident.get('incident_id')}] {incident.get('category', 'unknown').upper()}"
+        )
         lines.append(f"   Timestamp: {incident.get('timestamp', 'unknown')}")
         lines.append(f"   Symptom: {incident.get('symptom', 'none')}")
 

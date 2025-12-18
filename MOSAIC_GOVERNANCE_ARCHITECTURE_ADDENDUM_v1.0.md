@@ -10,6 +10,7 @@ and drift-governance for all Mosaic-related work (Mosaic, WIMD, PS101, Opportuni
 
 Any AI agent or human collaborator that interacts with Mosaic MUST treat this document
 as authoritative for:
+
 - Where files live
 - Who can edit them
 - How changes propagate
@@ -25,11 +26,13 @@ as authoritative for:
 `/Users/damianseguin/AI_Workspace/WIMD-Railway_Deploy_Project`
 
 Contains:
+
 - All editable governance documents
 - All architectural specs
 - All state and playbooks
 
 Writable by:
+
 - Gemini (Terminal)
 - Claude (Terminal)
 - Codex in Cursor
@@ -42,11 +45,13 @@ ChatGPT Web does **not** write directly to this workspace.
 ### 2.2 GDrive Master Repository (Authoritative Cloud Copy)
 
 Purpose:
+
 - Cloud-based continuity and backup
 - Team access
 - Long-term storage
 
 Properties:
+
 - Mirrors the Local Authoritative Workspace
 - Never edited directly by AI agents or humans
 - Updated exclusively by the sync script
@@ -58,11 +63,13 @@ When in doubt, Local is treated as more up-to-date than Master.
 ### 2.3 GDrive Consulting Mirror (LLM Consumption Layer)
 
 Purpose:
+
 - Provide a clean, read-only representation of the system to ChatGPT Web
 - Decouple analysis and drafting from the authoritative repositories
 - Reduce risk of accidental corruption or drift
 
 Properties:
+
 - Overwritten during each sync cycle
 - Never edited directly
 - Used only for reading by ChatGPT (and other web-only LLM interfaces, if needed)
@@ -79,10 +86,12 @@ If Master and Mirror differ, Mirror is assumed stale.
 `/Users/damianseguin/.local/bin/google-drive-sync.sh`
 
 Core responsibilities:
+
 1. Push changes from LOCAL → GDrive Master
 2. Push changes from LOCAL → GDrive Consulting Mirror
 
 The script is triggered by LaunchAgents at:
+
 - 12:00
 - 18:00
 - 21:00
@@ -126,11 +135,13 @@ No AI writes directly to GDrive. All GDrive updates flow through the sync script
 ### 5.1 Self-Enforcement by AI Agents
 
 Each agent must:
+
 - Identify whether it is operating on Local, Master, or Mirror.
 - Refuse to propose or describe a workflow where Mirror becomes a write target.
 - Recommend running the sync script whenever documents are meaningfully updated.
 
 When generating instructions for humans, agents MUST:
+
 - Point to Local as the only editable copy.
 - Remind the operator to run the sync script if work affects governance, architecture, or other critical documents.
 
@@ -139,11 +150,13 @@ When generating instructions for humans, agents MUST:
 ### 5.2 Refusal Conditions
 
 Agents should explicitly refuse to:
+
 - Edit files in the GDrive Master repository directly.
 - Use the GDrive Consulting Mirror as if it were editable.
 - Propose bidirectional sync between Mirror and Local.
 
 The correct response is to:
+
 - Update Local
 - Instruct the operator to run the sync script
 - Confirm that Master and Mirror will update via that channel

@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 
 # One-shot script to create a fresh Railway deployment for this repo.
@@ -123,7 +123,7 @@ else
     [[ -z "$line" || "$line" == \#* ]] && continue
     key="${line%%=*}"
     default="${line#*=}"
-    current="${(P)key:-}"
+    current=""
     # skip provider keys here; already handled securely above
     if [[ "$key" == "OPENAI_API_KEY" || "$key" == "CLAUDE_API_KEY" ]]; then
       continue

@@ -12,7 +12,7 @@ This document is the single source of truth for where assets live, how they map 
 
 ## Deployment Targets
 
-- **Railway Backend**: https://what-is-my-delta-site-production.up.railway.app (branch `main`, repo `railway-origin`).
+- **Railway Backend**: <https://what-is-my-delta-site-production.up.railway.app> (branch `main`, repo `railway-origin`).
 - **Netlify Frontend**: Site `resonant-crostata-90b706`, proxying to Railway; repo `origin` (Netlify deploy integration).
 
 ## Canonical Directory Layout (Depth ≤ 2)

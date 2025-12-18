@@ -1,13 +1,15 @@
 # Session Handoff – 2025-12-03
 
 ## Session Snapshot
+
 - **Agent handing off**: Claude Code → Codex & human team
 - **Branch / commit**: `phase1-incomplete` @ `ea5ffba` (docs), code changes anchored at `799046f`, infra assist at `15a31ac`
-- **Production URLs**: https://whatismydelta.com (frontend) · https://what-is-my-delta-site-production.up.railway.app (backend)
+- **Production URLs**: <https://whatismydelta.com> (frontend) · <https://what-is-my-delta-site-production.up.railway.app> (backend)
 - **Production status**: ✅ Site healthy · ⚠️ Schema endpoint still reports `v1` · ✅ Day 1 fixes live in repo · ⚠️ Deployment verification gap (line-count mismatch + unknown deployed commit)
 - **Goal of session**: Close Day 1 deployment loop and leave team-ready documentation for deciding Day 2 start vs. deeper deployment work
 
 ## Full Timeline (Eastern Time)
+
 | Time | Event | Notes & Evidence |
 | --- | --- | --- |
 | 14:44 | Commit `799046f` lands on `main` with all four Day 1 blocker fixes. | `git show 799046f` – schema defaults to `v2`, PS101 endpoint hardened. |
@@ -23,6 +25,7 @@
 > Timestamps derived from git history and recorded operator notes; manual steps without explicit timestamps are approximate but ordered accurately.
 
 ## What Was Accomplished
+
 - All Day 1 blocker fixes (auth hardening, timeout, retries, schema constant) merged and pushed (`799046f`).
 - NARs confirm production health for frontend, backend, and AI integrations despite schema mismatch.
 - Deployment infrastructure investigated; permission gaps, missing builder config, and automation gaps documented.
@@ -30,6 +33,7 @@
 - Comprehensive documentation (this handoff + `QUICK_STATUS.md` + `TEAM_PLAYBOOK.md`) authored to hand context to the team at commit `ea5ffba`.
 
 ## Open Issues Requiring Investigation
+
 1. **Schema version stuck at `v1` in production**
    - *Why it matters*: Indicates either stale deployment or `/config` is reading a different source than expected, so Day 1 changes might not truly be live.
    - *Evidence*: `curl https://whatismydelta.com/config | jq '.schemaVersion'` → `"v1"`; code at `api/settings.py` hard-codes `v2` after `799046f`.
@@ -51,13 +55,16 @@
    - *Next action*: Re-link service to `DAMIANSEGUIN/wimd-railway-deploy@main` and verify a test push triggers a deployment.
 
 ## Diagnostic Commands (Run/Modify as Needed)
+
 ### Production truth
+
 ```bash
 curl -s https://whatismydelta.com/health | jq
 curl -s https://whatismydelta.com/config | jq
 ```
 
 ### Deployment source & runtime
+
 ```bash
 railway status
 railway variables --service what-is-my-delta-site | grep -E 'APP_SCHEMA_VERSION|PYTHON_VERSION'
@@ -65,6 +72,7 @@ railway logs --service what-is-my-delta-site --tail 200
 ```
 
 ### Content verification tuning
+
 ```bash
 # Compare Netlify export with production to understand 3989 vs 3992 line counts
 curl -s https://whatismydelta.com | md5
@@ -72,6 +80,7 @@ wc -l dist/index.html
 ```
 
 ### Commit provenance (local vs. prod)
+
 ```bash
 git rev-parse HEAD
 git log origin/main -1 --oneline
@@ -79,11 +88,13 @@ git log origin/main -1 --oneline
 ```
 
 ## Decision Points
+
 - **Deployment focus vs. Day 2 build**: Do we halt new feature work until schema + verification issues are resolved, or begin Day 2 MVP tasks while infra engineers fix deployment in parallel?
 - **Verification gate strategy**: Keep strict line-count gate (risking false negatives) or replace with checksum/semantic checks so the CI pipeline can unblock deploys?
 - **Canonical config source**: Which of `nixpacks.toml`, `railway.toml`, `railway.json`, or `Procfile` remains authoritative going forward?
 
 ## Recommendations
+
 1. **Use Railway dashboard immediately to confirm the commit hash and environment variables running in production.** This will prove whether schema `v2` ever shipped.
 2. **Consolidate to a single deployment config (recommend `nixpacks.toml` + Procfile) and delete/archive the rest to prevent builder drift.**
 3. **Patch the verification scripts (`deploy_wrapper`, `verify_live`) so they compare checksums or known selectors instead of absolute line counts, then re-run to achieve a green gate.**
@@ -91,6 +102,7 @@ git log origin/main -1 --oneline
 5. **Only start Day 2 coding once the team agrees on the deployment plan; otherwise, keep the focus on closing the schema + verification gap.**
 
 ## Reference Files & Logs
+
 - `DEPLOYMENT_STATUS.md` – manual deployment attempts + builder notes.
 - `deploy_wrapper.log` & `verify_live.log` – latest verification failures.
 - `TEAM_PLAYBOOK.md` – sprint protocol + open issue tracker.

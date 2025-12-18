@@ -3,6 +3,7 @@
 **Purpose:** Give the browser-based Codex Agent a self-serve reference so it can capture Mosaic production evidence and log outcomes without relying on human relays.
 
 **Context:** We run two Codex agents in tandem:
+
 - **Terminal Codex** – Handles repo work (coding, scripts, docs)
 - **Codex Agent (You)** – Browser-based, traces real user flows in production
 
@@ -51,11 +52,13 @@
 ## Change Awareness
 
 1. Before every evidence cycle, run:
+
    ```bash
    git status -sb
    git log -1 --oneline
    ls -1t .ai-agents/TEAM_NOTE_* 2>/dev/null | head
    ```
+
    to spot fresh instructions.
 2. If a new Stage or Team note appears, read it fully before continuing.
 3. When finished, record what changed (or if nothing changed) in the Stage diagnosis file and, if applicable, in `.ai-agents/TEAM_NOTE_STAGE2_EVIDENCE_READY_*`.
@@ -74,12 +77,14 @@ Following this guide keeps the Codex Agent aligned with Terminal Codex and Curso
 ## Two-Agent Tandem Model
 
 **Your Role (Codex Agent - Browser):**
+
 - Open WhatIsMyDelta in fresh session
 - Run DevTools checklist (initializer, auth modal, chat network, API base)
 - Log console/network output into `.ai-agents/STAGE2_DIAGNOSIS_YYYY-MM-DD.md`
 - Provide hard data for Terminal Codex to act on
 
 **Terminal Codex Role:**
+
 - Reads your evidence from Stage 2 diagnosis docs
 - Implements fixes/tests based on your hard data
 - Runs verify scripts
@@ -87,6 +92,7 @@ Following this guide keeps the Codex Agent aligned with Terminal Codex and Curso
 - **No waiting on human relays** – acts directly on your evidence
 
 **Workflow:**
+
 1. You capture Stage 2 evidence (BEFORE code edits)
 2. Terminal Codex reads your evidence and implements fixes
 3. You confirm fixes in Stage 3 verification
@@ -99,7 +105,8 @@ Following this guide keeps the Codex Agent aligned with Terminal Codex and Curso
 **When invoked:** Both agents re-run `.ai-agents/SESSION_START_PROTOCOL.md` Steps 1–5, restate Present State → Desired Outcome, and re-log the session.
 
 **Your action:** When you see "Codex Reset Protocol", immediately:
+
 1. Re-run session start protocol
 2. Restate Present State → Desired Outcome
 3. Write new entry to `.ai-agents/session_log.txt`
-4. Resume with fresh context 
+4. Resume with fresh context

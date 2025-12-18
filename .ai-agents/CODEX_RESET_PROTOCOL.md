@@ -1,6 +1,6 @@
 # Codex Reset Protocol
 
-**Date:** 2025-11-05  
+**Date:** 2025-11-05
 **Status:** Active
 
 ---
@@ -41,6 +41,7 @@ When "Codex Reset Protocol" is invoked:
 ## When to Invoke
 
 **Invoke Codex Reset Protocol when:**
+
 - Agent drifts from assigned task
 - Context confusion or conflicting instructions
 - Agent makes changes that don't align with staging notes
@@ -56,6 +57,7 @@ When "Codex Reset Protocol" is invoked:
 ### Terminal Codex
 
 **On Reset:**
+
 1. Re-run session start protocol (Steps 1–5)
 2. Read current staging notes:
    - `.ai-agents/STAGE1_CURRENT_STATE_YYYY-MM-DD.md`
@@ -68,6 +70,7 @@ When "Codex Reset Protocol" is invoked:
 ### Codex Agent (Browser)
 
 **On Reset:**
+
 1. Re-run session start protocol (Steps 1–5)
 2. Read current staging notes:
    - `.ai-agents/STAGE1_CURRENT_STATE_YYYY-MM-DD.md`
@@ -82,6 +85,7 @@ When "Codex Reset Protocol" is invoked:
 ## Staging Notes as Source of Truth
 
 **Critical:** After reset, both agents must reference staging notes for current state:
+
 - `.ai-agents/STAGE1_CURRENT_STATE_YYYY-MM-DD.md` – Problem statement
 - `.ai-agents/STAGE2_DIAGNOSIS_YYYY-MM-DD.md` – Evidence and diagnosis
 - `.ai-agents/STAGE3_VERIFICATION_YYYY-MM-DD.md` – Verification results
@@ -106,6 +110,5 @@ When "Codex Reset Protocol" is invoked:
 
 ---
 
-**Status:** Active  
+**Status:** Active
 **Last Updated:** 2025-11-05
-

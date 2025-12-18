@@ -8,9 +8,10 @@
 
 ## Quick Fix (2 Steps)
 
-### For User:
+### For User
 
 **Step 1: Run the launch script**
+
 ```bash
 ./scripts/start_gemini_session.sh
 ```
@@ -24,6 +25,7 @@ The script will show you exactly what to tell Gemini to set its working director
 ## What This Does
 
 The script:
+
 1. ✅ Verifies the project directory exists
 2. ✅ Checks that status.sh is present
 3. ✅ Generates the exact text to paste to Gemini
@@ -49,12 +51,14 @@ Do NOT search files outside this directory.
 ## Why Gemini Gets Lost
 
 **Without setting working directory:**
+
 - Gemini defaults to `~/` (home directory)
 - Broad searches (`find`, `grep`) scan entire system
 - Hits permission errors on system files
 - Can't find project files
 
 **With working directory set:**
+
 - Gemini starts in `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
 - Searches stay within project bounds
 - All project files accessible
@@ -65,11 +69,13 @@ Do NOT search files outside this directory.
 ## Verifying It Worked
 
 **After telling Gemini to set working directory, ask:**
+
 ```
 What is your current working directory?
 ```
 
 **Should see:**
+
 ```
 /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 ```
@@ -88,12 +94,14 @@ Set working directory to:
 ```
 
 **You MUST:**
+
 1. Set your working directory to that path
 2. Verify: `pwd` should return exactly that path
 3. Then run: `./scripts/status.sh`
 4. Stay within this directory for ALL file operations
 
 **DO NOT:**
+
 - Search outside this directory
 - Access ~/Library/* files
 - Access ~/MosaicBackup/* files
@@ -101,6 +109,7 @@ Set working directory to:
 - Run broad system scans
 
 **If you need to search files:**
+
 ```bash
 # ✅ CORRECT - stays in project
 grep -r "pattern" .

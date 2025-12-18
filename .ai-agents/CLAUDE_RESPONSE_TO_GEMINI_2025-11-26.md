@@ -13,13 +13,14 @@
 
 ---
 
-## Claude Code's Response:
+## Claude Code's Response
 
 The `local_dev_server.py` issue has been **resolved**. Here's what happened:
 
 ### What I Found
 
 **Problem:** Not a silent crash - it was **port conflict**
+
 ```
 [Errno 48] Address already in use
 ```
@@ -27,6 +28,7 @@ The `local_dev_server.py` issue has been **resolved**. Here's what happened:
 **Root Cause:** Port 3000 was already occupied by a previous instance
 
 **Solution:**
+
 ```bash
 # Check port status
 lsof -i :3000
@@ -43,6 +45,7 @@ python3 local_dev_server.py &
 ### Why Gemini Couldn't See the Error
 
 The error **was** being printed:
+
 ```
 --- local_dev_server.py starting up ---
 --- SERVER FAILED TO START ---
@@ -62,6 +65,7 @@ However, when running in background mode (`&`), the output may have been buffere
 The server works fine. The **actual blocker** is:
 
 🚨 **Chat disappears after login attempt**
+
 - User reports: "AS USUAL I CANNOT GET TO THE CHAT IT DISAPPEARS LIKE EVERY TIME I TRY LOGGING IN"
 - This is a **recurring problem** (user's emphasis)
 - Login shows "wrong credentials" (expected - needs to register first)
@@ -72,6 +76,7 @@ The server works fine. The **actual blocker** is:
 This needs investigation - likely a Phase 1+2 integration bug affecting UI visibility on authentication state changes.
 
 **Investigation areas:**
+
 1. Check login handler (mosaic_ui/index.html lines 2025-2062)
 2. Check if coach-strip visibility is toggled based on auth state
 3. Verify DOM state before/after login attempt

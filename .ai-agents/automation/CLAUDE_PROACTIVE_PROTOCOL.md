@@ -1,4 +1,5 @@
 # Claude Code Proactive Protocol
+
 **Instructions for Anticipatory Assistance**
 
 ---
@@ -20,6 +21,7 @@
 ### Step 1: Parse User Intent
 
 **Extract:**
+
 - Primary goal (what do they want?)
 - Context (why do they want it?)
 - Urgency (do they need it now?)
@@ -27,6 +29,7 @@
 ### Step 2: Search Existing Resources
 
 **Check these locations:**
+
 ```bash
 # Quick start commands
 .ai-agents/quick_start/
@@ -44,6 +47,7 @@ TROUBLESHOOTING_CHECKLIST.md
 ```
 
 **Search patterns:**
+
 ```bash
 # Find by keyword
 grep -ri "keyword" .ai-agents/ docs/ scripts/
@@ -59,6 +63,7 @@ find . -type f -mtime -7 -name "*.md"
 ### Step 3: Assess State
 
 **Does it exist?**
+
 - ✅ **YES, UP-TO-DATE:** Provide direct link/command
 - ⚠️ **YES, OUTDATED:** Update it, then provide
 - ❌ **NO:** Create it, make it comprehensive
@@ -66,6 +71,7 @@ find . -type f -mtime -7 -name "*.md"
 ### Step 4: Prepare Complete Solution
 
 **Components:**
+
 1. **Direct answer** (what they asked for)
 2. **Copy-paste commands** (no typing needed)
 3. **Expected output** (so they know success)
@@ -93,11 +99,13 @@ find . -type f -mtime -7 -name "*.md"
 ### Example 1: User asks "How do I test this?"
 
 **❌ BAD Response:**
+
 ```
 You can test by opening the browser and checking the app.
 ```
 
 **✅ GOOD Response:**
+
 ```
 I've created a complete testing suite for you:
 
@@ -133,11 +141,13 @@ All ready - just run ./scripts/test_mosaic.sh to start.
 ### Example 2: User asks "What's the deployment status?"
 
 **❌ BAD Response:**
+
 ```
 It's deployed to production.
 ```
 
 **✅ GOOD Response:**
+
 ```
 Deployment complete. Here's the current status:
 
@@ -258,6 +268,7 @@ scripts/
 ## Troubleshooting
 
 **If [common error]:**
+
 ```bash
 [Fix command]
 ```
@@ -267,6 +278,7 @@ scripts/
 ## Next Steps
 
 [What they'll likely need after this]
+
 ```
 
 ---

@@ -1,11 +1,12 @@
 # SESSION RECOVERY DOCUMENT - 2025-11-07 17:12 EST
+
 **CRITICAL: Use this to restore full context after session crash**
 
 ---
 
 ## 🚨 IMMEDIATE STATUS
 
-**Production Site:** https://whatismydelta.com
+**Production Site:** <https://whatismydelta.com>
 **Status:** 🔴 **BROKEN** - JavaScript errors preventing site function
 **Issue:** `Uncaught ReferenceError: initApp is not defined`
 **Root Cause:** Missing `document.readyState` check in DOMContentLoaded listener
@@ -38,21 +39,25 @@ After reading these files, confirm you understand the issue and are ready to app
 ## 🎯 CURRENT PROBLEM
 
 ### What's Broken
-- **Production URL:** https://whatismydelta.com
+
+- **Production URL:** <https://whatismydelta.com>
 - **Console Errors:**
   1. `Uncaught ReferenceError: initApp is not defined` at (index):4018:49
   2. `Uncaught (in promise) TypeError: Cannot read properties of null (reading 'appendChild')` at (index):1325:13
 - **User Impact:** Chat doesn't work, login doesn't work, site appears broken
 
 ### Root Cause
+
 **File:** `mosaic_ui/index.html` (line 4018)
 
 **Current code (WRONG):**
+
 ```javascript
 document.addEventListener('DOMContentLoaded', initApp, { once: true });
 ```
 
 **Why it fails:**
+
 - Script tag is at END of HTML (line 1103)
 - By the time browser parses the script, DOM is already loaded
 - DOMContentLoaded event has already fired
@@ -61,6 +66,7 @@ document.addEventListener('DOMContentLoaded', initApp, { once: true });
 - Everything breaks
 
 **Required fix:**
+
 ```javascript
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp, { once: true });
@@ -70,6 +76,7 @@ if (document.readyState === 'loading') {
 ```
 
 ### Evidence
+
 - **Screenshots:** User provided 2 screenshots showing console errors before/after typing in chat
 - **Deployment:** Deploy ID `690e65bbdcfd486ed75af217` completed successfully
 - **CDN:** Files deployed correctly to Netlify
@@ -80,11 +87,13 @@ if (document.readyState === 'loading') {
 ## 📂 PROJECT STRUCTURE
 
 ### Repository Location
+
 ```
 /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 ```
 
 ### Key Directories
+
 ```
 .ai-agents/           ← Session notes, diagnostics, protocols
 mosaic_ui/            ← Frontend source (PRODUCTION - deployed to Netlify)
@@ -98,21 +107,25 @@ Mosaic/               ← PS101 Continuity Kit
 ### Critical Files
 
 **Frontend (Current Issue):**
+
 - `mosaic_ui/index.html` - LINE 4018 needs fix
 - `frontend/index.html` - Mirror (sync after fixing mosaic_ui)
 
 **Protocols:**
+
 - `.ai-agents/SESSION_START_PROTOCOL.md` - MANDATORY session start checklist
 - `.ai-agents/DOM_TIMING_PLAYBOOK_PROTOCOL.md` - Fix documented here
 - `TROUBLESHOOTING_CHECKLIST.md` - Pre-flight checks
 - `SELF_DIAGNOSTIC_FRAMEWORK.md` - Error taxonomy
 
 **Deployment:**
+
 - `netlify.toml` - Netlify config (publish = mosaic_ui)
 - `scripts/verify_critical_features.sh` - Pre-deploy verification
 - `scripts/deploy.sh` - Wrapper for safe deploys
 
 **Documentation:**
+
 - `CLAUDE.md` - Project overview & architecture
 - `docs/README.md` - Restart protocol
 
@@ -121,16 +134,20 @@ Mosaic/               ← PS101 Continuity Kit
 ## 🔍 ESSENTIAL CONTEXT
 
 ### Project Name
+
 **Mosaic Platform** (also known as "What Is My Delta")
 
 ### What It Is
+
 Career transition coaching platform with:
+
 - AI-powered career coaching chat
 - PS101 framework (10-step self-assessment)
 - Job search & resume optimization
 - Trial mode (5 minutes for unauthenticated users)
 
 ### Tech Stack
+
 - **Frontend:** Vanilla JavaScript ES6+ in single HTML file
 - **Backend:** Python FastAPI on Railway
 - **Database:** PostgreSQL on Railway
@@ -138,8 +155,9 @@ Career transition coaching platform with:
 - **AI:** OpenAI GPT-4, Anthropic Claude
 
 ### Deployment
-- **Production:** https://whatismydelta.com
-- **Backend API:** https://what-is-my-delta-site-production.up.railway.app
+
+- **Production:** <https://whatismydelta.com>
+- **Backend API:** <https://what-is-my-delta-site-production.up.railway.app>
 - **Netlify Site ID:** resonant-crostata-90b706
 
 ---
@@ -149,60 +167,72 @@ Career transition coaching platform with:
 ### Timeline
 
 **16:10 - Deployment Attempt #1**
+
 - Deploy ID: `690e63098529e76bc1cec4bb`
 - Result: FAILED - `initApp is not defined` error
 - Diagnosis: DOM timing issue
 
 **16:12 - DOM Timing Diagnosis**
+
 - Created `DOM_TIMING_DIAGNOSTIC_2025-11-07.md`
 - Identified: Script at end of HTML causes race condition
 - Root cause: DOMContentLoaded already fired before listener added
 
 **16:13 - Prevention Protocol Created**
+
 - Created `DOM_TIMING_PLAYBOOK_PROTOCOL.md`
 - Documented correct pattern with `document.readyState` check
 - Added ESLint rules, checklist, examples
 
 **16:15 - Deploy Action Plan**
+
 - Created `DEPLOY_ACTION_PLAN_2025-11-07.md`
 - Planned phased fix approach
 
 **16:27 - Deployment Status Check**
+
 - Created `DEPLOYMENT_STATUS_2025-11-07.md`
 - Confirmed Phase 2.5 deployed
 - Noted: `document.readyState` check NOT YET APPLIED
 
 **16:28 - Deployment Attempt #2**
+
 - Changed `netlify.toml` to enforce `[context.production]`
 - Deploy ID: `690e65bbdcfd486ed75af217`
 - Result: Config deployed, but CODE ERROR PERSISTS
 - Reason: Only changed netlify.toml, didn't fix actual bug
 
 **16:34 - Deployment Documentation**
+
 - Created `DEPLOYMENT_ATTEMPT_2_2025-11-07.md`
 - Awaiting user browser verification
 
 **~16:45 - User Testing**
+
 - User tested in browser
 - Confirmed: Errors still present
 - User stated: "it may after all be coding errors not deployment issues"
 
 **~16:49 - Session Crash #1**
+
 - Laptop crashed during active session
 - Context lost
 
 **~17:00 - Session Restart #1**
+
 - User provided screenshots showing errors
 - Agent attempted to diagnose without reading docs
 - User stopped agent: "Review protocols before taking action"
 
 **17:05 - Session Start Protocol Run**
+
 - Ran `./scripts/verify_critical_features.sh` - ✅ PASSED
 - Read handoff manifest
 - Read urgent files
 - Reviewed recent commits
 
 **17:10 - Documentation Review**
+
 - Found recent MD files in `.ai-agents/`
 - Reviewed deployment attempts
 - Confirmed: Fix documented but not applied
@@ -238,12 +268,15 @@ Career transition coaching platform with:
 ## 🔧 THE FIX (Ready to Apply)
 
 ### File to Edit
+
 `mosaic_ui/index.html`
 
 ### Line Number
+
 4018
 
 ### Current Code
+
 ```javascript
   // Single consolidated DOMContentLoaded handler
   // DEPLOY_MARKER: DOMContentLoaded listener | Line ~4016 | Should be INSIDE IIFE
@@ -252,6 +285,7 @@ Career transition coaching platform with:
 ```
 
 ### Replacement Code
+
 ```javascript
   // Single consolidated DOMContentLoaded handler
   // DEPLOY_MARKER: DOMContentLoaded listener | Line ~4016 | Should be INSIDE IIFE
@@ -265,6 +299,7 @@ Career transition coaching platform with:
 ```
 
 ### After Fixing mosaic_ui/index.html
+
 **MUST ALSO UPDATE:** `frontend/index.html` (same fix, keep in sync)
 
 ---
@@ -272,6 +307,7 @@ Career transition coaching platform with:
 ## 📋 DEPLOYMENT CHECKLIST (After Fix Applied)
 
 ### Pre-Deploy
+
 ```bash
 # 1. Verify critical features
 ./scripts/verify_critical_features.sh
@@ -284,6 +320,7 @@ open mosaic_ui/index.html
 ```
 
 ### Deploy
+
 ```bash
 # Use wrapper script (MANDATORY per SESSION_START_PROTOCOL)
 ./scripts/deploy.sh netlify
@@ -294,6 +331,7 @@ netlify deploy --prod
 ```
 
 ### Post-Deploy Verification
+
 ```bash
 # 1. Wait 60-90 seconds for CDN propagation
 
@@ -340,6 +378,7 @@ netlify deploy --prod
    - `./scripts/deploy.sh all`
 
 ### If Wrapper Scripts Don't Exist
+
 Ask user for permission before using raw commands.
 
 ---
@@ -347,21 +386,25 @@ Ask user for permission before using raw commands.
 ## 📚 DOCUMENTATION HIERARCHY
 
 ### Read First (Session Start)
+
 1. `.ai-agents/SESSION_START_PROTOCOL.md` - MANDATORY checklist
 2. This file - Full context restoration
 3. `CLAUDE.md` - Project architecture overview
 
 ### Issue-Specific
+
 4. `.ai-agents/DOM_TIMING_PLAYBOOK_PROTOCOL.md` - Current issue fix
 5. `.ai-agents/DEPLOYMENT_STATUS_2025-11-07.md` - Latest deployment info
 6. `.ai-agents/DEPLOYMENT_ATTEMPT_2_2025-11-07.md` - What was tried
 
 ### Reference
+
 7. `TROUBLESHOOTING_CHECKLIST.md` - Debugging workflow
 8. `SELF_DIAGNOSTIC_FRAMEWORK.md` - Error patterns
 9. `docs/README.md` - General project docs
 
 ### Urgent/For Other Agents
+
 10. `FOR_NETLIFY_AGENT_RAILWAY_FIX.md`
 11. `URGENT_FOR_NARS_LOGS_NEEDED.md`
 
@@ -370,31 +413,37 @@ Ask user for permission before using raw commands.
 ## 🔑 KEY COMMANDS
 
 ### Verify Features
+
 ```bash
 ./scripts/verify_critical_features.sh
 ```
 
 ### Check Recent Commits
+
 ```bash
 git log -5 --oneline
 ```
 
 ### Check Backend Health
+
 ```bash
 curl https://what-is-my-delta-site-production.up.railway.app/health
 ```
 
 ### Check Production Site
+
 ```bash
 curl -I https://whatismydelta.com
 ```
 
 ### Deploy Frontend
+
 ```bash
 ./scripts/deploy.sh netlify
 ```
 
 ### Emergency Rollback
+
 ```bash
 git revert HEAD
 ./scripts/push.sh railway-origin main
@@ -405,6 +454,7 @@ git revert HEAD
 ## 🎓 LEARNING FROM THIS INCIDENT
 
 ### What Went Wrong
+
 1. Fix was documented in DOM_TIMING_PLAYBOOK_PROTOCOL.md
 2. But fix was never actually applied to code
 3. Deployment #2 only changed netlify.toml config
@@ -413,6 +463,7 @@ git revert HEAD
 6. Had to restore context from scratch
 
 ### Prevention for Next Time
+
 - ✅ Created this recovery document
 - ✅ Includes quick-start prompt
 - ✅ Includes exact file/line to fix
@@ -420,6 +471,7 @@ git revert HEAD
 - ✅ No ambiguity about what needs to be done
 
 ### Knowledge Captured
+
 - DOM timing issues with end-of-body scripts
 - Need for `document.readyState` check
 - Distinction between "fix documented" vs "fix applied"
@@ -436,29 +488,34 @@ git revert HEAD
 **Location:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
 
 **Quick Context:**
-1. Production site broken: https://whatismydelta.com
+
+1. Production site broken: <https://whatismydelta.com>
 2. Error: "initApp is not defined"
 3. Fix needed: Add `document.readyState` check to `mosaic_ui/index.html` line 4018
 4. Full instructions in this document
 
 **Start Here:**
+
 ```bash
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 cat .ai-agents/SESSION_RECOVERY_2025-11-07_1712.md
 ```
 
 **After reading this file, you'll know:**
+
 - What the problem is
 - Where the fix goes
 - How to deploy it
 - How to verify it worked
 
 **Don't:**
+
 - Make changes without reading SESSION_START_PROTOCOL.md first
 - Use raw `git push` or `netlify deploy` commands
 - Skip the verification checklist
 
 **Do:**
+
 - Read the documentation first
 - Follow the protocols
 - Verify fixes in browser before declaring success
@@ -473,6 +530,7 @@ cat .ai-agents/SESSION_RECOVERY_2025-11-07_1712.md
 **Blocker:** None - fix is ready to apply
 
 **For Next Session Owner:**
+
 1. Read this file
 2. Read SESSION_START_PROTOCOL.md
 3. Run session start checklist
@@ -486,6 +544,7 @@ cat .ai-agents/SESSION_RECOVERY_2025-11-07_1712.md
 ## 🏁 COMPLETION CRITERIA
 
 **Fix is complete when:**
+
 - [x] `mosaic_ui/index.html` line 4018 updated with `readyState` check
 - [x] `frontend/index.html` synced with same fix
 - [x] Changes committed to git (commits 5cf9088, 21144cd)
@@ -506,18 +565,21 @@ cat .ai-agents/SESSION_RECOVERY_2025-11-07_1712.md
 **Status:** DEPLOYED - Awaiting user browser testing
 
 **What was deployed:**
+
 - Commit 5cf9088: Added `document.readyState` check to prevent initApp race condition
 - Commit 21144cd: Updated BUILD_ID footer
 - Deploy ID: 6910f394e882c4ad31fac09b
-- Production URL: https://whatismydelta.com
+- Production URL: <https://whatismydelta.com>
 
 **Deployment method:**
+
 - Used Solution C (Codex recommendation)
 - Injected BUILD_ID just before deploy
 - Reverted BUILD_ID after deploy to keep repo clean
 - Avoided infinite loop bug in wrapper script
 
 **Code verification (automated):**
+
 - ✅ HTTP 200 response from production
 - ✅ `document.readyState` check present in deployed HTML
 - ✅ BUILD_ID matches commit hash (21144cd9)
@@ -525,6 +587,7 @@ cat .ai-agents/SESSION_RECOVERY_2025-11-07_1712.md
 
 **User testing required:**
 User must test in browser to confirm:
+
 1. No JavaScript errors in console
 2. initApp function defined and executing
 3. Chat functionality working
@@ -532,6 +595,7 @@ User must test in browser to confirm:
 5. All interactive elements functional
 
 **Related documents:**
+
 - `.ai-agents/DEPLOYMENT_SUCCESS_2025-11-09.md` - Full deployment details
 - `.ai-agents/DEPLOYMENT_LOOP_DIAGNOSIS_2025-11-09.md` - Wrapper script bug analysis
 

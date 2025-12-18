@@ -1,4 +1,5 @@
 # CODEX Follow-up Fixes
+
 **Date**: 2025-10-07
 **Issue**: RemoteOK TypeError blocking 6th source
 **Status**: ✅ Fixed
@@ -18,6 +19,7 @@
 **File**: `api/job_sources/remoteok.py:45-66`
 
 **Before**:
+
 ```python
 job = JobPosting(
     ...
@@ -27,6 +29,7 @@ job = JobPosting(
 ```
 
 **After**:
+
 ```python
 # Build salary range string from min/max if available
 salary_min = job_data.get('salary_min')
@@ -59,10 +62,12 @@ job = JobPosting(
 6. ✅ Reddit
 
 **Disabled (Paid API Required)**:
+
 - ❌ AngelList
 - ❌ SerpAPI
 
 **Untested Web Scraping**:
+
 - ⚠️ LinkedIn, Glassdoor, Dice, Monster (may work, need testing)
 
 ---
@@ -70,6 +75,7 @@ job = JobPosting(
 ## Ready for CODEX Persona Testing
 
 All blockers resolved:
+
 - ✅ No mock data
 - ✅ No TypeErrors
 - ✅ 6 sources returning real job data

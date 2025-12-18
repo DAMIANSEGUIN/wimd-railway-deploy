@@ -10,15 +10,18 @@
 ## Current Situation
 
 **What's Working:**
+
 - ✅ Local scripts push to `origin/main` correctly (`scripts/deploy.sh` → `scripts/push.sh`)
 - ✅ Railway **restarts** when push occurs (webhook triggers container restart)
 - ✅ Manual `railway up` deployment works (workaround confirmed)
 
 **What's Broken:**
+
 - ❌ Railway restarts but serves **OLD code** (doesn't pull from GitHub)
 - ❌ New endpoints missing (e.g., `/api/ps101/extract-context` returns 404)
 
 **Evidence:**
+
 ```bash
 # Pushed at 15:45 UTC
 git log origin/main --oneline -1
@@ -40,6 +43,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/openapi.json | jq '
 ### Step 1: Verify Railway Deployment Source
 
 **Terminal Command (Run First):**
+
 ```bash
 # Get expected commit hash from GitHub
 git log origin/main --oneline -1
@@ -47,7 +51,8 @@ git log origin/main --oneline -1
 ```
 
 **Railway Dashboard Navigation:**
-1. Go to: https://railway.app/dashboard
+
+1. Go to: <https://railway.app/dashboard>
 2. Click project: **"wimd-career-coaching"**
 3. Click service: **"what-is-my-delta-site"**
 4. Click tab: **"Deployments"** (left sidebar)
@@ -55,6 +60,7 @@ git log origin/main --oneline -1
 
 **What to Check:**
 Look for a section labeled **"Source"** or **"Deployment Source"** showing:
+
 - **Source type:** Should say "GitHub" (not "CLI" or "Manual")
 - **Repository:** Should be `DAMIANSEGUIN/wimd-railway-deploy`
 - **Branch:** Should be `main`
@@ -70,23 +76,27 @@ Look for a section labeled **"Source"** or **"Deployment Source"** showing:
 ### Step 2: Verify GitHub Integration Settings
 
 **Railway Dashboard Navigation:**
-1. Go to: https://railway.app/dashboard
+
+1. Go to: <https://railway.app/dashboard>
 2. Click project: **"wimd-career-coaching"**
 3. Click tab: **"Settings"** (left sidebar)
 4. Scroll down to section: **"Integrations"**
 
 **What to Check:**
+
 1. **Is "GitHub" listed?** Should see GitHub logo with status
 2. **Status:** Should show "Connected" with green checkmark
 3. Click button: **"Configure"** or **"Manage"** next to GitHub integration
 
 **Inside GitHub Integration Settings:**
+
 - **Repository access:** Look for `DAMIANSEGUIN/wimd-railway-deploy` in authorized repos list
 - **Auto Deploy:** Toggle should be **ON** (blue/enabled)
 - **Branch filter:** Should show `main` (or "All branches" if no filter set)
 - **Service connected:** Should show `what-is-my-delta-site`
 
 **Expected:**
+
 - ✅ GitHub shows "Connected"
 - ✅ Auto-deploy toggle is ON
 - ✅ Repository `DAMIANSEGUIN/wimd-railway-deploy` is authorized
@@ -101,7 +111,8 @@ Look for a section labeled **"Source"** or **"Deployment Source"** showing:
 ### Step 3: Verify GitHub Webhook Configuration
 
 **GitHub Navigation:**
-1. Go to: https://github.com/DAMIANSEGUIN/wimd-railway-deploy
+
+1. Go to: <https://github.com/DAMIANSEGUIN/wimd-railway-deploy>
 2. Click tab: **"Settings"** (top right of repository)
 3. Click: **"Webhooks"** (left sidebar under "Code and automation")
 
@@ -109,6 +120,7 @@ Look for a section labeled **"Source"** or **"Deployment Source"** showing:
 Look for Railway webhook in the list (URL contains `railway.app` or `railway.com`)
 
 **Click on the Railway webhook to see details:**
+
 - **Payload URL:** Should be active Railway endpoint (contains `railway.app`)
 - **Content type:** Should be `application/json`
 - **Events:** Should include "Pushes" or "Just the push event"
@@ -117,10 +129,12 @@ Look for Railway webhook in the list (URL contains `railway.app` or `railway.com
 **Click tab: "Recent Deliveries"** (at top of webhook details page)
 
 Find the most recent delivery (timestamp around 15:45 UTC when you pushed `be8b21c`):
+
 - **Response code:** Should be `200` or `201` (success)
 - **If 4xx or 5xx:** Webhook delivery failing
 
 **Expected:**
+
 - ✅ Webhook exists and is active
 - ✅ Recent deliveries show `200` or `201` response codes
 - ✅ Delivery timestamp matches your push time
@@ -136,6 +150,7 @@ Find the most recent delivery (timestamp around 15:45 UTC when you pushed `be8b2
 **Purpose:** Trigger webhook and observe behavior in real-time
 
 **Commands:**
+
 ```bash
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 
@@ -149,16 +164,19 @@ git push origin main
 ```
 
 **Observe:**
+
 1. **GitHub Webhooks → Recent Deliveries:** New webhook delivery appears within 5 seconds
 2. **Railway Dashboard → Deployments:** New deployment appears within 1 minute
 3. **Railway Logs:** Watch for build/deploy activity
 
 **Expected Behavior:**
+
 - Webhook delivery: `200 OK`
 - New deployment appears in Railway
 - Deployment pulls latest commit (the empty test commit)
 
 **If webhook delivery succeeds BUT Railway doesn't deploy:**
+
 - Railway is receiving webhook but ignoring it
 - Possible causes:
   - Branch filter misconfigured (not watching `main`)
@@ -166,6 +184,7 @@ git push origin main
   - Railway bug (need support ticket)
 
 **If webhook delivery fails (4xx/5xx):**
+
 - GitHub can't reach Railway webhook endpoint
 - Possible causes:
   - Webhook URL outdated
@@ -223,6 +242,7 @@ git push origin main
 **If:** Integration shows "Not Connected" or webhook returns `401/403`
 
 **Steps:**
+
 1. Railway Dashboard → Settings → Integrations
 2. Click "Connect GitHub" or "Reconnect"
 3. Authorize Railway app in GitHub OAuth flow
@@ -237,6 +257,7 @@ git push origin main
 **If:** Webhook returns `404` or doesn't exist
 
 **Steps:**
+
 1. GitHub → Repository → Settings → Webhooks
 2. Delete existing Railway webhook (if any)
 3. Railway Dashboard → Settings → Integrations → Disconnect GitHub
@@ -251,6 +272,7 @@ git push origin main
 **If:** Above fixes don't work immediately and you need to deploy
 
 **Command:**
+
 ```bash
 # From project root
 railway up --detach
@@ -271,6 +293,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/openapi.json | jq '
 **This indicates a Railway platform bug.**
 
 **Template:**
+
 ```
 Subject: GitHub auto-deploy not pulling latest code despite successful webhooks
 
@@ -305,12 +328,14 @@ GitHub repository despite receiving webhook events.
 ## Next Actions
 
 **For User:**
+
 1. Complete Steps 1-4 above
 2. Fill in Diagnostic Results Template
 3. Share results with team (Codex, Gemini, Claude Code)
 4. Apply appropriate fix based on results
 
 **For Team:**
+
 - If webhook failing → Re-authorize integration (Fix 1 or 2)
 - If webhook succeeds but no deploy → Railway support ticket (Fix 4)
 - In parallel → Use manual deployment workaround (Fix 3)

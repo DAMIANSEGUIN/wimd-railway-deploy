@@ -1,4 +1,5 @@
 # Quick Start Testing Commands
+
 **One-Command Testing Shortcuts**
 
 ---
@@ -84,4 +85,3 @@ echo "test+mosaic_$(date +%s)@example.com"
 ```bash
 watch -n 30 'curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3 -m json.tool'
 ```
-

@@ -1,7 +1,7 @@
 # Cursor UI Bug Report - Button Overlap Issue
 
-**Date:** 2025-11-03  
-**Reported By:** User (Damian)  
+**Date:** 2025-11-03
+**Reported By:** User (Damian)
 **Issue:** Terminal command execution buttons overlapping
 
 ---
@@ -46,6 +46,7 @@ Please fix the button layout in the terminal command execution UI to prevent ove
 ## Context
 
 This bug was encountered during a critical merge operation where:
+
 - Files needed to be synced (`frontend/index.html` ↔ `mosaic_ui/index.html`)
 - Multiple verification commands were being executed
 - User had to manually clarify intent multiple times due to button overlap
@@ -63,9 +64,9 @@ This bug was encountered during a critical merge operation where:
 The overlapping Run/Stop button issue continues to occur. User reports: "that issues with the overlapping stop run is persisting"
 
 This is a persistent UI bug that affects:
+
 - Command execution accuracy
 - User workflow confidence
 - Agent-user interaction reliability
 
 **Action Required:** Cursor team needs to investigate and fix the button layout/click target alignment in the terminal command execution UI component.
-

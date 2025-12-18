@@ -1,4 +1,5 @@
 # DOM Timing Issues - Prevention Protocol & Playbook
+
 **Integrated:** 2025-11-07
 **Source:** AI Frontend Safety Playbook (JS + Vite Edition)
 **Status:** MANDATORY for all frontend code changes
@@ -22,7 +23,8 @@
 
 ## Problem Pattern: Immediate DOM Access
 
-### ❌ WRONG (Causes Crash):
+### ❌ WRONG (Causes Crash)
+
 ```javascript
 <script>
   // This runs IMMEDIATELY before DOM is ready
@@ -36,6 +38,7 @@
 ```
 
 **Result:**
+
 - `TypeError: Cannot set properties of null`
 - Script execution stops
 - Everything below never runs
@@ -47,7 +50,8 @@
 
 ## Solution Pattern: DOMContentLoaded Wrapper
 
-### ✅ CORRECT (Safe):
+### ✅ CORRECT (Safe)
+
 ```javascript
 <script>
   // Declare module-level variables (no DOM access)
@@ -114,11 +118,13 @@
 ```
 
 **What this blocks:**
+
 - Top-level `document.getElementById()`
 - Top-level `document.querySelector()`
 - Top-level `document.querySelectorAll()`
 
 **What this allows:**
+
 - DOM queries inside functions
 - DOM queries inside event handlers
 - DOM queries inside `init()` or `initApp()`
@@ -127,15 +133,17 @@
 
 ## Diagnostic Checklist: "My UI is Broken"
 
-### Symptoms:
+### Symptoms
+
 - Chat doesn't work
 - Login doesn't show
 - Buttons don't respond
 - Console shows `initApp is not defined` or `TypeError: Cannot set properties of null`
 
-### Quick Diagnosis:
+### Quick Diagnosis
 
 **1. Check Browser Console:**
+
 ```javascript
 typeof window.initApp
 // Expected: "function"
@@ -144,18 +152,21 @@ typeof window.initApp
 
 **2. Look for Immediate DOM Access:**
 Search codebase for:
+
 ```bash
 # Find top-level DOM queries (outside functions)
 grep -n "getElementById\|querySelector" index.html | grep -v "function\|=>"
 ```
 
 **3. Check for Common Patterns:**
+
 - [ ] `$('#element').textContent = ...` at top level
 - [ ] `const el = $('#element');` at top level
 - [ ] `addEventListener` calls at top level
 - [ ] Any DOM manipulation before `DOMContentLoaded`
 
 **4. Verify Script Loading:**
+
 - [ ] Script has `defer` attribute OR is at end of `<body>`
 - [ ] Script is inside IIFE (Immediately Invoked Function Expression)
 - [ ] DOMContentLoaded listener exists
@@ -164,7 +175,8 @@ grep -n "getElementById\|querySelector" index.html | grep -v "function\|=>"
 
 ## Prevention Checklist: Before Every Code Change
 
-### Pre-Flight Check:
+### Pre-Flight Check
+
 ```
 □ No top-level DOM queries/mutations
 □ All DOM access inside init() or event handlers
@@ -175,7 +187,8 @@ grep -n "getElementById\|querySelector" index.html | grep -v "function\|=>"
 □ ESLint passes (no restricted syntax violations)
 ```
 
-### Pre-Deploy Check:
+### Pre-Deploy Check
+
 ```
 □ Run ESLint: npm run lint
 □ Test in browser: typeof window.init === "function"
@@ -190,12 +203,15 @@ grep -n "getElementById\|querySelector" index.html | grep -v "function\|=>"
 ## Common Mistakes & Fixes
 
 ### Mistake 1: "I need this to run immediately!"
+
 **Wrong:**
+
 ```javascript
 $('#y').textContent = new Date().getFullYear(); // Runs immediately
 ```
 
 **Right:**
+
 ```javascript
 document.addEventListener('DOMContentLoaded', () => {
   const yearEl = $('#y');
@@ -204,7 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
 ```
 
 ### Mistake 2: "But I added a null check!"
+
 **Still Wrong:**
+
 ```javascript
 // Still at top level - runs before DOM ready!
 const el = $('#y'); // el will ALWAYS be null here
@@ -212,6 +230,7 @@ if (el) el.textContent = 'text'; // Never executes
 ```
 
 **Right:**
+
 ```javascript
 document.addEventListener('DOMContentLoaded', () => {
   const el = $('#y'); // NOW element exists
@@ -220,7 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
 ```
 
 ### Mistake 3: "I put it in a function!"
+
 **Still Wrong if function runs immediately:**
+
 ```javascript
 function setYear() {
   $('#y').textContent = new Date().getFullYear();
@@ -229,6 +250,7 @@ setYear(); // STILL runs before DOM ready!
 ```
 
 **Right:**
+
 ```javascript
 function setYear() {
   const yearEl = $('#y');
@@ -238,7 +260,9 @@ document.addEventListener('DOMContentLoaded', setYear, { once: true });
 ```
 
 ### Mistake 4: "DOMContentLoaded is outside IIFE"
+
 **Wrong:**
+
 ```javascript
 (function() {
   function initApp() { ... }
@@ -249,6 +273,7 @@ document.addEventListener('DOMContentLoaded', initApp);
 ```
 
 **Right:**
+
 ```javascript
 (function() {
   function initApp() { ... }
@@ -262,9 +287,10 @@ document.addEventListener('DOMContentLoaded', initApp);
 
 ## Reference Implementation
 
-### Minimal Safe Boot (from Playbook):
+### Minimal Safe Boot (from Playbook)
 
 **File: `src/init.js`**
+
 ```javascript
 let booted = false;
 
@@ -284,6 +310,7 @@ window.init = init;
 ```
 
 **File: `public/index.html`**
+
 ```html
 <!doctype html>
 <html lang="en">
@@ -331,6 +358,7 @@ test('init is defined and footer year is set', async ({ page }) => {
 ### Applied to: `mosaic_ui/index.html` & `frontend/index.html`
 
 **Pattern Used:**
+
 1. IIFE wrapper for scope isolation
 2. `initApp()` function with phased initialization
 3. All DOM access moved into `initApp()` phases
@@ -339,6 +367,7 @@ test('init is defined and footer year is set', async ({ page }) => {
 6. Module-level variable declarations (no immediate DOM access)
 
 **Phases:**
+
 - Phase 1: API config, session management
 - Phase 2: Auth UI setup
 - **Phase 2.5: API check + chat system** ← Added for DOM timing fix
@@ -347,6 +376,7 @@ test('init is defined and footer year is set', async ({ page }) => {
 - Phase 5: Trial mode initialization
 
 **Key Addition (Phase 2.5):**
+
 ```javascript
 // Phase 2.5: Initialize API check and chat system
 console.log('[INIT] Phase 2.5: Initializing API check and chat...');
@@ -383,14 +413,16 @@ console.log('[INIT] Phase 2.5 complete');
 
 ## When to Apply This Protocol
 
-### MANDATORY for:
+### MANDATORY for
+
 - Any code that accesses `document.getElementById()`
 - Any code that accesses `document.querySelector()` or `querySelectorAll()`
 - Any code that sets element properties (`.textContent`, `.value`, `.style`, etc.)
 - Any code that adds event listeners to DOM elements
 - Any code that manipulates DOM classes, attributes, or content
 
-### NOT REQUIRED for:
+### NOT REQUIRED for
+
 - Code inside functions that are only called AFTER DOMContentLoaded
 - Code in event handlers (already guaranteed DOM exists)
 - Code that only declares variables/functions (no execution)

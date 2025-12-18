@@ -1,4 +1,5 @@
 # Google Calendar Booking - Finalized Requirements
+
 **Date:** 2025-10-25
 **Status:** ✅ Requirements Confirmed - Ready for Implementation
 
@@ -9,9 +10,11 @@
 ### Most Critical (1-5)
 
 **1. Who books whom?**
+
 - ✅ **User books coach** (Damian)
 
 **2. Where in UI?**
+
 - ⚠️ **User asked for recommendation:** "link pop up? Or just a link? Suggestion?"
 - **SSE Recommendation:** Modal overlay (better UX, keeps user in context)
   - Button in chat interface: "Schedule Coaching Session"
@@ -20,6 +23,7 @@
   - Benefits: No page navigation, seamless flow, mobile-friendly
 
 **3. Post-booking experience?**
+
 - ✅ **Calendar invite** with:
   - 30-minute appointment
   - Note: "Prepare for session by completing AI prompts from your previous conversations as far as you're able"
@@ -27,9 +31,11 @@
   - Cancellation policy reminder (48 hours)
 
 **4. Session types?**
+
 - ✅ **1-on-1 only**
 
 **5. Trial user access?**
+
 - ✅ **Free trial with code:**
   - Requires promo code to book free session
   - Limit: 25 free sessions total (system-wide cap)
@@ -38,12 +44,14 @@
 ### Business Rules (6-10)
 
 **6. Availability model?**
+
 - ✅ **Fixed hours with admin flexibility:**
   - Coach (Damian) sets fixed availability hours
   - Coach can block specific dates (PTO, holidays)
   - User selects primary slot + backup slot (in case coach cancels)
 
 **7. Booking constraints?**
+
 - ✅ **Advance notice:**
   - Block availability 2 days in advance from current date
   - Exception: Paid sessions can book closer (need to clarify: same-day? 24 hours?)
@@ -52,6 +60,7 @@
 - ✅ **Duration:** 30 minutes (all sessions)
 
 **8. Cancellation policy?**
+
 - ✅ **Free session:** No penalty
 - ✅ **Paid session:**
   - 48-hour advance notice required
@@ -60,12 +69,14 @@
   - **QUESTION:** How to collect 50% penalty? Charge original payment method? Require upfront for next booking?
 
 **9. Video conferencing?**
+
 - ✅ **Phone call only**
   - No video, Zoom, or WhatsApp
   - Calendar invite includes phone number to call
   - **QUESTION:** Display your phone number in invite? Or user provides their number and you call them?
 
 **10. Notifications?**
+
 - ✅ **User choice:**
   - Email (Google Calendar default)
   - In-app notification (WIMD platform)
@@ -75,11 +86,13 @@
 ### Pricing (New Requirement)
 
 **Free Sessions:**
+
 - Requires promo code
 - 30 minutes
 - 25 total available (first-come, first-served)
 
 **Paid Sessions:**
+
 - **Single session:**
   - $150 USD (US customers)
   - $150 CAD (Canadian customers)
@@ -95,6 +108,7 @@
 ### Technical (11-12)
 
 **11. Authentication approach?**
+
 - ⚠️ **User deferred to SSE:** "you tell me"
 - **SSE Recommendation:** **Service Account** (simpler for MVP)
   - Backend creates events on coach's Google Calendar using service account
@@ -104,6 +118,7 @@
   - Alternative: OAuth if you want users to also add event to their calendar (adds complexity)
 
 **12. Which calendar(s)?**
+
 - ⚠️ **User asked:** "Shared calendar? User and coach? What is ideal? What is easier for me? Privacy issues, I do not want other users to see what is in my calendar."
 - **SSE Recommendation:** **Coach calendar only, NO sharing with users**
   - Create event on coach's (Damian's) Google Calendar
@@ -119,12 +134,14 @@
 ### UI Design: Modal Overlay ✅
 
 **Rationale:**
+
 - Better UX (no page navigation)
 - Keeps user in coaching context
 - Mobile-friendly
 - Modern, professional feel
 
 **Flow:**
+
 1. User clicks "Schedule Coaching Session" button in chat or guide
 2. Modal overlay appears with:
    - Session type selector (Free with code / Paid single / Paid package)
@@ -147,12 +164,14 @@
 ### Authentication: Service Account ✅
 
 **Rationale:**
+
 - Simpler for MVP (no OAuth consent flow)
 - Better UX (users don't need Google account)
 - Coach grants access once, works forever
 - Sufficient for single coach use case
 
 **Setup Required:**
+
 1. Create Google Cloud project
 2. Enable Google Calendar API
 3. Create service account
@@ -163,12 +182,14 @@
 ### Calendar Strategy: Coach Only ✅
 
 **Rationale:**
+
 - Privacy (users can't see coach's full calendar)
 - Simplicity (one source of truth)
 - User sees their appointments in WIMD dashboard
 - Optional: Send email invite to user (they can add to their own calendar)
 
 **Database Schema:**
+
 ```sql
 CREATE TABLE appointments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -234,6 +255,7 @@ CREATE TABLE session_packages (
 ### Payment Integration: Stripe ✅
 
 **Rationale:**
+
 - Industry standard
 - Simple integration
 - Supports USD and CAD
@@ -241,6 +263,7 @@ CREATE TABLE session_packages (
 - PCI compliant (don't store card details)
 
 **Flow:**
+
 1. User selects paid session
 2. Stripe Checkout modal appears
 3. User enters card details (Stripe handles)
@@ -249,6 +272,7 @@ CREATE TABLE session_packages (
 6. On failure: show error, don't create appointment
 
 **Required:**
+
 - Stripe account
 - Stripe API keys (publishable + secret)
 - Stripe Python SDK
@@ -258,7 +282,9 @@ CREATE TABLE session_packages (
 ## Clarifying Questions (Still Needed)
 
 ### 1. Paid Session Advance Notice
+
 **Question:** Paid sessions can book closer than 2 days. How close?
+
 - [ ] Same-day booking allowed?
 - [ ] 24-hour minimum?
 - [ ] 12-hour minimum?
@@ -266,14 +292,18 @@ CREATE TABLE session_packages (
 **Recommendation:** 24 hours minimum (gives you buffer)
 
 ### 2. Phone Call Direction
+
 **Question:** Who calls whom?
+
 - [ ] Coach calls user (user provides phone number in booking)
 - [ ] User calls coach (coach's number shown in calendar invite)
 
 **Recommendation:** Coach calls user (more professional, user comfort)
 
 ### 3. Cancellation Fee Collection
+
 **Question:** How to collect 50% penalty for late cancellation?
+
 - [ ] Charge original payment method automatically?
 - [ ] Require prepayment for next booking?
 - [ ] Manual invoice?
@@ -281,14 +311,18 @@ CREATE TABLE session_packages (
 **Recommendation:** Charge original payment method (automatic, enforceable)
 
 ### 4. SMS Notifications
+
 **Question:** Implement SMS reminders?
+
 - [ ] Yes (requires Twilio integration)
 - [ ] No (email + in-app sufficient for MVP)
 
 **Recommendation:** Skip for MVP (adds complexity, cost)
 
 ### 5. Free Session Code Distribution
+
 **Question:** How do users get promo code?
+
 - [ ] Single code shared publicly ("FREESESSION25")
 - [ ] Unique codes per user (prevents sharing)
 - [ ] Generated after trial completion
@@ -296,7 +330,9 @@ CREATE TABLE session_packages (
 **Recommendation:** Single shared code for MVP, track by user ID to prevent reuse
 
 ### 6. Backup Slot Handling
+
 **Question:** If coach cancels, what happens?
+
 - [ ] Automatically reschedule to user's backup slot?
 - [ ] Email user to manually reschedule?
 - [ ] Coach manually contacts user?
@@ -304,7 +340,9 @@ CREATE TABLE session_packages (
 **Recommendation:** Email user with backup slot + option to reschedule
 
 ### 7. Package Session Scheduling
+
 **Question:** User bought 3-session package. How do they book subsequent sessions?
+
 - [ ] Book all 3 upfront?
 - [ ] Book 1 at a time (track sessions remaining)?
 
@@ -315,6 +353,7 @@ CREATE TABLE session_packages (
 ## Blast Radius - Updated Estimate
 
 ### New Files (8-12 files)
+
 - `/api/booking.py` - Booking API endpoints
 - `/api/google_calendar_service.py` - Google Calendar integration
 - `/api/stripe_service.py` - Stripe payment integration
@@ -326,6 +365,7 @@ CREATE TABLE session_packages (
 - `/data/migrations/seed_coach_availability.sql` - Default availability
 
 ### Modified Files (4-6 files)
+
 - `/mosaic_ui/index.html` - Add booking button + modal container
 - `/api/index.py` - Register booking routes
 - `/requirements.txt` - Add dependencies:
@@ -337,6 +377,7 @@ CREATE TABLE session_packages (
 - `/.env` - Add environment variables (service account key, Stripe keys)
 
 ### Environment Variables Needed
+
 ```bash
 # Google Calendar
 GOOGLE_SERVICE_ACCOUNT_KEY='{...json...}'  # Service account credentials
@@ -356,6 +397,7 @@ TWILIO_PHONE_NUMBER='+1...'
 ### Updated Blast Radius: 12-18 files
 
 ### Updated Implementation Time: 8-12 hours
+
 - Google Calendar integration: 2-3 hours
 - Stripe payment integration: 2-3 hours
 - Database schema + migrations: 1 hour
@@ -364,6 +406,7 @@ TWILIO_PHONE_NUMBER='+1...'
 - Testing + debugging: 2-3 hours
 
 **Complexity Factors:**
+
 - Payment integration adds significant complexity
 - Multiple pricing tiers (free, single, package)
 - Cancellation/rescheduling logic
@@ -375,6 +418,7 @@ TWILIO_PHONE_NUMBER='+1...'
 ## Recommended Phased Implementation
 
 ### Phase 1: Core Booking (MVP - 4 hours)
+
 - Google Calendar service account setup
 - Basic booking API (no payment)
 - Simple modal UI
@@ -384,6 +428,7 @@ TWILIO_PHONE_NUMBER='+1...'
 **Deliverable:** Users can book free coaching sessions with code
 
 ### Phase 2: Payment Integration (3-4 hours)
+
 - Stripe integration
 - Paid single session booking
 - 3-session package purchase
@@ -392,6 +437,7 @@ TWILIO_PHONE_NUMBER='+1...'
 **Deliverable:** Users can purchase and book paid sessions
 
 ### Phase 3: Advanced Features (3-4 hours)
+
 - Cancellation/rescheduling UI
 - Backup slot handling
 - Reschedule penalty enforcement
@@ -400,6 +446,7 @@ TWILIO_PHONE_NUMBER='+1...'
 **Deliverable:** Full lifecycle management
 
 ### Phase 4: Notifications & Polish (2-3 hours)
+
 - Email notifications (via existing email service when ready)
 - In-app notifications
 - SMS (optional)
@@ -412,11 +459,13 @@ TWILIO_PHONE_NUMBER='+1...'
 ## Next Actions
 
 ### Immediate (Awaiting User Clarification)
+
 1. Answer 7 clarifying questions above
 2. Approve phased implementation approach
 3. Confirm UI recommendation (modal overlay)
 
 ### Once Confirmed
+
 1. Set up Google Cloud project + service account
 2. Set up Stripe account + get API keys
 3. Implement Phase 1 (core booking)
@@ -432,12 +481,14 @@ TWILIO_PHONE_NUMBER='+1...'
 **SSE Decision:** Proceed with phased implementation, starting with Phase 1 (core booking, free sessions only).
 
 **Rationale:**
+
 - De-risks payment integration complexity
 - Allows user testing of booking UX before money involved
 - Can launch free sessions immediately (25 slots)
 - Payment integration follows after core flow validated
 
 **User Approval Needed:**
+
 1. Confirm phased approach (Phase 1 → 2 → 3 → 4)
 2. Answer 7 clarifying questions
 3. Provide Stripe account details (or create account)

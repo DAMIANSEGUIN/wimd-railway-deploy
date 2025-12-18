@@ -9,6 +9,7 @@
 ## Quick Start (For You)
 
 ### One-Time Setup
+
 ```bash
 # 1. Start the message broker (runs in background)
 ./scripts/start_broker.sh
@@ -17,6 +18,7 @@
 ```
 
 Now when you start ANY AI agent session:
+
 ```bash
 # 2. Tell the AI agent:
 "Run ./scripts/start_session.sh"
@@ -32,6 +34,7 @@ Now when you start ANY AI agent session:
 ## How It Works
 
 ### Architecture
+
 ```
 ┌─────────────────┐
 │  Claude Code    │ ←─┐
@@ -51,6 +54,7 @@ Now when you start ANY AI agent session:
 ```
 
 ### Message Flow Example
+
 ```
 1. Claude Code (me): Needs SQL results from Gemini
    → I run: agent_send.sh Gemini SQL_QUERY "Run query from file X"
@@ -78,11 +82,13 @@ Total user involvement: "Check for messages" (2 words, 2 times)
 ### When You Need to Send a Message
 
 **From Claude Code (me):**
+
 ```bash
 ./scripts/agent_send.sh Gemini REQUEST_TYPE "Your message here"
 ```
 
 **From Gemini (in browser console or via tool):**
+
 ```bash
 # Gemini would execute via its shell access or API:
 curl -X POST http://localhost:8765/messages \
@@ -98,12 +104,14 @@ curl -X POST http://localhost:8765/messages \
 ### When You Start Your Session
 
 **Automatic check:**
+
 ```bash
 ./scripts/start_session.sh
 # Automatically checks for messages and displays them
 ```
 
 **Manual check:**
+
 ```bash
 ./scripts/agent_receive.sh
 # Shows all pending messages for you
@@ -142,6 +150,7 @@ curl -X POST http://localhost:8765/messages \
 ## Advanced: For Gemini Integration
 
 ### If Gemini Has Shell Access
+
 ```bash
 # Gemini can use same scripts as Claude Code:
 export AI_AGENT_NAME="Gemini"
@@ -152,6 +161,7 @@ export AI_AGENT_NAME="Gemini"
 ### If Gemini Only Has Browser/API Access
 
 **JavaScript (browser console):**
+
 ```javascript
 // Check for messages
 fetch('http://localhost:8765/messages/Gemini')
@@ -174,6 +184,7 @@ fetch('http://localhost:8765/messages', {
 ```
 
 **Python (if Gemini uses Python tools):**
+
 ```python
 import requests
 
@@ -196,37 +207,46 @@ requests.post('http://localhost:8765/messages', json={
 ## Troubleshooting
 
 ### "Broker not running"
+
 **Fix:**
+
 ```bash
 ./scripts/start_broker.sh
 ```
 
 ### "Connection refused"
+
 **Check if broker is running:**
+
 ```bash
 curl http://localhost:8765/health
 # Should return: {"status": "ok", "messages": 0}
 ```
 
 **If not running, check logs:**
+
 ```bash
 cat .ai-agents/broker.log
 ```
 
 ### "Port 8765 already in use"
+
 **Option 1 - Use different port:**
+
 ```bash
 export AGENT_BROKER_URL=http://localhost:8766
 python3 scripts/agent_broker.py 8766
 ```
 
 **Option 2 - Kill existing process:**
+
 ```bash
 kill $(cat .ai-agents/broker.pid)
 ./scripts/start_broker.sh
 ```
 
 ### "Messages not persisting"
+
 **Check:** `.ai-agents/broker_messages.json` exists and is writable
 
 **Recover:** Messages are in memory until broker restarts, then loaded from file
@@ -256,6 +276,7 @@ rm .ai-agents/broker.pid
 - CORS enabled for browser-based agents
 
 **For production use, add:**
+
 - Authentication tokens
 - Rate limiting
 - Message encryption
@@ -266,14 +287,17 @@ rm .ai-agents/broker.pid
 ## Comparison to Alternatives
 
 ### vs Claude Code's Task Tool
+
 - **Task:** Only works between Claude instances, fully automated
 - **Broker:** Works across platforms (Claude ↔ Gemini), minimal setup
 
 ### vs Shared File Protocol
+
 - **Files:** No daemon needed, survives restarts
 - **Broker:** Real-time, no polling, cleaner API
 
 ### vs Enterprise Solutions (RabbitMQ, Redis, etc.)
+
 - **Enterprise:** Production-grade, scalable, complex
 - **Broker:** Simple Python script, 200 lines, runs locally
 
@@ -346,6 +370,7 @@ TOTAL USER INVOLVEMENT:
 ## Future Enhancements
 
 ### Polling Mode (Zero User Involvement)
+
 ```python
 # Add to agent_broker.py
 def poll_messages():
@@ -357,11 +382,13 @@ def poll_messages():
 ```
 
 ### Browser Extension
+
 - Visual notification when message arrives
 - Click to respond inline
 - No terminal needed
 
 ### Webhook Support
+
 ```python
 # Agent registers webhook URL
 POST /webhooks/register {"agent": "Gemini", "url": "http://..."}

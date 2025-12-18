@@ -355,17 +355,30 @@ def list_files(session_id: str) -> List[Dict[str, Any]]:
 def cleanup_expired_sessions() -> None:
     cutoff = datetime.utcnow()
     with get_conn() as conn:
-        expired_ids = [row[0] for row in conn.execute("SELECT id FROM sessions WHERE expires_at <= ?", (cutoff,)).fetchall()]
+        expired_ids = [
+            row[0]
+            for row in conn.execute(
+                "SELECT id FROM sessions WHERE expires_at <= ?", (cutoff,)
+            ).fetchall()
+        ]
         if expired_ids:
             placeholders = ",".join(["?"] * len(expired_ids))
             file_rows = conn.execute(
                 f"SELECT file_path FROM file_uploads WHERE session_id IN ({placeholders})",
                 expired_ids,
             ).fetchall()
-            conn.execute(f"DELETE FROM file_uploads WHERE session_id IN ({placeholders})", expired_ids)
-            conn.execute(f"DELETE FROM resume_versions WHERE session_id IN ({placeholders})", expired_ids)
-            conn.execute(f"DELETE FROM job_matches WHERE session_id IN ({placeholders})", expired_ids)
-            conn.execute(f"DELETE FROM wimd_outputs WHERE session_id IN ({placeholders})", expired_ids)
+            conn.execute(
+                f"DELETE FROM file_uploads WHERE session_id IN ({placeholders})", expired_ids
+            )
+            conn.execute(
+                f"DELETE FROM resume_versions WHERE session_id IN ({placeholders})", expired_ids
+            )
+            conn.execute(
+                f"DELETE FROM job_matches WHERE session_id IN ({placeholders})", expired_ids
+            )
+            conn.execute(
+                f"DELETE FROM wimd_outputs WHERE session_id IN ({placeholders})", expired_ids
+            )
             conn.execute(f"DELETE FROM sessions WHERE id IN ({placeholders})", expired_ids)
             for row in file_rows:
                 try:
@@ -392,6 +405,7 @@ def session_summary(session_id: str) -> Dict[str, Any]:
     data["resumes"] = list_resume_versions(session_id)
     data["job_matches"] = fetch_job_matches(session_id)
     return data
+
 
 __all__ = [
     "UPLOAD_ROOT",

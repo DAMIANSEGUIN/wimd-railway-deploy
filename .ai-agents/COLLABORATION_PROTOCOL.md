@@ -31,6 +31,7 @@ AI must provide:
 4. **Recommendation:** Which option AI thinks is best (and why)
 
 **Format:**
+
 ```
 ## Analysis
 [What I understand the problem to be]
@@ -51,6 +52,7 @@ What would you like me to do?
 ### Step 3: Human Decides
 
 Human reviews options and responds with:
+
 - "Proceed with Option X"
 - "Do Option X but change Y"
 - "None of these - here's what I want instead"
@@ -81,6 +83,7 @@ If AI has active todos and human sends a message:
 ### Interrupt Signals
 
 These phrases mean **STOP IMMEDIATELY**:
+
 - "wait"
 - "stop"
 - "hold on"
@@ -95,6 +98,7 @@ When you see these: Stop mid-task, acknowledge, wait for direction.
 ## Context vs. Action Requests
 
 ### Context Signals (informational, not stop)
+
 - "FYI:"
 - "Context:"
 - "Background:"
@@ -103,6 +107,7 @@ When you see these: Stop mid-task, acknowledge, wait for direction.
 AI should: Acknowledge, ask if this changes the approach, wait for response.
 
 ### Action Requests
+
 - "Please [action]"
 - "Can you [action]"
 - "I want you to [action]"
@@ -127,6 +132,7 @@ Before ANY deployment (Netlify, Railway, git push):
 5. **WAIT for "yes" / "proceed" / "deploy"**
 
 **Never deploy with:**
+
 - "Should I deploy?"
 - "Deploying now unless you object"
 - Implicit "I'm doing X" followed immediately by doing X
@@ -183,6 +189,7 @@ If AI has executed 3+ times without solving the problem:
 ## Documentation Updates
 
 After EVERY execution:
+
 - Update `.verification_audit.log` with what was tried
 - Note outcome (success/failure)
 - Update relevant Stage/Team notes
@@ -194,6 +201,7 @@ This prevents repetitive attempts and maintains context for next agent.
 ## Session Start
 
 Every AI agent must:
+
 1. Read this protocol first
 2. Acknowledge it explicitly
 3. Confirm understanding with human
@@ -204,12 +212,14 @@ Every AI agent must:
 ## Violations
 
 If human says:
+
 - "You're not listening"
 - "Stop ignoring me"
 - "This is not how I choose to work"
 - "You're doing the same thing as the others"
 
 **AI must:**
+
 1. Stop immediately
 2. Apologize
 3. Acknowledge the specific violation

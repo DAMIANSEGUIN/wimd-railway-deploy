@@ -21,11 +21,13 @@ That's it. The AI will handle the rest.
 ## For AI Agents: Your First Actions
 
 **1. Run verification (MANDATORY):**
+
 ```bash
 ./scripts/verify_critical_features.sh
 ```
 
 **2. If it passes, declare:**
+
 ```
 ✅ Verification passed
 ✅ Critical features confirmed:
@@ -37,12 +39,14 @@ I will preserve these features.
 ```
 
 **3. If it fails:**
+
 ```
 ❌ CRITICAL: Verification failed
 🚨 Blocking all work until resolved
 ```
 
 **4. Read the protocols:**
+
 - `.ai-agents/SESSION_START_PROTOCOL.md`
 - `.ai-agents/HANDOFF_PROTOCOL.md`
 
@@ -56,14 +60,17 @@ I will preserve these features.
 ## How It Works
 
 **Layer 1: Pre-commit Hook**
+
 - Blocks commits that remove critical features
 - Runs automatically on `git commit`
 
 **Layer 2: Verification Script**
+
 - Checks critical features present
 - Run before any deploy
 
 **Layer 3: Agent Protocols**
+
 - Session start checklist
 - Handoff procedures
 - Operating rules
@@ -71,6 +78,7 @@ I will preserve these features.
 ## Testing
 
 **Test the system:**
+
 ```bash
 # Should show current status (auth missing locally, but present in prod)
 ./scripts/verify_critical_features.sh
@@ -85,11 +93,13 @@ I will preserve these features.
 ## When Agent Fails/Changes
 
 **Outgoing agent:**
+
 ```bash
 ./scripts/create_handoff_manifest.sh > .ai-agents/handoff_$(date +%Y%m%d_%H%M%S).json
 ```
 
 **Incoming agent:**
+
 ```bash
 # Find latest handoff
 ls -t .ai-agents/handoff_*.json | head -1
@@ -102,11 +112,13 @@ cat [handoff_file]
 ## Emergency Override
 
 Only with explicit human approval:
+
 ```bash
 git commit --no-verify -m "[EMERGENCY-OVERRIDE] reason"
 ```
 
 Then immediately:
+
 ```bash
 ./scripts/verify_critical_features.sh
 ```
@@ -132,12 +144,14 @@ scripts/
 ## Current Status
 
 ✅ **Installed and Active**
+
 - Pre-commit hook blocking feature removal
 - Verification script working
 - Protocols documented
 - Handoff system ready
 
 ⚠️ **Known Issue**
+
 - Authentication UI missing from local files (frontend/ and mosaic_ui/)
 - Needs restoration from backup or git history
 - This is the issue that prompted creating this system

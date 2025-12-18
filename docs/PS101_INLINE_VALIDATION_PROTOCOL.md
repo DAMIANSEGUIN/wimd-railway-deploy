@@ -21,22 +21,26 @@ This protocol defines the standard approach for form validation established duri
 ## Pattern Requirements
 
 ### 1. Error Display
+
 - **Location:** Error messages appear inline below the input field
 - **Styling:** Use `.form-error` class (12px, color: #d63638, margin-top: 4px)
 - **Structure:** `<span id="field-name-error" class="form-error hidden">Error message</span>`
 - **Hidden state:** Use `.hidden` class to show/hide (display: none)
 
 ### 2. Validation Timing
+
 - **On submit:** Check all required fields when Save button clicked
 - **On input:** Clear error messages when user starts typing (real-time feedback)
 - **Focus:** Auto-focus first invalid field when validation fails
 
 ### 3. Error Messages
+
 - **Content:** Clear, specific instructions (e.g., "Please describe the obstacle.")
 - **Tone:** Helpful, not accusatory
 - **Accessibility:** Error messages are part of DOM (screen readers can announce)
 
 ### 4. Visual Feedback
+
 - **Invalid state:** Show error message below field
 - **Valid state:** Hide error message (no green checkmarks needed per Peripheral Calm aesthetic)
 - **No alerts:** Never block UI with modal dialogs
@@ -93,10 +97,12 @@ fieldInput.addEventListener('input', () => {
 ## Where This Pattern Is Used
 
 ### Currently Implemented
+
 - ✅ PS101 Step 7: Obstacle form (lines 3089-3231 in frontend/index.html)
 - ✅ PS101 Step 8: Action form (lines 3233-3318 in frontend/index.html)
 
 ### Should Be Applied To
+
 - ❌ PS101 Step validation (lines 2875-2902 still use `alert()`)
 - ❌ File upload errors (lines 1525-1530 use `alert()`)
 - ❌ Save/load errors (lines 1511, 2967 use `alert()`)
@@ -109,6 +115,7 @@ fieldInput.addEventListener('input', () => {
 ## Rationale
 
 ### Why Not `alert()`?
+
 - ❌ Blocks entire UI (bad UX)
 - ❌ Not accessible (screen readers struggle)
 - ❌ Poor mobile experience
@@ -116,6 +123,7 @@ fieldInput.addEventListener('input', () => {
 - ❌ Users can't see context while error shown
 
 ### Why Inline Messages?
+
 - ✅ Non-blocking (user can still see form)
 - ✅ Accessible (part of DOM, screen readers announce)
 - ✅ Mobile-friendly (doesn't take over screen)
@@ -143,8 +151,3 @@ fieldInput.addEventListener('input', () => {
 **Last Updated:** 2025-10-31
 **Established By:** PS101-FIX-001 implementation
 **Protocol Owner:** Codex (documentation) / Cursor (implementation)
-
-
-
-
-

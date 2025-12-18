@@ -6,9 +6,9 @@ Provides /debug dump-context command for observability
 
 import json
 import sys
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List
+from pathlib import Path
+from typing import Any, Dict, List
 
 
 def get_session_context_size() -> Dict[str, Any]:
@@ -21,25 +21,15 @@ def get_session_context_size() -> Dict[str, Any]:
     if context_dir.exists():
         for file in context_dir.glob("*.md"):
             size = file.stat().st_size
-            sizes[file.name] = {
-                "size_bytes": size,
-                "size_kb": round(size / 1024, 2)
-            }
+            sizes[file.name] = {"size_bytes": size, "size_kb": round(size / 1024, 2)}
             total_size += size
 
         for file in context_dir.glob("*.json"):
             size = file.stat().st_size
-            sizes[file.name] = {
-                "size_bytes": size,
-                "size_kb": round(size / 1024, 2)
-            }
+            sizes[file.name] = {"size_bytes": size, "size_kb": round(size / 1024, 2)}
             total_size += size
 
-    return {
-        "files": sizes,
-        "total_bytes": total_size,
-        "total_kb": round(total_size / 1024, 2)
-    }
+    return {"files": sizes, "total_bytes": total_size, "total_kb": round(total_size / 1024, 2)}
 
 
 def get_baseline_context_size() -> Dict[str, Any]:
@@ -48,7 +38,7 @@ def get_baseline_context_size() -> Dict[str, Any]:
         "CLAUDE.md",
         "TROUBLESHOOTING_CHECKLIST.md",
         "SELF_DIAGNOSTIC_FRAMEWORK.md",
-        "docs/README.md"
+        "docs/README.md",
     ]
 
     sizes = {}
@@ -58,17 +48,10 @@ def get_baseline_context_size() -> Dict[str, Any]:
         path = Path(filepath)
         if path.exists():
             size = path.stat().st_size
-            sizes[filepath] = {
-                "size_bytes": size,
-                "size_kb": round(size / 1024, 2)
-            }
+            sizes[filepath] = {"size_bytes": size, "size_kb": round(size / 1024, 2)}
             total_size += size
 
-    return {
-        "files": sizes,
-        "total_bytes": total_size,
-        "total_kb": round(total_size / 1024, 2)
-    }
+    return {"files": sizes, "total_bytes": total_size, "total_kb": round(total_size / 1024, 2)}
 
 
 def get_active_sessions() -> List[Dict[str, Any]]:
@@ -83,13 +66,15 @@ def get_active_sessions() -> List[Dict[str, Any]]:
         size = log_file.stat().st_size
         event_count = sum(1 for _ in open(log_file) if _.strip())
 
-        sessions.append({
-            "session_id": log_file.stem,
-            "size_bytes": size,
-            "size_kb": round(size / 1024, 2),
-            "event_count": event_count,
-            "last_modified": datetime.fromtimestamp(log_file.stat().st_mtime).isoformat()
-        })
+        sessions.append(
+            {
+                "session_id": log_file.stem,
+                "size_bytes": size,
+                "size_kb": round(size / 1024, 2),
+                "event_count": event_count,
+                "last_modified": datetime.fromtimestamp(log_file.stat().st_mtime).isoformat(),
+            }
+        )
 
     return sessions
 
@@ -106,24 +91,25 @@ def get_completion_gates() -> Dict[str, Any]:
         try:
             with open(gate_file) as f:
                 gate_data = json.load(f)
-                gates.append({
-                    "file": gate_file.name,
-                    "task": gate_data.get("task"),
-                    "agent": gate_data.get("agent"),
-                    "completed": gate_data.get("completed_at")
-                })
+                gates.append(
+                    {
+                        "file": gate_file.name,
+                        "task": gate_data.get("task"),
+                        "agent": gate_data.get("agent"),
+                        "completed": gate_data.get("completed_at"),
+                    }
+                )
         except:
-            gates.append({
-                "file": gate_file.name,
-                "task": gate_file.stem,
-                "agent": "unknown",
-                "completed": "unknown"
-            })
+            gates.append(
+                {
+                    "file": gate_file.name,
+                    "task": gate_file.stem,
+                    "agent": "unknown",
+                    "completed": "unknown",
+                }
+            )
 
-    return {
-        "gates": gates,
-        "total": len(gates)
-    }
+    return {"gates": gates, "total": len(gates)}
 
 
 def get_feature_flags() -> Dict[str, Any]:
@@ -158,7 +144,7 @@ def calculate_context_reduction() -> Dict[str, Any]:
         "baseline_kb": baseline_kb,
         "current_kb": current_kb,
         "reduction_kb": round(reduction_kb, 2),
-        "reduction_percent": round(reduction_percent, 2)
+        "reduction_percent": round(reduction_percent, 2),
     }
 
 
@@ -168,29 +154,21 @@ def dump_full_context(output_format: str = "json") -> str:
     context = {
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "mcp_version": "v1.1",
-
         "context_sizes": {
             "baseline": get_baseline_context_size(),
             "session": get_session_context_size(),
-            "reduction": calculate_context_reduction()
+            "reduction": calculate_context_reduction(),
         },
-
-        "sessions": {
-            "active": get_active_sessions(),
-            "total_active": len(get_active_sessions())
-        },
-
+        "sessions": {"active": get_active_sessions(), "total_active": len(get_active_sessions())},
         "gates": get_completion_gates(),
-
         "feature_flags": get_feature_flags(),
-
         "directories": {
             "session_context": str(Path(".ai-agents/session_context").exists()),
             "sessions": str(Path(".ai-agents/sessions").exists()),
             "status": str(Path(".ai-agents/status").exists()),
             "templates": str(Path(".ai-agents/templates").exists()),
-            "validation": str(Path(".ai-agents/validation").exists())
-        }
+            "validation": str(Path(".ai-agents/validation").exists()),
+        },
     }
 
     if output_format == "json":

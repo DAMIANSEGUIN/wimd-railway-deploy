@@ -1,4 +1,5 @@
 # Mosaic MVP Deployment Review
+
 **Pre-Deployment Validation Report**
 
 **Agent:** Claude Code
@@ -14,12 +15,14 @@
 Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes have been reviewed and comply with governance patterns. The implementation is production-ready pending environment variable verification and deployment.
 
 **Changes:**
+
 - 4 files modified (api/index.py, api/storage.py, api/ai_clients.py, frontend/index.html)
 - 1 new module created (api/ps101.py - already exists with security fixes)
 - 0 breaking changes
 - 0 governance violations
 
 **Key Features Implemented:**
+
 1. ✅ Context extraction endpoint (`/api/ps101/extract-context`)
 2. ✅ PS101 completion gate (blocks coaching without context)
 3. ✅ Context-aware coaching (dynamic system prompts)
@@ -32,23 +35,27 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
 ### ✅ api/index.py - COMPLIANT
 
 **Changes:**
+
 - Added imports: `get_user_context`, `get_user_id_for_session`
 - Added PS101 completion gate (lines 387-397)
 - Added dynamic system prompt construction (lines 418-437)
 - Modified context passing to AI clients
 
 **Governance Compliance:**
+
 - ✅ **Context Manager Pattern:** No database operations added (uses storage.py functions)
 - ✅ **PostgreSQL Syntax:** N/A (no direct SQL)
 - ✅ **Error Handling:** Uses existing try/except blocks
 - ✅ **Idempotency:** Read-only operations (safe)
 
 **Security Review:**
+
 - ✅ **Authentication:** Uses existing `get_user_id_for_session()` (session-based auth)
 - ✅ **Input Validation:** User context from database (already validated)
 - ✅ **Data Exposure:** PS101 context only shown to authenticated user
 
 **Quality:**
+
 - Clear separation of concerns (context retrieval vs prompt construction)
 - Proper fallback behavior (returns helpful message if no context)
 - System prompt well-structured and actionable
@@ -58,10 +65,12 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
 ### ✅ api/storage.py - COMPLIANT
 
 **Changes:**
+
 - Added `get_user_context()` function (lines 772-786)
 - Added to `__all__` exports
 
 **Governance Compliance:**
+
 - ✅ **Context Manager Pattern:** `with get_conn() as conn:` (line 774)
 - ✅ **PostgreSQL Syntax:** `%s` placeholder (line 777)
 - ✅ **Cursor Pattern:** `cursor = conn.cursor(cursor_factory=RealDictCursor)` (line 775)
@@ -69,8 +78,10 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
 - ✅ **Idempotency:** Read-only SELECT (safe)
 
 **Schema Verification:**
+
 - ✅ **Table Exists:** `user_contexts` table created in `init_db()` (line 193)
 - ✅ **Schema Valid:**
+
   ```sql
   CREATE TABLE IF NOT EXISTS user_contexts (
       user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
@@ -82,6 +93,7 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
   ```
 
 **Quality:**
+
 - Proper use of `RealDictCursor` for dict-style results
 - Safe JSON loading with `_json_load()` helper
 - Follows existing patterns in storage.py
@@ -91,19 +103,23 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
 ### ✅ api/ai_clients.py - COMPLIANT
 
 **Changes:**
+
 - Modified `_call_openai()` to support custom system prompts (lines 132-147)
 - Modified `_call_anthropic()` to support custom system prompts (lines 166-174)
 
 **Governance Compliance:**
+
 - ✅ **No Database Operations:** Pure function (no DB access)
 - ✅ **Error Handling:** Existing try/except blocks maintained
 - ✅ **Backward Compatibility:** Falls back to old behavior if no system_prompt
 
 **Security Review:**
+
 - ✅ **Input Validation:** System prompt from trusted source (backend logic)
 - ✅ **Data Sanitization:** JSON dumps for context (safe)
 
 **Quality:**
+
 - Clean conditional logic (checks for `system_prompt` in context)
 - Maintains existing behavior for non-Mosaic calls
 - Proper message structure for both providers
@@ -113,15 +129,18 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
 ### ✅ frontend/index.html - COMPLIANT
 
 **Changes:**
+
 - Added X-User-ID header to `callJson()` function (lines 1970-1977)
 - Added context extraction trigger on PS101 completion (lines 4433-4447)
 
 **Security Review:**
+
 - ✅ **Authentication:** Uses existing `currentUser` object (session-based)
 - ✅ **Data Exposure:** Only sends user's own ID
 - ✅ **Error Handling:** Console logging for debugging (not user-facing)
 
 **Quality:**
+
 - Follows existing patterns in frontend codebase
 - Proper conditional checks (`if currentUser && currentUser.userId`)
 - Non-blocking trigger (fire-and-forget, logs success/failure)
@@ -133,18 +152,21 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
 **Status:** Already exists (created 2025-12-03 by Claude Code)
 
 **Security Enhancements:**
+
 - ✅ **Authentication:** Requires X-User-ID header (line 241)
 - ✅ **User Validation:** Verifies user exists before processing (line 264)
 - ✅ **Rate Limiting:** Retry logic with exponential backoff (lines 102-131)
 - ✅ **Timeout:** 30-second timeout on Claude API calls (line 200)
 
 **Governance Compliance:**
+
 - ✅ **Context Manager Pattern:** Used throughout (lines 269, 289)
 - ✅ **PostgreSQL Syntax:** %s placeholders (lines 271-276, 291-298)
 - ✅ **Idempotent Operations:** ON CONFLICT DO UPDATE (line 294)
 - ✅ **Error Logging:** Explicit logging with context (lines 207, 225, 301)
 
 **Quality:**
+
 - Pydantic validation for LLM outputs (prevents schema drift)
 - Structured error responses (404, 422, 503)
 - Comprehensive inline documentation
@@ -154,12 +176,14 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
 ## Environment Variables Verification
 
 **Required Variables:**
+
 - ✅ `DATABASE_URL` - Verified present (3 variables found including this)
 - ✅ `CLAUDE_API_KEY` - Required for context extraction
 - ✅ `OPENAI_API_KEY` - Required for coaching chat
 - ⚠️ `ANTHROPIC_API_KEY` - Optional (fallback provider)
 
 **Action Required:**
+
 - Verify `CLAUDE_API_KEY` is set on Railway (used by api/ps101.py:155)
 
 ---
@@ -167,28 +191,32 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
 ## Database Schema Verification
 
 **Tables Required:**
+
 - ✅ `users` - Exists (created in init_db)
 - ✅ `sessions` - Exists (created in init_db)
 - ✅ `ps101_responses` - Exists (created in init_db)
 - ✅ `user_contexts` - Exists (created in init_db, line 193)
 
 **Indexes:**
+
 - ✅ `idx_contexts_extracted` - Created on `user_contexts(extracted_at)`
 
 **Foreign Keys:**
+
 - ✅ `user_contexts.user_id → users.id` (ON DELETE CASCADE)
 
 ---
 
 ## Pre-Deployment Tests
 
-### Manual Tests Performed by Gemini:
+### Manual Tests Performed by Gemini
+
 - ✅ Context extraction produces valid JSON
 - ✅ Completion gate blocks coaching without context
 - ✅ Chat shows personalized responses with context
 - ✅ Frontend triggers extraction on PS101 completion
 
-### Recommended Tests Before Deploy:
+### Recommended Tests Before Deploy
 
 ```bash
 # 1. Verify database connection
@@ -312,12 +340,14 @@ git checkout prod-2025-11-18
 ```
 
 **What Gets Reverted:**
+
 - Context extraction endpoint removed
 - PS101 completion gate removed
 - Chat returns to generic (non-personalized) coaching
 - Frontend X-User-ID header removed
 
 **Side Effects of Rollback:**
+
 - Users can still complete PS101 (data saves)
 - Chat still works (just not personalized)
 - No data loss (user_contexts table persists)
@@ -330,6 +360,7 @@ git checkout prod-2025-11-18
 ### 🟢 LOW RISK
 
 **Reasons:**
+
 1. **No Breaking Changes:** All changes are additive (existing flows unaffected)
 2. **Graceful Degradation:** Completion gate shows helpful message, doesn't crash
 3. **Database Safety:** Uses idempotent operations (ON CONFLICT DO UPDATE)
@@ -356,6 +387,7 @@ git checkout prod-2025-11-18
 ## Success Criteria
 
 **Deployment succeeds if:**
+
 - ✅ Health endpoint returns 200 OK
 - ✅ PostgreSQL connected (no SQLite fallback)
 - ✅ Users can complete PS101
@@ -364,6 +396,7 @@ git checkout prod-2025-11-18
 - ✅ Completion gate shows helpful message for non-PS101 users
 
 **Monitoring Post-Deploy:**
+
 - Track context extraction success rate
 - Monitor Claude API errors (429, 5xx)
 - Verify personalized coaching quality (user feedback)
@@ -373,19 +406,22 @@ git checkout prod-2025-11-18
 
 ## Recommendations
 
-### Immediate (Pre-Deploy):
+### Immediate (Pre-Deploy)
+
 1. ✅ Verify `CLAUDE_API_KEY` set on Railway
 2. ✅ Review code changes (COMPLETE)
 3. ⏳ Run database verification script
 4. ⏳ Commit changes with detailed message
 
-### Short-Term (Post-Deploy):
+### Short-Term (Post-Deploy)
+
 1. Test with 3-5 real users (beta testing)
 2. Monitor context extraction success rate
 3. Gather feedback on personalization quality
 4. Add analytics for completion gate (how many users blocked?)
 
-### Long-Term (Future Iterations):
+### Long-Term (Future Iterations)
+
 1. Add caching for extracted context (reduce Claude API calls)
 2. Implement context versioning (track schema changes)
 3. Add A/B testing (personalized vs generic coaching)
@@ -456,6 +492,7 @@ DEPLOYMENT SAFETY:
 **Confidence Level:** HIGH (95%)
 
 **Reasoning:**
+
 1. All governance patterns followed
 2. Security enhancements implemented (auth, timeout, retry)
 3. No breaking changes (backward compatible)

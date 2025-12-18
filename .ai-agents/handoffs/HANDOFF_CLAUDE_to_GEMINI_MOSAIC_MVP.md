@@ -1,4 +1,5 @@
 # Agent Handoff - Structured Template
+
 **MCP v1.1 Standardized Handoff Protocol**
 
 **From:** Claude Code
@@ -12,18 +13,21 @@
 ## 1. Causal Steps - Decision History
 
 ### Step 1: Complete MCP v1.1 Infrastructure
+
 - **Decision:** Finish all 3 phases of MCP implementation before Mosaic build
 - **Reasoning:** Context degradation was blocking effective development sessions
 - **Alternatives Considered:** ["Build Mosaic first", "Parallel development", "Complete MCP infrastructure first"]
 - **Chosen Because:** MCP provides infrastructure for longer, more effective sessions - benefits Mosaic build
 
 ### Step 2: Validate Mosaic Plan Alignment
+
 - **Decision:** Review MOSAIC_IMMEDIATE_ACTION_PLAN.md against current architecture
 - **Reasoning:** User asked "are you ready to review the alignment of the Mosaic implementation plan"
 - **Alternatives Considered:** ["Start building immediately", "Review plan first", "Defer to Gemini"]
 - **Chosen Because:** Validation ensures plan aligns with current deployed state
 
 ### Step 3: Handoff to Gemini for Mosaic MVP Build
+
 - **Decision:** Create structured handoff to Gemini for 3-day MVP sprint
 - **Reasoning:** User stated "this plan needs to be carried out with Gemini"
 - **Alternatives Considered:** ["Do it myself", "Hand off to Gemini", "Split work"]
@@ -67,6 +71,7 @@
 ## 3. Failure Ledger - What Didn't Work
 
 ### No Failures - Clean MCP Implementation
+
 - MCP v1.1 implementation had no significant failures
 - All phases completed successfully
 - Token usage stayed within budget (101K/200K = 50.5%)
@@ -76,6 +81,7 @@
 ## 4. Open Commitments - Promises/Deliverables
 
 ### Commitment 1: MCP Integration Testing
+
 - **Status:** pending
 - **Due By:** Before enabling MCP in production
 - **Dependencies:** User decision to enable MCP_ENABLED flag
@@ -87,6 +93,7 @@
   - Measure real-world context reduction
 
 ### Commitment 2: Mosaic MVP 3-Hour Sprint (TRANSFERRED TO GEMINI)
+
 - **Status:** pending
 - **Due By:** 3 hours maximum
 - **Dependencies:** None - architecture ready
@@ -145,6 +152,7 @@
 ## 6. Dependencies - What Relies on What
 
 ### Depends On (Blockers)
+
 - **MCP v1.1:** ✅ COMPLETE - No blockers for Mosaic work
 - **Database:** ✅ PostgreSQL connected and operational
 - **Auth:** ✅ Login/register/password reset working
@@ -152,6 +160,7 @@
 - **Chat Interface:** ✅ Functional (needs context injection)
 
 ### Blocks (Downstream Impact)
+
 - **Beta Launch:** Blocked until Mosaic MVP 3-day sprint complete
 - **User Feedback:** Blocked until beta launch
 - **Revenue:** Blocked until users can access personalized coaching
@@ -161,6 +170,7 @@
 ## 7. Provenance - Source Metadata
 
 ### Session Summary
+
 ```json
 {
   "source": "claude_20251210_mcp_complete",
@@ -185,6 +195,7 @@
 ## 8. Work Completed This Session
 
 ### Files Created (MCP v1.1)
+
 - `.ai-agents/templates/HANDOFF_TEMPLATE.md` - Structured handoff template
 - `.ai-agents/examples/SAMPLE_HANDOFF_TASK_2_2.md` - Example handoff
 - `.ai-agents/validation/HANDOFF_TEMPLATE_VALIDATION.md` - Validation report
@@ -195,11 +206,13 @@
 - `.ai-agents/validation/PHASE_3_VALIDATION.md` - Phase 3 validation report
 
 ### Completion Gates Created
+
 - `phase2_task2.2_logging_claude_code.complete`
 - `phase2_task2.3_handoffs_claude_code.complete`
 - `phase3_production_hardening_claude_code.complete`
 
 ### Tests Performed
+
 - [x] Debug dump-context command - ✅ WORKING (68.67% context reduction)
 - [x] Retrieval logger - ✅ WORKING (tracks all retrievals)
 - [x] Failure mode tests - ✅ 4/5 PASSING
@@ -212,12 +225,14 @@
 ### For Gemini (Immediate - 3 Hours Maximum)
 
 **Hour 1: Context Extraction (60 min)**
+
 1. Verify PS101 data persistence (check database - 10 min)
 2. Build `/api/ps101/extract-context` endpoint (30 min)
 3. Use Claude API to extract structured context (15 min)
 4. Test extraction with sample PS101 responses (5 min)
 
 **Hour 2: Context Injection + Completion Gate (60 min)**
+
 1. Modify chat endpoint to fetch user's extracted context (20 min)
 2. Inject context into system prompt (15 min)
 3. Test chat shows personalized responses (10 min)
@@ -225,12 +240,14 @@
 5. Create transition screen (5 min)
 
 **Hour 3: Polish + Verification (60 min)**
+
 1. Refine system prompt for experiment design (15 min)
 2. End-to-end test with sample user flow (20 min)
 3. Fix any issues found (20 min)
 4. Deploy to production (5 min)
 
 ### For Claude Code (Future)
+
 1. MCP integration testing (when user enables MCP_ENABLED flag)
 2. Monitor Gemini's Mosaic MVP progress
 3. Provide technical support if database/deployment issues arise
@@ -247,6 +264,7 @@
    - `MOSAIC_MVP_IMPLEMENTATION/MOSAIC_IMMEDIATE_ACTION_PLAN.md` - Original plan (BUT 3 HOURS NOT 3 DAYS)
 
 2. **Check current state:**
+
    ```bash
    # Verify PS101 flow exists
    grep -r "ps101" frontend/
@@ -265,11 +283,13 @@
    - TOTAL: 60 minutes maximum
 
 ### Context to Load
+
 - MCP v1.1 is complete and available if needed (feature flag disabled)
 - All safety mechanisms in place (rollback, auto-recovery)
 - Token usage: 106K/200K (53% - plenty of budget remaining)
 
 ### Verification Before Starting
+
 - [x] MCP infrastructure complete
 - [x] Database connected (PostgreSQL on Railway)
 - [x] Auth working (verified in CLAUDE.md)
@@ -309,6 +329,7 @@
 ## 12. Session Metrics
 
 **MCP v1.1 Implementation:**
+
 - **Duration:** Multiple sessions over 2 days
 - **Files Created:** 15+ infrastructure files
 - **Lines Added:** ~3000 lines
@@ -317,6 +338,7 @@
 - **Token Usage:** 106K/200K (53%)
 
 **Handoff Creation:**
+
 - **Duration:** 30 minutes
 - **Files Created:** 1 handoff document
 - **Purpose:** Transfer Mosaic MVP build to Gemini
@@ -328,6 +350,7 @@
 **If Mosaic build breaks production:**
 
 ### Rollback Command
+
 ```bash
 # Check latest production tag
 git describe --tags --abbrev=0
@@ -340,11 +363,13 @@ railway rollback
 ```
 
 ### What Gets Reverted
+
 - Any new API endpoints → Removed
 - Database schema changes → Need manual migration rollback
 - Frontend changes → Restored from Netlify deploy history
 
 ### Side Effects of Rollback
+
 - Lose Mosaic MVP work (context extraction, chat injection)
 - MCP infrastructure unaffected (separate system)
 - Production auth/PS101/chat still functional
@@ -354,7 +379,9 @@ railway rollback
 ## Additional Context for Gemini
 
 ### Current Production State (From CLAUDE.md)
+
 ✅ **Working:**
+
 - Authentication (login/register/password reset)
 - PS101 flow (10 questions)
 - Chat interface
@@ -363,11 +390,13 @@ railway rollback
 - Frontend (Netlify)
 
 ⏳ **Ready to Build:**
+
 - Context extraction pipeline
 - Context-aware coaching
 - Experiment-focused refinement
 
 ### Technical Stack
+
 - **Backend:** Python FastAPI on Railway
 - **Frontend:** Vanilla JavaScript on Netlify
 - **Database:** PostgreSQL (Railway managed)
@@ -377,6 +406,7 @@ railway rollback
 ### Critical Patterns (FROM TROUBLESHOOTING_CHECKLIST.md)
 
 **Database:**
+
 ```python
 # ✅ CORRECT
 with get_conn() as conn:
@@ -389,6 +419,7 @@ cursor = conn.execute(...)  # Will fail
 ```
 
 **Error Handling:**
+
 ```python
 # ✅ CORRECT
 try:
@@ -418,6 +449,7 @@ Priority: P0 (Mosaic MVP - 3-day sprint)
 ## Appendix: User's Explicit Instruction
 
 **User stated:**
+
 1. "are you ready to review the alignment of the Mosaic implementation plan the current architecture and continue the build? of you are this plan needs to be carried out with Gemini."
 2. "NO ITS NOT A 2 DAYS SPRINT it will be no more than 3 hours max"
 

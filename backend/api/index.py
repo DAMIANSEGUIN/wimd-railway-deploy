@@ -4,14 +4,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import (
-    BackgroundTasks,
-    FastAPI,
-    File,
-    Header,
-    HTTPException,
-    UploadFile,
-)
+from fastapi import BackgroundTasks, FastAPI, File, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -140,7 +133,9 @@ def _clamp(value: float) -> int:
 def _update_metrics(prompt: str, current: Dict[str, Any]) -> Dict[str, int]:
     words = len(re.findall(r"\w+", prompt))
     sentiment_boost = 4 if "thank" in prompt.lower() else 0
-    clarity = _clamp(current.get("clarity", DEFAULT_METRICS["clarity"]) + min(words // 12, 6) + sentiment_boost)
+    clarity = _clamp(
+        current.get("clarity", DEFAULT_METRICS["clarity"]) + min(words // 12, 6) + sentiment_boost
+    )
     action = _clamp(current.get("action", DEFAULT_METRICS["action"]) + min(words // 18, 5))
     momentum = _clamp(current.get("momentum", DEFAULT_METRICS["momentum"]) + min(words // 20, 4))
     return {"clarity": clarity, "action": action, "momentum": momentum}
@@ -155,7 +150,11 @@ def _coach_reply(prompt: str, metrics: Dict[str, int]) -> str:
 
 
 def _score_job(metrics: Dict[str, int], job: Dict[str, Any]) -> Dict[str, Any]:
-    base = (metrics.get("clarity", 0) * 0.4 + metrics.get("action", 0) * 0.35 + metrics.get("momentum", 0) * 0.25)
+    base = (
+        metrics.get("clarity", 0) * 0.4
+        + metrics.get("action", 0) * 0.35
+        + metrics.get("momentum", 0) * 0.25
+    )
     skill_bias = 5 if "analysis" in job["skills"] and metrics.get("clarity", 0) > 70 else 0
     score = _clamp(base + skill_bias)
     return {
@@ -175,14 +174,20 @@ def _generate_matches(metrics: Dict[str, int]) -> List[Dict[str, Any]]:
     return sorted(matches, key=lambda item: item["fit_score"], reverse=True)
 
 
-def _rewrite_resume_text(metrics: Dict[str, int], job_id: Optional[str], source: Optional[str]) -> str:
+def _rewrite_resume_text(
+    metrics: Dict[str, int], job_id: Optional[str], source: Optional[str]
+) -> str:
     summary = (
         f"Clarity {metrics.get('clarity', 0)} · Action {metrics.get('action', 0)} · "
         f"Momentum {metrics.get('momentum', 0)}"
     )
     header = "Resume Draft — Mosaic"
     target = f"Target Role: {job_id}" if job_id else "Exploratory Draft"
-    body = source.strip() if source else "• Translate delta analysis into narrative impact\n• Highlight fast-track wins"
+    body = (
+        source.strip()
+        if source
+        else "• Translate delta analysis into narrative impact\n• Highlight fast-track wins"
+    )
     return f"{header}\n{target}\nMetrics: {summary}\n\n{body}\n"
 
 
@@ -308,7 +313,13 @@ async def _save_upload(session_id: str, file: UploadFile) -> Dict[str, Any]:
                     pass
                 raise HTTPException(status_code=413, detail="file_too_large")
             buffer.write(chunk)
-    store_file_upload(session_id, file.filename or safe_name, file.content_type or "application/octet-stream", size, target)
+    store_file_upload(
+        session_id,
+        file.filename or safe_name,
+        file.content_type or "application/octet-stream",
+        size,
+        target,
+    )
     return {"filename": file.filename or safe_name, "size": size, "content_type": file.content_type}
 
 
@@ -403,7 +414,11 @@ def resume_customize(
     session_id = _resolve_session(payload.session_id, session_header, allow_create=False)
     metrics = latest_metrics(session_id) or DEFAULT_METRICS
     highlights = payload.highlight_skills or []
-    suffix = "\n\nHighlighted Skills:\n" + "\n".join(f"• {item}" for item in highlights) if highlights else ""
+    suffix = (
+        "\n\nHighlighted Skills:\n" + "\n".join(f"• {item}" for item in highlights)
+        if highlights
+        else ""
+    )
     draft = _rewrite_resume_text(metrics, payload.job_id, payload.resume) + suffix
     version_name = f"custom-{payload.job_id}-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
     version_id = add_resume_version(session_id, version_name, draft, payload.job_id)
@@ -430,7 +445,12 @@ def resume_feedback(
         suggestions.append("Surface measurable impact (e.g., % lift, revenue, time saved).")
     if "summary" not in payload.resume.lower():
         suggestions.append("Consider opening with a 2-3 sentence summary that anchors your delta.")
-    add_resume_version(session_id, f"feedback-{datetime.utcnow().strftime('%H%M%S')}", payload.resume, feedback={"suggestions": suggestions})
+    add_resume_version(
+        session_id,
+        f"feedback-{datetime.utcnow().strftime('%H%M%S')}",
+        payload.resume,
+        feedback={"suggestions": suggestions},
+    )
     return {
         "session_id": session_id,
         "analysis": {"word_count": word_count, "line_count": line_count},

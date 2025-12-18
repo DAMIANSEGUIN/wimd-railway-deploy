@@ -8,7 +8,8 @@ import json
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Any, Dict, List, Optional, Tuple
+
 import jsonschema
 
 
@@ -54,7 +55,7 @@ class SessionLogger:
         open_commitments: Optional[List[Dict]] = None,
         key_entities: Optional[Dict] = None,
         dependencies: Optional[Dict] = None,
-        confidence: float = 1.0
+        confidence: float = 1.0,
     ) -> Tuple[bool, Optional[str]]:
         """
         Append event to session log
@@ -82,11 +83,7 @@ class SessionLogger:
             "event_id": self._generate_event_id(),
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "event_type": event_type,
-            "provenance": {
-                "source": source,
-                "agent": agent,
-                "confidence": confidence
-            }
+            "provenance": {"source": source, "agent": agent, "confidence": confidence},
         }
 
         # Add optional fields
@@ -113,8 +110,8 @@ class SessionLogger:
         # Write to log (append-only)
         log_file = self.sessions_dir / f"{session_id}.jsonl"
         try:
-            with open(log_file, 'a') as f:
-                f.write(json.dumps(event) + '\n')
+            with open(log_file, "a") as f:
+                f.write(json.dumps(event) + "\n")
             return (True, None)
         except Exception as e:
             return (False, f"Write failed: {e}")
@@ -135,7 +132,7 @@ class SessionLogger:
             return []
 
         events = []
-        with open(log_file, 'r') as f:
+        with open(log_file) as f:
             for line in f:
                 if line.strip():
                     events.append(json.loads(line))
@@ -147,7 +144,7 @@ class SessionLogger:
         session_id: str,
         event_type: Optional[str] = None,
         agent: Optional[str] = None,
-        after_timestamp: Optional[str] = None
+        after_timestamp: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
         """
         Query events with filters
@@ -214,12 +211,7 @@ def main():
         agent="user",
         source="terminal",
         data={"message": "Deploy to production"},
-        causal_steps=[
-            {
-                "step": "Parse user request",
-                "reasoning": "User wants deployment action"
-            }
-        ]
+        causal_steps=[{"step": "Parse user request", "reasoning": "User wants deployment action"}],
     )
     print(f"Event 1: {'✅ Success' if success else f'❌ Failed - {error}'}")
 
@@ -229,17 +221,14 @@ def main():
         event_type="tool_call",
         agent="claude_code",
         source="./scripts/deploy.sh",
-        data={
-            "tool": "bash",
-            "command": "./scripts/deploy.sh railway"
-        },
+        data={"tool": "bash", "command": "./scripts/deploy.sh railway"},
         active_constraints=[
             {
                 "constraint": "Use wrapper scripts for deployment",
                 "source": "CLAUDE.md",
-                "priority": "mandatory"
+                "priority": "mandatory",
             }
-        ]
+        ],
     )
     print(f"Event 2: {'✅ Success' if success else f'❌ Failed - {error}'}")
 
@@ -255,16 +244,16 @@ def main():
                 "attempt": "Direct git push to railway",
                 "failure_reason": "Permission denied",
                 "timestamp": datetime.utcnow().isoformat() + "Z",
-                "error_code": "403"
+                "error_code": "403",
             }
         ],
         open_commitments=[
             {
                 "commitment": "Deploy to production",
                 "status": "blocked",
-                "dependencies": ["Fix railway authentication"]
+                "dependencies": ["Fix railway authentication"],
             }
-        ]
+        ],
     )
     print(f"Event 3: {'✅ Success' if success else f'❌ Failed - {error}'}")
 

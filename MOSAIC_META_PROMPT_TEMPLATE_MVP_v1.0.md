@@ -1,10 +1,13 @@
 # MOSAIC META-PROMPT TEMPLATE — MVP v1.0
+
 **Document Metadata:**
+
 - Created: 2025-12-06
 - Last Updated: 2025-12-06 by Gemini
 - Status: ACTIVE
 
 ## 1. Purpose
+
 This document provides a standardized meta-prompt template to initialize any AI agent session for the Mosaic project. Using this template ensures the agent starts with the correct context and governance framework.
 
 ## 2. Template
@@ -30,4 +33,5 @@ Your NEXT_TASK is: [User inserts the specific task here]
 ```
 
 ## 3. Usage
+
 To start a new session, copy the text from the template above and replace `[User inserts the specific task here]` with the actual task description.

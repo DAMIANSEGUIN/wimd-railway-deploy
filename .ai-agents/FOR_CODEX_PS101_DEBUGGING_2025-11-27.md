@@ -17,6 +17,7 @@ Debug the PS101 flow to identify the **actual root cause** of the UX bugs found 
 ## Context
 
 **What happened:**
+
 1. User tested PS101 through Step 9
 2. Found 5 critical UX bugs (see below)
 3. Gemini analyzed and approved fix: "Move function definitions to global scope"
@@ -25,6 +26,7 @@ Debug the PS101 flow to identify the **actual root cause** of the UX bugs found 
 6. Need actual debugging to find real problem
 
 **Current status:**
+
 - Local server NOT running
 - Files have been modified but bugs still present
 - Backup available at `backups/pre-scope-fix_20251126_233100Z/`
@@ -44,6 +46,7 @@ Debug the PS101 flow to identify the **actual root cause** of the UX bugs found 
 ## Your Tasks
 
 ### 1. Start Local Server
+
 ```bash
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 python3 local_dev_server.py
@@ -51,37 +54,43 @@ python3 local_dev_server.py
 ```
 
 ### 2. Open Browser & Test PS101
-- Navigate to http://localhost:3000
+
+- Navigate to <http://localhost:3000>
 - Click "Start PS101" or continue if in progress
 - Open browser DevTools console (F12 or Cmd+Option+I)
 
 ### 3. Test Each Bug & Capture Errors
 
 **Bug 1: Character Counter**
+
 - Start typing in textarea
 - Watch char counter (should update in real-time)
 - Check console for JavaScript errors
 - Expected: `updateCharCount()` should be called on input event
 
 **Bug 2: Prompt Counter**
+
 - Note what step you're on
 - Check what the counter displays
 - Click "Next Prompt" several times
 - Record actual vs. expected values
 
 **Bug 3: Coaching Hints**
+
 - Read the hint text
 - Click "Next Prompt"
 - Does hint change?
 - Check if `PROMPT_HINTS` array is being accessed correctly
 
 **Bug 4: Advancing Through Prompts**
+
 - Fill out a prompt (meet minimum chars)
 - Click "Next Prompt"
 - Does it advance or stay on same prompt?
 - Check console for validation errors
 
 **Bug 5: Completion Screen**
+
 - Complete all 10 steps
 - Check final button text
 - Should say "Complete PS101 →" not "Next Prompt →"
@@ -89,6 +98,7 @@ python3 local_dev_server.py
 ### 4. Inspect Function Scope in Console
 
 In browser console, check if functions are accessible:
+
 ```javascript
 // Test if functions exist at global scope
 typeof updateCharCount
@@ -119,6 +129,7 @@ console.log('Textarea:', textarea);
 **Main file:** `mosaic_ui/index.html`
 
 **Critical sections:**
+
 - Line 2531-2573: `updateCharCount()` - Should update character display
 - Line 2575-2622: `updateNavButtons()` - FIRST definition
 - Line 2673-2720: `updateNavButtons()` - DUPLICATE (suspicious!)
@@ -128,6 +139,7 @@ console.log('Textarea:', textarea);
 - Line 2984: `renderCurrentStep()` - Renders each prompt
 
 **Specific issues to check:**
+
 - Are there TWO definitions of `updateNavButtons`? (lines 2575 and 2673)
 - Which one is actually being called?
 - Is `handleStepAnswerInput` actually attached to textarea?
@@ -152,6 +164,7 @@ Please document:
 Create a file: `.ai-agents/CODEX_DEBUGGING_FINDINGS_2025-11-27.md`
 
 Include:
+
 - What's actually broken (not what we thought was broken)
 - Console errors (screenshots or copy/paste)
 - Function scope findings
@@ -171,6 +184,7 @@ Include:
 ## Handoff Back to Claude Code
 
 When debugging complete, create handoff with:
+
 - Root cause(s) identified
 - Recommended implementation approach
 - Any code snippets showing the fix

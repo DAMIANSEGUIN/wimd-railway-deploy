@@ -9,11 +9,13 @@
 ## Why This Actually Works
 
 ### The Problem with Other Solutions
+
 - **Message broker:** Requires agents to poll/check manually
 - **Orchestrator:** Needs persistent daemon processes
 - **Direct API:** Agents aren't running continuously
 
 ### Why Git-Based Solves It
+
 ```
 ✅ You're already using git for every session
 ✅ Agents already commit their work
@@ -28,6 +30,7 @@
 ## How It Works
 
 ### Architecture
+
 ```
 Claude Code Session                Git Repository               Gemini Session
 ─────────────────                 ───────────────              ──────────────
@@ -77,12 +80,14 @@ Claude Code Session                Git Repository               Gemini Session
 ## Setup (One-Time, 30 Seconds)
 
 ### 1. Git Hook is Already Installed ✅
+
 ```bash
 # Already done:
 .git/hooks/post-commit
 ```
 
 ### 2. Test Desktop Notifications
+
 ```bash
 # macOS
 osascript -e 'display notification "Test message" with title "AI Agent"'
@@ -101,6 +106,7 @@ notify-send "AI Agent" "Test message"
 ### For Claude Code (Requesting Agent)
 
 **When you need something from Gemini:**
+
 ```bash
 # 1. Create request
 export AI_AGENT_NAME="Claude-Code"
@@ -127,6 +133,7 @@ git push
 ### For Gemini (Responding Agent)
 
 **When you get notification:**
+
 ```bash
 # 1. Pull to get request
 git pull
@@ -160,6 +167,7 @@ git push
 ## Your Involvement: Minimal
 
 ### Before (Manual Copy/Paste)
+
 ```
 1. Claude: "I need SQL results for user X"
 2. You: Copy entire message
@@ -172,6 +180,7 @@ git push
 ```
 
 ### After (Git-Based)
+
 ```
 1. Claude: Creates request, commits, pushes
 2. 🔔 Notification: "Claude → Gemini: SQL_QUERY"
@@ -183,6 +192,7 @@ git push
 ```
 
 **Your involvement:**
+
 - See 2 notifications
 - Say 2 sentences total
 - No copying/pasting content
@@ -192,32 +202,38 @@ git push
 ## Advantages
 
 ### ✅ Async by Design
+
 - Agents don't need to be online at same time
 - Request sits in git until Gemini is ready
 - Response sits in git until Claude pulls
 
 ### ✅ Auditable
+
 - All requests/responses in git history
 - Can see when request was made, when answered
 - Can trace communication flow
 
 ### ✅ No New Infrastructure
+
 - Uses git (already using)
 - Uses desktop notifications (built-in OS)
 - No broker daemon to manage
 - No port conflicts
 
 ### ✅ Works Offline
+
 - Commit locally even without internet
 - Push when connection available
 - Other agent pulls when ready
 
 ### ✅ Persistent
+
 - Survives agent crashes
 - Survives computer restarts
 - Nothing lost if process dies
 
 ### ✅ Cross-Platform
+
 - Works with any agent that uses git
 - Claude Code, Gemini, Codex, human devs
 - Same protocol for everyone
@@ -227,21 +243,26 @@ git push
 ## Notifications
 
 ### macOS (Built-in)
+
 ```bash
 osascript -e 'display notification "Message" with title "Title"'
 ```
+
 **Appears:** Top-right corner
 **Sound:** System notification sound
 **Action:** Click to see details
 
 ### Linux (notify-send)
+
 ```bash
 notify-send "Title" "Message"
 ```
+
 **Appears:** Top-right corner (Ubuntu/GNOME)
 **Duration:** 5 seconds default
 
 ### Windows (Powershell)
+
 ```powershell
 Add-Type -AssemblyName System.Windows.Forms
 $notification = New-Object System.Windows.Forms.NotifyIcon
@@ -259,6 +280,7 @@ $notification.ShowBalloonTip(5000)
 ### Make It Even More Automatic
 
 **Create notification action script:**
+
 ```bash
 # ~/.ai-agent-notification-handler.sh
 #!/bin/bash
@@ -274,6 +296,7 @@ fi
 ```
 
 **Update git hook to trigger script:**
+
 ```bash
 # In .git/hooks/post-commit, add:
 osascript -e 'tell application "Terminal" to do script "~/.ai-agent-notification-handler.sh"'
@@ -430,6 +453,7 @@ $ cat .ai-agents/response_req_1732544500.json
 | **Orchestrator** | 0 (fully automatic) | 0 seconds |
 
 **Git-based is practical middle ground:**
+
 - Not fully automatic (that requires orchestrator)
 - But close enough (2 simple actions vs manual copying)
 - Uses tools you already have (git + notifications)
@@ -439,17 +463,22 @@ $ cat .ai-agents/response_req_1732544500.json
 ## Troubleshooting
 
 ### "No notification appeared"
+
 **Check:** Notifications enabled for Terminal/iTerm
 **macOS:** System Preferences → Notifications → Terminal → Allow notifications
 
 ### "Git hook didn't run"
+
 **Check:** Hook is executable
+
 ```bash
 chmod +x .git/hooks/post-commit
 ```
 
 ### "Can't find request file"
+
 **Check:** Did you pull first?
+
 ```bash
 git pull
 ls .ai-agents/request_*.json
@@ -472,6 +501,7 @@ ls .ai-agents/request_*.json
 ## This is the REAL automation
 
 **Not perfect (orchestrator would be better) but:**
+
 - Works TODAY with tools you have
 - Requires no new infrastructure
 - Reduces your work by 70%
@@ -479,4 +509,3 @@ ls .ai-agents/request_*.json
 - Nothing gets lost
 
 **For your current project, this is the sweet spot.**
-

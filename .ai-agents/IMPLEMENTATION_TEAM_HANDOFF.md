@@ -1,4 +1,5 @@
 # Implementation Team Handoff Document
+
 **Project:** WIMD - What Is My Delta (Mosaic Career Transition Platform)
 **Date:** 2025-11-02
 **Status:** Production v2.0 - All critical features operational
@@ -9,12 +10,14 @@
 ## Quick Start for New Team Members
 
 ### 1. Repository Access
+
 - **GitHub:** github.com/DAMIANSEGUIN/wimd-railway-deploy
-- **Production Frontend:** https://whatismydelta.com
-- **Backend API:** https://what-is-my-delta-site-production.up.railway.app
-- **Health Check:** https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
+- **Production Frontend:** <https://whatismydelta.com>
+- **Backend API:** <https://what-is-my-delta-site-production.up.railway.app>
+- **Health Check:** <https://what-is-my-delta-site-production.up.railway.app/health/comprehensive>
 
 ### 2. Essential Documentation (Read in Order)
+
 1. **`CLAUDE.md`** - Main architecture overview and deployment status
 2. **`TROUBLESHOOTING_CHECKLIST.md`** - Error prevention and debugging workflows
 3. **`SELF_DIAGNOSTIC_FRAMEWORK.md`** - Architecture-specific error handling
@@ -55,12 +58,14 @@ cd frontend
 ## System Architecture Overview
 
 ### Stack
+
 - **Frontend:** Vanilla JavaScript (ES6+), deployed on Netlify
 - **Backend:** Python FastAPI, deployed on Railway
 - **Database:** PostgreSQL (Railway managed)
 - **AI Providers:** OpenAI (embeddings, GPT-4), Anthropic (Claude)
 
 ### Key Components
+
 1. **Authentication:** Login/register/password reset (5-min trial mode)
 2. **PS101 Flow:** 10-step career problem-solving framework with inline forms
 3. **Job Search:** 12 free sources (APIs + web scraping)
@@ -76,11 +81,13 @@ cd frontend
 ### Before Making ANY Code Changes
 
 **ALWAYS run verification script:**
+
 ```bash
 ./scripts/verify_critical_features.sh
 ```
 
 **Expected output:**
+
 ```
 ✅ Authentication UI present (16 occurrences)
 ✅ PS101 flow present (160 references)
@@ -90,6 +97,7 @@ cd frontend
 ```
 
 ### Pre-commit Hook (Already Installed)
+
 - **Location:** `.git/hooks/pre-commit`
 - **Function:** Blocks commits that remove critical features
 - **Critical patterns:** Authentication UI, PS101 flow, API_BASE config
@@ -98,6 +106,7 @@ cd frontend
 ### After Making Changes
 
 **MANDATORY steps:**
+
 1. Run verification script (above)
 2. Test backend health: `curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive`
 3. For major changes: Run full diagnostic (see `.ai-agents/FINAL_DIAGNOSTIC_20251102.md`)
@@ -111,18 +120,21 @@ cd frontend
 ## Common Tasks
 
 ### Deploy Frontend
+
 ```bash
 cd frontend
 netlify deploy --prod --dir=. --site=bb594f69-4d23-4817-b7de-dadb8b4db874
 ```
 
 ### Deploy Backend
+
 ```bash
 git push railway-origin main
 # Railway auto-deploys on push
 ```
 
 ### Check Deployment Status
+
 ```bash
 # Frontend
 netlify status
@@ -133,6 +145,7 @@ railway logs
 ```
 
 ### Run Tests
+
 ```bash
 # Backend golden dataset tests
 pytest tests/test_golden_dataset.py -v
@@ -142,6 +155,7 @@ pytest tests/test_prompts.py -v
 ```
 
 ### Access Database
+
 ```bash
 railway run psql $DATABASE_URL
 
@@ -157,23 +171,27 @@ SELECT id, email, created_at FROM users LIMIT 10;
 ## Phase Implementation Status
 
 ### ✅ Phase 1: Migration Framework
+
 - AI fallback operational
 - CSV→AI fallback working
 - Feature flags configured
 - Prompt system healthy (0% error rate)
 
 ### ⚠️ Phase 2: Experiment Engine
+
 - Backend implemented
 - Feature flag DISABLED (intentional - gated feature)
 - No action required
 
 ### ✅ Phase 3: Self-Efficacy Metrics
+
 - Backend operational (requires auth session)
 - Frontend code deployed
 - Coach escalation working
 - Focus Stack present
 
 ### ✅ Phase 4: RAG + Job Sources
+
 - Job search operational (12 sources)
 - RAG engine working (real OpenAI embeddings)
 - OSINT operational
@@ -181,6 +199,7 @@ SELECT id, email, created_at FROM users LIMIT 10;
 - Source analytics working
 
 ### ✅ PS101 v2 (Restored 2025-11-02)
+
 - Enhanced inline forms (no browser prompts)
 - Experiment components (Steps 6-9)
 - Progress dot navigation
@@ -192,10 +211,12 @@ SELECT id, email, created_at FROM users LIMIT 10;
 ## Known Issues & Priorities
 
 ### Priority 1: Add `/rag/health` Endpoint
+
 - **Status:** Missing (returns 404)
 - **Impact:** Low - RAG functionality working
 - **Effort:** 15 minutes
 - **Implementation:**
+
 ```python
 # api/rag/router.py
 @router.get("/health")
@@ -204,15 +225,18 @@ async def rag_health():
 ```
 
 ### Priority 2: Verify Database Schema
+
 - **Status:** Not verified (needs Railway credentials)
 - **Impact:** Low - system working fine
 - **Effort:** 15 minutes
 - **Action:**
+
 ```bash
 railway run psql $DATABASE_URL -c "\dt"
 ```
 
 ### Priority 3: E2E Testing Suite
+
 - **Status:** Not implemented
 - **Impact:** High - prevents regressions
 - **Effort:** 4-6 hours
@@ -225,6 +249,7 @@ railway run psql $DATABASE_URL -c "\dt"
   - File upload
 
 ### Priority 4: Email Service Integration
+
 - **Status:** Password reset sends placeholder
 - **Impact:** Low - can reset via DB
 - **Effort:** 2-3 hours
@@ -235,11 +260,13 @@ railway run psql $DATABASE_URL -c "\dt"
 ## AI Agent Protocols
 
 ### Session Start (MANDATORY)
+
 **Every AI agent session MUST:**
 
 1. Read `.ai-agents/SESSION_START_PROTOCOL.md`
 2. Run `./scripts/verify_critical_features.sh`
 3. Declare acknowledgment:
+
 ```
 ✅ Session start verification passed
 ✅ Critical features confirmed present:
@@ -251,17 +278,21 @@ I acknowledge these features MUST BE PRESERVED.
 ```
 
 ### Agent Handoff (When Switching Tools)
+
 **When handing off to another AI agent:**
 
 1. Read `.ai-agents/HANDOFF_PROTOCOL.md`
 2. Generate handoff manifest:
+
 ```bash
 ./scripts/create_handoff_manifest.sh > handoff_manifest.json
 ```
+
 3. Document what was done and what's pending
 4. Verify critical features before exiting
 
 ### Emergency Rollback
+
 ```bash
 # If deployment breaks production
 git log --oneline -5  # Find last good commit
@@ -291,22 +322,26 @@ EXPERIMENTS_ENABLED=false  # Intentionally disabled
 ## Monitoring & Health
 
 ### Backend Health Check
+
 ```bash
 curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive | jq
 ```
 
 **Expected response:**
+
 - `current_test.success: true`
 - `prompt_system_health.fallback_enabled: true`
 - `recent_failures: 0`
 - `failure_rate_percent: 0`
 
 ### Railway Auto-Restart
+
 - **Trigger:** `/health` endpoint returns 503
 - **Action:** Container automatically restarted
 - **Recovery:** Cache clearing + flag reset attempted
 
 ### Frontend Verification
+
 ```bash
 curl -s https://whatismydelta.com | grep -c "authModal"
 # Should return: 15+
@@ -317,12 +352,14 @@ curl -s https://whatismydelta.com | grep -c "authModal"
 ## Contact & Escalation
 
 ### When to Escalate
+
 - Production down (backend 503, frontend 404)
 - Data loss detected (users can't log in)
 - Security issue (credentials exposed, API keys leaked)
 - Critical feature missing (auth, PS101, job search)
 
 ### How to Escalate
+
 1. Check `.ai-agents/` directory for recent diagnostics
 2. Run verification script and save output
 3. Gather logs: `railway logs > backend_logs.txt`
@@ -338,11 +375,13 @@ curl -s https://whatismydelta.com | grep -c "authModal"
 ## Recent Incident & Recovery (2025-11-02)
 
 ### What Happened
+
 - **Incident:** Commit 890d2bc copied `frontend/` → `mosaic_ui/`, overwriting auth system
 - **Cause:** AI agent handoff between Claude Code → Codex → Cursor without context preservation
 - **Impact:** Login/register UI removed from production
 
 ### How We Fixed It
+
 1. Traced git history to find auth (commit 70b8392)
 2. Restored auth from backup commit
 3. Merged PS101 v2 enhancements with authenticated base
@@ -350,6 +389,7 @@ curl -s https://whatismydelta.com | grep -c "authModal"
 5. Verified all features operational
 
 ### What We Built to Prevent Recurrence
+
 1. **Pre-commit hooks** - Block feature removal automatically
 2. **Verification scripts** - Automated checks before/after changes
 3. **Handoff protocol** - Manifest generation for agent transitions
@@ -357,6 +397,7 @@ curl -s https://whatismydelta.com | grep -c "authModal"
 5. **Diagnostic framework** - Systematic architecture review process
 
 ### Lessons Learned
+
 - Never bypass verification scripts
 - Always run diagnostics after major changes
 - Document AI agent handoffs explicitly
@@ -396,6 +437,7 @@ git push railway-origin main    # Deploy backend
 ## Success Metrics
 
 **System is healthy when:**
+
 - ✅ Verification script passes (all 4 checks)
 - ✅ Backend health shows 0% error rate
 - ✅ Frontend has 15+ auth references
@@ -403,6 +445,7 @@ git push railway-origin main    # Deploy backend
 - ✅ No 404s on documented endpoints (except /rag/health)
 
 **Current Status (2025-11-02):**
+
 - 🟢 92% feature completeness (11/12 features)
 - 🟢 100% critical features working
 - 🟢 0% backend error rate

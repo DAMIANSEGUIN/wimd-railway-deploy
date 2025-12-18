@@ -1,5 +1,7 @@
 # SESSION START MACRO — v1.1.2
+
 **Document Metadata:**
+
 - Created: 2025-12-06
 - Last Updated: 2025-12-06 by Gemini
 - Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
@@ -10,6 +12,7 @@ DEPRECATED. Agents must NOT load or execute `SESSION_START_v2.md` for any
 active Mosaic workflow.
 
 ## Sequence
+
 1. Load this macro.
 2. Load META_GOVERNANCE_CANON_MVP_v1.0.md.
 3. Load GLOBAL_META_INSTRUCTION_v2.0.md.
@@ -31,6 +34,6 @@ active Mosaic workflow.
 If repo context is missing, request the “MOSAIC_GOVERNANCE_ARCHITECTURE_ADDENDUM_v1.0.md” recovery file.
 
 ---
-Beginning Mosaic session.  
-Active Mode: OPTION A  
+Beginning Mosaic session.
+Active Mode: OPTION A
 Benchmark Addendum: v1.1.2

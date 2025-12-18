@@ -1,4 +1,5 @@
 # Solution: AI Agent Context Discovery System
+
 **Created:** 2025-11-23 by Claude Code
 **Problem Solved:** "AI can't find latest/most updated info"
 
@@ -63,7 +64,7 @@
 
 ## How It Works
 
-### For Claude Code / Terminal AI:
+### For Claude Code / Terminal AI
 
 ```bash
 # User pastes ONE command:
@@ -91,7 +92,7 @@ cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && ./scripts/sho
 "✅ Context loaded. System verified. Ready to proceed."
 ```
 
-### For Gemini / Non-Terminal AI:
+### For Gemini / Non-Terminal AI
 
 ```
 # User pastes instructions from COPY_PASTE_FOR_GEMINI.txt
@@ -117,30 +118,35 @@ git log -10 --oneline
 ## Key Features
 
 ### 1. Automatic Discovery
+
 - **No more hunting for files**
 - Script finds latest files by date
 - Shows file ages with freshness warnings
 - Recommends reading order
 
 ### 2. Single Source of Truth
+
 - **START_HERE.md is always current**
 - Updated after every major event
 - Max age: 3 days before warning
 - Contains links to all relevant docs
 
 ### 3. Self-Updating Documentation
+
 - **AI agents update START_HERE.md**
 - After critical incidents
 - After major milestones
 - When file >3 days old
 
 ### 4. Clear File Conventions
+
 - **Predictable naming patterns**
 - `FINAL_STATUS_YYYY-MM-DD_CONTEXT.md`
 - `CRITICAL_ISSUE_NAME_YYYY-MM-DD.md`
 - `handoff_YYYYMMDD_HHMMSS.json`
 
 ### 5. Cross-AI Compatibility
+
 - **Works for all AI types**
 - Claude Code: Bash script
 - Gemini: Manual file reading
@@ -151,24 +157,31 @@ git log -10 --oneline
 ## Problem → Solution Mapping
 
 ### Problem 1: "AI asks 'where do I start?' every session"
+
 **Solution:** START_HERE.md always read first, contains latest status
 
 ### Problem 2: "User repeats project history every time"
+
 **Solution:** Single command loads full context automatically
 
 ### Problem 3: "AI reads outdated documentation"
+
 **Solution:** Script shows file ages, warns if >3 days old
 
 ### Problem 4: "Important context buried in old files"
+
 **Solution:** Script finds latest files by date, shows top 5
 
 ### Problem 5: "No clear reading order"
+
 **Solution:** Script outputs recommended reading sequence
 
 ### Problem 6: "Documentation gets stale"
+
 **Solution:** Self-updating protocol, AI agents required to update
 
 ### Problem 7: "Different AI tools need different approaches"
+
 **Solution:** Multiple onboarding files (bash script + manual instructions)
 
 ---
@@ -176,6 +189,7 @@ git log -10 --oneline
 ## Success Metrics
 
 ### Before This System
+
 - ⏱️ Time to productive: 10-15 minutes
 - 😤 User effort: High (manual file guidance)
 - 📚 Context quality: Medium (might miss files)
@@ -183,6 +197,7 @@ git log -10 --oneline
 - ❌ Reading wrong/outdated files
 
 ### After This System
+
 - ⏱️ Time to productive: 2-3 minutes
 - 😊 User effort: Minimal (one paste)
 - 📚 Context quality: High (finds all files)
@@ -193,7 +208,8 @@ git log -10 --oneline
 
 ## Files Created/Modified
 
-### Created Files:
+### Created Files
+
 ```
 .ai-agents/
 ├── START_HERE.md                    (single source of truth)
@@ -209,7 +225,8 @@ Root directory:
 └── COPY_PASTE_FOR_GEMINI.txt       (Gemini onboarding)
 ```
 
-### Modified Files:
+### Modified Files
+
 ```
 README.md                           (added AI agent section at top)
 ```
@@ -221,21 +238,25 @@ README.md                           (added AI agent section at top)
 ### Example 1: Claude Code Starting Session
 
 **User types:**
+
 ```
 Go to and review and follow instructions to get updated
 ```
 
 **Claude Code:**
+
 1. Reads old CLAUDE_CODE_README.md (outdated)
 2. User frustrated: "Look in AI_Workspace"
 3. Claude finds latest files but takes time
 
 **With new system, user types:**
+
 ```
 [Pastes COPY_PASTE_FOR_AI.txt]
 ```
 
 **Claude Code:**
+
 1. Runs `show_latest_context.sh` → sees output
 2. Reads START_HERE.md → gets latest status
 3. Reads SESSION_START_PROTOCOL.md → knows what to do
@@ -246,11 +267,13 @@ Go to and review and follow instructions to get updated
 ### Example 2: Gemini Starting Session
 
 **User types:**
+
 ```
 [Pastes COPY_PASTE_FOR_GEMINI.txt]
 ```
 
 **Gemini:**
+
 1. Reads `.ai-agents/START_HERE.md`
 2. Sees: "Latest Critical Event: Phase 1 Rollback (Nov 21)"
 3. Reads: "Status: ✅ STABLE - Website functional"
@@ -261,6 +284,7 @@ Go to and review and follow instructions to get updated
 ### Example 3: Weekly Maintenance
 
 **AI Agent (any type):**
+
 1. Checks START_HERE.md date: "Last Updated: 2025-11-16"
 2. Calculates age: 7 days old ⚠️
 3. Reads recent files to understand current state
@@ -272,10 +296,12 @@ Go to and review and follow instructions to get updated
 ## Maintenance Protocol
 
 ### Daily (Automated by AI)
+
 - Check START_HERE.md age when starting session
 - Update if >3 days old and user hasn't
 
 ### After Major Events (AI Responsibility)
+
 - Update START_HERE.md with:
   - New "Latest Critical Event"
   - Updated "Current State" bullets
@@ -284,6 +310,7 @@ Go to and review and follow instructions to get updated
 - Commit update with clear message
 
 ### Weekly (Human or AI)
+
 ```bash
 # Check documentation health
 ls -l .ai-agents/START_HERE.md
@@ -294,6 +321,7 @@ find .ai-agents -name "*.md" -mtime +30 -exec mv {} .ai-agents/archive/ \;
 ```
 
 ### Monthly (Human Review)
+
 - Verify all links in START_HERE.md work
 - Remove resolved alerts from SESSION_START_PROTOCOL.md
 - Clean up archive directory
@@ -306,12 +334,14 @@ find .ai-agents -name "*.md" -mtime +30 -exec mv {} .ai-agents/archive/ \;
 ### Future Enhancements
 
 1. **Auto-update on git commit**
+
    ```bash
    # Post-commit hook updates START_HERE.md timestamp
    # Keeps "Last Updated" current automatically
    ```
 
 2. **Smart file recommendations**
+
    ```bash
    # Script detects keywords in user message
    # "deployment" → recommends DEPLOYMENT_SNAPSHOT
@@ -319,12 +349,14 @@ find .ai-agents -name "*.md" -mtime +30 -exec mv {} .ai-agents/archive/ \;
    ```
 
 3. **Health dashboard**
+
    ```bash
    # Visual display of documentation freshness
    # Green: <3 days, Yellow: 3-7 days, Red: >7 days
    ```
 
 4. **Cross-project template**
+
    ```bash
    # Extract this system into reusable template
    # Other projects can adopt same structure
@@ -337,6 +369,7 @@ find .ai-agents -name "*.md" -mtime +30 -exec mv {} .ai-agents/archive/ \;
 ### How to Verify System Works
 
 **Test 1: Fresh AI Session**
+
 ```bash
 # Simulate new AI agent
 # Run: ./scripts/show_latest_context.sh
@@ -345,6 +378,7 @@ find .ai-agents -name "*.md" -mtime +30 -exec mv {} .ai-agents/archive/ \;
 ```
 
 **Test 2: File Discovery**
+
 ```bash
 # Create new status file
 touch .ai-agents/TEST_STATUS_$(date +%Y-%m-%d).md
@@ -354,6 +388,7 @@ touch .ai-agents/TEST_STATUS_$(date +%Y-%m-%d).md
 ```
 
 **Test 3: Staleness Warning**
+
 ```bash
 # Temporarily change START_HERE.md date to 10 days ago
 # Run script
@@ -362,6 +397,7 @@ touch .ai-agents/TEST_STATUS_$(date +%Y-%m-%d).md
 ```
 
 **Test 4: Cross-AI Compatibility**
+
 ```bash
 # Test with Claude Code: Use bash script
 # Test with Gemini: Use manual file reading
@@ -376,6 +412,7 @@ touch .ai-agents/TEST_STATUS_$(date +%Y-%m-%d).md
 ### ✅ System is Working
 
 **Observe:**
+
 - AI starts productive work within 3 minutes
 - No "where do I start?" questions
 - AI finds critical context without prompting
@@ -383,6 +420,7 @@ touch .ai-agents/TEST_STATUS_$(date +%Y-%m-%d).md
 - START_HERE.md stays current (<3 days old)
 
 **Metrics:**
+
 - Session start time: <3 min (vs 10-15 min before)
 - User messages to orient AI: 1 (vs 5-10 before)
 - AI reads correct files: 100% (vs 60% before)
@@ -391,6 +429,7 @@ touch .ai-agents/TEST_STATUS_$(date +%Y-%m-%d).md
 ### ❌ System Needs Improvement
 
 **Observe:**
+
 - AI asks repeated questions about project state
 - User manually guides AI to files
 - START_HERE.md >7 days old
@@ -398,6 +437,7 @@ touch .ai-agents/TEST_STATUS_$(date +%Y-%m-%d).md
 - AI misses critical recent events
 
 **Action:**
+
 - Update START_HERE.md immediately
 - Review and fix broken links
 - Archive or delete contradictory files
@@ -446,22 +486,26 @@ touch .ai-agents/TEST_STATUS_$(date +%Y-%m-%d).md
 ## Rollout Plan
 
 ### Phase 1: Validation (Complete ✅)
+
 - Created all core files
 - Tested script execution
 - Documented system
 - Created onboarding docs
 
 ### Phase 2: User Adoption
+
 - User tests with next AI session
 - Refine based on feedback
 - Update docs if needed
 
 ### Phase 3: Team Adoption
+
 - Share COPY_PASTE files with team
 - Train on update protocol
 - Establish maintenance schedule
 
 ### Phase 4: Monitoring
+
 - Track time-to-productive metrics
 - Collect AI agent feedback
 - Iterate on improvements
@@ -471,16 +515,19 @@ touch .ai-agents/TEST_STATUS_$(date +%Y-%m-%d).md
 ## Contact & Support
 
 **For AI Agents:**
+
 - Read: `.ai-agents/START_HERE.md` (FIRST)
 - Read: `.ai-agents/SYSTEM_OVERVIEW.md` (for details)
 - Run: `./scripts/show_latest_context.sh` (for discovery)
 
 **For Humans:**
+
 - Quick start: `COPY_PASTE_FOR_AI.txt` or `COPY_PASTE_FOR_GEMINI.txt`
 - Full docs: `.ai-agents/SYSTEM_OVERVIEW.md`
 - Issues: Update START_HERE.md or ask AI to do it
 
 **For Maintenance:**
+
 - Weekly: Check START_HERE.md age
 - Monthly: Archive old files, verify links
 - On incident: Update START_HERE.md immediately

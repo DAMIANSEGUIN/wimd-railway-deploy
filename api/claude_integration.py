@@ -1,4 +1,5 @@
 from typing import Any, Literal
+
 from pydantic import BaseModel
 
 # Assuming AnthropicVertex is available from a library like google-cloud-aiplatform
@@ -6,24 +7,31 @@ from pydantic import BaseModel
 try:
     from anthropic.vertex import AnthropicVertex
 except ImportError:
+
     class AnthropicVertex:
         def __init__(self, model, max_tokens, temperature, **kwargs):
             pass
+
 
 # Placeholder for the @prompter decorator, as its definition was not provided.
 def prompter(func):
     """A decorator to register a function as a prompter."""
     return func
 
+
 # Placeholder for the LLM and Message classes.
 class LLM:
     """A generic Language Model class."""
+
     def __init__(self, model, input_template=None, output_parser=None):
         pass
 
+
 class Message:
     """A generic Message class."""
+
     pass
+
 
 def template_messages(messages):
     """A placeholder for a message templating function."""
@@ -36,6 +44,7 @@ class ClaudeRequest(BaseModel):
     max_tokens: int
     stream: bool = False
 
+
 class Claude(AnthropicVertex):
     """A Claude prompter that uses the Anthropic Vertex SDK."""
 
@@ -46,7 +55,9 @@ class Claude(AnthropicVertex):
             "claude-3-sonnet-20240229",
             "claude-3-haiku-20240307",
         ] = "claude-3-opus-20240229",
-        api_key: str | None = None, # api_key is not used by AnthropicVertex but kept for signature consistency
+        api_key: (
+            str | None
+        ) = None,  # api_key is not used by AnthropicVertex but kept for signature consistency
         max_tokens: int = 1024,
         temperature: float = 0.7,
         **kwargs: Any,
@@ -74,7 +85,7 @@ def claude(
 
 def claude_llm(
     model: str = "claude-3-opus-20240229",
-) -> LLM: # Simplified return type annotation
+) -> LLM:  # Simplified return type annotation
     # TODO: Add temperature, etc.
     return LLM(
         model=Claude(model=model),
@@ -82,11 +93,13 @@ def claude_llm(
         output_parser=str,
     )
 
+
 def to_claude_role(role: Literal["system", "user", "assistant"]) -> str:
     """Convert a role to the format expected by Claude."""
     if role == "assistant":
         return "assistant"
     return "user"
+
 
 def _match_claude_family(model_name: str) -> bool:
     """Helper to check if a model name belongs to the Claude family."""

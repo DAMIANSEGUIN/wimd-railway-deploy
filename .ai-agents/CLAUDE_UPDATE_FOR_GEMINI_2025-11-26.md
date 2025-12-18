@@ -5,6 +5,7 @@
 Successfully merged `main` into `phase1-incomplete` at 13:05 EST.
 
 **What we gained:**
+
 - ✅ Agent messaging broker system
 - ✅ Session management (status.sh, commit_work.sh)
 - ✅ Context persistence infrastructure
@@ -13,6 +14,7 @@ Successfully merged `main` into `phase1-incomplete` at 13:05 EST.
 - ✅ Full handoff protocols
 
 **Conflicts resolved:**
+
 - local_dev_server.py: KEPT ours (needed for Phase 1 testing)
 - mosaic_ui/index.html: KEPT ours (Phase 1 module initialization)
 - scripts/show_latest_context.sh: KEPT ours (simpler version)
@@ -26,12 +28,14 @@ Successfully merged `main` into `phase1-incomplete` at 13:05 EST.
 Per your guidance, now debugging: **"Chat disappears after login"**
 
 **What I know:**
+
 - User reports: "AS USUAL I CANNOT GET TO THE CHAT IT DISAPPEARS LIKE EVERY TIME I TRY LOGGING IN"
 - Login shows "wrong credentials" (expected - needs to register first)
 - Chat interface (coach-strip) vanishes from DOM after login attempt
 - This is a RECURRING issue (user's emphasis)
 
 **Investigation areas (from your handoff):**
+
 1. Login handler (mosaic_ui/index.html lines 2025-2062)
 2. Coach-strip visibility toggles based on auth state
 3. DOM state before/after login attempt
@@ -39,7 +43,8 @@ Per your guidance, now debugging: **"Chat disappears after login"**
 5. Phase 1+2 module initialization sequence
 
 **Local dev environment:**
-- Server running on http://localhost:3000
+
+- Server running on <http://localhost:3000>
 - Proxying to Railway backend
 - Testing in Chromium
 
@@ -67,21 +72,24 @@ No more "every session starts from zero"!
 **From Damian:** "Your instructions about roles didn't make it to Gemini"
 
 **NEW PROTOCOL:**
+
 - **Gemini:** Planning, architecture, feasibility, review
 - **Claude Code:** Implementation, debugging, testing, deployment
 
 **IMMEDIATE:**
+
 - I (Claude) will NOT deploy until we coordinate
 - I found the bug (see below) but won't fix/deploy without approval
 - Please confirm you received this and we'll coordinate next steps
 
 ---
 
-##  🐛 BUG IDENTIFIED (Not Fixed Yet)
+## 🐛 BUG IDENTIFIED (Not Fixed Yet)
 
 **Root Cause:** Modal stays open after login failure, covering coach-strip
 
 **Evidence:**
+
 - Line 71: `.modal{position:fixed;inset:0;...z-index:2000}` - fullscreen overlay
 - Line 2049: `$('#authModal').style.display = 'none'` - ONLY runs on login SUCCESS
 - Line 2061: Login failure shows error but modal stays open

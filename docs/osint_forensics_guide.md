@@ -16,14 +16,17 @@ Unlike traditional job search that focuses on skills and experience, Mosaic's OS
 ## OSINT Analysis Process
 
 ### Phase 1: Discovery
+
 - **Source**: Official careers sites + job boards (LinkedIn, Indeed, BuiltIn)
 - **Timeframe**: Recent postings (<90 days), older marked as ARCHIVE
 - **Data Collected**: Title, location, date, source, compensation, key snippets
 
 ### Phase 2: Signal Detection
+
 From job postings, we identify:
 
 **Values Indicators**:
+
 - **Environmental**: "sustainability", "green", "climate", "renewable"
 - **Social Impact**: "social impact", "community", "nonprofit", "mission-driven"
 - **Learning**: "learning", "education", "training", "development", "mentorship"
@@ -32,6 +35,7 @@ From job postings, we identify:
 - **Transparency**: "transparent", "open", "honest", "authentic"
 
 **Passion Opportunities**:
+
 - **Creative**: "creative", "design", "artistic", "aesthetic"
 - **Technical**: "technical", "engineering", "development", "coding"
 - **Leadership**: "leadership", "management", "mentor", "inspire"
@@ -40,6 +44,7 @@ From job postings, we identify:
 - **Problem Solving**: "problem-solving", "solutions", "challenges"
 
 **Culture Signals**:
+
 - **Remote Friendly**: "remote", "flexible", "work from home"
 - **Collaborative**: "collaborative", "team", "cross-functional"
 - **Innovative**: "innovative", "cutting-edge", "breakthrough"
@@ -48,6 +53,7 @@ From job postings, we identify:
 - **Stable**: "stable", "established", "long-term"
 
 **Growth Indicators**:
+
 - **New Team**: "new team", "first hire", "90-day pilot"
 - **Expansion**: "expanding", "growing", "scaling"
 - **Investment**: "investment", "funding", "backed"
@@ -56,31 +62,37 @@ From job postings, we identify:
 ### Phase 3: Values-Driven Insights
 
 **1. Values Alignment Analysis**
+
 - What values does this company demonstrate?
 - How well do they align with your personal values?
 - What values are missing that you care about?
 
 **2. Passion Opportunities Analysis**
+
 - What passion areas does this company support?
 - How well do they align with your passions?
 - What passion opportunities are missing?
 
 **3. Cultural Insights**
+
 - What's their dominant culture?
 - How diverse is their cultural approach?
 - Will you thrive in their environment?
 
 **4. Growth Signals**
+
 - Where are they investing?
 - What growth areas are strongest?
 - Do they align with your career goals?
 
 **5. Watch Outs**
+
 - Red flags and risk indicators
 - Stale postings or reposted jobs
 - Vague descriptions or missing information
 
 **6. User-Specific Alignment**
+
 - How well do they match your values?
 - What passion opportunities align with your skills?
 - What's missing for your ideal role?
@@ -88,6 +100,7 @@ From job postings, we identify:
 ### Phase 4: Receipts Table
 
 Provides evidence for all claims:
+
 - **Claim**: Key insight from analysis
 - **Snippet**: Verbatim text from job posting
 - **Job**: Title and location
@@ -100,9 +113,11 @@ Provides evidence for all claims:
 ## API Endpoints
 
 ### Analyze Company OSINT
+
 **Endpoint**: `POST /osint/analyze-company`
 
 **Request**:
+
 ```json
 {
   "company_name": "Google",
@@ -122,6 +137,7 @@ Provides evidence for all claims:
 ```
 
 **Response**:
+
 ```json
 {
   "company_name": "Google",
@@ -218,9 +234,11 @@ Provides evidence for all claims:
 ```
 
 ### OSINT Health Check
+
 **Endpoint**: `GET /osint/health`
 
 **Response**:
+
 ```json
 {
   "status": "operational",
@@ -234,26 +252,31 @@ Provides evidence for all claims:
 ## Use Cases
 
 ### 1. Values-Driven Company Research
+
 - Research companies that align with your values
 - Identify companies that share your passion for environmental causes
 - Find organizations that prioritize learning and development
 
 ### 2. Passion-Opportunity Mapping
+
 - Discover companies that support your creative passions
 - Find roles that align with your technical interests
 - Identify leadership opportunities that match your goals
 
 ### 3. Cultural Fit Assessment
+
 - Understand company culture before applying
 - Identify remote-friendly vs. office-focused companies
 - Find collaborative vs. competitive environments
 
 ### 4. Growth Potential Analysis
+
 - Identify companies investing in areas you care about
 - Find organizations with strong growth signals
 - Avoid companies with red flags or stagnant hiring
 
 ### 5. Strategic Job Applications
+
 - Target applications to companies with strong values alignment
 - Focus on roles that match your passion opportunities
 - Avoid companies with cultural mismatches
@@ -261,6 +284,7 @@ Provides evidence for all claims:
 ## Integration with Mosaic
 
 ### Values-Driven Job Search
+
 The OSINT forensics system integrates with Mosaic's values-driven approach:
 
 1. **User Values Input**: Users specify their core values
@@ -270,6 +294,7 @@ The OSINT forensics system integrates with Mosaic's values-driven approach:
 5. **Strategic Recommendations**: Users get targeted company recommendations
 
 ### Experiment Integration
+
 OSINT analysis can inform Mosaic experiments:
 
 1. **Values Experiments**: Test different values in job applications
@@ -278,6 +303,7 @@ OSINT analysis can inform Mosaic experiments:
 4. **Growth Experiments**: Focus on different growth areas
 
 ### Learning and Development
+
 OSINT insights can guide learning:
 
 1. **Skills Development**: Focus on skills that align with target companies
@@ -288,6 +314,7 @@ OSINT insights can guide learning:
 ## Benefits
 
 ### For Job Seekers
+
 1. **Values Alignment**: Find companies that share your values
 2. **Passion Opportunities**: Discover roles that match your passions
 3. **Cultural Fit**: Avoid companies with poor cultural fit
@@ -295,6 +322,7 @@ OSINT insights can guide learning:
 5. **Strategic Applications**: Focus on high-alignment opportunities
 
 ### For Career Development
+
 1. **Values Clarification**: Better understand your own values
 2. **Passion Discovery**: Explore new passion areas
 3. **Cultural Awareness**: Learn about different company cultures
@@ -302,6 +330,7 @@ OSINT insights can guide learning:
 5. **Strategic Planning**: Make informed career decisions
 
 ### For Mosaic Users
+
 1. **Personalized Insights**: Analysis tailored to your values and passions
 2. **Strategic Recommendations**: Targeted company and role recommendations
 3. **Learning Opportunities**: Insights that inform your development
@@ -311,16 +340,19 @@ OSINT insights can guide learning:
 ## Technical Implementation
 
 ### Performance
+
 - **Caching**: Intelligent caching of company analyses
 - **Batch Processing**: Efficient analysis of multiple job postings
 - **Real-time Updates**: Fresh analysis of recent job postings
 
 ### Accuracy
+
 - **Confidence Scoring**: 0-100 confidence scores for all insights
 - **Source Verification**: Multiple sources for validation
 - **Archive Detection**: Automatic detection of stale postings
 
 ### Scalability
+
 - **Concurrent Analysis**: Handle multiple company analyses simultaneously
 - **Batch Processing**: Efficient analysis of large job posting datasets
 - **Resource Management**: Cost controls and usage tracking

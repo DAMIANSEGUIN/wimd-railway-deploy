@@ -27,11 +27,14 @@ This is the single, authoritative plan. Do not deviate from it.
 
 **Owner:** Claude
 
-1.  **Action:** Create a temporary directory to host the backup files for testing.
+1. **Action:** Create a temporary directory to host the backup files for testing.
+
     ```bash
     mkdir -p /tmp/backup_test/js
     ```
-2.  **Action:** Create the dummy `main.js` file inside this temporary directory. This will be used for all tests to prevent the 404 error.
+
+2. **Action:** Create the dummy `main.js` file inside this temporary directory. This will be used for all tests to prevent the 404 error.
+
     ```bash
     echo "// Dummy file for testing" > /tmp/backup_test/js/main.js
     ```
@@ -42,18 +45,22 @@ The goal of this test is to verify if **Login and Chat** are working. We expect 
 
 **Owner:** Claude, **User (for testing)**, Codex (for analysis)
 
-1.  **Claude:** Copy the `pre-ps101-fix` backup into the test directory.
+1. **Claude:** Copy the `pre-ps101-fix` backup into the test directory.
+
     ```bash
     cp backups/pre-ps101-fix_20251126_220704Z/mosaic_ui_index.html /tmp/backup_test/index.html
     ```
-2.  **Claude:** Start the local Python server, pointing to the temporary directory. **It is critical to use a different port (e.g., 8000) to avoid confusion with the main server on port 3000.**
+
+2. **Claude:** Start the local Python server, pointing to the temporary directory. **It is critical to use a different port (e.g., 8000) to avoid confusion with the main server on port 3000.**
+
     ```bash
     python3 -m http.server 8000 --directory /tmp/backup_test
     ```
-3.  **User:** Navigate to `http://localhost:8000` in Chromium.
-4.  **User:** Test ONLY the **Login** and **Chat** functionalities. Capture results with CodexCapture.
-5.  **Codex:** Analyze the captured logs from the user's test.
-6.  **Claude:** Report the results back to me. Specifically: **"Did Login and Chat work? (Yes/No)"**. Stop the test server.
+
+3. **User:** Navigate to `http://localhost:8000` in Chromium.
+4. **User:** Test ONLY the **Login** and **Chat** functionalities. Capture results with CodexCapture.
+5. **Codex:** Analyze the captured logs from the user's test.
+6. **Claude:** Report the results back to me. Specifically: **"Did Login and Chat work? (Yes/No)"**. Stop the test server.
 
 ### Step 3: Test Backup #2 (`pre-scope-fix`)
 
@@ -61,18 +68,22 @@ The goal of this test is to verify if **PS101 Advances**. We expect Login/Chat m
 
 **Owner:** Claude, **User (for testing)**, Codex (for analysis)
 
-1.  **Claude:** Copy the `pre-scope-fix` backup into the test directory, overwriting the previous one.
+1. **Claude:** Copy the `pre-scope-fix` backup into the test directory, overwriting the previous one.
+
     ```bash
     cp backups/pre-scope-fix_20251126_233100Z/mosaic_ui_index.html /tmp/backup_test/index.html
     ```
-2.  **Claude:** Start the local Python server on port 8000 again.
+
+2. **Claude:** Start the local Python server on port 8000 again.
+
     ```bash
     python3 -m http.server 8000 --directory /tmp/backup_test
     ```
-3.  **User:** Navigate to `http://localhost:8000` in Chromium.
-4.  **User:** Test ONLY the **PS101 questionnaire**. Can you start it and advance through the steps? Capture results with CodexCapture.
-5.  **Codex:** Analyze the captured logs.
-6.  **Claude:** Report the results back to me. Specifically: **"Did PS101 advance? (Yes/No)"**. Stop the test server.
+
+3. **User:** Navigate to `http://localhost:8000` in Chromium.
+4. **User:** Test ONLY the **PS101 questionnaire**. Can you start it and advance through the steps? Capture results with CodexCapture.
+5. **Codex:** Analyze the captured logs.
+6. **Claude:** Report the results back to me. Specifically: **"Did PS101 advance? (Yes/No)"**. Stop the test server.
 
 ### Step 4: Await Final Decision
 

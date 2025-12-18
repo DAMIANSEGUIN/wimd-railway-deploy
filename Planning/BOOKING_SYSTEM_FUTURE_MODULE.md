@@ -1,4 +1,5 @@
 # Booking System Implementation - Session Backup
+
 **Date:** 2025-10-25
 **Status:** Backend Complete, Ready for Deployment
 **Next Step:** Deploy code + Run database migrations
@@ -7,8 +8,10 @@
 
 ## Session Summary
 
-### What Was Requested:
+### What Was Requested
+
 User wants to implement a Google Calendar booking system for coaching sessions with:
+
 - Free sessions (promo code WIMD25, 25 uses)
 - Paid single sessions ($150 USD/CAD)
 - Paid 3-session packages ($500 USD/CAD)
@@ -16,7 +19,7 @@ User wants to implement a Google Calendar booking system for coaching sessions w
 - 48-hour cancellation policy with 50% penalty
 - PayPal payment integration (user already has PayPal set up)
 
-### Key Decisions Made:
+### Key Decisions Made
 
 1. **Payment Provider:** PayPal (user has existing setup + billing agreement)
    - Alternative considered: Stripe (better UX but requires new setup)
@@ -41,7 +44,8 @@ User wants to implement a Google Calendar booking system for coaching sessions w
 
 ## Files Created This Session
 
-### Backend Services:
+### Backend Services
+
 1. **`api/google_calendar_service.py`**
    - Google Calendar API integration
    - Create/update/cancel coaching session events
@@ -64,7 +68,8 @@ User wants to implement a Google Calendar booking system for coaching sessions w
      - `POST /booking/create-paid` - Book paid session
      - `GET /booking/my-appointments` - User's bookings
 
-### Database Migrations:
+### Database Migrations
+
 4. **`data/migrations/001_add_booking_tables.sql`**
    - Tables: appointments, session_packages, promo_codes, coach_availability, blocked_dates, notification_log
    - Indexes for performance
@@ -75,7 +80,8 @@ User wants to implement a Google Calendar booking system for coaching sessions w
    - Coach availability: Mon-Fri 9AM-5PM EST (America/Toronto)
    - View: session_packages_with_remaining
 
-### Documentation:
+### Documentation
+
 6. **`PAYPAL_VS_STRIPE_ANALYSIS.md`**
    - Comprehensive comparison of payment providers
    - Fee analysis, UX comparison, implementation complexity
@@ -99,7 +105,8 @@ User wants to implement a Google Calendar booking system for coaching sessions w
 10. **`BOOKING_IMPLEMENTATION_PLAN.md`** (already existed)
     - Full implementation plan with phases
 
-### Code Updates:
+### Code Updates
+
 11. **`requirements.txt`**
     - Added: `google-api-python-client`, `google-auth`
 
@@ -112,7 +119,8 @@ User wants to implement a Google Calendar booking system for coaching sessions w
 
 User successfully added these to Railway Dashboard → Variables:
 
-### Google Calendar:
+### Google Calendar
+
 ```bash
 GOOGLE_SERVICE_ACCOUNT_KEY='<full JSON service account key>'
 COACH_GOOGLE_CALENDAR_ID='primary'
@@ -121,14 +129,16 @@ COACH_EMAIL='damian.seguin@gmail.com'
 
 **Note:** `COACH_PHONE_NUMBER` was discussed but deliberately excluded for security reasons (user correctly identified it as unnecessary - coach calls user, not vice versa)
 
-### PayPal:
+### PayPal
+
 ```bash
 PAYPAL_CLIENT_ID='<from PayPal developer dashboard>'
 PAYPAL_CLIENT_SECRET='<from PayPal developer dashboard>'
 PAYPAL_MODE='live'
 ```
 
-### Already Existing:
+### Already Existing
+
 ```bash
 DATABASE_URL=postgresql://...railway.internal...
 OPENAI_API_KEY=sk-...
@@ -151,7 +161,7 @@ CLAUDE_API_KEY=sk-ant-...
 
 ## PayPal Setup Completed
 
-1. ✅ User logged into https://developer.paypal.com/dashboard
+1. ✅ User logged into <https://developer.paypal.com/dashboard>
 2. ✅ Selected "Live" mode (for production)
 3. ✅ Found "Apps & Credentials"
 4. ✅ Copied Client ID and Secret
@@ -161,34 +171,40 @@ CLAUDE_API_KEY=sk-ant-...
 
 ## Key Technical Implementation Details
 
-### Database Schema:
+### Database Schema
 
 **appointments table:**
+
 - Stores all coaching session bookings
 - Links to users, session_packages, Google Calendar events
 - Tracks payment status, reschedule count, cancellation fees
 - Supports backup datetime slots
 
 **promo_codes table:**
+
 - WIMD25 code with 25 max uses
 - Tracks current usage count
 
 **coach_availability table:**
+
 - Default weekly schedule (day_of_week, start_time, end_time)
 - Currently seeded: Mon-Fri 9AM-5PM America/Toronto
 
 **blocked_dates table:**
+
 - Manual date blocking for PTO/holidays
 - Notify affected users option
 
 **session_packages table:**
+
 - 3-session packages ($500)
 - Tracks sessions_used vs sessions_total
 - Links to appointments via package_id
 
-### API Flow:
+### API Flow
 
 **Free Session Booking:**
+
 1. User validates promo code: `GET /booking/promo/WIMD25`
 2. User gets available slots: `GET /booking/availability?start_date=...&end_date=...`
 3. User books session: `POST /booking/create-free` with promo code + datetime + phone
@@ -201,6 +217,7 @@ CLAUDE_API_KEY=sk-ant-...
 5. User receives calendar invite via email
 
 **Paid Session Booking:**
+
 1. User gets available slots (same as above)
 2. Frontend creates PayPal order (client-side SDK)
 3. User redirected to PayPal, approves payment
@@ -213,17 +230,19 @@ CLAUDE_API_KEY=sk-ant-...
    - Saves appointment with payment details
 7. User receives calendar invite
 
-### Mock Mode Support:
+### Mock Mode Support
 
 Both services (`google_calendar_service.py` and `paypal_service.py`) have mock modes:
+
 - Work without credentials for local development
 - Return fake IDs (e.g., `mock_event_1234567890`)
 - Log warnings indicating mock mode active
 - Switch to live mode automatically when credentials detected
 
-### Security Considerations:
+### Security Considerations
 
 **User's Security Questions Addressed:**
+
 - Credentials encrypted in Railway
 - Service account has minimal permissions (calendar only)
 - No public calendar access
@@ -233,6 +252,7 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 - Authentication required for all booking endpoints
 
 **Audit Trail:**
+
 - All appointments logged in database
 - Notification log tracks what was sent to users
 - Railway deployment logs for debugging
@@ -241,7 +261,7 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 
 ## What's NOT Built Yet (Frontend)
 
-### Still Need to Create:
+### Still Need to Create
 
 1. **Frontend Booking Modal** (`mosaic_ui/js/booking-modal.js`)
    - Calendar date picker UI
@@ -278,9 +298,10 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 
 ## Next Steps (In Order)
 
-### IMMEDIATE - Deploy Backend:
+### IMMEDIATE - Deploy Backend
 
 1. **Commit and push booking system code:**
+
    ```bash
    cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
    git add .
@@ -289,6 +310,7 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
    ```
 
 2. **Run database migrations:**
+
    ```bash
    # Option 1: Via Railway CLI
    railway run psql $DATABASE_URL < data/migrations/001_add_booking_tables.sql
@@ -298,6 +320,7 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
    ```
 
 3. **Verify deployment:**
+
    ```bash
    # Check health endpoint
    curl https://what-is-my-delta-site-production.up.railway.app/health
@@ -309,6 +332,7 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
    ```
 
 4. **Test API endpoints:**
+
    ```bash
    # Test promo code validation
    curl https://what-is-my-delta-site-production.up.railway.app/booking/promo/WIMD25 \
@@ -319,7 +343,7 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
      -H "Authorization: Bearer <JWT_TOKEN>"
    ```
 
-### AFTER BACKEND DEPLOYED - Build Frontend:
+### AFTER BACKEND DEPLOYED - Build Frontend
 
 5. Build booking modal UI
 6. Integrate PayPal JavaScript SDK
@@ -332,19 +356,22 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 
 ## Important Context for Next Session
 
-### User's Working Style:
+### User's Working Style
+
 - User said: "treat this entire session as one prompt and only ask for my approval or input when absolutely necessary"
 - User is security-conscious (correctly questioned phone number exposure)
 - User prefers to use existing tools (PayPal) over setting up new ones (Stripe)
 - User wants to ship fast but also wants to understand what's happening
 
-### Blocking Issues Resolved:
+### Blocking Issues Resolved
+
 - ✅ Google Calendar sharing confusion (found correct section)
 - ✅ Calendar ID vs. public URL confusion (clarified use `primary`)
 - ✅ Service account JSON vs. Client ID string (downloaded full JSON)
 - ✅ Phone number security concern (removed COACH_PHONE_NUMBER requirement)
 
-### Current State:
+### Current State
+
 - ✅ All backend code written and committed locally
 - ✅ All environment variables added to Railway
 - ✅ Google Calendar shared with service account
@@ -396,17 +423,20 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 
 ## File Locations Reference
 
-### Backend Code:
+### Backend Code
+
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/google_calendar_service.py`
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/paypal_service.py`
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/booking.py`
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/index.py` (updated)
 
-### Database:
+### Database
+
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/data/migrations/001_add_booking_tables.sql`
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/data/migrations/002_seed_booking_data.sql`
 
-### Documentation:
+### Documentation
+
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/PAYPAL_VS_STRIPE_ANALYSIS.md`
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/BOOKING_ENV_SETUP.md`
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/BOOKING_SYSTEM_READY.md`
@@ -414,14 +444,16 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/BOOKING_IMPLEMENTATION_PLAN.md`
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/Planning/BOOKING_SESSION_BACKUP_2025-10-25.md` (THIS FILE)
 
-### Dependencies:
+### Dependencies
+
 - `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/requirements.txt` (updated)
 
 ---
 
 ## Quick Reference Commands
 
-### Deploy to Railway:
+### Deploy to Railway
+
 ```bash
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
 git add .
@@ -429,19 +461,22 @@ git commit -m "Add booking system backend"
 git push railway-origin main
 ```
 
-### Run Migrations:
+### Run Migrations
+
 ```bash
 railway run psql $DATABASE_URL < data/migrations/001_add_booking_tables.sql
 railway run psql $DATABASE_URL < data/migrations/002_seed_booking_data.sql
 ```
 
-### Check Deployment:
+### Check Deployment
+
 ```bash
 railway logs --follow
 curl https://what-is-my-delta-site-production.up.railway.app/health
 ```
 
-### Test Endpoints:
+### Test Endpoints
+
 ```bash
 # Get JWT token first (login)
 curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/login \
@@ -455,20 +490,23 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/login 
 
 ## Pricing / Business Model
 
-### Free Sessions:
+### Free Sessions
+
 - Promo code: WIMD25
 - 25 total uses (system-wide cap)
 - 30 minutes per session
 - No payment required
 
-### Paid Sessions:
+### Paid Sessions
+
 - **Single:** $150 USD or $150 CAD
 - **3-Pack:** $500 USD or $500 CAD
 - PayPal fees: 2.9% + $0.30 per transaction
   - $150 session → $4.65 fee → $145.35 net
   - $500 package → $14.80 fee → $485.20 net
 
-### Cancellation Policy:
+### Cancellation Policy
+
 - Free sessions: No penalty
 - Paid sessions: 48-hour notice required
 - One free reschedule allowed
@@ -495,6 +533,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/login 
 **Next Action:** Deploy code to Railway and run database migrations
 
 **Command to Run:**
+
 ```bash
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
 git add .

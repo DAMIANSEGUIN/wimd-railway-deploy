@@ -1,8 +1,8 @@
 ## Context
 
-- **Date:** 2025-11-04  
-- **Session:** PS101 Mosaic Deployment guardrail review  
-- **Participants:** Damian, Codex, Claude_Code  
+- **Date:** 2025-11-04
+- **Session:** PS101 Mosaic Deployment guardrail review
+- **Participants:** Damian, Codex, Claude_Code
 - **Objective:** Resolve production mismatch where Netlify served the legacy `frontend/` UI instead of the PS101 Mosaic UI.
 
 ## Root Cause Summary
@@ -23,24 +23,26 @@
 
 ## Implementation Guardrails — “Mosaic Deploy Safeguard”
 
-> **Name:** Mosaic Deploy Safeguard (MDS)  
+> **Name:** Mosaic Deploy Safeguard (MDS)
 > **Invocation:** Mention “Apply Mosaic Deploy Safeguard” at session start to enforce these steps.
 
 1. **Source Control Check**
    - `git status` must be clean before deployment.
-   - Confirm target commits exist locally:  
+   - Confirm target commits exist locally:
      `git log --stat netlify.toml Procfile scripts/deploy_frontend_netlify.sh`
 2. **Remote Sync Verification**
-   - Ensure `origin` URL is reachable. If SSH fails, switch to HTTPS:  
+   - Ensure `origin` URL is reachable. If SSH fails, switch to HTTPS:
      `git remote set-url origin https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git`
    - Push with credentials: `git push origin main`
 3. **Netlify Config Validation**
    - Repo root `netlify.toml` **must** contain:
+
      ```
      [build]
        base = "mosaic_ui"
        publish = "mosaic_ui"
      ```
+
    - Any change to deploy scripts must echo the chosen directory.
 4. **Deployment Confirmation**
    - Netlify Deploys tab → “Clear cache and deploy site”.

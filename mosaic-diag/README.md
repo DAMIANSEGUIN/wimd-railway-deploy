@@ -291,12 +291,14 @@ INCIDENT LOG (3 total)
 ## Roadmap (Future Phases)
 
 ### Phase 2: Prognostic Engine (Not Yet Implemented)
+
 - Recurrence detection
 - Clustering of similar incidents
 - Likelihood forecasting
 - Preventative suggestions
 
 ### Phase 3: Auto-Suggestion Generation (Not Yet Implemented)
+
 - LLM-assisted check generation
 - Documentation gap detection
 - Roadmap expansion proposals
@@ -308,12 +310,14 @@ INCIDENT LOG (3 total)
 See `mosaic_diag_spec_v2.0.md` for complete specification.
 
 **Core Modules:**
+
 - `storage.py` - Atomic file I/O
 - `preflight.py` - Check registry + execution
 - `incidents.py` - Incident logging + classification
 - `cli.py` - Command-line interface
 
 **Planned Modules (v2.1):**
+
 - `classifiers.py` - Rule-based classifiers
 - `classifiers_ml.py` - LLM-assisted clustering
 - `suggestions.py` - Auto-generation engine
@@ -348,6 +352,7 @@ Internal tool for Mosaic project. Not for external distribution.
 ## Questions?
 
 See:
+
 - `RECURRING_BLOCKERS.md` - Blocker patterns and prevention
 - `TEAM_PLAYBOOK.md` - Team protocols
 - `mosaic_diag_spec_v2.0.md` - Full specification

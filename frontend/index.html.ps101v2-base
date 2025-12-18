@@ -88,16 +88,16 @@
   .notice .btn{border:1px solid var(--line);background:#fff;padding:6px 10px;border-radius:2px}
 
   .foot{border-top:1px solid var(--line);margin-top:140px;padding:14px 0;color:#777;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-  
+
   .status{display:inline-block;padding:2px 6px;font-size:10px;border-radius:12px;font-weight:500}
   .status.working{background:#e8f5e8;color:#2d6e2d}
   .status.error{background:#ffe8e8;color:#d63638}
-  
+
   @keyframes pulse {
     0%, 100% { opacity: 0.6; }
     50% { opacity: 1; }
   }
-  
+
   @media (max-width:860px){
     .metrics{grid-template-columns:1fr}
     .actions{flex-direction:column;align-items:flex-start}
@@ -106,7 +106,7 @@
     .foot{flex-direction:column;text-align:center}
     .chat{width:280px;right:10px;bottom:10px}
   }
-  
+
   @media (max-width:480px){
     .wrap{padding:20px 16px}
     .hero{margin:80px 0 30px}
@@ -114,7 +114,7 @@
     .coach-strip input{width:100%}
     .actions .quiet{width:100%;text-align:center}
   }
-  
+
   .tooltip{position:relative;cursor:help;color:var(--muted);border:1px solid var(--line);border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;margin-left:4px}
   .tooltip:hover::after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--fg);color:#fff;padding:8px 10px;border-radius:4px;font-size:11px;white-space:normal;max-width:200px;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
   .intro-process{margin:40px 0 60px;padding:20px;border:1px solid var(--line);border-radius:4px;background:#fafafa}
@@ -145,7 +145,7 @@
   .method-step{margin:20px 0;padding:16px;border-left:3px solid var(--line);padding-left:20px}
   .method-step strong{display:block;margin-bottom:8px;color:var(--fg)}
   .method-step p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
-  
+
   /* PS101 Styles */
   .ps101-welcome{max-width:640px;margin:80px auto;padding:40px 20px;text-align:center}
   .ps101-welcome.hidden{display:none}
@@ -164,7 +164,7 @@
   .welcome-btn-secondary{background:transparent;border-color:var(--line)}
   .welcome-resume{margin-top:32px;padding-top:24px;border-top:1px solid var(--line)}
   .resume-text{font-size:12px;color:var(--muted);margin-bottom:12px}
-  
+
   .ps101-container{max-width:var(--max);margin:0 auto;padding:40px 20px}
   .ps101-progress{max-width:var(--max);margin:0 auto 40px;padding:20px}
   .progress-header{text-align:center;margin-bottom:16px}
@@ -175,7 +175,7 @@
   .progress-dots .dot.completed{background:linear-gradient(145deg,#f5f5f5 0%,#eee 100%);color:var(--fg);border-color:var(--hair)}
   .progress-dots .dot.active{background:linear-gradient(145deg,#fff 0%,#f8f8f8 100%);box-shadow:0 3px 8px rgba(0,0,0,0.12);color:var(--fg);font-weight:600;border-color:var(--hair)}
   .progress-dots .dot:disabled{cursor:not-allowed;opacity:0.5}
-  
+
   /* Experiment Components Styles */
   .experiment-components{margin:32px 0;padding:24px;border:1px solid var(--line);border-radius:6px;background:linear-gradient(145deg,#fff 0%,#fafafa 100%)}
   .experiment-components.hidden{display:none}
@@ -188,7 +188,7 @@
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .btn-add{padding:8px 16px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer;border-radius:3px;font-size:12px;transition:all 0.2s ease;margin-top:8px}
   .btn-add:hover{background:var(--line);border-color:var(--hair)}
-  
+
   /* Obstacle Mapping */
   .obstacle-item,.action-item{margin-bottom:16px;padding:12px;border:1px solid var(--line);border-radius:4px;background:#fff}
   .obstacle-header,.action-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -201,18 +201,18 @@
   .action-due{font-size:11px;color:var(--muted);margin-top:4px}
   .btn-remove{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0;line-height:1;opacity:0.6;transition:opacity 0.2s ease}
   .btn-remove:hover{opacity:1}
-  
+
   /* Reflection */
   .confidence-slider-container{display:flex;align-items:center;gap:12px}
   .confidence-slider-container input[type="range"]{flex:1}
   #confidence-value{font-weight:600;min-width:30px;text-align:center}
-  
+
   /* Add Form Containers */
   .add-form-container{margin-top:16px;padding:16px;background:var(--bg-secondary);border:1px solid var(--line);border-radius:4px}
   .add-form-container.hidden{display:none}
   .form-error{font-size:12px;color:#d63638;margin-top:4px;display:block}
   .form-error.hidden{display:none}
-  
+
   .previous-answers{margin-bottom:32px;border:1px solid var(--line);border-radius:4px;background:linear-gradient(145deg,#fafafa 0%,#f5f5f5 100%);padding:16px}
   .previous-answers summary{cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;padding:8px 0}
   .previous-answers summary:hover .summary-text{color:var(--fg)}
@@ -226,28 +226,28 @@
   .answer-edit{font-size:11px;padding:4px 8px;border:1px solid var(--line);background:transparent;cursor:pointer;border-radius:2px;transition:all 0.2s ease}
   .answer-edit:hover{background:var(--line)}
   .answer-content{font-size:12px;line-height:1.5;color:var(--muted);white-space:pre-wrap}
-  
+
   .ps101-question{margin-bottom:32px}
   .question-text{font-size:18px;font-weight:400;line-height:1.5;color:var(--fg);margin:0 0 16px}
   .coaching-hint{margin-top:12px;padding:12px;background:linear-gradient(145deg,#fafafa 0%,#f5f5f5 100%);border:1px solid var(--line);border-radius:4px}
   .coaching-hint summary{font-size:12px;cursor:pointer;user-select:none;color:var(--muted)}
   .coaching-hint summary:hover{color:var(--fg)}
   .coaching-hint p{margin:8px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
-  
+
   .ps101-input{margin-bottom:24px}
   .step-textarea{width:100%;min-height:120px;padding:12px;border:1px solid var(--line);border-radius:4px;font:inherit;font-size:13px;line-height:1.6;resize:vertical;transition:all 0.2s ease}
   .step-textarea:focus{outline:none;border-color:var(--hair);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
   .char-count{margin-top:8px;font-size:11px;color:var(--muted);text-align:right}
-  
+
   .ps101-nav{display:flex;justify-content:space-between;margin-top:32px;gap:16px}
   .nav-btn{min-width:120px;padding:10px 20px;font-size:13px}
   .nav-back{background:transparent;border-color:var(--line)}
   .nav-next{background:linear-gradient(145deg,#fff 0%,#f8f8f8 100%);border-color:var(--hair);font-weight:500}
   .nav-btn:disabled{opacity:0.5;cursor:not-allowed}
-  
+
   .autosave-indicator{margin-top:16px;text-align:center;font-size:11px;color:var(--muted);opacity:0;transition:opacity 0.3s ease}
   .autosave-indicator.visible{opacity:1}
-  
+
   .ps101-completion{max-width:var(--max);margin:40px auto;padding:40px 20px}
   .ps101-completion.hidden{display:none}
   .completion-header{text-align:center;margin-bottom:32px}
@@ -262,7 +262,7 @@
   .commitment-deadline{font-size:12px;color:var(--muted);font-weight:500}
   .completion-summary{margin-bottom:32px;border:1px solid var(--line);border-radius:4px;padding:16px}
   .completion-summary summary{cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);user-select:none}
-  
+
   @media (max-width:768px){
     .ps101-welcome{margin:40px auto;padding:24px 16px}
     .welcome-title{font-size:24px}
@@ -363,7 +363,7 @@
         <a href="javascript:void(0)" data-prompt="help me get started with these questions">start here</a>
       </div>
     </div>
-    
+
     <div class="module" id="progress">
       <h3><a href="javascript:void(0)" onclick="scrollToSection('progress')" title="open Progress">Stay on Track — Weekly Check-ins</a></h3>
       <ul>
@@ -376,7 +376,7 @@
         <a href="javascript:void(0)" data-prompt="help me figure out what to focus on this week">plan next steps</a>
       </div>
     </div>
-    
+
     <div class="module" id="jobs">
       <h3><a href="javascript:void(0)" onclick="scrollToSection('jobs')" title="open Jobs">Job Search — Compare Opportunities</a></h3>
       <ul>
@@ -390,7 +390,7 @@
         <a href="javascript:void(0)" id="findJobs" title="Find relevant jobs">find jobs</a>
       </div>
     </div>
-    
+
     <div class="module" id="resume">
       <h3><a href="javascript:void(0)" onclick="scrollToSection('resume')" title="open Resume">Resume — Tell Your Story</a></h3>
       <ul>
@@ -403,7 +403,7 @@
         <a href="javascript:void(0)" data-prompt="help me write about this experience clearly">improve my resume</a>
       </div>
     </div>
-    
+
     <div class="module" id="dashboard">
       <h3><a href="javascript:void(0)" onclick="scrollToSection('dashboard')" title="open Dashboard">Delta — Dashboard</a></h3>
       <ul><li>Clarity graph</li><li>Action trend</li><li>Next steps</li></ul>
@@ -745,7 +745,7 @@
         </ul>
       </div>
     </div>
-    
+
     <div id="guide" class="help-section">
       <h3>How This Platform Works</h3>
       <div class="process-flow">
@@ -777,7 +777,7 @@
         </div>
       </div>
     </div>
-    
+
     <div id="examples" class="help-section">
       <h3>Example Questions & Answers</h3>
       <div class="example-qa">
@@ -794,11 +794,11 @@
       </div>
     </div>
   </section>
-  
+
   <section id="about" class="island" aria-label="About">
     <div class="welcome-title">About What Is My Delta</div>
     <p>A practical career guidance platform designed to help you get unstuck and move forward in your career.</p>
-    
+
     <h3>What This Platform Does</h3>
     <p>Instead of overwhelming you with generic career advice, we focus on three simple questions that cut through the noise:</p>
     <ul>
@@ -806,7 +806,7 @@
       <li><strong>What would success look like?</strong> - Define your specific career goals</li>
       <li><strong>What's your biggest obstacle?</strong> - Identify what needs to change</li>
     </ul>
-    
+
     <h3>The PS101 Methodology</h3>
     <p>Our approach is based on PS101 (Problem Solving 101) - a straightforward framework that prioritizes action over analysis paralysis:</p>
     <div class="methodology-steps">
@@ -823,25 +823,25 @@
         <p>Weekly progress reviews to stay on track and adjust course when needed.</p>
       </div>
     </div>
-    
+
     <h3>Why It Works</h3>
     <p>Most career advice tries to solve everything at once. We believe in tackling one clear problem at a time with specific, actionable steps. No fluff, no corporate speak - just practical guidance that fits into your real life.</p>
-    
+
     <h3>Your Data, Your Control</h3>
     <p>Everything you enter stays on your device unless you choose to share it. You can save your progress, export your responses, or start fresh anytime. We're here to help you think through your career, not collect your data.</p>
-    
+
     <h3>About Me</h3>
     <p>I'm Damian, founder of Alacrity Learning and Performance, and I built this platform after spending years helping people navigate career transitions. I've seen too many talented people get stuck - not because they lack skills or ambition, but because career advice often makes things more complicated than they need to be.</p>
-    
+
     <p>The PS101 methodology came from working with hundreds of professionals who just needed a clear way to think through their next move. Instead of lengthy assessments or abstract frameworks, I wanted something practical: three questions that cut through the noise and get you moving forward.</p>
-    
+
     <p>This isn't backed by venture capital or designed for massive scale. It's a straightforward tool for people who want to make thoughtful career decisions without the overwhelm. Your progress stays private, your data stays yours, and the focus remains on practical next steps rather than endless analysis.</p>
-    
+
     <p>If you find this helpful, great. If not, no worries - there are many paths to career clarity, and this is just one approach that's worked for the people I've had the privilege to work with.</p>
-    
+
     <h4>Get In Touch</h4>
     <p>Questions about the platform or want to share feedback? You can reach me at <span id="emailContact"></span> - I read every message and try to respond within a few days.</p>
-    
+
     <div class="contact-form" style="margin-top:20px;padding:20px;border:1px solid var(--line);border-radius:4px;background:#fafafa">
       <h5 style="margin:0 0 16px;font-size:12px;text-transform:uppercase;letter-spacing:0.05em">Send a Message</h5>
       <form id="contactForm" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
@@ -879,7 +879,7 @@
       </form>
     </div>
   </section>
-  
+
   <section id="privacy" class="island" aria-label="Privacy">
     <div class="welcome-title">Privacy Policy</div>
     <p>Your privacy is important to us. Here's what you need to know:</p>
@@ -944,8 +944,8 @@
   <footer class="foot">
     <div>What Is My Delta — A project by Alacrity Learning and Performance</div>
     <div>
-      <a href="javascript:void(0)" onclick="scrollToSection('resources')">Help</a> · 
-      <a href="javascript:void(0)" onclick="scrollToSection('privacy')">Privacy</a> · 
+      <a href="javascript:void(0)" onclick="scrollToSection('resources')">Help</a> ·
+      <a href="javascript:void(0)" onclick="scrollToSection('privacy')">Privacy</a> ·
       <a href="javascript:void(0)" onclick="scrollToSection('feedback')">Feedback</a>
     </div>
   </footer>
@@ -985,24 +985,24 @@
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const API_BASE = '';  // Use relative paths - Netlify proxies to Railway backend
-  
+
   // Load career coaching knowledge base + PS101 framework
   let careerPrompts = [];
   let ps101Framework = [];
-  
+
   async function loadPrompts() {
     try {
       // Load 607 career coaching responses
       const csvResponse = await fetch('./assets/prompts.csv');
       const csvText = await csvResponse.text();
       const lines = csvText.split('\n').slice(1); // Skip header
-      
+
       // Proper CSV parsing for CoachVox AI structure with embedded commas
       function parseCSVLine(line) {
         const result = [];
         let current = '';
         let inQuotes = false;
-        
+
         for (let i = 0; i < line.length; i++) {
           const char = line[i];
           if (char === '"') {
@@ -1017,68 +1017,68 @@
         result.push(current.trim().replace(/^"|"$/g, ''));
         return result;
       }
-      
+
       careerPrompts = lines.filter(line => line.trim()).map(line => {
         const [prompt, completion, labels] = parseCSVLine(line);
         return { prompt, completion, labels };
       });
-      
+
       // Load PS101 framework questions
       const ps101Response = await fetch('./data/prompts.ps101.json');
       const ps101Data = await ps101Response.json();
       ps101Framework = ps101Data.prompts;
-      
+
       console.log(`Loaded ${careerPrompts.length} career coaching prompts + ${ps101Framework.length} PS101 framework questions`);
     } catch (error) {
       console.error('Failed to load prompt systems:', error);
     }
   }
-  
+
   // Smart prompt matching
   function findBestMatch(userInput) {
     if (!careerPrompts.length) return null;
-    
+
     const input = userInput.toLowerCase();
     let bestMatch = null;
     let highestScore = 0;
-    
+
     careerPrompts.forEach(prompt => {
       let score = 0;
       const promptWords = prompt.prompt.toLowerCase().split(' ');
       const inputWords = input.split(' ');
-      
+
       // Keyword matching
       inputWords.forEach(word => {
         if (promptWords.some(pw => pw.includes(word) || word.includes(pw))) {
           score += 1;
         }
       });
-      
+
       // Exact phrase matching (higher weight)
       if (prompt.prompt.toLowerCase().includes(input)) {
         score += 10;
       }
-      
+
       if (score > highestScore) {
         highestScore = score;
         bestMatch = prompt;
       }
     });
-    
+
     return highestScore > 0 ? bestMatch : null;
   }
 
   $('#y').textContent = new Date().getFullYear();
-  
+
   // Initialize prompts on page load
   loadPrompts();
 
   // API Status Check with improved error handling
   async function checkAPI() {
     try {
-      const response = await fetch(`${API_BASE}/health`, { 
+      const response = await fetch(`${API_BASE}/health`, {
         method: 'GET',
-        timeout: 5000 
+        timeout: 5000
       });
       if (response.ok) {
         const data = await response.json();
@@ -1096,7 +1096,7 @@
       return false;
     }
   }
-  
+
   checkAPI();
   // Retry API check every 30 seconds if offline
   setInterval(() => {
@@ -1112,11 +1112,11 @@
   const sendMsg = $('#sendMsg');
 
   $('#openChat').addEventListener('click', e => {
-    e.preventDefault(); 
+    e.preventDefault();
     chat.style.display = 'block';
     chatInput.focus();
   });
-  
+
   $('#closeChat').addEventListener('click', () => {
     chat.style.display = 'none';
   });
@@ -1134,7 +1134,7 @@
     div.textContent = (who === 'you' ? '> ' : '') + txt;
     chatLog.appendChild(div);
     chatLog.scrollTop = chatLog.scrollHeight;
-    
+
     // Announce new messages to screen readers
     if (who === 'bot') {
       div.setAttribute('aria-live', 'polite');
@@ -1145,20 +1145,20 @@
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
-      
+
       const response = await fetch(`${API_BASE}/wimd`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: prompt.trim() }),
         signal: controller.signal
       });
-      
+
       clearTimeout(timeoutId);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      
+
       const data = await response.json();
       return data?.result?.message || data?.result || 'no response from coach';
     } catch (error) {
@@ -1173,17 +1173,17 @@
   async function send() {
     const v = chatInput.value.trim();
     if (!v) return;
-    
+
     addMsg(v, 'you');
     chatInput.value = '';
-    
+
     // Show loading with better UX
     const loadingDiv = document.createElement('div');
     loadingDiv.className = 'msg loading';
     loadingDiv.textContent = 'thinking...';
     chatLog.appendChild(loadingDiv);
     chatLog.scrollTop = chatLog.scrollHeight;
-    
+
     try {
       const response = await askCoach(v);
       loadingDiv.remove();
@@ -1192,7 +1192,7 @@
       loadingDiv.remove();
       addMsg('connection issue - please try again', 'bot');
     }
-    
+
     softRoute(v);
   }
 
@@ -1202,7 +1202,7 @@
       send();
     }
   });
-  
+
   sendMsg.addEventListener('click', send);
 
   // Enhanced Coach Strip (immediate input)
@@ -1216,7 +1216,7 @@
     chat.style.display = 'block';
     addMsg(v, 'you');
     coachAsk.value = '';
-    
+
     // Show loading
     const loadingDiv = document.createElement('div');
     loadingDiv.className = 'msg loading';
@@ -1224,7 +1224,7 @@
     const chatLog = document.getElementById('chatLog');
     chatLog.appendChild(loadingDiv);
     chatLog.scrollTop = chatLog.scrollHeight;
-    
+
     // Try local CSV prompts first (607 career coaching responses)
     const match = findBestMatch(v);
     if (match) {
@@ -1241,7 +1241,7 @@
         addMsg('I understand you\'re looking for guidance. Could you try rephrasing your question? I work best with specific situations like "I feel stuck in my career" or "I don\'t know what I want to do."', 'bot');
       }
     }
-    
+
     softRoute(v);
   }
 
@@ -1251,7 +1251,7 @@
       sendStrip();
     });
   }
-  
+
   if (coachAsk) {
     coachAsk.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
@@ -1301,7 +1301,7 @@
   // Enhanced file upload functionality
   async function uploadFile(file) {
     if (!file) return;
-    
+
     // Validate file size (10MB limit)
     if (file.size > 10 * 1024 * 1024) {
       uploadStatus.style.display = 'block';
@@ -1327,14 +1327,14 @@
       }
 
       const result = await response.json();
-      
+
       uploadStatus.innerHTML = '<div style="font-size:11px;color:#2d6e2d">upload complete!</div>';
-      
+
       // Add result to chat
       chat.style.display = 'block';
       addMsg(`uploaded: ${file.name}`, 'you');
       addMsg(result?.result?.message || result?.result || 'file processed', 'bot');
-      
+
       // Close modal after delay
       setTimeout(() => {
         closeUploadModal();
@@ -1349,7 +1349,7 @@
   filePick.addEventListener('change', async (e) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    
+
     for (let file of files) {
       await uploadFile(file);
     }
@@ -1374,7 +1374,7 @@
     e.preventDefault();
     dropZone.style.background = '';
     dropZone.style.borderColor = '';
-    
+
     const files = e.dataTransfer.files;
     for (let file of files) {
       await uploadFile(file);
@@ -1384,24 +1384,24 @@
   // Enhanced Job Search Integration
   $('#findJobs').addEventListener('click', async (e) => {
     e.preventDefault();
-    
+
     const jobsText = $('#t_jobs').value.trim();
     const query = jobsText || 'career opportunities';
-    
+
     chat.style.display = 'block';
     addMsg(`finding jobs: ${query}`, 'you');
-    
+
     const loadingDiv = document.createElement('div');
     loadingDiv.className = 'msg loading';
     loadingDiv.textContent = 'searching...';
     chatLog.appendChild(loadingDiv);
     chatLog.scrollTop = chatLog.scrollHeight;
-    
+
     try {
       const response = await fetch(`${API_BASE}/jobsearch`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           query: query,
           location: 'Toronto, ON',
           max_results: 5
@@ -1417,7 +1417,7 @@
       const result = await response.json();
       const jobsFound = result?.results?.length || 0;
       addMsg(`found ${jobsFound} opportunities. check your dashboard module for details.`, 'bot');
-      
+
     } catch (error) {
       loadingDiv.remove();
       addMsg('job search temporarily unavailable', 'bot');
@@ -1654,7 +1654,7 @@
     // Show PS101 welcome screen or continue existing flow
     const welcomeScreen = document.getElementById('ps101-welcome');
     const flow = document.getElementById('ps101-flow');
-    
+
     // Wait for PS101 to initialize
     setTimeout(() => {
       if (window.PS101State && window.PS101State.steps && Object.keys(window.PS101State.steps).length > 0 && !window.PS101State.completed) {
@@ -1750,7 +1750,7 @@
       el.dataset.prompt = prompt;
       delete el.dataset.coach;
     });
-    
+
     // Fix data-prompt link handlers
     document.querySelectorAll('[data-prompt]').forEach(link => {
       link.addEventListener('click', async (e) => {
@@ -1759,16 +1759,16 @@
         if (prompt) {
           const coachAsk = document.getElementById('coachAsk');
           const coachSend = document.getElementById('coachSend');
-          
+
           // Set the prompt in the input field
           coachAsk.value = prompt;
-          
+
           // Trigger the send function directly
           sendStrip();
         }
       });
     });
-    
+
     // Fix resource section internal links
     const resourceLinks = document.querySelectorAll('#resources a[href^="#"]');
     resourceLinks.forEach(link => {
@@ -1781,7 +1781,7 @@
         }
       });
     });
-    
+
     // Obfuscate email address to prevent spam bots
     const emailSpan = document.getElementById('emailContact');
     if (emailSpan) {
@@ -1790,16 +1790,16 @@
       const email = parts[0] + '@' + parts[1] + '.' + parts[2];
       emailSpan.innerHTML = `<a href="mailto:${email}">${email}</a>`;
     }
-    
+
     // Handle contact form submission
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
       contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const statusSpan = document.getElementById('contactStatus');
         const submitBtn = contactForm.querySelector('button[type="submit"]');
-        
+
         // Get form data
         const formData = {
           name: document.getElementById('contactName').value,
@@ -1811,13 +1811,13 @@
           // BCC to your email
           bcc: 'damianseguin@gmail.com'
         };
-        
+
         // Update UI
         submitBtn.disabled = true;
         submitBtn.textContent = 'Sending...';
         statusSpan.textContent = 'Sending message...';
         statusSpan.style.color = 'var(--muted)';
-        
+
         try {
           // Send via Netlify Forms or your preferred service
           const response = await fetch('/', {
@@ -1830,7 +1830,7 @@
               ...formData
             })
           });
-          
+
           if (response.ok) {
             statusSpan.textContent = 'Message sent successfully!';
             statusSpan.style.color = 'green';
@@ -1845,7 +1845,7 @@
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Send Message';
-          
+
           // Clear status after 5 seconds
           setTimeout(() => {
             statusSpan.textContent = '';
@@ -1853,49 +1853,49 @@
         }
       });
     }
-    
+
     // Voice input functionality
     const voiceBtn = document.getElementById('voiceBtn');
     const coachAsk = document.getElementById('coachAsk');
-    
+
     if (voiceBtn && coachAsk && 'webkitSpeechRecognition' in window) {
       const recognition = new webkitSpeechRecognition();
       recognition.continuous = false;
       recognition.interimResults = false;
       recognition.lang = 'en-US';
-      
+
       let isListening = false;
-      
+
       voiceBtn.addEventListener('click', () => {
         if (isListening) {
           recognition.stop();
           return;
         }
-        
+
         recognition.start();
         isListening = true;
         voiceBtn.textContent = '⏹️';
         voiceBtn.title = 'Stop recording';
         coachAsk.placeholder = 'Listening...';
       });
-      
+
       recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
         coachAsk.value = transcript;
-        
+
         // Auto-submit after voice input
         setTimeout(() => {
           sendStrip();
         }, 500);
       };
-      
+
       recognition.onend = () => {
         isListening = false;
         voiceBtn.textContent = '🎤';
         voiceBtn.title = 'Voice input';
         coachAsk.placeholder = 'type a question or try: help me get started';
       };
-      
+
       recognition.onerror = (event) => {
         console.warn('Speech recognition error:', event.error);
         isListening = false;
@@ -2386,10 +2386,10 @@
       const currentEl = document.getElementById('char-current');
       const maxEl = document.getElementById('char-max');
       const charCount = document.getElementById('char-count');
-      
+
       if (currentEl) currentEl.textContent = current;
       if (maxEl) maxEl.textContent = max;
-      
+
       if (charCount) {
         if (current > max * 0.9) {
           charCount.style.color = '#d63638';
@@ -2428,13 +2428,13 @@
         const currentAnswer = PS101State.getAnswer(currentStep, promptIndex);
         const step = PS101_STEPS.find(s => s.step === currentStep);
         let isValid = currentAnswer.length >= (step ? step.minChars : 30);
-        
+
         // Additional validation for experiment steps (when on last prompt)
         if (isLastPrompt && [6, 7, 8, 9].includes(currentStep)) {
           const activeExp = PS101State.getActiveExperiment();
           if (currentStep === 6 && activeExp) {
             // Step 6: need hypothesis, success metric, and duration
-            isValid = isValid && activeExp.hypothesis && activeExp.successMetric && 
+            isValid = isValid && activeExp.hypothesis && activeExp.successMetric &&
                      (activeExp.duration?.start || activeExp.duration?.review);
           } else if (currentStep === 7 && activeExp) {
             // Step 7: need at least one obstacle with strategy
@@ -2445,12 +2445,12 @@
             isValid = isValid && activeExp.actions && activeExp.actions.length >= 3;
           } else if (currentStep === 9 && activeExp) {
             // Step 9: need reflection outcome and learning
-            isValid = isValid && activeExp.reflection && 
+            isValid = isValid && activeExp.reflection &&
                      activeExp.reflection.outcome && activeExp.reflection.learning &&
                      activeExp.reflection.confidence?.after;
           }
         }
-        
+
         nextBtn.disabled = !isValid;
       }
     }
@@ -2459,7 +2459,7 @@
     function renderPreviousAnswers(currentStep) {
       const previousSteps = currentStep - 1;
       const previousAnswersEl = document.getElementById('previous-answers');
-      
+
       if (!previousAnswersEl) return;
 
       if (previousSteps === 0) {
@@ -2475,7 +2475,7 @@
 
       const answerList = previousAnswersEl.querySelector('.answer-list');
       if (!answerList) return;
-      
+
       answerList.innerHTML = '';
 
       for (let i = 1; i < currentStep; i++) {
@@ -2536,7 +2536,7 @@
       const welcome = document.getElementById('ps101-welcome');
       const completion = document.getElementById('ps101-completion');
       const flow = document.getElementById('ps101-flow');
-      
+
       if (welcome) welcome.classList.add('hidden');
       if (completion) completion.classList.add('hidden');
       if (flow) flow.classList.remove('hidden');
@@ -2582,7 +2582,7 @@
       // Show/hide experiment components for Steps 6-9
       const expComponents = document.getElementById('experiment-components');
       const ps101Input = document.getElementById('ps101-input');
-      
+
       if ([6, 7, 8, 9].includes(state.currentStep) && promptIndex === totalPrompts - 1) {
         // Show experiment component for this step, hide regular input
         if (expComponents) {
@@ -2592,7 +2592,7 @@
           if (!activeExp && state.currentStep === 6) {
             activeExp = PS101State.createExperiment();
           }
-          
+
           // Show relevant component
           if (state.currentStep === 6) {
             renderExperimentCanvas(activeExp);
@@ -2621,25 +2621,25 @@
     // Experiment Component Rendering Functions
     function renderExperimentCanvas(experiment) {
       if (!experiment) return;
-      
+
       const canvas = document.getElementById('experiment-canvas');
       const obstacleMapping = document.getElementById('obstacle-mapping');
       const actionPlan = document.getElementById('action-plan');
       const reflectionLog = document.getElementById('reflection-log');
-      
+
       // Show canvas, hide others
       if (canvas) canvas.classList.remove('hidden');
       if (obstacleMapping) obstacleMapping.classList.add('hidden');
       if (actionPlan) actionPlan.classList.add('hidden');
       if (reflectionLog) reflectionLog.classList.add('hidden');
-      
+
       // Populate fields
       const hypothesis = document.getElementById('exp-hypothesis');
       const successMetric = document.getElementById('exp-success-metric');
       const startDate = document.getElementById('exp-start-date');
       const reviewDate = document.getElementById('exp-review-date');
       const resources = document.getElementById('exp-resources');
-      
+
       if (hypothesis) hypothesis.value = experiment.hypothesis || '';
       if (successMetric) successMetric.value = experiment.successMetric || '';
       if (startDate) startDate.value = experiment.duration?.start || '';
@@ -2649,25 +2649,25 @@
 
     function renderObstacleMapping(experiment) {
       if (!experiment) return;
-      
+
       const canvas = document.getElementById('experiment-canvas');
       const obstacleMapping = document.getElementById('obstacle-mapping');
       const actionPlan = document.getElementById('action-plan');
       const reflectionLog = document.getElementById('reflection-log');
-      
+
       // Show obstacle mapping, hide others
       if (canvas) canvas.classList.add('hidden');
       if (obstacleMapping) obstacleMapping.classList.remove('hidden');
       if (actionPlan) actionPlan.classList.add('hidden');
       if (reflectionLog) reflectionLog.classList.add('hidden');
-      
+
       // Render obstacles list
       const obstaclesList = document.getElementById('obstacles-list');
       if (!obstaclesList) return;
-      
+
       obstaclesList.innerHTML = '';
       const obstacles = experiment.obstacles || [];
-      
+
       obstacles.forEach((obs, idx) => {
         const item = document.createElement('div');
         item.className = 'obstacle-item';
@@ -2681,7 +2681,7 @@
         `;
         obstaclesList.appendChild(item);
       });
-      
+
       // Attach remove handlers
       obstaclesList.querySelectorAll('.btn-remove').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -2697,25 +2697,25 @@
 
     function renderActionPlan(experiment) {
       if (!experiment) return;
-      
+
       const canvas = document.getElementById('experiment-canvas');
       const obstacleMapping = document.getElementById('obstacle-mapping');
       const actionPlan = document.getElementById('action-plan');
       const reflectionLog = document.getElementById('reflection-log');
-      
+
       // Show action plan, hide others
       if (canvas) canvas.classList.add('hidden');
       if (obstacleMapping) obstacleMapping.classList.add('hidden');
       if (actionPlan) actionPlan.classList.remove('hidden');
       if (reflectionLog) reflectionLog.classList.add('hidden');
-      
+
       // Render actions list
       const actionsList = document.getElementById('actions-list');
       if (!actionsList) return;
-      
+
       actionsList.innerHTML = '';
       const actions = experiment.actions || [];
-      
+
       actions.forEach((action, idx) => {
         const item = document.createElement('div');
         item.className = 'action-item';
@@ -2731,7 +2731,7 @@
           ${action.accountability ? `<div class="action-due">Accountability: ${escapeHtml(action.accountability)}</div>` : ''}
         `;
         actionsList.appendChild(item);
-        
+
         // Attach checkbox handler
         const checkbox = item.querySelector('input[type="checkbox"]');
         if (checkbox) {
@@ -2745,7 +2745,7 @@
           });
         }
       });
-      
+
       // Attach remove handlers
       actionsList.querySelectorAll('.btn-remove').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -2761,27 +2761,27 @@
 
     function renderReflectionLog(experiment) {
       if (!experiment) return;
-      
+
       const canvas = document.getElementById('experiment-canvas');
       const obstacleMapping = document.getElementById('obstacle-mapping');
       const actionPlan = document.getElementById('action-plan');
       const reflectionLog = document.getElementById('reflection-log');
-      
+
       // Show reflection log, hide others
       if (canvas) canvas.classList.add('hidden');
       if (obstacleMapping) obstacleMapping.classList.add('hidden');
       if (actionPlan) actionPlan.classList.add('hidden');
       if (reflectionLog) reflectionLog.classList.remove('hidden');
-      
+
       // Populate fields
       const outcome = document.getElementById('reflection-outcome');
       const learning = document.getElementById('reflection-learning');
       const confidence = document.getElementById('reflection-confidence');
       const confidenceValue = document.getElementById('confidence-value');
       const nextMove = document.getElementById('reflection-next-move');
-      
+
       const reflection = experiment.reflection || {};
-      
+
       if (outcome) outcome.value = reflection.outcome || '';
       if (learning) learning.value = reflection.learning || '';
       if (confidence) {
@@ -2791,7 +2791,7 @@
         }
       }
       if (nextMove) nextMove.value = reflection.nextMove || 'Continue';
-      
+
       // Update confidence display when slider changes
       if (confidence && confidenceValue) {
         confidence.addEventListener('input', (e) => {
@@ -2814,7 +2814,7 @@
       // Check if user has progress
       const hasProgress = state.steps && Object.keys(state.steps).length > 0;
       const resumeSection = document.getElementById('welcome-resume');
-      
+
       if (resumeSection) {
         if (hasProgress && !state.completed) {
           resumeSection.classList.remove('hidden');
@@ -2866,7 +2866,7 @@
       const step = state.getCurrentStep();
       const textarea = document.getElementById('step-answer');
       if (!textarea || !step) return false;
-      
+
       const answer = textarea.value.trim();
       const promptIndex = state.currentPromptIndex || 0;
 
@@ -2930,7 +2930,7 @@
     function showAutosaveIndicator(message) {
       const indicator = document.getElementById('autosave-indicator');
       if (!indicator) return;
-      
+
       const text = indicator.querySelector('.autosave-text');
       if (text) {
         text.textContent = message;
@@ -2952,7 +2952,7 @@
           answers: state.answers
         }
       };
-      
+
       try {
         const blob = new Blob([JSON.stringify(summary, null, 2)], { type: 'application/json' });
         const a = document.createElement('a');
@@ -3065,11 +3065,11 @@ grep
       const expStartDate = document.getElementById('exp-start-date');
       const expReviewDate = document.getElementById('exp-review-date');
       const expResources = document.getElementById('exp-resources');
-      
+
       function saveExperimentCanvas() {
         const activeExp = PS101State.getActiveExperiment();
         if (!activeExp) return;
-        
+
         PS101State.updateExperiment(activeExp.id, {
           hypothesis: expHypothesis?.value || '',
           successMetric: expSuccessMetric?.value || '',
@@ -3082,13 +3082,13 @@ grep
         });
         showAutosaveIndicator('Experiment saved');
       }
-      
+
       if (expHypothesis) expHypothesis.addEventListener('input', () => saveExperimentCanvas());
       if (expSuccessMetric) expSuccessMetric.addEventListener('input', () => saveExperimentCanvas());
       if (expStartDate) expStartDate.addEventListener('change', () => saveExperimentCanvas());
       if (expReviewDate) expReviewDate.addEventListener('change', () => saveExperimentCanvas());
       if (expResources) expResources.addEventListener('input', () => saveExperimentCanvas());
-      
+
       // Add Obstacle button (Step 7)
       // Implementation: Replaces browser prompt()/confirm() dialogs with inline form per Decision #003
       const addObstacleBtn = document.getElementById('add-obstacle-btn');
@@ -3099,7 +3099,7 @@ grep
       const obstacleStrategyInput = document.getElementById('obstacle-strategy');
       const obstacleLabelError = document.getElementById('obstacle-label-error');
       const obstacleStrategyError = document.getElementById('obstacle-strategy-error');
-      
+
       if (addObstacleBtn && addObstacleForm) {
         // Show form when Add button clicked
         // Form appears inline below button, button hides, first field auto-focuses
@@ -3112,7 +3112,7 @@ grep
           // Focus first input with slight delay to ensure form is visible
           setTimeout(() => obstacleLabelInput?.focus(), 50);
         });
-        
+
         // Cancel button: Hides form, restores button, clears all input state
         if (cancelObstacleBtn) {
           cancelObstacleBtn.addEventListener('click', () => {
@@ -3128,7 +3128,7 @@ grep
             obstacleLabelError.classList.add('hidden');
             obstacleStrategyError.classList.add('hidden');
           });
-          
+
           // ESC key handler: Cancel form when Escape pressed (keyboard accessibility)
           document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !addObstacleForm.classList.contains('hidden')) {
@@ -3136,7 +3136,7 @@ grep
             }
           });
         }
-        
+
         // Save button: Validates inputs, shows inline errors, saves to state if valid
         if (saveObstacleBtn) {
           saveObstacleBtn.addEventListener('click', () => {
@@ -3144,11 +3144,11 @@ grep
             const strategy = obstacleStrategyInput?.value.trim() || '';
             const typeRadio = document.querySelector('input[name="obstacle-type"]:checked');
             const type = typeRadio?.value || 'external';
-            
+
             // Validation: Both label and strategy are required
             // Inline error messages appear below fields (no alert() dialogs)
             let isValid = true;
-            
+
             if (!label) {
               obstacleLabelError.textContent = 'Please describe the obstacle.';
               obstacleLabelError.classList.remove('hidden');
@@ -3157,7 +3157,7 @@ grep
             } else {
               obstacleLabelError.classList.add('hidden');
             }
-            
+
             if (!strategy) {
               obstacleStrategyError.textContent = 'Please add a strategy to overcome this obstacle.';
               obstacleStrategyError.classList.remove('hidden');
@@ -3167,10 +3167,10 @@ grep
             } else {
               obstacleStrategyError.classList.add('hidden');
             }
-            
+
             // Stop if validation failed
             if (!isValid) return;
-            
+
             // Save obstacle to state via PS101State method (per Decision #003)
             const activeExp = PS101State.getActiveExperiment();
             if (activeExp) {
@@ -3179,7 +3179,7 @@ grep
                 label: label,
                 strategy: strategy
               });
-              
+
               // Reset form state: clear inputs, reset defaults, hide form, show button
               obstacleLabelInput.value = '';
               obstacleStrategyInput.value = '';
@@ -3187,12 +3187,12 @@ grep
               if (externalRadioReset) externalRadioReset.checked = true;
               addObstacleForm.classList.add('hidden');
               addObstacleBtn.style.display = 'block';
-              
+
               // Re-render obstacle list to show new item
               renderObstacleMapping(activeExp);
             }
           });
-          
+
           // Enter key submission: Allow form submission when Enter pressed in any field
           // Form fields will trigger save when Enter is pressed (default form behavior)
           if (obstacleLabelInput) {
@@ -3212,7 +3212,7 @@ grep
             });
           }
         }
-        
+
         // Real-time error clearing: Hide error messages as user types (better UX)
         if (obstacleLabelInput) {
           obstacleLabelInput.addEventListener('input', () => {
@@ -3229,7 +3229,7 @@ grep
           });
         }
       }
-      
+
       // Add Action button (Step 8)
       // Implementation: Replaces browser prompt() dialogs with inline form per Decision #003
       const addActionBtn = document.getElementById('add-action-btn');
@@ -3240,7 +3240,7 @@ grep
       const actionDueInput = document.getElementById('action-due');
       const actionAccountabilityInput = document.getElementById('action-accountability');
       const actionLabelError = document.getElementById('action-label-error');
-      
+
       if (addActionBtn && addActionForm) {
         // Show form when Add button clicked
         // Form appears inline below button, button hides, first field auto-focuses
@@ -3252,7 +3252,7 @@ grep
           // Focus first input with slight delay to ensure form is visible
           setTimeout(() => actionLabelInput?.focus(), 50);
         });
-        
+
         // Cancel button: Hides form, restores button, clears all input state
         if (cancelActionBtn) {
           cancelActionBtn.addEventListener('click', () => {
@@ -3265,7 +3265,7 @@ grep
             // Clear any validation error messages
             actionLabelError.classList.add('hidden');
           });
-          
+
           // ESC key handler: Cancel form when Escape pressed (keyboard accessibility)
           document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !addActionForm.classList.contains('hidden')) {
@@ -3273,14 +3273,14 @@ grep
             }
           });
         }
-        
+
         // Save button: Validates inputs, shows inline errors, saves to state if valid
         if (saveActionBtn) {
           saveActionBtn.addEventListener('click', () => {
             const label = actionLabelInput?.value.trim() || '';
             const due = actionDueInput?.value.trim() || '';
             const accountability = actionAccountabilityInput?.value.trim() || '';
-            
+
             // Validation: Label is required (due and accountability are optional)
             // Inline error message appears below field (no alert() dialogs)
             if (!label) {
@@ -3291,7 +3291,7 @@ grep
             } else {
               actionLabelError.classList.add('hidden');
             }
-            
+
             // Save action to state via PS101State method (per Decision #003)
             const activeExp = PS101State.getActiveExperiment();
             if (activeExp) {
@@ -3300,19 +3300,19 @@ grep
                 due: due,
                 accountability: accountability
               });
-              
+
               // Reset form state: clear inputs, hide form, show button
               actionLabelInput.value = '';
               actionDueInput.value = '';
               actionAccountabilityInput.value = '';
               addActionForm.classList.add('hidden');
               addActionBtn.style.display = 'block';
-              
+
               // Re-render action list to show new item
               renderActionPlan(activeExp);
             }
           });
-          
+
           // Enter key submission: Allow form submission when Enter pressed in any field
           if (actionLabelInput) {
             actionLabelInput.addEventListener('keydown', (e) => {
@@ -3339,7 +3339,7 @@ grep
             });
           }
         }
-        
+
         // Real-time error clearing: Hide error messages as user types (better UX)
         if (actionLabelInput) {
           actionLabelInput.addEventListener('input', () => {
@@ -3349,17 +3349,17 @@ grep
           });
         }
       }
-      
+
       // Reflection fields (Step 9) - auto-save
       const reflectionOutcome = document.getElementById('reflection-outcome');
       const reflectionLearning = document.getElementById('reflection-learning');
       const reflectionConfidence = document.getElementById('reflection-confidence');
       const reflectionNextMove = document.getElementById('reflection-next-move');
-      
+
       function saveReflection() {
         const activeExp = PS101State.getActiveExperiment();
         if (!activeExp) return;
-        
+
         PS101State.updateReflection(activeExp.id, {
           outcome: reflectionOutcome?.value || '',
           learning: reflectionLearning?.value || '',
@@ -3370,7 +3370,7 @@ grep
         });
         showAutosaveIndicator('Reflection saved');
       }
-      
+
       if (reflectionOutcome) reflectionOutcome.addEventListener('input', () => saveReflection());
       if (reflectionLearning) reflectionLearning.addEventListener('input', () => saveReflection());
       if (reflectionConfidence) reflectionConfidence.addEventListener('change', () => saveReflection());
@@ -3404,7 +3404,7 @@ grep
           }
         });
       }
-      
+
       // Also link the "start here" action in the module
       const startHereLink = ps101Module.querySelector('[data-prompt]');
       if (startHereLink) {

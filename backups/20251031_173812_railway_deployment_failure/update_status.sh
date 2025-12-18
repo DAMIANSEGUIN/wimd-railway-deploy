@@ -1,8 +1,8 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 NOTE="DEPLOY_STATUS_NOTE.md"
 APP_URL="${1:-}"
-TS="$(date '+%Y-%m-%d %H:%M:%S')" 
+TS="$(date '+%Y-%m-%d %H:%M:%S')"
 echo "=== Updating status note ($TS) ==="
 {
   echo ""

@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 TAG="pre_mosaic_cutover_$(date +%Y%m%d_%H%M%S)"
 git tag "$TAG"

@@ -3,6 +3,7 @@
 > **Note for all Mosaic agents:** This document converts the “Context Engineering Prompt Pack” into a shared questionnaire so every subject-matter expert can capture answers in one place. Complete the sections relevant to your workflow before any MCP implementation work begins. Please keep responses concise but explicit, and link to supporting artifacts when needed.
 
 ## How to use this workbook
+
 - Work section by section; if a prompt does not apply to your role, @-mention the right owner.
 - When a question expects iterative dialogue (e.g., “ask me one question at a time”), answer inline under “Response Guidance” so the next agent can follow the reasoning chain.
 - Preserve prior answers—append rather than overwrite so we maintain provenance.
@@ -11,9 +12,11 @@
 ---
 
 ## 1. State Persistence Analysis
+
 **Purpose:** Classify every piece of information the agent touches into transient, decision-relevant, durable, or external artifact buckets.
 
 **Response Guidance:**
+
 1. Describe the agent (inputs, outputs, lifecycle).
 2. List each information item the agent uses; classify it in the table and justify the choice.
 3. For each item, answer:
@@ -49,12 +52,14 @@
 | **MCP server configuration** (future) | DURABLE (session-scoped) | Agent can't query MCP servers, no context retrieval | Minimal (~1KB config), needed if MCP active | Load at session start IF MCP implemented. **Claude Code - FUTURE** |
 
 > **Claude Code Analysis (2025-12-09):**
+>
 > - **Current problem:** I load 60KB+ of governance docs every session even when just fixing typos.
 > - **Biggest bloat:** TROUBLESHOOTING_CHECKLIST.md (15KB) + SELF_DIAGNOSTIC_FRAMEWORK.md (32KB) = 47KB loaded preemptively.
 > - **Proposed improvement:** Load governance as EXTERNAL ARTIFACTS, fetch only relevant sections via retrieval triggers (e.g., "error occurred" → fetch troubleshooting, "deployment command" → fetch deployment truth).
 > - **MCP opportunity:** Summarize governance into decision rules (~5KB), keep full docs as retrievable artifacts.
 
 > **Open Questions:**
+>
 > - @Codex: Do you agree governance files should be EXTERNAL ARTIFACTS vs. DURABLE?
 > - @Damian: Is 60KB governance load acceptable, or should we optimize with MCP retrieval?
 > - @ALL: Should error messages persist across sessions (durable) or only within-session (transient)?
@@ -62,9 +67,11 @@
 ---
 
 ## 2. View Compilation Design
+
 **Purpose:** Define what must/should/should-not enter the context view for each step type.
 
 **Response Guidance:**
+
 1. Outline the agent’s main step types (e.g., planning, coding, verification).
 2. For each step type, fill the matrix below.
 3. Challenge inclusions—document why each item stays in the view.
@@ -75,9 +82,11 @@
 ---
 
 ## 3. Retrieval Trigger Design
+
 **Purpose:** Specify explicit events or signals that force the agent to fetch memory/context.
 
 **Response Guidance:**
+
 1. Enumerate all stages/tools where additional context may be required.
 2. For each, define the trigger signal and the retrieval mechanism.
 
@@ -101,27 +110,32 @@
 > **Claude Code Analysis (2025-12-09):**
 >
 > **Current Problem (v1.1.2):**
+>
 > - No triggers → Agent loads everything at session start
 > - Wastes 60KB context on info that might never be needed
 > - Agent doesn't know when to refresh context (stale feature flags, old docs)
 >
 > **MCP Opportunity:**
+>
 > - Trigger-based retrieval reduces initial context to ~5KB (governance summary only)
 > - Fetch additional context just-in-time when signals detected
 > - Can refresh context mid-session (e.g., re-fetch feature flags before deployment)
 >
 > **Implementation Notes:**
+>
 > - Trigger detection happens in agent's reasoning layer (before tool calls)
 > - MCP query format needs to be defined (JSON-RPC? REST API?)
 > - Fallback: If MCP unavailable, fall back to full file reads (current behavior)
 > - Retrieval latency must be <500ms to not disrupt workflow
 >
 > **Testing Strategy:**
+>
 > - Measure context size with vs. without triggers
 > - Track retrieval accuracy (did we fetch the right doc?)
 > - Monitor false positives (fetched unnecessarily) and false negatives (missed fetching)
 
 > **Open Questions:**
+>
 > - @Codex: Should semantic search be part of MCP retrieval, or separate?
 > - @Gemini: How would API mode detect triggers without tool introspection?
 > - @Damian: Are 500ms retrieval latencies acceptable, or must be faster?
@@ -130,9 +144,11 @@
 ---
 
 ## 4. Attention Budget Allocation
+
 **Purpose:** Assign every information class to attention tiers (must see → never read again).
 
 **Response Guidance:**
+
 1. List each information class.
 2. Choose the lowest feasible tier; justify what breaks if it moves down.
 
@@ -142,9 +158,11 @@
 ---
 
 ## 5. Summarization Schema Design
+
 **Purpose:** Define mandatory fields for safe summaries (causal steps, constraints, failures, commitments, entities).
 
 **Response Guidance:**
+
 1. For each field, describe the policy for capturing it.
 2. Explain what fails if the field is missing.
 
@@ -154,9 +172,11 @@
 ---
 
 ## 6. External Memory Architecture
+
 **Purpose:** Decide what stays in-context vs. what lives in files/databases/checkpoints.
 
 **Response Guidance:**
+
 1. List major content types (governance, logs, code, etc.).
 2. For each, decide summary vs. external storage vs. structured store.
 
@@ -183,17 +203,20 @@
 > **Claude Code Analysis (2025-12-09):**
 >
 > **Current Approach (v1.1.2):**
+>
 > - All context loaded from files each session (no summarization)
 > - No structured external memory (just filesystem)
 > - No checkpointing or cross-session persistence
 > - Works, but inefficient (60KB+ governance load every time)
 >
 > **Proposed MCP Approach:**
+>
 > - **In-context:** Summaries only (~15KB total: 5KB governance rules + 3KB architecture + 2KB schema + 2KB API inventory + 1KB flags + 1KB git + 1KB todos)
 > - **External storage:** Full documents in filesystem, MCP servers provide retrieval
 > - **Structured store:** Future - could use PostgreSQL for agent state (query history, learned patterns, cross-session memory)
 >
 > **Key Decision Points:**
+>
 > 1. **Where do MCP servers run?**
 >    - Option A: Railway service (new deployment, $5-10/month)
 >    - Option B: Local process (started by session script, no cost but availability issues)
@@ -212,11 +235,13 @@
 >    - **Recommendation:** Not in Phase 1 - prove MCP value with file-based first
 >
 > **Rollback Safety:**
+>
 > - All external storage stays in filesystem (unchanged from v1.1.2)
 > - If MCP fails, agents fall back to direct file reads
 > - No data loss risk - MCP is query layer only, not storage
 
 > **Open Questions:**
+>
 > - @Damian: Budget for MCP server infrastructure? (Railway service ~$5-10/month)
 > - @Codex: Can ChatGPT query HTTP MCP servers, or only file-based retrieval?
 > - @Gemini: How would API mode broker scripts interact with MCP servers?
@@ -225,9 +250,11 @@
 ---
 
 ## 7. Multi-Agent Scope Design
+
 **Purpose:** Determine whether separate context windows (agents) are necessary.
 
 **Response Guidance:**
+
 1. Identify candidate splits (planning/execution, verification/generation, etc.).
 2. Document what gains clarity or correctness from the split; veto if unclear.
 
@@ -237,9 +264,11 @@
 ---
 
 ## 8. Cache Stability Optimization
+
 **Purpose:** Maximize KV-cache reuse by organizing prompts into stable/semi-stable/volatile sections.
 
 **Response Guidance:**
+
 1. Map current prompt sections.
 2. Categorize each and note required changes to improve stability.
 
@@ -249,9 +278,11 @@
 ---
 
 ## 9. Failure Reflection System
+
 **Purpose:** Define how failures are captured, structured, and reintegrated without overwhelming context.
 
 **Response Guidance:**
+
 1. Catalogue failure signals.
 2. Specify the memory delta format.
 3. Describe integration and decay/cleanup rules.
@@ -262,9 +293,11 @@
 ---
 
 ## 10. Architecture Ceiling Test
+
 **Purpose:** Identify where architecture, not model capability, limits performance.
 
 **Response Guidance:**
+
 1. List hard constraints (decision trees, aggressive summarization, rigid tools, unnecessary splits).
 2. For each, note whether a stronger model would still be blocked.
 
@@ -274,9 +307,11 @@
 ---
 
 ## 11. Context Observability Audit
+
 **Purpose:** Ensure we can inspect context contents, provenance, inclusion rationale, and exclusions.
 
 **Response Guidance:**
+
 1. Describe how to dump the context window at any step.
 2. Document provenance tracking and inclusion/exclusion logs.
 
@@ -299,18 +334,21 @@
 > **Claude Code Analysis (2025-12-09):**
 >
 > **Current State (v1.1.2):**
+>
 > - Essentially blind to my own context
 > - Cannot debug "why did I not fetch doc X?"
 > - Cannot prove compliance with governance rules
 > - No audit trail for decisions
 >
 > **Criticality for MCP:**
+>
 > - MCP retrieval REQUIRES observability to debug
 > - Must log: what was retrieved, why, what was excluded
 > - Must track: MCP query latency, retrieval accuracy
 > - Must verify: triggers fired correctly, fallback worked
 >
 > **Implementation Approach:**
+>
 > 1. **Phase 1 (No MCP):** Add basic logging to `.ai-agents/` folder
 >    - `context_dump_TIMESTAMP.txt` - manual dumps on request
 >    - `token_usage.jsonl` - token tracking
@@ -325,22 +363,26 @@
 >    - Auto-suggest trigger improvements
 >
 > **Storage Considerations:**
+>
 > - `.ai-agents/` folder already exists for governance docs
 > - JSONL format for logs (append-only, easy to parse)
 > - Rotate logs after 7 days (or 100MB file size)
 > - .gitignore logs (don't commit context dumps)
 >
 > **Privacy/Security:**
+>
 > - Redact sensitive info from context dumps (API keys, credentials)
 > - Separate audit trail (what was done) from content dumps (what was said)
 > - Alert if context dump requested in production environment
 >
 > **Testing Instrumentation:**
+>
 > - Add `/debug stats` command → show token usage, retrieval count, tool calls
 > - Add `/debug last-retrieval` → show details of most recent MCP query
 > - Add `/debug context-size` → show breakdown of context by category
 
 > **Open Questions:**
+>
 > - @Damian: Is logging to `.ai-agents/` folder acceptable, or need separate location?
 > - @Codex: How do you audit your ChatGPT sessions currently? (ChatGPT doesn't expose context dump commands)
 > - @Gemini: Can API mode agents log to filesystem, or need different approach?
@@ -349,9 +391,11 @@
 ---
 
 ## 12. Demystifying Agentic Memory (Non-Technical)
+
 **Purpose:** Produce a plain-language explanation for non-technical stakeholders.
 
 **Response Guidance:**
+
 1. Gather real anecdotes about AI memory successes or failures.
 2. Build explanations incrementally, checking comprehension.
 3. Tie every concept back to practical implications.
@@ -362,6 +406,7 @@
 ---
 
 ### Next Steps
+
 - Populate each section with owner assignments and deadlines.
 - Review completed sections jointly before locking the MCP integration approach.
 - Keep this workbook updated as answers evolve; it is now part of the Mosaic governance corpus.

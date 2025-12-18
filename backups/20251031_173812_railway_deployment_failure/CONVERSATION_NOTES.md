@@ -1,6 +1,7 @@
 # Conversation Notes - WIMD Railway Deployment
 
 ## 2025-10-02 Updates (Claude in Cursor - Forensic Analysis & Implementation)
+
 - **18:30 UTC**: Completed comprehensive forensic analysis of project status
 - **18:45 UTC**: Implemented complete user authentication system (email/password capture)
 - **19:00 UTC**: Added comprehensive user onboarding and explanation system
@@ -9,6 +10,7 @@
 - **19:45 UTC**: Deployed all changes to production
 
 ## 2025-10-03 Updates (Claude in Cursor - Phase 1 Implementation)
+
 - **15:30 UTC**: Implemented Phase 1 of CODEX acceleration plan
 - **15:35 UTC**: Created migration framework with backup/restore capabilities
 - **15:40 UTC**: Implemented CSV→AI fallback system with feature flags
@@ -57,14 +59,16 @@
 - **19:30 UTC**: Competitive Intelligence & Strategic Analysis complete (LOCAL ONLY - rollout pending)
 
 ## Phase 1 Feature Flags Status (2025-10-03)
+
 - **AI_FALLBACK_ENABLED**: ❌ Disabled (default)
-- **EXPERIMENTS_ENABLED**: ❌ Disabled (default)  
+- **EXPERIMENTS_ENABLED**: ❌ Disabled (default)
 - **SELF_EFFICACY_METRICS**: ✅ Enabled (Phase 3)
 - **RAG_BASELINE**: ❌ Disabled (default)
 - **COACH_ESCALATION**: ✅ Enabled (Phase 3)
 - **NEW_UI_ELEMENTS**: ❌ Disabled (default)
 
 ## Phase 1 Implementation Status
+
 - ✅ Migration framework implemented with backup/restore
 - ✅ CSV→AI fallback system implemented
 - ✅ Feature flags system created (all disabled by default)
@@ -74,6 +78,7 @@
 - ⚠️ AI clients temporarily disabled for testing (dependency issues)
 
 ## Phase 2 Implementation Status (2025-10-03)
+
 - ✅ Experiment schema migration executed successfully
 - ✅ Experiment engine APIs implemented (`api/experiment_engine.py`)
 - ✅ All experiment endpoints added to main API
@@ -84,6 +89,7 @@
 - ✅ Transactional integrity with proper error handling
 
 ## Phase 3 Implementation Status (2025-10-03)
+
 - ✅ Self-efficacy metrics engine implemented (`api/self_efficacy_engine.py`)
 - ✅ Coach escalation system with risk assessment
 - ✅ Frontend UI updated with Focus Stack layout
@@ -94,11 +100,13 @@
 - ✅ Complete system testing and validation
 
 ## 2025-10-01 Updates
+
 - CODEX added fallback logic in `api/prompts_loader.py` so `/prompts/active` resolves even if `data/prompts_registry.json` is missing from deploy builds.
 - Documented canonical layout in `PROJECT_STRUCTURE.md`, codified multi-agent workflow in `PROTOCOL_ENFORCEMENT_PLAN.md`, published `AI_ROUTING_PLAN.md` (CSV → AI → fallback), created `NETLIFY_AGENT_RUNNER_README.md` for external runner handoff, and added `JOB_FEED_DISCOVERY_PLAN.md` to drive real OpportunityBridge data sourcing.
 - Outstanding: surface original resource audit into accessible workspace; decide whether to track `data/prompts_registry.json` in git or rely on fallback regeneration.
 
 ## 2025-10-01 Session Start (Claude in Cursor)
+
 - **Focus**: Validate current deployment status, test prompts loading, and address any immediate issues
 - **Status**: Session start checklist completed (Gate A passed)
 - **Registry**: `data/prompts_registry.json` exists locally (390 bytes, Sep 26)
@@ -117,9 +125,10 @@
 - ✅ **Railway origin health** - `/health` returns `{"ok": true}` (verified 2025-09-29)
 
 ## Current Status (Updated 2025-10-02 19:45 UTC)
-- **API URL:** https://what-is-my-delta-site-production.up.railway.app (direct origin; healthy)
-- **Frontend URL:** https://whatismydelta.com (Netlify production with full authentication)
-- **Railway URL:** https://what-is-my-delta-site-production.up.railway.app
+
+- **API URL:** <https://what-is-my-delta-site-production.up.railway.app> (direct origin; healthy)
+- **Frontend URL:** <https://whatismydelta.com> (Netlify production with full authentication)
+- **Railway URL:** <https://what-is-my-delta-site-production.up.railway.app>
 - **Domain Provider:** Netlify (DNS updated; API routes proxied)
 - **SSL:** Working (Railway automatic)
 - **Prompts:** Loaded and active
@@ -129,6 +138,7 @@
 - **User Experience:** ✅ ENHANCED (progress tracking, auto-save)
 
 ## Verifications (2025-09-30 - FIXED)
+
 - ✅ `curl https://whatismydelta.com/health` → `{"ok":true,"timestamp":"..."}`
 - ✅ `curl https://whatismydelta.com/config` → Working
 - ✅ `curl https://whatismydelta.com/prompts/active` → Working
@@ -136,24 +146,29 @@
 - ✅ Solution: Connected Netlify site to GitHub repository
 
 ## User Instructions
+
 - **Track everything** user tells me
 - **Update checklist** when steps complete
 - **Annotate conversation** with completed items
 - **Don't forget** what user has already done
 
 ## Next Steps
+
 - ⚠️ Add Netlify rewrite/proxy so domain API routes hit Railway backend
 - ⚠️ Re-run smoke tests (`scripts/verify_deploy.sh`) once domain routes resolve
 
 ## Frontend Deployment (2025-09-25)
+
 - ✅ **Netlify CLI reinstalled** under Node 20
 - ✅ **Bootstrap package added** to resolve missing dependencies
 - ✅ **Frontend deployed** via `scripts/deploy_frontend_netlify.sh`
-- ✅ **Mosaic UI live** at https://resonant-crostata-90b706.netlify.app
+- ✅ **Mosaic UI live** at <https://resonant-crostata-90b706.netlify.app>
 - ⚠️ **Smoke tests pending** - Domain routes still 404 until rewrite in place
 
 ## Last Updated
+
 -2025-09-30 - CORS issue escalated to Claude Code
+
 - ✅ **Local CORS working**: HTTP 200 with `access-control-allow-origin` header
 - ❌ **Railway CORS failing**: HTTP 400, missing `access-control-allow-origin` header
 - ✅ **Explicit OPTIONS handlers added**: All POST endpoints have OPTIONS handlers
@@ -162,11 +177,13 @@
 - 🔄 **Escalated to Claude Code**: Railway infrastructure investigation needed
 
 ## Current Blocker
+
 - **Issue**: Railway edge servers (`railway-edge`) intercepting OPTIONS preflight requests
 - **Evidence**: Local works, Railway returns HTTP 400 regardless of explicit OPTIONS handlers
 - **Next**: Claude Code to investigate Railway edge server configuration and alternatives
 
 ## 2025-10-04 Updates (CODEX Planning Clarification)
+
 - **21:10 UTC**: Created `docs/mosaic_semantic_match_upgrade_plan.md` outlining low-cost semantic match improvements.
 - **21:20 UTC**: Logged handoff prompt in `SHARE_PROMPTS_2025-10-04.md`; no code changes executed.
 - **21:45 UTC**: Confusion detected between Cursor and Claude Code—neither implemented changes; repository remains unchanged (`git status` clean).

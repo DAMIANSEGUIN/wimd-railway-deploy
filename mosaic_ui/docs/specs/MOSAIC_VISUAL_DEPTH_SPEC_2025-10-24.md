@@ -10,6 +10,7 @@
 ## Overview
 
 Enhance the existing gradient system with:
+
 1. **Sharper gradients** - Steeper color transitions for more defined depth
 2. **Enhanced shadows** - Multi-layer shadows for richer depth perception
 3. **Subtle highlights** - Inner shadows and light reflections
@@ -20,6 +21,7 @@ Enhance the existing gradient system with:
 ## Current State Analysis
 
 From `mosaic_ui/index.html` lines 41-105, the site already has:
+
 - Basic gradients (`linear-gradient(145deg, #ffffff 0%, #f8f8f8 100%)`)
 - Simple shadows (`box-shadow: 0 3px 6px rgba(0,0,0,0.08)`)
 - Hover transitions
@@ -451,6 +453,7 @@ textarea:focus {
 ## Comparison: Before vs After
 
 ### Before (Original)
+
 ```css
 .quiet {
   border: 1px solid var(--line);
@@ -460,6 +463,7 @@ textarea:focus {
 ```
 
 ### After (Enhanced)
+
 ```css
 .quiet {
   border: 1px solid var(--line);
@@ -475,6 +479,7 @@ textarea:focus {
 ```
 
 **Improvements**:
+
 - ✅ **3-stop gradient** (sharper depth perception)
 - ✅ **Multi-layer shadows** (richer depth)
 - ✅ **Inner highlights** (light reflection)
@@ -496,6 +501,7 @@ textarea:focus {
 ## Testing Checklist
 
 ### Visual Quality
+
 - [ ] Gradients appear sharper (visible depth)
 - [ ] Shadows create clear layering hierarchy
 - [ ] Highlights add subtle light reflection
@@ -503,18 +509,21 @@ textarea:focus {
 - [ ] Consistent depth across all elements
 
 ### Performance
+
 - [ ] No layout shifts when applying styles
 - [ ] Smooth animations (60fps)
 - [ ] No excessive repaints (check DevTools Performance)
 - [ ] Works in Chrome, Firefox, Safari, Edge
 
 ### Responsiveness
+
 - [ ] Depth effects scale on mobile
 - [ ] No overflow issues on small screens
 - [ ] Touch interactions feel responsive
 - [ ] Shadows don't cause scrollbar issues
 
 ### Accessibility
+
 - [ ] Contrast ratios still meet WCAG AA (4.5:1)
 - [ ] Focus states clearly visible
 - [ ] Hover effects don't rely solely on color
@@ -525,6 +534,7 @@ textarea:focus {
 ## Browser Compatibility
 
 All CSS features used are well-supported:
+
 - ✅ **Linear gradients**: Chrome 26+, Firefox 16+, Safari 6.1+, Edge 12+
 - ✅ **Box-shadow (multiple)**: Chrome 10+, Firefox 4+, Safari 5.1+, Edge 12+
 - ✅ **Inset box-shadow**: Same as above
@@ -575,6 +585,7 @@ This allows quick adjustment of depth intensity across the entire UI.
 **Difficulty**: Very Low (copy-paste CSS)
 
 **Visual impact**:
+
 - 🎨 **20-30% sharper gradients** (3-stop vs 2-stop)
 - 🎨 **40-50% richer shadows** (3-4 layers vs 1-2)
 - 🎨 **Subtle highlights** (light reflection)

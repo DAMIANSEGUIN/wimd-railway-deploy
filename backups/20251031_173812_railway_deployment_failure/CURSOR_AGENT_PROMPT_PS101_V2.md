@@ -9,6 +9,7 @@ You are implementing the canonical 10-step PS101 problem-solving framework in va
 ### Your Task
 
 Replace the existing PS101 implementation (lines ~1727-2360) with a complete 10-step structure that includes:
+
 1. Multi-prompt system (3-6 prompts per step)
 2. Small Experiments Framework (Steps 6-9)
 3. Extended state management (localStorage: `ps101_v2_state`)
@@ -17,11 +18,13 @@ Replace the existing PS101 implementation (lines ~1727-2360) with a complete 10-
 ### Step-by-Step Implementation Plan
 
 #### Phase 1: Replace PS101_STEPS Array
+
 **Location**: Lines ~1731-1796
 
 **Action**: Replace the 7-step array with the complete 10-step structure from `api/ps101_flow.py` (lines 11-124).
 
 **New Structure**:
+
 ```javascript
 const PS101_STEPS = [
   {
@@ -44,6 +47,7 @@ const PS101_STEPS = [
 ```
 
  PRESERVES**:
+
 - Step 1: 6 prompts (from `api/ps101_flow.py`)
 - Step 2: 4 prompts
 - Step 3: 4 prompts
@@ -56,9 +60,11 @@ const PS101_STEPS = [
 - Step 10: 4 prompts + `requiresExperiment: true`
 
 #### Phase 2: Update PS101State Object
+
 **Location**: Lines ~1798-1886
 
 **Current Structure** (simplified):
+
 ```javascript
 {
   currentStep: 1,
@@ -70,6 +76,7 @@ const PS101_STEPS = [
 ```
 
 **New Structure** (from spec §5.1):
+
 ```javascript
 {
   currentStep: 4,
@@ -107,6 +114,7 @@ const PS101_STEPS = [
 **Storage Key**: Change from `ps101_state` to `ps101_v2_state`
 
 #### Phase 3: Update Rendering Functions
+
 **Location**: Lines ~1900-2100
 
 **Key Functions to Update**:
@@ -121,7 +129,7 @@ const PS101_STEPS = [
    - Change `Step X of 7` → `Step X of 10`
    - Ensure all 10 dots render correctly
 
-3. **NEW: `renderPrompt(promptIndex)`** 
+3. **NEW: `renderPrompt(promptIndex)`**
    - Render individual prompt within a step
    - Handle prompt completion/collapse
    - Update character counts per prompt
@@ -157,9 +165,11 @@ const PS101_STEPS = [
    - Export summary button
 
 #### Phase 4: Update HTML Structure
+
 **Location**: Lines ~415-523
 
 **Updates Needed**:
+
 1. Progress dots: Already updated to 10 ✅
 2. **NEW**: Add sub-prompt navigation UI
    - Mini progress indicator: "Prompt 3 of 6"
@@ -171,10 +181,12 @@ const PS101_STEPS = [
 6. **NEW**: Journey rail component (milestone mapping)
 
 #### Phase 5: Validation Updates
+
 **Location**: Lines ~2097-2150
 
 **Current**: Validates single answer per step
 **New**: Validate each prompt within step
+
 - Each prompt has its own `minChars` requirement
 - Step validation only passes when ALL prompts in step are completed
 - Experiment-specific validation (Steps 6-9):
@@ -233,6 +245,7 @@ const PS101_STEPS = [
 ### Testing Checklist
 
 After implementation:
+
 - [ ] All 10 steps render correctly
 - [ ] Multi-prompt navigation works (advance through prompts within step)
 - [ ] Completed prompts collapse into chips
@@ -272,4 +285,3 @@ When using Cursor Composer/Agent:
 ---
 
 **Ready to start?** Begin with Phase 1: Replace PS101_STEPS array with the complete 10-step structure.
-

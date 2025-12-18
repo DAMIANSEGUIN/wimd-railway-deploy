@@ -1,6 +1,7 @@
 # CODEX → Claude Code Handoff (2025-10-06)
 
 ## TL;DR
+
 - Treat the "Phase 4" job/RAG/competitive-intelligence features as prototypes. The code is present, but everything is still mocked or disabled and the docs claiming they're live are inaccurate.
 - Reset expectations with stakeholders, then focus on (a) restoring production smoke tests on the custom domain, (b) wiring the new API endpoints through Netlify, and (c) deciding which Phase 4 items to finish versus cutting for now.
 - No sensitive keys are loaded anywhere. `.env` is a template with placeholders, `secure_key_loader.py` has never been run, and Railway will not see the required secrets until you add them yourself.
@@ -8,6 +9,7 @@
 ---
 
 ## Reality Check vs. Prior Notes
+
 - `CLAUDE.md` and multiple handoff files say every Phase 4 feature shipped; that conflicts with the actual repository state.
   - `feature_flags.json`: only `SELF_EFFICACY_METRICS` and `COACH_ESCALATION` are enabled. `RAG_BASELINE` and `JOB_SOURCES_STUBBED_ENABLED` stay `false`, so the new pipelines never run in production.
   - `.env`: still contains `OPENAI_API_KEY=your_openai_api_key_here` and `CLAUDE_API_KEY=your_claude_api_key_here`. Nothing will authenticate until real keys are supplied.
@@ -18,6 +20,7 @@
 ---
 
 ## Immediate Priorities for Claude Code
+
 1. **Re-establish production observability**
    - Run `./scripts/verify_deploy.sh https://whatismydelta.com` once routing is fixed. At the moment the script fails because the domain proxies skip new endpoints (see below).
    - Manually hit `https://what-is-my-delta-site-production.up.railway.app/health` to double-check origin health; make sure the Railway deployment date matches our latest code push.
@@ -45,6 +48,7 @@
 ---
 
 ## Useful Files & References
+
 - `netlify.toml` — missing rewrites for new endpoints.
 - `feature_flags.json` — confirms which features are actually on.
 - `api/job_sources/*.py` — all mocked data; no real HTTP calls.
@@ -55,6 +59,7 @@
 ---
 
 ## Suggested Next Moves (if continuing Phase 4)
+
 1. Wire Netlify rewrites ➜ redeploy ➜ run smoke tests.
 2. Run pending migrations against Railway (confirm state before/after).
 3. Replace mocked job-source implementations with real calls (start with RemoteOK + WeWorkRemotely since they are easiest).

@@ -3,6 +3,7 @@
 **One-word trigger for Claude Code:** `Mosaic`
 
 When you say "Mosaic", Claude Code will automatically:
+
 1. Load Foundation canon from `/Users/damianseguin/Mosaic/foundation/Mosaic_Foundation_v1.0.md`
 2. Review current project state (CLAUDE_CODE_README.md, CURSOR_CLAUDE_SYNC_README.md)
 3. Assume Senior Debugger role with operational rules
@@ -26,15 +27,17 @@ The script auto-loads APP_URL from wimd_config.sh (asks once, then saves), runs 
 > Action on Restart: run ~/restart_wimd.sh (auto-logs status; URL saved in wimd_config.sh)
 
 ## Required Env Vars (Railway → Variables)
+
 OPENAI_API_KEY=sk-xxx
 CLAUDE_API_KEY=sk-ant-xxx
-PUBLIC_SITE_ORIGIN=https://whatismydelta.com
-PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.railway.app
+PUBLIC_SITE_ORIGIN=<https://whatismydelta.com>
+PUBLIC_API_BASE=<https://what-is-my-delta-site-production.up.railway.app>
 DATABASE_URL=
 SENTRY_DSN=
 APP_SCHEMA_VERSION=v1
 
 ## Dependencies (requirements.txt)
+
 - fastapi
 - uvicorn
 - gunicorn
@@ -44,11 +47,13 @@ APP_SCHEMA_VERSION=v1
 - python-multipart (CRITICAL: Required for file uploads)
 
 ## API Endpoints
+
 - `GET /health` — basic health probe
 - `GET /config` — returns `{ apiBase, schemaVersion }`
 - `GET /prompts/active` — returns `{ active }` (may be null until a CSV is ingested)
 
 ## Verify Deploy
+
 ```zsh
 # Test Railway API directly
 curl https://what-is-my-delta-site-production.up.railway.app/health
@@ -60,6 +65,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/config
 ```
 
 ## Local Development (RECOMMENDED FOR DEBUGGING)
+
 ```zsh
 # Set environment variables
 export OPENAI_API_KEY="your_key_here"
@@ -80,8 +86,9 @@ curl http://localhost:8000/prompts/active
 ```
 
 ## One-Shot Fresh Deploy (New Railway Project)
+
 - Run to create a brand-new Railway project, set variables, and deploy:
-  
+
   ```zsh
   ./scripts/one_shot_new_deploy.sh
   ```
@@ -93,15 +100,19 @@ curl http://localhost:8000/prompts/active
   - If you want to remove the old service/project, do so from the Railway dashboard to avoid accidental data loss.
 
 ## Railway Variables (Build vs Runtime)
+
 - In the Railway service → Variables, ensure each variable is:
   - Scoped to the correct environment (e.g., Production)
   - Marked "Available during deploy" so Nixpacks can access it at build time
 - Typical vars: `OPENAI_API_KEY`, `CLAUDE_API_KEY`, `PUBLIC_API_BASE`, `PUBLIC_SITE_ORIGIN`, `APP_SCHEMA_VERSION`
 
 If build fails with "secret NAME: not found":
+
 - The variable likely isn’t marked "Available during deploy" or isn’t defined for this service/environment.
 - Toggle it on and redeploy.
+
 # Force rebuild: 1759167655
 
 # PostgreSQL connection test
+
 # PostgreSQL connection retry

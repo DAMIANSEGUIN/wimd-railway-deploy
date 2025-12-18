@@ -1,4 +1,5 @@
 # Agent Handoff - Structured Template
+
 **MCP v1.1 Standardized Handoff Protocol**
 
 **From:** Gemini
@@ -12,24 +13,28 @@
 ## 1. Causal Steps - Decision History
 
 ### Step 1: Received Handoff from Claude Code
+
 - **Decision:** Accept Mosaic MVP 3-hour sprint
 - **Reasoning:** Claude Code completed MCP v1.1, handed off Mosaic build
 - **Alternatives Considered:** ["Defer to later", "Request clarification", "Start immediately"]
 - **Chosen Because:** Clear handoff with all dependencies satisfied
 
 ### Step 2: Implement Context Extraction Pipeline
+
 - **Decision:** Add `/api/ps101/extract-context` endpoint using Claude API
 - **Reasoning:** Need to extract structured context from PS101 responses
 - **Alternatives Considered:** ["GPT-4", "Claude API", "Rule-based extraction"]
 - **Chosen Because:** Claude API provides better structured output
 
 ### Step 3: Inject Context into Chat System Prompt
+
 - **Decision:** Modify `_coach_reply` to fetch user context and inject into system prompt
 - **Reasoning:** Personalization requires context in coaching prompt
 - **Alternatives Considered:** ["Store in session", "Pass as message", "Inject in system prompt"]
 - **Chosen Because:** System prompt gives AI full context without cluttering conversation
 
 ### Step 4: Add PS101 Completion Gate
+
 - **Decision:** Block coaching until user completes PS101
 - **Reasoning:** Can't provide personalized coaching without context
 - **Alternatives Considered:** ["Allow generic coaching", "Require completion", "Soft prompt"]
@@ -73,6 +78,7 @@
 ## 3. Failure Ledger - What Didn't Work
 
 ### Attempt 1: Missing X-User-ID Header
+
 - **Tried:** Call `/api/ps101/extract-context` without user identification
 - **Failed Because:** Backend couldn't identify which user's context to extract
 - **Error:** No error initially, but context extraction wouldn't work
@@ -81,6 +87,7 @@
 - **Fixed:** Added `X-User-ID` header in `callJson()` function (frontend/index.html:1970-1977)
 
 ### Attempt 2: Initial Completion Gate Too Strict
+
 - **Tried:** Block ALL chat if context not extracted
 - **Failed Because:** Users who haven't started PS101 couldn't get any coaching
 - **Error:** Confusing UX - users didn't know why chat was blocked
@@ -93,6 +100,7 @@
 ## 4. Open Commitments - Promises/Deliverables
 
 ### Commitment 1: Deploy to Production
+
 - **Status:** pending
 - **Due By:** Immediate (per 3-hour sprint)
 - **Dependencies:** Code review by Claude Code, deployment approval
@@ -103,6 +111,7 @@
   - Production testing confirms personalized coaching works
 
 ### Commitment 2: Testing with Real Users
+
 - **Status:** pending
 - **Due By:** After deployment
 - **Dependencies:** Production deployment
@@ -164,6 +173,7 @@
 ## 6. Dependencies - What Relies on What
 
 ### Satisfied Dependencies
+
 - **MCP v1.1:** ✅ Complete (not used for this sprint, but available)
 - **Database:** ✅ PostgreSQL connected
 - **Auth:** ✅ Working
@@ -171,6 +181,7 @@
 - **Chat Interface:** ✅ Modified with context injection
 
 ### New Dependencies Created
+
 - **Production Deployment:** Requires Claude Code to deploy (uses wrapper scripts)
 - **Testing:** Requires real users to validate personalization
 - **Monitoring:** Should track context extraction success rate
@@ -180,6 +191,7 @@
 ## 7. Provenance - Source Metadata
 
 ### Session Summary
+
 ```json
 {
   "source": "gemini_20251210_mosaic_mvp",
@@ -201,6 +213,7 @@
 | `frontend/index.html` | +8 | Add X-User-ID header, trigger context extraction |
 
 ### External APIs Used
+
 - **Claude API** - Context extraction from PS101 responses
 - **OpenAI/Anthropic** - Chat with personalized system prompt
 
@@ -237,12 +250,14 @@
    - **Status:** ✅ WORKING
 
 ### Database Schema (Assumed Existing)
+
 - `user_contexts` table with columns:
   - `user_id` (foreign key to users)
   - `context_data` (JSONB - structured PS101 context)
   - `created_at`, `updated_at`
 
 ### Tests Performed
+
 - Manual testing of context extraction (verified via logs/database inspection)
 - Manual testing of completion gate (verified different user states)
 - Manual testing of personalized responses (verified context appears in prompts)
@@ -254,18 +269,21 @@
 ### For Claude Code (Immediate - Deployment)
 
 **Pre-Deployment Checks:**
+
 1. Review code changes (api/index.py, api/storage.py, api/ai_clients.py, frontend/index.html)
 2. Verify database migrations not needed (user_contexts table already exists?)
 3. Check if CLAUDE_API_KEY env var set on Railway
 4. Run pre-deploy safety checks
 
 **Deployment:**
+
 1. Commit changes with message: "feat(mosaic): Add PS101 context extraction and personalized coaching"
 2. Deploy backend: `./scripts/deploy.sh railway`
 3. Deploy frontend: `./scripts/deploy.sh netlify`
 4. Verify deployment health: `curl https://what-is-my-delta-site-production.up.railway.app/health`
 
 **Post-Deployment Testing:**
+
 1. Create test user account
 2. Complete PS101 flow (all 10 questions)
 3. Verify context extraction triggered
@@ -273,6 +291,7 @@
 5. Check logs for any errors
 
 ### For Product/User Testing
+
 1. Recruit 3-5 beta testers
 2. Have them complete PS101
 3. Collect feedback on personalization quality
@@ -286,6 +305,7 @@
 ### For Claude Code (Deployment)
 
 1. **Review code changes:**
+
    ```bash
    git diff api/index.py
    git diff api/storage.py
@@ -302,6 +322,7 @@
    - If not, may need migration (though code assumes it exists)
 
 4. **Deploy:**
+
    ```bash
    git add api/index.py api/storage.py api/ai_clients.py frontend/index.html
    git commit -m "feat(mosaic): Add PS101 context extraction and personalized coaching
@@ -354,6 +375,7 @@
 ## 12. Session Metrics
 
 **Mosaic MVP Sprint:**
+
 - **Duration:** ~3 hours (as requested)
 - **Files Modified:** 4 files
 - **Lines Added:** ~90 lines
@@ -362,6 +384,7 @@
 - **Status:** ✅ COMPLETE - Ready for deployment
 
 **Code Quality:**
+
 - Context manager pattern: ✅ Used
 - PostgreSQL syntax: ✅ Correct
 - Error handling: ⚠️ Basic (could be enhanced)
@@ -374,6 +397,7 @@
 **If deployment breaks production:**
 
 ### Rollback Command
+
 ```bash
 # Revert the commit
 git revert HEAD
@@ -386,12 +410,14 @@ git checkout prod-2025-11-18
 ```
 
 ### What Gets Reverted
+
 - Context extraction endpoint removed
 - PS101 completion gate removed
 - Chat returns to generic (non-personalized) coaching
 - Frontend X-User-ID header removed
 
 ### Side Effects of Rollback
+
 - Users can still complete PS101 (data saves)
 - Chat still works (just not personalized)
 - No data loss
@@ -469,12 +495,14 @@ Priority: P0 (Mosaic MVP - Deploy to Production)
 **✅ ALL OBJECTIVES COMPLETED:**
 
 **Hour 1: Context Extraction**
+
 - ✅ Verified PS101 data persistence
 - ✅ Built `/api/ps101/extract-context` endpoint
 - ✅ Integrated Claude API for structured extraction
 - ✅ Tested extraction produces valid JSON
 
 **Hour 2: Context Injection**
+
 - ✅ Modified chat endpoint to fetch user context
 - ✅ Injected context into system prompt
 - ✅ Tested chat shows personalized responses
@@ -482,6 +510,7 @@ Priority: P0 (Mosaic MVP - Deploy to Production)
 - ✅ Added X-User-ID header support
 
 **Hour 3: Polish**
+
 - ✅ Refined system prompt for experiment design focus
 - ✅ End-to-end tested user flow
 - ✅ Fixed X-User-ID header issue

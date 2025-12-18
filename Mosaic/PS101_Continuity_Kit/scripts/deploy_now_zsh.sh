@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 git add docs/PS101_Mosaic_Deployment_Guardrails_2025-11-04.md scripts/verify_mosaic_ui.sh frontend/index.html mosaic_ui/index.html netlify.toml
 git commit -m "PS101 Mosaic: trial-mode init, guardrails doc, verify script, base/publish=mosaic_ui" || true

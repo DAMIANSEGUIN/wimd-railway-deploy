@@ -9,12 +9,14 @@
 ## Lesson Learned
 
 **What went wrong:**
+
 - Netlify upgrade recommendations attempted without baseline documentation
 - Repository entered broken rebase state with merge conflicts
 - No clear restore point to return to
 - Critical error: **No baseline documented before making changes**
 
 **Result:**
+
 - Hours of recovery work
 - Risk of losing Netlify Agent's completed features
 - Uncertainty about what to preserve vs. discard
@@ -34,6 +36,7 @@ cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
 ```
 
 **What it documents:**
+
 - Current git state (branch, commit, status)
 - All modified/staged/untracked files
 - Key file checksums (index.html, config files)
@@ -60,6 +63,7 @@ git tag -a baseline-$(date +%Y%m%d-%H%M%S) -m "Baseline before [operation]"
 ```
 
 **This allows instant rollback:**
+
 ```bash
 # If something goes wrong
 git reset --hard baseline-YYYYMMDD-HHMMSS
@@ -81,6 +85,7 @@ rsync -av --exclude='.git' \
 ```
 
 **For critical files only:**
+
 ```bash
 # Backup just the files being changed
 cp frontend/index.html frontend/index.html.backup-$(date +%Y%m%d-%H%M%S)
@@ -94,16 +99,19 @@ cp netlify.toml netlify.toml.backup-$(date +%Y%m%d-%H%M%S)
 ### 4. Incremental Changes with Commits
 
 **NO MORE:**
+
 - Making multiple changes without commits
 - Long-running rebase operations
 - Batching unrelated changes together
 
 **INSTEAD:**
+
 - One logical change = one commit
 - Test after each commit
 - Document what each commit does
 
 **Example workflow:**
+
 ```bash
 # Change 1: Update dependency
 npm install new-package
@@ -138,6 +146,7 @@ git push origin main  # Deploy to verify UI renders
 ```
 
 **Manual checks:**
+
 - [ ] Railway deployment succeeded (check dashboard)
 - [ ] Netlify deployment succeeded (check dashboard)
 - [ ] Health endpoint returns 200: `curl https://whatismydelta.com/health`
@@ -170,18 +179,21 @@ echo "Rollback: git reset --hard rollback-ready-YYYYMMDD" > ROLLBACK_PLAN.txt
 ### 7. Communication Protocol
 
 **Before deployment work:**
+
 1. Announce intent: "About to upgrade Netlify configuration"
 2. Document expected changes: "Will modify netlify.toml to add new proxy rules"
 3. Document expected impact: "Should not affect existing features"
 4. Get approval: "Proceed? (yes/no)"
 
 **During deployment work:**
+
 1. Announce each step: "Creating baseline snapshot"
 2. Announce each commit: "Committed netlify.toml update"
 3. Announce each deploy: "Deploying to Netlify"
 4. Announce each verification: "Verified health endpoint still works"
 
 **After deployment work:**
+
 1. Announce completion: "Deployment complete"
 2. Document what changed: "Added 3 new proxy rules to netlify.toml"
 3. Document verification results: "All checks passed"
@@ -195,6 +207,7 @@ echo "Rollback: git reset --hard rollback-ready-YYYYMMDD" > ROLLBACK_PLAN.txt
 ### Rebase Operations
 
 **Before rebase:**
+
 ```bash
 # 1. Create safety branch
 git branch safety-before-rebase-$(date +%Y%m%d-%H%M%S)
@@ -211,12 +224,14 @@ echo "If rebase fails: git rebase --abort" > REBASE_ABORT_PLAN.txt
 ```
 
 **During rebase:**
+
 - At first sign of conflict, STOP
 - Document the conflict
 - Ask user if should continue or abort
 - DO NOT make assumptions about conflict resolution
 
 **After rebase:**
+
 ```bash
 # Verify nothing lost
 git diff safety-before-rebase-YYYYMMDD-HHMMSS
@@ -232,6 +247,7 @@ git rebase --abort  # Return to safety
 ### File Reorganization
 
 **Before moving/deleting files:**
+
 ```bash
 # 1. Document what exists now
 find . -type f -name "*.md" > file-inventory-before.txt
@@ -249,6 +265,7 @@ cat reorganization-plan.txt
 ```
 
 **After reorganization:**
+
 ```bash
 # Verify critical files still exist
 test -f frontend/index.html || echo "CRITICAL: index.html MISSING"
@@ -266,6 +283,7 @@ diff file-inventory-before.txt file-inventory-after.txt
 ### Dependency Updates
 
 **Before updating packages:**
+
 ```bash
 # 1. Backup current package files
 cp package.json package.json.backup-$(date +%Y%m%d)
@@ -279,6 +297,7 @@ npm run build  # or relevant test command
 ```
 
 **After updating:**
+
 ```bash
 # 1. Document new versions
 npm list --depth=0 > installed-packages-after.txt
@@ -368,6 +387,7 @@ echo "Then get user approval to proceed."
 ```
 
 **Make executable:**
+
 ```bash
 chmod +x scripts/create_baseline_snapshot.sh
 ```
@@ -415,6 +435,7 @@ echo "To rollback: git reset --hard $TAG_NAME"
 ```
 
 **Make executable:**
+
 ```bash
 chmod +x scripts/create_safety_checkpoint.sh
 ```
@@ -472,6 +493,7 @@ echo "All checks must pass before proceeding with more changes."
 ```
 
 **Make executable:**
+
 ```bash
 chmod +x scripts/verify_deployment.sh
 ```
@@ -559,6 +581,7 @@ test -f frontend/index.html && echo "OK" || echo "STILL MISSING"
 ## Success Criteria
 
 **Deployment is considered safe when:**
+
 - [ ] Baseline snapshot created before changes
 - [ ] Safety checkpoint (branch + tag) created
 - [ ] Each change committed incrementally
@@ -568,6 +591,7 @@ test -f frontend/index.html && echo "OK" || echo "STILL MISSING"
 - [ ] User informed at every step
 
 **Deployment is considered UNSAFE when:**
+
 - [ ] No baseline snapshot exists
 - [ ] Multiple uncommitted changes
 - [ ] No safety checkpoint
@@ -583,6 +607,7 @@ This fail-safe protocol implements the Pre-Flight Checklist from:
 `/Users/damianseguin/Downloads/planning/TEAM_ORCHESTRATION_README.md`
 
 **Before ANY deployment work:**
+
 1. ✅ READ complete relevant documents (FULL READ)
 2. ✅ VERIFY all file paths exist and are correct
 3. ✅ TEST any commands before executing
@@ -599,6 +624,7 @@ This fail-safe protocol implements the Pre-Flight Checklist from:
 **To activate these fail-safes:**
 
 1. **Create scripts directory:**
+
    ```bash
    mkdir -p /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/scripts
    ```
@@ -606,6 +632,7 @@ This fail-safe protocol implements the Pre-Flight Checklist from:
 2. **Create the 3 automation scripts** listed above
 
 3. **Test scripts on non-critical operation:**
+
    ```bash
    ./scripts/create_baseline_snapshot.sh
    ./scripts/create_safety_checkpoint.sh

@@ -7,7 +7,7 @@
 # - a writer
 # - or, for body writers, a dict of framin-dependent writer factories
 
-from typing import Any, Callable, Dict, List, Tuple, Type, Union
+from typing import Any, Callable, Dict, Tuple, Type, Union
 
 from ._events import Data, EndOfMessage, Event, InformationalResponse, Request, Response
 from ._headers import Headers
@@ -41,9 +41,7 @@ def write_request(request: Request, write: Writer) -> None:
 
 
 # Shared between InformationalResponse and Response
-def write_any_response(
-    response: Union[InformationalResponse, Response], write: Writer
-) -> None:
+def write_any_response(response: Union[InformationalResponse, Response], write: Writer) -> None:
     if response.http_version != b"1.1":
         raise LocalProtocolError("I only send HTTP/1.1")
     status_bytes = str(response.status_code).encode("ascii")

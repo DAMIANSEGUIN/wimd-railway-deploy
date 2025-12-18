@@ -1,10 +1,13 @@
 # Mosaic Platform - Architecture Audit
+
 **Date:** 2025-10-14
 **Auditor:** Claude Code (Senior SSE)
 **Scope:** Production readiness using OWASP + industry standard checklists
 
 ## Audit Framework
+
 Based on:
+
 - OWASP Web Security Testing Guide (WSTG)
 - OWASP Application Security Verification Standard (ASVS)
 - Production Readiness Checklists (Auth0, SigNoz, Gruntwork)
@@ -14,6 +17,7 @@ Based on:
 ## 1. AUTHENTICATION & AUTHORIZATION
 
 ### ✅ Implemented
+
 - [x] User registration with email/password
 - [x] Login functionality
 - [x] Password minimum length validation (6 chars)
@@ -22,6 +26,7 @@ Based on:
 - [x] Password hashing (SHA-256 with salt) - `api/storage.py:430-433`
 
 ### ❌ Missing/Broken
+
 - [ ] **Password strength requirements** (no uppercase, numbers, special chars required)
 - [ ] **Rate limiting on login attempts** (brute force protection)
 - [ ] **Account lockout after failed attempts** (credential stuffing protection)
@@ -36,6 +41,7 @@ Based on:
 - [ ] **Clear credentials after logout** - JUST FIXED but needs testing
 
 ### 🔧 Issues Found
+
 1. **Weak password hashing**: Using SHA-256 instead of bcrypt/Argon2 (`api/storage.py:432`)
 2. **No HTTPS enforcement**: HTTP requests not automatically upgraded
 3. **Session reuse bug**: Same user ID gets same session on re-login (database persistence issue)
@@ -46,12 +52,14 @@ Based on:
 ## 2. SESSION MANAGEMENT
 
 ### ✅ Implemented
+
 - [x] Session IDs generated and stored in localStorage
 - [x] Session ID passed in headers (`X-Session-ID`)
 - [x] Session data stored in SQLite database
 - [x] Session cleanup on logout (frontend)
 
 ### ❌ Missing/Broken
+
 - [ ] **Session expiration/timeout** (sessions never expire)
 - [ ] **Session token rotation** (same token used indefinitely)
 - [ ] **httpOnly cookies** (using localStorage instead - XSS vulnerable)
@@ -63,6 +71,7 @@ Based on:
 - [ ] **Idle timeout warning** (no warning before session expires)
 
 ### 🔧 Issues Found
+
 1. **localStorage for session tokens** - Vulnerable to XSS attacks (should use httpOnly cookies)
 2. **No session TTL** - Sessions live forever in database
 3. **Railway database persistence** - SQLite resets on deployment, losing sessions
@@ -74,12 +83,14 @@ Based on:
 ## 3. STATE MANAGEMENT
 
 ### ✅ Implemented
+
 - [x] PS101 flow state in session data
 - [x] User data stored in localStorage
 - [x] Auto-save functionality
 - [x] Chat history stored in DOM
 
 ### ❌ Missing/Broken
+
 - [ ] **State sync between tabs** (localStorage changes don't propagate)
 - [ ] **Offline state handling** (app breaks without network)
 - [ ] **State versioning** (no migration for schema changes)
@@ -89,6 +100,7 @@ Based on:
 - [ ] **Conflict resolution** (multiple tabs can corrupt state)
 
 ### 🔧 Issues Found
+
 1. **Chat history not cleared on logout** - JUST FIXED
 2. **PS101 prompt_index not initialized** - Causes "all questions at once" bug - JUST FIXED
 3. **No state cleanup between sessions** - Old PS101 state persists
@@ -100,6 +112,7 @@ Based on:
 ## 4. USER EXPERIENCE (UX)
 
 ### ✅ Implemented
+
 - [x] Trial mode (5 minutes for unauthenticated users)
 - [x] Loading states for API calls
 - [x] Error messages displayed
@@ -107,6 +120,7 @@ Based on:
 - [x] Chat interface
 
 ### ❌ Missing/Broken
+
 - [ ] **Loading spinners** (just text "loading...")
 - [ ] **Error recovery suggestions** (errors just say "failed")
 - [ ] **Keyboard shortcuts** (no shortcuts for common actions)
@@ -121,6 +135,7 @@ Based on:
 - [ ] **Export/download functionality** (can't export conversation history)
 
 ### 🔧 Issues Found
+
 1. **PS101 shows all questions at once** - JUST FIXED (shows one at a time now)
 2. **Generic advice pile** - JUST FIXED (PS101 auto-activates now)
 3. **Login fields persist after logout** - JUST FIXED
@@ -135,11 +150,13 @@ Based on:
 ## 5. ERROR HANDLING
 
 ### ✅ Implemented
+
 - [x] Try-catch blocks in async functions
 - [x] HTTP error status codes
 - [x] Error messages returned to frontend
 
 ### ❌ Missing/Broken
+
 - [ ] **User-friendly error messages** (technical errors shown to users)
 - [ ] **Error logging/monitoring** (no Sentry/LogRocket)
 - [ ] **Retry logic** (network failures = permanent failure)
@@ -153,10 +170,12 @@ Based on:
 ## 6. SECURITY HEADERS & CONFIGURATION
 
 ### ✅ Implemented
+
 - [x] CORS configured (FastAPI middleware)
 - [x] JSON validation (Pydantic models)
 
 ### ❌ Missing/Broken
+
 - [ ] **Content-Security-Policy (CSP)** header
 - [ ] **X-Frame-Options** header (clickjacking protection)
 - [ ] **X-Content-Type-Options: nosniff**
@@ -166,6 +185,7 @@ Based on:
 - [ ] **XSS protection headers**
 
 ### 🔧 Issues Found
+
 Run this to check: `curl -I https://whatismydelta.com`
 
 ---
@@ -173,11 +193,13 @@ Run this to check: `curl -I https://whatismydelta.com`
 ## 7. DATA PERSISTENCE & DATABASE
 
 ### ✅ Implemented
+
 - [x] SQLite database for sessions/users
 - [x] File uploads stored on disk
 - [x] Database migrations framework
 
 ### ❌ Missing/Broken
+
 - [ ] **PostgreSQL for production** (using SQLite - not production-ready)
 - [ ] **Database backups** (no backup strategy)
 - [ ] **Data encryption at rest** (SQLite not encrypted)
@@ -187,6 +209,7 @@ Run this to check: `curl -I https://whatismydelta.com`
 - [ ] **GDPR compliance** (no data export/deletion for users)
 
 ### 🔧 Issues Found
+
 1. **Railway ephemeral storage** - SQLite resets on deployment (CRITICAL)
 2. **No Railway volumes** - Uploaded files lost on restart
 3. **No database indexes** - Slow queries as data grows
@@ -197,11 +220,13 @@ Run this to check: `curl -I https://whatismydelta.com`
 ## 8. API DESIGN & TESTING
 
 ### ✅ Implemented
+
 - [x] RESTful endpoints
 - [x] JSON request/response
 - [x] Type validation (Pydantic)
 
 ### ❌ Missing/Broken
+
 - [ ] **API versioning** (/v1/wimd)
 - [ ] **Rate limiting** (no throttling)
 - [ ] **API documentation** (no OpenAPI/Swagger)
@@ -216,12 +241,14 @@ Run this to check: `curl -I https://whatismydelta.com`
 ## 9. DEPLOYMENT & INFRASTRUCTURE
 
 ### ✅ Implemented
+
 - [x] Railway backend deployment
 - [x] Netlify frontend deployment
 - [x] Environment variables for secrets
 - [x] Git-based deployment (auto-deploy on push)
 
 ### ❌ Missing/Broken
+
 - [ ] **Staging environment** (deploy direct to production)
 - [ ] **Rollback strategy** (no automated rollback)
 - [ ] **Blue-green deployment** (downtime during deploys)
@@ -236,11 +263,13 @@ Run this to check: `curl -I https://whatismydelta.com`
 ## 10. FRONTEND CODE QUALITY
 
 ### ✅ Implemented
+
 - [x] Vanilla JS (no framework bloat)
 - [x] CSS variables for theming
 - [x] Modular functions
 
 ### ❌ Missing/Broken
+
 - [ ] **Linting** (no ESLint)
 - [ ] **Code minification** (shipping unminified JS)
 - [ ] **Tree shaking** (no build process)
@@ -276,6 +305,7 @@ Run this to check: `curl -I https://whatismydelta.com`
 ## NEXT STEPS
 
 **Immediate (This Session):**
+
 1. ✅ Fix PS101 auto-activation
 2. ✅ Fix PS101 one-question-at-a-time
 3. ✅ Fix logout clearing chat/fields
@@ -283,6 +313,7 @@ Run this to check: `curl -I https://whatismydelta.com`
 5. ⏳ Document remaining issues
 
 **Short-term (Next 1-2 days):**
+
 1. Migrate to Railway PostgreSQL (critical)
 2. Add backend `/auth/logout` endpoint
 3. Implement session TTL (30-day expiration)
@@ -290,6 +321,7 @@ Run this to check: `curl -I https://whatismydelta.com`
 5. Switch to httpOnly cookies
 
 **Medium-term (Next week):**
+
 1. Add rate limiting
 2. Upgrade password hashing to bcrypt
 3. Create staging environment
@@ -297,6 +329,7 @@ Run this to check: `curl -I https://whatismydelta.com`
 5. Fix email delivery
 
 **Long-term (Next month):**
+
 1. Add automated testing
 2. Implement proper error handling
 3. Add GDPR compliance tools
@@ -312,11 +345,13 @@ Run this to check: `curl -I https://whatismydelta.com`
 **Recommendation:** Address P0 issues before scaling user base
 
 **Biggest Wins Today:**
+
 - ✅ PS101 flow now works as designed
 - ✅ Logout properly clears state
 - ✅ Session management issues identified
 
 **Biggest Risks:**
+
 - ⚠️ Railway SQLite data loss (users/sessions wiped on deploy)
 - ⚠️ No session security (XSS via localStorage)
 - ⚠️ No rate limiting (brute force attacks possible)

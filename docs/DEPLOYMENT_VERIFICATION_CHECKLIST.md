@@ -28,6 +28,7 @@
 **Monitor these while deployment in progress:**
 
 ### Railway Dashboard
+
 - [ ] Build logs show no errors
 - [ ] Build completes successfully
 - [ ] Deploy logs show application starting
@@ -35,9 +36,11 @@
 - [ ] Container status shows "Active" or "Running"
 
 ### Critical Log Messages
+
 Watch for these in Railway logs:
 
 **✅ Good signs:**
+
 ```
 [STORAGE] ✅ PostgreSQL connection pool created
 [STORAGE] Using PostgreSQL backend
@@ -46,6 +49,7 @@ Uvicorn running on http://0.0.0.0:8000
 ```
 
 **🚨 Bad signs:**
+
 ```
 [STORAGE] ⚠️ SQLite fallback active
 ERROR: Connection refused
@@ -67,6 +71,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 ```
 
 **Verify response:**
+
 - [ ] Status code: 200 OK
 - [ ] `"ok": true`
 - [ ] `"database.connected": true`
@@ -85,6 +90,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/config
 ```
 
 **Verify response:**
+
 - [ ] Returns valid JSON
 - [ ] `"apiBase"` matches expected URL
 - [ ] `"schemaVersion"` correct
@@ -102,6 +108,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/auth/me
 ```
 
 **Verify:**
+
 - [ ] Prompts endpoint returns data (not null)
 - [ ] Auth endpoint returns 401 Unauthorized (expected)
 - [ ] No 500 Internal Server Error responses
@@ -109,7 +116,8 @@ curl https://what-is-my-delta-site-production.up.railway.app/auth/me
 ### 4. Frontend Load Test
 
 **Open in browser:**
-- [ ] https://whatismydelta.com loads without errors
+
+- [ ] <https://whatismydelta.com> loads without errors
 - [ ] No console errors in browser DevTools
 - [ ] Chat interface visible
 - [ ] Login/register buttons work
@@ -118,6 +126,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/auth/me
 ### 5. Database Connection Verification
 
 **Check Railway logs for:**
+
 - [ ] `[STORAGE] ✅ PostgreSQL connection pool created`
 - [ ] No `SQLite fallback active` warnings
 - [ ] No connection timeout errors
@@ -125,6 +134,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/auth/me
 ### 6. Feature-Specific Checks
 
 **For PS101 v2 deployments:**
+
 - [ ] Navigate to PS101 flow
 - [ ] Step navigation works (Next/Previous)
 - [ ] Multi-prompt display correct
@@ -136,12 +146,14 @@ curl https://what-is-my-delta-site-production.up.railway.app/auth/me
 - [ ] Download summary works
 
 **For job search deployments (Phase 4):**
+
 - [ ] Job search button functional
 - [ ] Job sources returning data
 - [ ] RAG search working (not falling back to random)
 - [ ] Resume optimization functional
 
 **For authentication changes:**
+
 - [ ] Register new user works
 - [ ] Login with credentials works
 - [ ] Password reset flow functional
@@ -156,12 +168,14 @@ curl https://what-is-my-delta-site-production.up.railway.app/auth/me
 ### 7. Error Rate Monitoring
 
 **Check Railway logs every 5-10 minutes:**
+
 - [ ] No new exception tracebacks appearing
 - [ ] No spike in error messages
 - [ ] Request volume normal
 - [ ] Response times stable
 
 **Run health check multiple times:**
+
 ```bash
 # Run 5 times, 1 minute apart
 for i in {1..5}; do
@@ -172,6 +186,7 @@ done
 ```
 
 **Verify:**
+
 - [ ] Error rate stays < 5%
 - [ ] P95 latency stable (not increasing)
 - [ ] No database connection drops
@@ -181,6 +196,7 @@ done
 **Complete a full user journey:**
 
 **New user flow:**
+
 - [ ] Register new account
 - [ ] Verify email shows in users table (psql or Railway shell)
 - [ ] Login with new account
@@ -190,6 +206,7 @@ done
 - [ ] Logout works
 
 **Returning user flow:**
+
 - [ ] Login with existing account
 - [ ] Previous PS101 progress loads correctly
 - [ ] Can continue from last step
@@ -225,6 +242,7 @@ done
 ### 11. Monitor for Anomalies
 
 **Check the next day:**
+
 - [ ] No overnight errors in Railway logs
 - [ ] No user-reported issues
 - [ ] Database size normal (no unexpected growth)
@@ -234,6 +252,7 @@ done
 ### 12. Update Documentation
 
 **After successful deployment:**
+
 - [ ] Update DEPLOYMENT_LOG.md with deployment date and version
 - [ ] Mark task as complete in PROJECT_PLAN_ADJUSTMENTS.md
 - [ ] Update ARCHITECTURAL_DECISIONS.md if new decisions made
@@ -262,6 +281,7 @@ git push railway-origin HEAD:main --force
 ```
 
 **After rollback:**
+
 - [ ] Verify health check passes
 - [ ] Verify critical endpoints work
 - [ ] Document issue in DEPLOYMENT_LOG.md
@@ -271,6 +291,7 @@ git push railway-origin HEAD:main --force
 ### Partial Rollback (Feature Flag)
 
 **If feature flag enabled:**
+
 ```bash
 # Disable problematic feature via Railway variables
 railway variables set FEATURE_FLAG_NAME=false
@@ -283,6 +304,7 @@ git push railway-origin main
 ### Database Rollback (CRITICAL - USE WITH CAUTION)
 
 **Only if database migration failed:**
+
 - [ ] Check Railway PostgreSQL backups
 - [ ] Restore from most recent backup
 - [ ] Document data loss (if any)
@@ -334,6 +356,7 @@ git push railway-origin main
 4. **Security incident:** Rotate API keys immediately, investigate breach
 
 **Escalation path:**
+
 1. Self-diagnosis: Check TROUBLESHOOTING_CHECKLIST.md
 2. Playbook execution: Check SELF_DIAGNOSTIC_FRAMEWORK.md
 3. Team notification: Post in team channel
@@ -368,6 +391,7 @@ git revert HEAD && git push railway-origin main
 ## Checklist Maintenance
 
 **This checklist should be updated:**
+
 - After every major incident (add new check to prevent recurrence)
 - When new features deployed (add feature-specific checks)
 - Monthly review (remove outdated checks, improve clarity)

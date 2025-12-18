@@ -5,6 +5,7 @@
 ## Pre-Deployment
 
 - [ ] Verify git remote configuration
+
   ```bash
   git remote -v
   # PRODUCTION = railway-origin (what-is-my-delta-site)
@@ -12,12 +13,14 @@
   ```
 
 - [ ] Ensure you're on the correct branch
+
   ```bash
   git branch
   # Should show: * main
   ```
 
 - [ ] All changes committed
+
   ```bash
   git status
   # Should show: "nothing to commit, working tree clean"
@@ -26,11 +29,13 @@
 ## Deployment
 
 - [ ] Push to **PRODUCTION** remote (not origin!)
+
   ```bash
   git push railway-origin main
   ```
 
 - [ ] Confirm push succeeded
+
   ```bash
   git log railway-origin/main --oneline -1
   # Should show your latest commit
@@ -39,18 +44,21 @@
 ## Post-Deployment Verification
 
 - [ ] Wait for Railway backend rebuild (2 minutes)
+
   ```bash
   # Check Railway deployment status
   curl -s https://what-is-my-delta-site-production.up.railway.app/health | jq
   ```
 
 - [ ] Wait for Netlify frontend rebuild (1 minute)
+
   ```bash
   # Check Netlify deployment status
   curl -I https://whatismydelta.com/ | grep -i "x-nf-request-id\|age"
   ```
 
 - [ ] Verify specific changes are live
+
   ```bash
   # Example: Check if new function exists in deployed code
   curl -s https://whatismydelta.com/ | grep "LOGGING_OUT"
@@ -64,8 +72,8 @@
 
 ## If Deployment Failed
 
-- [ ] Check Railway logs: https://railway.app/dashboard
-- [ ] Check Netlify logs: https://app.netlify.com/sites/resonant-crostata-90b706/deploys
+- [ ] Check Railway logs: <https://railway.app/dashboard>
+- [ ] Check Netlify logs: <https://app.netlify.com/sites/resonant-crostata-90b706/deploys>
 - [ ] Verify correct remote was used: `git remote -v`
 - [ ] Rollback if needed: `git revert <commit-hash> && git push railway-origin main`
 

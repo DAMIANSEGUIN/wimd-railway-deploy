@@ -5,7 +5,8 @@ Detects when to retrieve full documentation based on conversation patterns
 """
 
 import re
-from typing import List, Set
+from typing import List
+
 
 class TriggerDetector:
     """Detects retrieval triggers from user messages and agent responses"""
@@ -15,47 +16,42 @@ class TriggerDetector:
         self.patterns = {
             "TROUBLESHOOTING_CHECKLIST": [
                 # Match error/problem keywords in technical contexts
-                r'\b(error|errors|failed|fails|failing|crash|crashed|exception|broken)\b',
+                r"\b(error|errors|failed|fails|failing|crash|crashed|exception|broken)\b",
                 # Match timeout variations
-                r'\b(timeout|timeouts|timing\s+out|timed\s+out)\b',
+                r"\b(timeout|timeouts|timing\s+out|timed\s+out)\b",
                 # Match bug in technical context (not "bug flying")
-                r'\bbug\s+(in|with|report|fix|fixes)',
-                r'\bbugs\b',
+                r"\bbug\s+(in|with|report|fix|fixes)",
+                r"\bbugs\b",
                 # Match issue/problem in technical context
-                r'\bissues?\s+(with|in|report|detected)',
-                r'\b(performance|security|critical)\s+issues?\b',
-                r'\bproblems?\s+(with|in|detected)',
+                r"\bissues?\s+(with|in|report|detected)",
+                r"\b(performance|security|critical)\s+issues?\b",
+                r"\bproblems?\s+(with|in|detected)",
             ],
             "DEPLOYMENT_TRUTH": [
-                r'\b(deploy|deployment|deploying|deployed|push|pushing|railway|production|prod|staging|release|released|rollback)\b',
+                r"\b(deploy|deployment|deploying|deployed|push|pushing|railway|production|prod|staging|release|released|rollback)\b",
             ],
             "STORAGE_PATTERNS": [
-                r'\b(database|postgresql|postgres|sqlite|query|queries|migration|migrations|schema|connection|connections|sql)\b',
+                r"\b(database|postgresql|postgres|sqlite|query|queries|migration|migrations|schema|connection|connections|sql)\b",
             ],
             "TEST_FRAMEWORK": [
                 # Match test-related phrases
-                r'\b(pytest|golden\s+dataset|coverage)\b',
-                r'\bunit\s+tests?\b',
-                r'\btests?\s+(are\s+)?(failing|failed|passed?|pass|running)\b',
+                r"\b(pytest|golden\s+dataset|coverage)\b",
+                r"\bunit\s+tests?\b",
+                r"\btests?\s+(are\s+)?(failing|failed|passed?|pass|running)\b",
             ],
             "CONTEXT_ENGINEERING_GUIDE": [
                 # Triggered by response length, not keywords
-            ]
+            ],
         }
 
         # Compile regex patterns
         self.compiled_patterns = {}
         for trigger, patterns in self.patterns.items():
             self.compiled_patterns[trigger] = [
-                re.compile(pattern, re.IGNORECASE)
-                for pattern in patterns
+                re.compile(pattern, re.IGNORECASE) for pattern in patterns
             ]
 
-    def detect_triggers(
-        self,
-        user_message: str,
-        agent_response: str = ""
-    ) -> List[str]:
+    def detect_triggers(self, user_message: str, agent_response: str = "") -> List[str]:
         """
         Detect which documents should be retrieved
 
@@ -104,7 +100,7 @@ class TriggerDetector:
             "DEPLOYMENT_TRUTH": "CLAUDE.md",  # Deployment section
             "STORAGE_PATTERNS": "SELF_DIAGNOSTIC_FRAMEWORK.md",  # Storage section
             "TEST_FRAMEWORK": "CLAUDE.md",  # Testing section
-            "CONTEXT_ENGINEERING_GUIDE": "docs/CONTEXT_ENGINEERING_CRITICAL_INFRASTRUCTURE.md"
+            "CONTEXT_ENGINEERING_GUIDE": "docs/CONTEXT_ENGINEERING_CRITICAL_INFRASTRUCTURE.md",
         }
 
         return {trigger: document_map[trigger] for trigger in triggers if trigger in document_map}

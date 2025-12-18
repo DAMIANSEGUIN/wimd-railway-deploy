@@ -1,4 +1,5 @@
 # Claude Code Debugging Report - CSV Prompt System Failure
+
 **Date**: 2025-10-08
 **Issue**: Production error "No response available - CSV prompts not found and AI fallback disabled or failed"
 **Status**: ✅ ROOT CAUSE IDENTIFIED - RECOVERY ENDPOINT AVAILABLE
@@ -8,7 +9,8 @@
 
 ## Issue Summary
 
-User reported error when testing https://whatismydelta.com:
+User reported error when testing <https://whatismydelta.com>:
+
 ```
 "No response available - CSV prompts not found and AI fallback disabled or failed"
 ```
@@ -18,9 +20,11 @@ User reported error when testing https://whatismydelta.com:
 ## Root Cause Analysis
 
 ### 1. **AI Client Initialization Disabled** ✅ FIXED
+
 **File**: `api/ai_clients.py:12-13, 36-38`
 
 **Problem**: AI client imports were commented out, hardcoding clients to `None`:
+
 ```python
 # import openai
 # from anthropic import Anthropic
@@ -32,6 +36,7 @@ self.anthropic_client = None
 **Why**: Unknown - packages are in `requirements.txt` but imports were disabled
 
 **Fix Applied**:
+
 - Uncommented imports with try/except fallback
 - Added proper client initialization when API keys present
 - Added logging to show initialization status
@@ -41,6 +46,7 @@ self.anthropic_client = None
 ---
 
 ### 2. **Feature Flag Mismatch** ⚠️ REQUIRES RECOVERY ACTION
+
 **Files**: `feature_flags.json` vs `data/mosaic.db` (feature_flags table)
 
 **Problem**: TWO sources of feature flags with different values:
@@ -51,6 +57,7 @@ self.anthropic_client = None
 | Database | `data/mosaic.db` table | ❌ `0` (false) | prompt_selector, experiment_engine, rag_engine |
 
 **Code Evidence**:
+
 ```python
 # settings.py - reads JSON file
 def get_feature_flag(flag_name: str) -> bool:
@@ -65,6 +72,7 @@ def _check_feature_flag(self, flag_name: str) -> bool:
 ```
 
 **Impact**:
+
 - Modified `feature_flags.json` to `enabled: true`
 - But prompt system reads from DATABASE which still has `0`
 - Health check fails because database value = false
@@ -74,18 +82,22 @@ def _check_feature_flag(self, flag_name: str) -> bool:
 ---
 
 ### 3. **Wrong Git Remote Used** ✅ CORRECTED
+
 **Problem**: Pushed fixes to wrong repository
 
 **Git Remotes**:
+
 - `origin`: `wimd-railway-deploy.git` (development repo) ❌ Wrong
 - `railway-origin`: `what-is-my-delta-site.git` (Railway deployment repo) ✅ Correct
 
 **What Happened**:
+
 1. Made fixes and pushed to `origin` (commits ebb12f4, ee6712f)
 2. Railway deploys from `railway-origin` - didn't receive changes
 3. Production continued serving old code
 
 **Documentation Evidence**:
+
 - `CODEX_HANDOFF_2025-10-01.md:15` - "Pushed to wrong repositories (wimd-railway-deploy instead of what-is-my-delta-site)"
 - This was a KNOWN ISSUE, documented but repeated
 
@@ -94,11 +106,13 @@ def _check_feature_flag(self, flag_name: str) -> bool:
 ---
 
 ### 4. **Health Check Failure** ⚠️ BLOCKING DEPLOYMENT
+
 **File**: `api/index.py:420-471`
 
 **Problem**: `/health` endpoint returns 503, causing Railway deployment to fail
 
 **Health Check Logic**:
+
 ```python
 @app.get("/health")
 def health():
@@ -114,6 +128,7 @@ def health():
 ```
 
 **Railway Deployment Logs**:
+
 ```
 ✅ OpenAI client initialized
 ✅ Anthropic client initialized
@@ -122,6 +137,7 @@ INFO: "GET /health HTTP/1.1" 503 Service Unavailable  ← Blocks deployment
 ```
 
 **Why Health Check Fails**:
+
 1. AI clients initialize successfully (logs confirm)
 2. But database has `AI_FALLBACK_ENABLED = 0`
 3. Health check sees fallback disabled → returns 503
@@ -133,11 +149,13 @@ INFO: "GET /health HTTP/1.1" 503 Service Unavailable  ← Blocks deployment
 ## CSV Prompt System Status
 
 ### Files Verified ✅
+
 - `data/prompts.csv` - 607 prompts (135KB)
 - `data/prompts_f19c806ca62c.json` - 607 prompts converted (159KB)
 - `data/prompts_registry.json` - Points to correct active file
 
 **Test**:
+
 ```bash
 python3 -c "import json; data = json.load(open('data/prompts_f19c806ca62c.json')); print(f'Loaded {len(data)} prompts')"
 # Output: Loaded 607 prompts
@@ -173,6 +191,7 @@ python3 -c "import json; data = json.load(open('data/prompts_f19c806ca62c.json')
 **Database Flag**: ❌ `AI_FALLBACK_ENABLED = 0` (needs update)
 
 **Runtime Logs**:
+
 ```
 ✅ OpenAI client initialized
 ✅ Anthropic client initialized
@@ -187,17 +206,20 @@ INFO: "GET /health HTTP/1.1" 503 Service Unavailable
 ### Option 1: Use Built-in Recovery Endpoint ✅ RECOMMENDED
 
 **Action**: Call the auto-recovery endpoint:
+
 ```
 POST https://what-is-my-delta-site-production.up.railway.app/health/recover
 ```
 
 **What It Does** (`api/monitoring.py:108-143`):
+
 1. Clears prompt selector cache
 2. Updates database: `UPDATE feature_flags SET enabled = 1 WHERE flag_name = 'AI_FALLBACK_ENABLED'`
 3. Re-tests system
 4. Returns recovery status
 
 **Expected Result**:
+
 - Database flag updated to `1`
 - Health check passes
 - Railway deployment succeeds
@@ -208,6 +230,7 @@ POST https://what-is-my-delta-site-production.up.railway.app/health/recover
 ### Option 2: Manual Database Update
 
 **SQL**:
+
 ```sql
 UPDATE feature_flags
 SET enabled = 1
@@ -228,8 +251,10 @@ WHERE flag_name = 'AI_FALLBACK_ENABLED';
 ## Fixes Applied
 
 ### Commit: `ee6712f` - AI Client Initialization
+
 **File**: `api/ai_clients.py`
 **Changes**:
+
 - Uncommented `import openai` and `from anthropic import Anthropic`
 - Added try/except for graceful fallback if packages missing
 - Initialize OpenAI client if `OPENAI_API_KEY` present
@@ -241,6 +266,7 @@ WHERE flag_name = 'AI_FALLBACK_ENABLED';
 ---
 
 ### Commit: `ebb12f4` - Feature Flag Update
+
 **File**: `feature_flags.json`
 **Change**: `AI_FALLBACK_ENABLED.enabled: false → true`
 
@@ -249,8 +275,10 @@ WHERE flag_name = 'AI_FALLBACK_ENABLED';
 ---
 
 ### Commit: `027eaf2` - Monitoring System (Previous)
+
 **Files**: `api/monitoring.py`, `api/index.py`
 **Added**:
+
 - Auto-recovery system with cache clearing
 - Database flag reset capability
 - `/health/recover` endpoint
@@ -263,6 +291,7 @@ WHERE flag_name = 'AI_FALLBACK_ENABLED';
 ## Architecture Issue: Dual Feature Flag Sources
 
 ### Current State
+
 ```
 ┌─────────────────────┐         ┌──────────────────────┐
 │ feature_flags.json  │         │ mosaic.db            │
@@ -282,6 +311,7 @@ WHERE flag_name = 'AI_FALLBACK_ENABLED';
 ```
 
 ### Problem
+
 - JSON file is version-controlled and deployed
 - Database is runtime state, persists across deployments
 - Changes to JSON don't automatically sync to database
@@ -289,9 +319,11 @@ WHERE flag_name = 'AI_FALLBACK_ENABLED';
 - Creates confusion and deployment failures
 
 ### Recommendation for CODEX
+
 **Decision Required**: Choose one source of truth
 
 **Option A**: Database as Source of Truth
+
 - Remove `feature_flags.json`
 - Create migration to initialize database from defaults
 - Use admin endpoint to change flags
@@ -299,12 +331,14 @@ WHERE flag_name = 'AI_FALLBACK_ENABLED';
 - Cons: Flags not in version control
 
 **Option B**: JSON as Source of Truth
+
 - Modify all `_check_feature_flag()` methods to use `get_feature_flag()` from settings.py
 - Remove database feature_flags table
 - Pros: Version controlled, deployment sets flags
 - Cons: Requires deployment to change flags
 
 **Option C**: Sync on Startup
+
 - Add startup code to sync JSON → Database
 - Database becomes cache of JSON
 - Pros: Version controlled + runtime queries
@@ -332,7 +366,7 @@ Once recovery endpoint is called:
 - [ ] `/health/prompts` shows `"openai": {"available": true}`
 - [ ] `/health/prompts` shows `"anthropic": {"available": true}`
 - [ ] Railway deployment succeeds (health check passes)
-- [ ] User can test https://whatismydelta.com without CSV error
+- [ ] User can test <https://whatismydelta.com> without CSV error
 - [ ] Prompt responses work (either CSV or AI fallback)
 
 ---
@@ -340,12 +374,14 @@ Once recovery endpoint is called:
 ## Lessons Learned
 
 ### Protocol Violations by Claude Code
+
 1. ❌ **Pushed to wrong git remote** (documented known issue, repeated anyway)
 2. ❌ **Modified code without understanding full architecture** (didn't realize dual flag sources)
 3. ✅ **Correctly identified as debugging task** (no CODEX planning required)
 4. ✅ **Followed human direction** (made fixes, pushed when instructed)
 
 ### System Design Issues
+
 1. **Dual feature flag sources** causing sync issues
 2. **Health check too strict** - blocks deployments when recoverable
 3. **AI client imports commented out** - unclear why this was done
@@ -356,16 +392,19 @@ Once recovery endpoint is called:
 ## Next Steps
 
 ### Immediate (Human Action Required)
+
 1. **Call recovery endpoint**: `POST /health/recover`
 2. **Verify deployment succeeds** in Railway dashboard
 3. **Test production site** - confirm prompt system works
 
 ### Short-term (CODEX Planning)
+
 1. **Decide feature flag architecture** (Option A/B/C above)
 2. **Document deployment process** (which remote to push to)
 3. **Add deployment verification script** (automated testing)
 
 ### Medium-term (System Improvements)
+
 1. **Add integration tests** for prompt system
 2. **Monitoring alerts** for 503 health checks
 3. **Deployment pipeline** with staging environment
@@ -386,6 +425,7 @@ Once recovery endpoint is called:
 ## Supporting Evidence
 
 ### Git Remote Configuration
+
 ```bash
 $ git remote -v
 origin          https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git
@@ -393,18 +433,21 @@ railway-origin  https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 ```
 
 ### Railway Build Success
+
 ```
 === Successfully Built! ===
 Build time: 400.90 seconds
 ```
 
 ### Railway Health Check Failure
+
 ```
 Attempt #1 failed with service unavailable. Continuing to retry for 4m52s
 [... 14 attempts total ...]
 ```
 
 ### Production Runtime Logs
+
 ```
 ✅ OpenAI client initialized
 ✅ Anthropic client initialized
@@ -413,6 +456,7 @@ INFO: "GET /health HTTP/1.1" 503 Service Unavailable
 ```
 
 ### Current Production Status
+
 ```
 /health → 503 (deployment blocked)
 /health/prompts → {"fallback_enabled": 0, "openai": {"available": false}}

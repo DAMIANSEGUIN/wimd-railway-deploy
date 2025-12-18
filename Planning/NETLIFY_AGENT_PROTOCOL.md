@@ -1,4 +1,5 @@
 # Netlify Agent Runner Protocol
+
 **Date:** 2025-10-26
 **Status:** Established Team Protocol
 
@@ -14,14 +15,16 @@ This is an **established protocol** that can be triggered if the team agrees it 
 
 ## When to Use Netlify Agent
 
-### Use Cases:
+### Use Cases
+
 - Diagnosing GitHub deployment issues
 - Diagnosing Railway deployment issues
 - Fixing deployment configuration problems
 - Debugging CI/CD pipeline failures
 - Troubleshooting integration between services
 
-### Decision Criteria:
+### Decision Criteria
+
 - Would save time compared to manual debugging
 - Would reduce potential errors
 - Team agrees it's the right approach
@@ -31,6 +34,7 @@ This is an **established protocol** that can be triggered if the team agrees it 
 ## How to Trigger
 
 When appropriate, suggest using Netlify Agent Runner to:
+
 1. Diagnose the issue faster
 2. Implement fixes with lower error rate
 3. Leverage established patterns from previous successful uses
@@ -40,6 +44,7 @@ When appropriate, suggest using Netlify Agent Runner to:
 ## Historical Context
 
 This protocol has been used **multiple times** successfully in the past for:
+
 - GitHub integration issues
 - Railway deployment problems
 - Cross-service configuration debugging

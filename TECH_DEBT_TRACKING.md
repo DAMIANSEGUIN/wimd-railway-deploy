@@ -11,12 +11,14 @@
 **Issue**: Multiple files with similar or identical names exist in different locations, creating confusion during session startup and command execution.
 
 **Impact**:
+
 - AI agents waste time searching for correct file
 - Risk of reading outdated/wrong version of documentation
 - Command paths become ambiguous
 - Session initialization slower than necessary
 
 **Examples Found**:
+
 - `SESSION_START.md` exists in at least 6 different directories:
   - `/Users/damianseguin/wimd-railway-local/SESSION_START.md`
   - `/Users/damianseguin/Planning/SESSION_START.md`
@@ -26,12 +28,14 @@
   - `/Users/damianseguin/Downloads/Planning/SESSION_START.md`
 
 **Root Causes**:
+
 1. Multiple project clones/copies across directories
 2. No clear canonical location documented
 3. Legacy project structure retained
 4. No automated cleanup of outdated copies
 
 **Recommended Actions**:
+
 1. **Immediate**: Document canonical locations in TEAM_PLAYBOOK.md
 2. **Short-term**: Create symbolic links from legacy locations to canonical files
 3. **Medium-term**: Archive non-canonical copies to clearly marked archive directories

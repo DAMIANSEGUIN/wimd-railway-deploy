@@ -7,10 +7,11 @@
 **Impact**: Production UI hits Netlify 404 for API routes and Claude-powered flows remain disabled until env loading is fixed
 
 **Current Issue State**:
+
 - **Railway Health**: `https://what-is-my-delta-site-production.up.railway.app/health` → ✅ `{"ok": true}` (verified 2025-09-29)
 - **Domain Health**: `https://whatismydelta.com/health` → ⚠️ Netlify HTML 404 (API not proxied)
 - **WWW Health**: `https://www.whatismydelta.com/health` → ⚠️ Netlify HTML 404
-- **Frontend**: Netlify deploy successful at https://resonant-crostata-90b706.netlify.app
+- **Frontend**: Netlify deploy successful at <https://resonant-crostata-90b706.netlify.app>
 - **DNS**: Apex/www pointing to Netlify (rewrite rule needed for API)
 - **SSL**: Working (Railway automatic)
 - **API Endpoints**: Working via Railway origin (`https://what-is-my-delta-site-production.up.railway.app`)
@@ -18,6 +19,7 @@
 - **❌ Environment Variables**: Not being loaded properly from .env file
 
 **Immediate Debugging Commands**:
+
 ```bash
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
 
@@ -47,6 +49,7 @@ python3 -c "from dotenv import load_dotenv; load_dotenv(); import os; print('CLA
 **Result**: Railway now serves complete 449-line Mosaic Platform API
 
 ### **Updated System Status**
+
 - ✅ **Local Development**: Mosaic works perfectly (all 449 lines, all endpoints)
 - ✅ **Railway Backend**: Complete API deployed and functional at Railway URL
 - ❌ **Domain Routing**: `whatismydelta.com` returns Netlify 404s instead of Railway API
@@ -54,9 +57,11 @@ python3 -c "from dotenv import load_dotenv; load_dotenv(); import os; print('CLA
 - ⚠️ **Root Cause**: Repository mismatch - Netlify monitors different source than Railway
 
 ### **Key Learning**
+
 The issue was resolved using the local-first development approach rather than infrastructure debugging. Running the application locally immediately revealed the missing dependency error that Railway was masking with a fallback app.
 
 ### **Working Commands**
+
 ```bash
 # Test Railway API (now working)
 curl https://what-is-my-delta-site-production.up.railway.app/health
@@ -71,18 +76,21 @@ python3 -m uvicorn api.index:app --host 0.0.0.0 --port 8000
 **From CODEX_HANDOVER_README.md**: "Claude API Key not being recognized by the application"
 
 **Current Problem**:
+
 1. **Domain Rewrite**: Netlify domain returns 404 for API routes; needs proxy to Railway origin
 2. **Environment Variable Loading**: The .env file exists but variables aren't being loaded properly
 3. **Claude API Key**: Not accessible to the application
 4. **Python Environment**: May need to fix how environment variables are loaded
 
 **Files to Check**:
+
 - `.env` file in project root
 - `api/settings.py` - how environment variables are loaded
 - `api/startup_checks.py` - API key validation
 - Railway environment variables
 
 **Next Steps for Claude_Code**:
+
 1. Add Netlify rewrite/proxy so public domain routes hit the Railway API
 2. Check how the application loads environment variables
 3. Fix the Claude API key recognition issue
@@ -90,6 +98,7 @@ python3 -m uvicorn api.index:app --host 0.0.0.0 --port 8000
 5. Test the API key validation in `api/startup_checks.py`
 
 **Specific Commands to Run**:
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -114,12 +123,14 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 ```
 
 ### **Latest Verification (2025-09-29)**
+
 - `curl https://whatismydelta.com/health` → Netlify HTML 404
 - `curl https://whatismydelta.com/config` → Netlify HTML 404
 - `curl https://whatismydelta.com/prompts/active` → Netlify HTML 404
 - `curl https://what-is-my-delta-site-production.up.railway.app/health` → `{"ok": true}`
 
 **Environment Variables Confirmed**:
+
 - `PUBLIC_SITE_ORIGIN=https://www.whatismydelta.com`
 - `PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.railway.app`
 
@@ -128,12 +139,14 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 ## **ROLE & RESPONSIBILITIES**
 
 ### **Primary Role: Senior Debugger**
+
 - **Railway deployment analysis** - Investigate build failures, runtime errors, infrastructure issues
 - **Log investigation** - Analyze deployment logs, error messages, system diagnostics
 - **Infrastructure debugging** - Troubleshoot environment variables, dependencies, configuration
 - **Performance analysis** - Identify bottlenecks, optimization opportunities, scaling issues
 
 ### **Handoff Triggers**
+
 - **Build failures** - When Railway deployment fails to build
 - **Runtime errors** - When deployed application crashes or behaves unexpectedly
 - **Missing endpoints** - When API endpoints return 404 or don't exist
@@ -145,6 +158,7 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 ## **CURRENT PROJECT STATUS**
 
 ### **Project Directory Structure**
+
 ```
 /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/
 ├── api/
@@ -168,6 +182,7 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 ```
 
 ### **Documentation Inventory (2025-09-29)**
+
 | Path | Purpose |
 | --- | --- |
 | `README.md` | Restart protocol and env checklist for operators |
@@ -191,6 +206,7 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 | `mosaic_ui/mosaic_ui_extracted/*` | Duplicate snapshot of Mosaic UI docs (Sept 11 archive) |
 
 ### **Deployment Status (2025-09-29) - ⚠️ PARTIAL**
+
 - ✅ **Backend API**: Running on Railway; `/health` returns `{"ok": true}`
 - ✅ **Frontend UI**: Live at `https://resonant-crostata-90b706.netlify.app` (Netlify)
 - ✅ **Railway Service**: `what-is-my-delta-site-production.up.railway.app` responding
@@ -200,6 +216,7 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 - ⚠️ **Domain API Routes**: `https://whatismydelta.com/*` return Netlify 404 (rewrite missing)
 
 ### **Current Working State (verified 2025-09-29)**
+
 - **Railway Health**: `https://what-is-my-delta-site-production.up.railway.app/health` → `{"ok": true}`
 - **Domain Health**: `https://whatismydelta.com/health` → Netlify HTML 404
 - **WWW Health**: `https://www.whatismydelta.com/health` → Netlify HTML 404
@@ -207,6 +224,7 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 - **Frontend Integration**: Netlify UI live; API calls must target Railway origin until rewrite lands
 
 ### **Working Endpoints (call Railway origin)**
+
 ```
 GET  /health              → `{"ok": true}`
 GET  /config              → returns API configuration
@@ -221,6 +239,7 @@ GET  /resume/versions    → list and manage resume versions
 ```
 
 ### **All Endpoints Implemented ✅**
+
 ```
 ✅ POST /wimd                → Chat endpoint for coach interactions
 ✅ POST /wimd/upload         → File upload handling
@@ -237,6 +256,7 @@ GET  /resume/versions    → list and manage resume versions
 ## **DEBUGGING WORKFLOW**
 
 ### **Step 1: Initial Assessment**
+
 1. **Check Railway logs** - `railway logs` or Railway dashboard
 2. **Verify service status** - Check if service is running
 3. **Test endpoints** - Use `curl` or browser to test API
@@ -248,6 +268,7 @@ GET  /resume/versions    → list and manage resume versions
 ### **Step 2: Common Issues & Solutions**
 
 #### **Build Failures**
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -267,6 +288,7 @@ pip list
 ```
 
 #### **Runtime Errors**
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -286,6 +308,7 @@ python3 -c "import os; print('OPENAI:', os.getenv('OPENAI_API_KEY')[:10] + '...'
 ```
 
 #### **Environment Issues**
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -304,6 +327,7 @@ ls -la .env
 ```
 
 #### **Domain/SSL Issues**
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -325,6 +349,7 @@ dig www.whatismydelta.com
 ### **Step 3: Diagnostic Commands**
 
 #### **Railway CLI Commands**
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -346,6 +371,7 @@ railway deployments
 ```
 
 #### **API Testing Commands**
+
 ```bash
 # Test health endpoint
 curl https://whatismydelta.com/health
@@ -361,6 +387,7 @@ curl -v https://whatismydelta.com/health
 ```
 
 #### **Local Testing Commands**
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -383,11 +410,13 @@ python3 -c "import os; print('CLAUDE:', os.getenv('CLAUDE_API_KEY')[:10] + '...'
 ## **TROUBLESHOOTING GUIDE**
 
 ### **CRITICAL ISSUE: Railway 502 Error - Gunicorn Command Not Found**
+
 **Current Problem**: Railway deployment failing with "gunicorn: command not found" despite Procfile update
 **Symptoms**: HTTP 502 errors, service completely down
 **Root Cause**: Railway still trying to use gunicorn instead of uvicorn
 
 **Immediate Debugging Steps**:
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -409,6 +438,7 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 ```
 
 **Environment Variables Check**:
+
 ```bash
 # Check Railway environment variables
 railway variables
@@ -419,6 +449,7 @@ railway variables
 ```
 
 **Procfile Requirements**:
+
 ```bash
 # Procfile should contain:
 web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
@@ -428,14 +459,17 @@ web: gunicorn api.index:app
 ```
 
 ### **Issue: Service Not Responding**
+
 **Symptoms**: 404 errors, connection refused, timeout
 **Diagnosis**:
+
 1. Check Railway service status
 2. Verify domain configuration
 3. Check SSL certificate status
 4. Test Railway URL directly
 
 **Solutions**:
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -454,14 +488,17 @@ railway up
 ```
 
 ### **Issue: API Keys Not Working**
+
 **Symptoms**: 500 errors, authentication failures, AI service errors
 **Diagnosis**:
+
 1. Check environment variables in Railway
 2. Verify API key format and validity
 3. Test API keys independently
 4. Check rate limits and quotas
 
 **Solutions**:
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -482,14 +519,17 @@ railway variables --set "CLAUDE_API_KEY=your_key_here"
 ```
 
 ### **Issue: Database/Storage Problems**
+
 **Symptoms**: Data not persisting, file upload failures, storage errors
 **Diagnosis**:
+
 1. Check Railway storage limits
 2. Verify file permissions
 3. Check database connectivity
 4. Review cleanup jobs
 
 **Solutions**:
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -509,14 +549,17 @@ railway run python3 -c "import sqlite3; print('DB OK')"
 ```
 
 ### **Issue: Frontend Integration Problems**
+
 **Symptoms**: CORS errors, API calls failing, UI not loading
 **Diagnosis**:
+
 1. Check CORS configuration
 2. Verify API endpoints exist
 3. Test frontend-backend communication
 4. Check network requests in browser
 
 **Solutions**:
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -542,6 +585,7 @@ curl https://whatismydelta.com/ob/opportunities
 ## **MONITORING & ALERTING**
 
 ### **Key Metrics to Monitor**
+
 - **Response times** - API endpoints should respond < 2 seconds
 - **Error rates** - Should be < 5% of requests
 - **Storage usage** - Monitor Railway storage limits
@@ -549,6 +593,7 @@ curl https://whatismydelta.com/ob/opportunities
 - **API key usage** - Monitor OpenAI/Anthropic quotas
 
 ### **Alert Conditions**
+
 - **Service down** - Health endpoint returns error
 - **High error rate** - > 10% of requests failing
 - **Slow response** - > 5 seconds average response time
@@ -556,6 +601,7 @@ curl https://whatismydelta.com/ob/opportunities
 - **API quota exceeded** - OpenAI/Anthropic rate limits hit
 
 ### **Monitoring Commands**
+
 ```bash
 # Navigate to project directory
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -582,14 +628,17 @@ cat CONVERSATION_NOTES.md | tail -10
 ## **COMMON DEBUGGING SCENARIOS**
 
 ### **Scenario 0: CURRENT CRITICAL FAILURE - Railway 502 Gunicorn Error**
+
 **Problem**: Railway deployment failing with "gunicorn: command not found" despite Procfile update
-**Current State**: 
+**Current State**:
+
 - Procfile updated to use Uvicorn, but Railway still failing
 - User reports redeploy "successful" but health endpoint still 502
 - No fresh log captured post-change
 - Frontend deployed to Netlify but shows request_failed (404) because API host is down
 
 **Immediate Actions**:
+
 1. Navigate to project directory: `cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
 2. Check Procfile content: `cat Procfile`
 3. Verify requirements.txt has uvicorn: `grep -i uvicorn requirements.txt`
@@ -599,19 +648,23 @@ cat CONVERSATION_NOTES.md | tail -10
 7. Test service: `curl -v https://what-is-my-delta-site-production.up.railway.app/health`
 
 **Expected Procfile**:
+
 ```
 web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 ```
 
 **If still failing**:
+
 - Check if Railway is using cached deployment
 - Verify uvicorn is installed: `railway run pip list | grep uvicorn`
 - Check if gunicorn is still referenced anywhere: `grep -r gunicorn .`
 - Consider pip install -r requirements.txt step if Railway uses build cache
 
 ### **Scenario 1: New Deployment Fails**
+
 **Problem**: Code changes deployed but service not responding
 **Steps**:
+
 1. Navigate to project directory: `cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
 2. Check Railway build logs for errors: `railway logs --deployment`
 3. Verify all dependencies are installed: `cat requirements.txt`
@@ -620,8 +673,10 @@ web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 6. Redeploy if necessary: `railway up`
 
 ### **Scenario 2: API Endpoints Missing**
+
 **Problem**: Frontend calls API but gets 404 errors
 **Steps**:
+
 1. Navigate to project directory: `cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
 2. Check if endpoints are implemented in code: `grep -n "POST\|GET" api/index.py`
 3. Verify route definitions in FastAPI: `cat api/index.py`
@@ -630,8 +685,10 @@ web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 6. Implement missing endpoints in `api/index.py`
 
 ### **Scenario 3: Database Connection Issues**
+
 **Problem**: Data not persisting, database errors
 **Steps**:
+
 1. Navigate to project directory: `cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
 2. Check SQLite file permissions: `ls -la data/`
 3. Verify database schema exists: `railway run python3 -c "import sqlite3; print('DB OK')"`
@@ -640,8 +697,10 @@ web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 6. Implement proper error handling in `api/index.py`
 
 ### **Scenario 4: File Upload Problems**
+
 **Problem**: Users can't upload files, uploads fail
 **Steps**:
+
 1. Check file size limits
 2. Verify file type validation
 3. Test upload functionality
@@ -653,22 +712,27 @@ web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 ## **INTEGRATION WITH OTHER AIs**
 
 ### **Handoff to Codex**
+
 **When**: Implementation needed, code changes required
 **What to provide**:
+
 - Specific error messages and logs
 - Exact code locations that need fixing
 - Clear requirements for new features
 - Test cases for validation
 
 ### **Handoff to Human**
+
 **When**: Railway configuration needed, approvals required
 **What to provide**:
+
 - Clear explanation of the problem
 - Specific steps needed to resolve
 - Railway dashboard instructions
 - Environment variable settings
 
 ### **Communication Protocol**
+
 1. **Identify the problem** clearly
 2. **Provide specific error messages** and logs
 3. **Suggest concrete solutions** with commands
@@ -680,6 +744,7 @@ web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 ## **USEFUL COMMANDS REFERENCE**
 
 ### **Railway CLI**
+
 ```bash
 # Service management
 railway status
@@ -698,6 +763,7 @@ railway shell
 ```
 
 ### **API Testing**
+
 ```bash
 # Health checks
 curl https://whatismydelta.com/health
@@ -716,6 +782,7 @@ curl -H "Content-Type: application/json" \
 ```
 
 ### **Local Development**
+
 ```bash
 # Run locally
 python3 -m uvicorn api.index:app --reload
@@ -731,6 +798,7 @@ python3 -c "import os; print(os.getenv('CLAUDE_API_KEY'))"
 ```
 
 ### **File Operations**
+
 ```bash
 # Check project structure
 ls -la
@@ -750,6 +818,7 @@ railway run cat data/prompts_clean.csv | head -5
 ## **EMERGENCY PROCEDURES**
 
 ### **Service Down**
+
 1. **Check Railway status** - `railway status`
 2. **View logs** - `railway logs`
 3. **Test endpoints** - `curl https://whatismydelta.com/health`
@@ -757,6 +826,7 @@ railway run cat data/prompts_clean.csv | head -5
 5. **Notify team** - Update status in project docs
 
 ### **Data Loss**
+
 1. **Check database** - `railway run ls -la data/`
 2. **Verify backups** - Check if data exists
 3. **Restore if possible** - Use backup data
@@ -764,6 +834,7 @@ railway run cat data/prompts_clean.csv | head -5
 5. **Document incident** - Record what happened
 
 ### **Security Issues**
+
 1. **Check logs** - Look for suspicious activity
 2. **Verify API keys** - Ensure they're not exposed
 3. **Rotate keys** - Generate new API keys
@@ -775,6 +846,7 @@ railway run cat data/prompts_clean.csv | head -5
 ## **DOCUMENTATION UPDATES**
 
 ### **When to Update This README**
+
 - **New debugging procedures** discovered
 - **Common issues** and solutions identified
 - **New monitoring** tools or commands added
@@ -782,6 +854,7 @@ railway run cat data/prompts_clean.csv | head -5
 - **Emergency procedures** updated
 
 ### **How to Update**
+
 1. **Test new procedures** thoroughly
 2. **Document step-by-step** instructions
 3. **Include example commands** and outputs
@@ -793,6 +866,7 @@ railway run cat data/prompts_clean.csv | head -5
 ## **SUCCESS CRITERIA**
 
 ### **Debugging Success**
+
 - **Issues identified** quickly and accurately
 - **Root causes** found and documented
 - **Solutions implemented** that work
@@ -800,6 +874,7 @@ railway run cat data/prompts_clean.csv | head -5
 - **Team informed** of resolutions
 
 ### **System Health**
+
 - **All endpoints** responding correctly
 - **Error rates** below 5%
 - **Response times** under 2 seconds
@@ -811,6 +886,7 @@ railway run cat data/prompts_clean.csv | head -5
 ## **CONTACT & ESCALATION**
 
 ### **When to Escalate**
+
 - **Critical system failure** - Service completely down
 - **Data loss** - User data missing or corrupted
 - **Security breach** - Unauthorized access detected
@@ -818,6 +894,7 @@ railway run cat data/prompts_clean.csv | head -5
 - **User impact** - Multiple users affected
 
 ### **Escalation Process**
+
 1. **Document the issue** clearly
 2. **Provide logs and evidence**
 3. **Suggest immediate actions**

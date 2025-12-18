@@ -1,15 +1,18 @@
 # Railway Deployment Health Check Failure - Diagnostic Prompt
 
 ## Problem Statement
+
 Railway deployment builds successfully and starts up correctly with all components initialized, but health check returns 503 causing deployment failure and rollback to old version.
 
 ## Current Deployment Status
+
 - **Active (Old)**: Deployment from Oct 6, 2025 (commit a583d26a) - healthy but missing fixes
 - **Failed (New)**: Deployment from Oct 9, 2025 (commit 80155006) - has all fixes but fails health check
 
 ## Evidence from Deploy Logs (New Deployment)
 
 ### ✅ Successful Startup Sequence
+
 ```
 Starting Container
 ✅ OpenAI client initialized
@@ -30,6 +33,7 @@ INFO: Application startup complete.
 ```
 
 ### ❌ Health Check Failures (14 attempts, all 503)
+
 ```
 INFO: 100.64.0.2:60093 - "GET /health HTTP/1.1" 503 Service Unavailable
 INFO: 100.64.0.2:49883 - "GET /health HTTP/1.1" 503 Service Unavailable
@@ -61,6 +65,7 @@ def health():
 ## What Old Deployment Shows (Still Active)
 
 Query: `https://whatismydelta.com/health/prompts`
+
 ```json
 {
   "ok": true,
@@ -78,6 +83,7 @@ Query: `https://whatismydelta.com/health/prompts`
 ## Fixes Already Applied (In New Deployment)
 
 ### 1. AI Client Initialization (api/ai_clients.py)
+
 ```python
 # BEFORE: imports commented out
 # import openai
@@ -93,6 +99,7 @@ except ImportError:
 ```
 
 ### 2. Feature Flag Sync Migration (api/migrations.py:221-227)
+
 ```python
 "004_sync_feature_flags_from_json": """
     UPDATE feature_flags SET enabled = TRUE WHERE flag_name = 'AI_FALLBACK_ENABLED';
@@ -104,6 +111,7 @@ except ImportError:
 ```
 
 ### 3. Dynamic Feature Flag Checking (api/prompt_selector.py:22)
+
 ```python
 # BEFORE: cached at init
 self.fallback_enabled = self._check_feature_flag("AI_FALLBACK_ENABLED")
@@ -138,6 +146,7 @@ self.fallback_enabled = self._check_feature_flag("AI_FALLBACK_ENABLED")
 ## Recommended Diagnostic Steps
 
 ### Step 1: Add Debug Logging to Health Check
+
 Modify `api/index.py` health check to log actual values:
 
 ```python
@@ -159,6 +168,7 @@ def health():
 ```
 
 ### Step 2: Verify AI Client Manager State
+
 Add diagnostic endpoint to check actual client state:
 
 ```python
@@ -175,6 +185,7 @@ def debug_ai_clients():
 ```
 
 ### Step 3: Verify Database Flag Value
+
 Add diagnostic endpoint to check database directly:
 
 ```python
@@ -187,6 +198,7 @@ def debug_feature_flags():
 ```
 
 ### Step 4: Alternative Solution - Temporary Health Check Bypass
+
 If debugging shows all values are correct but health check still fails, consider:
 
 ```python
@@ -215,6 +227,7 @@ Then investigate why original health check logic fails despite correct initializ
 ## Success Criteria
 
 Deployment is successful when:
+
 1. Build completes ✅ (already working)
 2. Container starts ✅ (already working)
 3. Application startup completes ✅ (already working)
@@ -234,7 +247,7 @@ Deployment is successful when:
 - **Repo**: github.com/DAMIANSEGUIN/what-is-my-delta-site
 - **Branch**: main
 - **Remote**: railway-origin
-- **Production URL**: https://whatismydelta.com
+- **Production URL**: <https://whatismydelta.com>
 - **Railway Service**: what-is-my-delta-site-production
 - **Last Working Commit**: a583d26a (Oct 6, 2025)
 - **Current Failed Commit**: 80155006 (Oct 9, 2025)

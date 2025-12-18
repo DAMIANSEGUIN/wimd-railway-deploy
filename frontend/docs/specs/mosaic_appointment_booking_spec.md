@@ -1,4 +1,5 @@
 # Mosaic Feature Spec: Appointment Booking Integration
+
 **Date**: 2025-10-22
 **Status**: Ready for Browser Implementation
 **Priority**: Medium
@@ -14,6 +15,7 @@ Add Google Calendar appointment booking to Mosaic for Coach in Residence and pre
 ## Booking URL
 
 **Google Calendar Appointment Link**:
+
 ```
 https://calendar.app.google/EAnDSz2CcTtH849x6
 ```
@@ -23,14 +25,17 @@ https://calendar.app.google/EAnDSz2CcTtH849x6
 ## Implementation Options
 
 ### Option 1: Simple Link (Fastest)
+
 Add a "Book a Session" button/link that opens the booking page in a new tab.
 
 **Where to add**:
+
 - PS101 results page (after user completes coaching flow)
 - User dashboard (if exists)
 - Marketing landing page
 
 **Code** (example):
+
 ```jsx
 <a
   href="https://calendar.app.google/EAnDSz2CcTtH849x6"
@@ -43,19 +48,23 @@ Add a "Book a Session" button/link that opens the booking page in a new tab.
 ```
 
 **Pros**:
+
 - 2 minutes to implement
 - Zero maintenance
 - Never breaks
 
 **Cons**:
+
 - Leaves Mosaic site (external page)
 
 ---
 
 ### Option 2: Embedded iframe (Better UX)
+
 Embed the Google Calendar booking page directly in Mosaic.
 
 **Code** (example):
+
 ```jsx
 <iframe
   src="https://calendar.app.google/EAnDSz2CcTtH849x6"
@@ -67,15 +76,18 @@ Embed the Google Calendar booking page directly in Mosaic.
 ```
 
 **Where to add**:
+
 - Dedicated `/book` route
 - Modal popup after PS101 completion
 - User dashboard section
 
 **Pros**:
+
 - User stays on Mosaic site
 - Cleaner experience
 
 **Cons**:
+
 - May have iframe restrictions (test first)
 - Slightly more complex
 
@@ -84,11 +96,13 @@ Embed the Google Calendar booking page directly in Mosaic.
 ## Recommended Implementation
 
 **Phase 1** (Now): Simple link on PS101 results page
+
 - Fast to implement
 - Validates demand
 - Zero risk
 
 **Phase 2** (Later): Embedded iframe if users prefer staying on site
+
 - Better UX
 - Requires testing for iframe compatibility
 
@@ -97,6 +111,7 @@ Embed the Google Calendar booking page directly in Mosaic.
 ## Copy/Messaging
 
 **Button text options**:
+
 - "Book a 1-on-1 Session"
 - "Schedule a Coaching Call"
 - "Talk to a Coach"
@@ -122,11 +137,13 @@ Embed the Google Calendar booking page directly in Mosaic.
 **Task**: Add appointment booking to Mosaic frontend
 
 **Files to modify** (likely):
+
 - `src/components/PS101Results.jsx` (or similar)
 - `src/pages/Dashboard.jsx` (if exists)
 - `src/components/BookingButton.jsx` (new component, optional)
 
 **Steps**:
+
 1. Choose implementation (link vs iframe)
 2. Add to appropriate page/component
 3. Test locally (does link work? does iframe load?)
@@ -134,6 +151,7 @@ Embed the Google Calendar booking page directly in Mosaic.
 5. Verify on production
 
 **Booking URL to use**:
+
 ```
 https://calendar.app.google/EAnDSz2CcTtH849x6
 ```

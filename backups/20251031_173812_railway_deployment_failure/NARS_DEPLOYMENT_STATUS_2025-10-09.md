@@ -11,11 +11,13 @@
 ## Problem Timeline
 
 ### Issue 1: Health Check Timing ✅ FIXED
+
 **Problem**: Railway health check runs before startup migration completes
 **Solution**: CODEX added startup readiness gate (commit 88dac89)
 **Result**: Migration now completes before health validation
 
 ### Issue 2: Database Check Failure ✅ FIXED
+
 **Problem**: `NameError: name 'get_conn' is not defined`
 **Cause**: CODEX's enhanced health check uses `get_conn()` but didn't import it
 **Solution**: Added `get_conn` to imports from `storage` (commit 34ab317)
@@ -26,6 +28,7 @@
 ## What Changed (Working → Fixed)
 
 **Working deployment** (067f33a, Oct 6):
+
 ```python
 @app.get("/health")
 def health():
@@ -33,6 +36,7 @@ def health():
 ```
 
 **Fixed deployment** (34ab317, Oct 9):
+
 ```python
 @app.get("/health")
 def health():
@@ -94,11 +98,13 @@ def health():
 ## How to Deploy
 
 **Via Railway CLI**:
+
 ```bash
 railway redeploy --yes
 ```
 
 **Via Railway Dashboard**:
+
 1. Go to what-is-my-delta-site service
 2. Deployments tab
 3. Click "Deploy" button
@@ -109,6 +115,7 @@ railway redeploy --yes
 ## Monitoring Deployment
 
 **Expected Deploy Logs**:
+
 ```
 Starting Container
 ✅ OpenAI client initialized
@@ -126,6 +133,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 ```
 
 **If still failing**:
+
 - Check Deploy Logs for any ERROR lines
 - Look for new NameError or import errors
 - Verify migration completes successfully
@@ -145,13 +153,14 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 
 ## Repository & Access
 
-**Repository**: https://github.com/DAMIANSEGUIN/what-is-my-delta-site
+**Repository**: <https://github.com/DAMIANSEGUIN/what-is-my-delta-site>
 **Branch**: main
 **Latest commit**: 34ab317
 
-**This document**: https://github.com/DAMIANSEGUIN/what-is-my-delta-site/blob/main/NARS_DEPLOYMENT_STATUS_2025-10-09.md
+**This document**: <https://github.com/DAMIANSEGUIN/what-is-my-delta-site/blob/main/NARS_DEPLOYMENT_STATUS_2025-10-09.md>
 
 **Related docs**:
+
 - `CODEX_HANDOFF_HEALTH_CHECK_2025-10-09.md` - CODEX's fix changelog
 - `CODEX_HANDOFF_DEPLOYMENT_PLAN_2025-10-09.md` - Full systematic analysis
 - `NARS_HANDOFF_MODULAR_TESTING_2025-10-09.md` - Isolation testing plan
@@ -161,16 +170,19 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 ## Next Actions
 
 **Immediate** (NARs or Claude Code):
+
 1. Trigger Railway deployment (commit 34ab317)
 2. Monitor Deploy Logs for health check status
 3. Verify deployment succeeds
 
 **Validation**:
+
 1. Check `curl https://whatismydelta.com/health` returns 200 OK
 2. Verify response includes `"checks"` field with all True values
 3. Test original user issue: "CSV prompts not found" should be resolved
 
 **If deployment fails again**:
+
 1. Copy full Deploy Logs showing the error
 2. Share with Claude Code for next fix iteration
 3. Consider simplified health check (remove database validation)
@@ -194,6 +206,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 ### Verification Results
 
 **Railway Backend Health** (`https://what-is-my-delta-site-production.up.railway.app/health`):
+
 ```json
 {
     "ok": true,
@@ -208,6 +221,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 ```
 
 **Production Health** (`https://whatismydelta.com/health`):
+
 ```json
 {
     "ok": true,
@@ -222,6 +236,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 ```
 
 **Prompt System Health** (`https://what-is-my-delta-site-production.up.railway.app/health/prompts`):
+
 ```json
 {
     "ok": true,

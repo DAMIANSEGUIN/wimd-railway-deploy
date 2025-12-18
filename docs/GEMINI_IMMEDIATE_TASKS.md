@@ -1,4 +1,5 @@
 # Gemini - Immediate Tasks (Phase 0)
+
 **Priority: URGENT - Start These Now**
 **Date: 2025-12-09**
 **From: Claude Code**
@@ -16,12 +17,14 @@ Codex has hit limit and cannot continue. You (Gemini) are now the primary implem
 ## Your Immediate Tasks (Phase 0 - Next 2 Hours)
 
 ### Task 0.4.1: Create Golden Dataset for Trigger Detection
+
 **File:** `.ai-agents/test_data/TRIGGER_TEST_DATASET.json`
 **Priority:** P0 - Blocking your Phase 1 work
 **Time Estimate:** 1 hour
 
 **What to Create:**
 A JSON file with 20-30 test cases for trigger detection. Each case includes:
+
 - User message
 - Agent response (optional)
 - Expected triggers that should fire
@@ -29,6 +32,7 @@ A JSON file with 20-30 test cases for trigger detection. Each case includes:
 - Rationale for the classification
 
 **Format:**
+
 ```json
 [
   {
@@ -66,6 +70,7 @@ A JSON file with 20-30 test cases for trigger detection. Each case includes:
 ```
 
 **5 Trigger Types to Cover:**
+
 1. **error** - Keywords: error, failed, crash, bug, exception, broken, issue, problem, timeout
 2. **deployment** - Keywords: deploy, push, railway, production, staging, release, rollback
 3. **database** - Keywords: database, postgresql, sqlite, query, migration, schema, connection, SQL
@@ -73,18 +78,21 @@ A JSON file with 20-30 test cases for trigger detection. Each case includes:
 5. **context_overflow** - Triggered when agent response >1000 words (not keyword-based)
 
 **Include Edge Cases:**
+
 - Message with NO triggers (normal conversation)
 - Message with MULTIPLE triggers (deployment failed = error + deployment)
 - Ambiguous messages (could be interpreted multiple ways)
 - False positives to avoid (words that sound like triggers but aren't)
 
 **Deliverable:**
+
 - File created: `.ai-agents/test_data/TRIGGER_TEST_DATASET.json`
 - Contains 20-30 test cases
 - Covers all 5 trigger types
 - Includes edge cases
 
 **Mark in Checklist:**
+
 ```markdown
 - [x] ✅ Create golden dataset for trigger detection (Gemini, 2025-12-09 HH:MM - DONE)
 ```
@@ -92,11 +100,13 @@ A JSON file with 20-30 test cases for trigger detection. Each case includes:
 ---
 
 ### Task 0.2.3: Test Current Agent Performance at 20-Minute Mark
+
 **File:** `.ai-agents/baseline/20MIN_BASELINE_SESSION.md`
 **Priority:** P0 - Proves the problem exists
 **Time Estimate:** 30 minutes (20 min session + 10 min documentation)
 
 **What to Do:**
+
 1. Start a fresh session (clear context)
 2. Work on a complex task for 20 minutes
 3. Document any degradation you observe:
@@ -107,6 +117,7 @@ A JSON file with 20-30 test cases for trigger detection. Each case includes:
    - Lost track of commitments
 
 **Format:**
+
 ```markdown
 # 20-Minute Baseline Session - Gemini
 **Date:** 2025-12-09
@@ -154,11 +165,13 @@ This baseline will be compared to post-MCP sessions to measure improvement.
 ```
 
 **Deliverable:**
+
 - File created: `.ai-agents/baseline/20MIN_BASELINE_SESSION.md`
 - Documents actual degradation (if any)
 - Provides baseline for comparison
 
 **Mark in Checklist:**
+
 ```markdown
 - [x] ✅ Test current agent performance at 20-minute mark (Gemini, 2025-12-09 HH:MM - DONE)
 ```
@@ -166,6 +179,7 @@ This baseline will be compared to post-MCP sessions to measure improvement.
 ---
 
 ### Task 0.3.2: Create Feature Flag System
+
 **File:** `.ai-agents/config/feature_flags.json`
 **Priority:** P0 - Required before any code changes
 **Time Estimate:** 15 minutes
@@ -174,6 +188,7 @@ This baseline will be compared to post-MCP sessions to measure improvement.
 A simple JSON file that controls MCP features. This allows disabling MCP without code changes.
 
 **Format:**
+
 ```json
 {
   "schema_version": "v1.0",
@@ -241,11 +256,13 @@ def is_feature_enabled(feature_name: str) -> bool:
 ```
 
 **Deliverable:**
+
 - File created: `.ai-agents/config/feature_flags.json`
 - File created: `.ai-agents/config/read_flags.py`
 - All flags default to `false` (safe)
 
 **Mark in Checklist:**
+
 ```markdown
 - [x] ✅ Create feature flag system (Gemini, 2025-12-09 HH:MM - DONE)
 ```
@@ -253,6 +270,7 @@ def is_feature_enabled(feature_name: str) -> bool:
 ---
 
 ### Task 0.4.2: Create Test Harness for Trigger Detection
+
 **File:** `tests/test_mcp_triggers.py`
 **Priority:** P0 - Validates your Phase 1 work
 **Time Estimate:** 30 minutes
@@ -261,6 +279,7 @@ def is_feature_enabled(feature_name: str) -> bool:
 A pytest test file that validates trigger detection using the golden dataset you created.
 
 **Format:**
+
 ```python
 import pytest
 import json
@@ -396,11 +415,13 @@ def test_trigger_detection_performance(golden_dataset):
 ```
 
 **Deliverable:**
+
 - File created: `tests/test_mcp_triggers.py`
 - Tests validate: format, precision, recall, false positives, performance
 - Can run (will skip if trigger_detector.py not implemented yet)
 
 **Mark in Checklist:**
+
 ```markdown
 - [x] ✅ Create test harness for trigger detection (Gemini, 2025-12-09 HH:MM - DONE)
 ```
@@ -433,6 +454,7 @@ def test_trigger_detection_performance(golden_dataset):
 If you have questions or get blocked:
 
 1. **Document in checklist:**
+
    ```markdown
    - [ ] ⛔ Task description (BLOCKED: reason)
    ```
@@ -448,6 +470,7 @@ If you have questions or get blocked:
 ## Summary
 
 **Your Phase 0 Tasks (Next 2 Hours):**
+
 1. ✅ Create golden dataset (20-30 test cases) - 1 hour
 2. ✅ Test 20-minute baseline session - 30 min
 3. ✅ Create feature flag system - 15 min

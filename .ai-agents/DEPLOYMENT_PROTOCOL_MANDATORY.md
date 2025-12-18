@@ -21,6 +21,7 @@
 ### PHASE 1: BEFORE ANY CHANGE
 
 **1.1 Create Timestamped Backup**
+
 ```bash
 TIMESTAMP=$(date -u +%Y%m%d_%H%M%S)Z
 BACKUP_DIR="backups/pre-${CHANGE_NAME}_${TIMESTAMP}"
@@ -30,6 +31,7 @@ cp frontend/index.html "$BACKUP_DIR/frontend_index.html"
 ```
 
 **1.2 Create BACKUP_MANIFEST.md**
+
 ```markdown
 # Backup: Pre-[CHANGE_NAME]
 **Created:** [TIMESTAMP]
@@ -55,12 +57,14 @@ cp "$BACKUP_DIR/mosaic_ui_index.html" mosaic_ui/index.html
 ```
 
 ## Verification Command
+
 ```bash
 # Test this backup works BEFORE using it
 cp "$BACKUP_DIR/mosaic_ui_index.html" /tmp/test_index.html
 # Start test server on /tmp
 # Verify login, chat, PS101 all work
 ```
+
 ```
 
 **1.3 Test Current State**
@@ -76,6 +80,7 @@ cp "$BACKUP_DIR/mosaic_ui_index.html" /tmp/test_index.html
 ```
 
 **1.4 Git Commit Current State**
+
 ```bash
 git add -A
 git commit -m "Pre-${CHANGE_NAME}: Working state before changes"
@@ -87,12 +92,14 @@ git commit -m "Pre-${CHANGE_NAME}: Working state before changes"
 ### PHASE 2: MAKE THE CHANGE
 
 **2.1 ONE Change at a Time**
+
 - Edit ONE file
 - OR restore ONE backup
 - OR apply ONE fix
 - **NEVER multiple changes simultaneously**
 
 **2.2 Document What Changed**
+
 ```bash
 # Create change log
 echo "Changed: [specific line numbers or files]" > .ai-agents/CHANGE_LOG_${TIMESTAMP}.md
@@ -101,6 +108,7 @@ echo "Expected result: [what should work after]" >> .ai-agents/CHANGE_LOG_${TIME
 ```
 
 **2.3 Verify File Integrity**
+
 ```bash
 # Check no broken references
 grep -n "src=\".*\.js\"" mosaic_ui/index.html
@@ -116,6 +124,7 @@ grep -c "PS101_STEPS\|PS101State\|PROMPT_HINTS" mosaic_ui/index.html
 ### PHASE 3: TEST THE CHANGE (MANDATORY - NO EXCEPTIONS)
 
 **3.1 Restart Server**
+
 ```bash
 # Kill old server
 pkill -f local_dev_server
@@ -129,6 +138,7 @@ curl -I http://localhost:3000/
 ```
 
 **3.2 Launch Test Browser**
+
 ```bash
 # Kill old Chromium
 killall Chromium 2>/dev/null
@@ -138,6 +148,7 @@ bash ~/Desktop/start_chromium_local.sh
 ```
 
 **3.3 Test ALL Core Functions**
+
 ```
 Manual Test Checklist:
 [ ] Page loads without console errors
@@ -152,6 +163,7 @@ Capture with Command+Shift+Y at EACH step
 ```
 
 **3.4 Analyze CodexCapture**
+
 ```bash
 LATEST=$(ls -t ~/Downloads/CodexAgentCaptures/ | head -1)
 echo "Latest capture: $LATEST"
@@ -170,6 +182,7 @@ cat ~/Downloads/CodexAgentCaptures/$LATEST/network.json | jq -r '.[] | select(.r
 ### PHASE 4: USER VERIFICATION (MANDATORY)
 
 **4.1 Report to User**
+
 ```
 "Change applied: [description]
 
@@ -186,12 +199,14 @@ Please verify before I proceed."
 ```
 
 **4.2 Wait for User Confirmation**
+
 - **DO NOT** proceed without user confirmation
 - **DO NOT** declare "fixed"
 - **DO NOT** make more changes
 - **WAIT** for user to test
 
 **4.3 If User Reports Issues**
+
 ```bash
 # IMMEDIATE ROLLBACK
 cp "$BACKUP_DIR/mosaic_ui_index.html" mosaic_ui/index.html
@@ -211,6 +226,7 @@ echo "Rolled back. System restored to pre-change state."
 ### PHASE 5: ONLY IF USER CONFIRMS WORKING
 
 **5.1 Create Success Backup**
+
 ```bash
 BACKUP_DIR="backups/working-${CHANGE_NAME}_${TIMESTAMP}"
 mkdir -p "$BACKUP_DIR"
@@ -232,6 +248,7 @@ EOF
 ```
 
 **5.2 Git Commit**
+
 ```bash
 git add -A
 git commit -m "${CHANGE_NAME}: User verified working
@@ -243,6 +260,7 @@ git commit -m "${CHANGE_NAME}: User verified working
 ```
 
 **5.3 Apply to frontend/index.html (if needed)**
+
 ```bash
 # Only if change needs to go to frontend too
 cp mosaic_ui/index.html frontend/index.html
@@ -251,6 +269,7 @@ cp mosaic_ui/index.html frontend/index.html
 ```
 
 **5.4 Deploy to Production**
+
 ```bash
 # Only after BOTH mosaic_ui AND frontend verified by user
 ./scripts/deploy.sh netlify
@@ -267,12 +286,14 @@ cp mosaic_ui/index.html frontend/index.html
 **Format:** `backups/[STATUS]-[DESCRIPTION]_[TIMESTAMP]/`
 
 **STATUS must be ONE of:**
+
 - `working-` = User verified everything works
 - `pre-` = Before attempting change (unknown if works)
 - `broken-` = Known to be broken
 - `test-` = Experimental, not verified
 
 **Examples:**
+
 ```
 ✅ GOOD:
 backups/working-ps101-full-flow_20251127_183000Z/
@@ -292,6 +313,7 @@ backups/good_one/
 **NEVER restore directly to production. ALWAYS test in isolation first.**
 
 ### Step 1: Verify Backup
+
 ```bash
 BACKUP="backups/[backup-name]"
 
@@ -306,6 +328,7 @@ ls -lh "$BACKUP/"
 ```
 
 ### Step 2: Test in Isolation
+
 ```bash
 # Copy to /tmp
 cp "$BACKUP/mosaic_ui_index.html" /tmp/test_index.html
@@ -319,6 +342,7 @@ python3 -m http.server 3001 &
 ```
 
 ### Step 3: If Test Passes, Create Pre-Restore Backup
+
 ```bash
 # Backup current state first!
 TIMESTAMP=$(date -u +%Y%m%d_%H%M%S)Z
@@ -327,11 +351,13 @@ cp mosaic_ui/index.html "backups/pre-restore_${TIMESTAMP}/mosaic_ui_index.html"
 ```
 
 ### Step 4: Restore
+
 ```bash
 cp "$BACKUP/mosaic_ui_index.html" mosaic_ui/index.html
 ```
 
 ### Step 5: Test Again (in production location)
+
 ```bash
 # Restart server
 pkill -f local_dev_server
@@ -343,6 +369,7 @@ python3 local_dev_server.py &
 ```
 
 ### Step 6: User Verification
+
 ```
 "Restored from: $BACKUP
 
@@ -356,6 +383,7 @@ Ready for you to test."
 ## CODEXCAPTURE MANDATORY USAGE
 
 **Every test session MUST:**
+
 1. Launch Chromium with CodexCapture
 2. Press Command+Shift+Y at EACH test point:
    - Page load
@@ -366,6 +394,7 @@ Ready for you to test."
    - Any error state
 
 3. Analyze EVERY capture:
+
 ```bash
 LATEST=$(ls -t ~/Downloads/CodexAgentCaptures/ | head -1)
 
@@ -402,6 +431,7 @@ echo "Capture: ~/Downloads/CodexAgentCaptures/$LATEST"
    - Team member assignments
 
 4. **Provide chat message:**
+
 ```
 [Your Role] completed: [task]
 
@@ -426,6 +456,7 @@ Status: [WORKING/BROKEN/UNKNOWN]
 ## WHAT TO DO IF SOMETHING BREAKS
 
 **IMMEDIATE:**
+
 1. STOP making changes
 2. Restore from last WORKING backup
 3. Verify restoration worked
@@ -433,12 +464,14 @@ Status: [WORKING/BROKEN/UNKNOWN]
 5. THEN diagnose what went wrong
 
 **DO NOT:**
+
 - Try another fix immediately
 - Restore from different backup hoping it works
 - Make multiple changes to "debug"
 - Declare anything fixed without user confirmation
 
 **DO:**
+
 - Analyze CodexCapture for errors
 - Read BACKUP_MANIFEST.md carefully
 - Test in isolation (/tmp) before production
@@ -452,12 +485,14 @@ Status: [WORKING/BROKEN/UNKNOWN]
 **This protocol is MANDATORY.**
 
 **Any AI agent that:**
+
 - Restores without testing first
 - Declares "fixed" without user confirmation
 - Makes changes without backup
 - Skips CodexCapture verification
 
 **Has FAILED their role and must:**
+
 1. Immediately rollback
 2. Document failure in `.ai-agents/FAILURE_REPORT_[DATE].md`
 3. Hand off to another agent
@@ -468,6 +503,7 @@ Status: [WORKING/BROKEN/UNKNOWN]
 ## SINGLE SOURCE OF TRUTH
 
 **Working Baseline Location:**
+
 ```
 backups/working-[latest]/
 ```
@@ -475,12 +511,14 @@ backups/working-[latest]/
 **Always updated after user confirms something works.**
 
 **Before any change, verify:**
+
 ```bash
 # What's the last confirmed working state?
 ls -lt backups/working-* | head -1
 ```
 
 **If no working-* backup exists:**
+
 ```
 STOP. Download from production Netlify.
 Test it locally.

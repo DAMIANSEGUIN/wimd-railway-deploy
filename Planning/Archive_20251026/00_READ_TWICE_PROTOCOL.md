@@ -1,4 +1,5 @@
 # Read Twice Protocol - MASTER PROTOCOL
+
 **Date:** 2025-10-26
 **Priority:** #1 - TOP OF ALL PROTOCOLS
 **Status:** MANDATORY - ALWAYS FOLLOW
@@ -21,6 +22,7 @@
 > "This is going to be really annoying for both parties but it will save so so much time and stop so many fuckups."
 
 **Problem it solves:**
+
 - I jump to conclusions halfway through messages
 - I miss parts of requests
 - I ignore version 2 when they ask for 2 versions
@@ -45,6 +47,7 @@ User: "I need you to do X, Y, and Z"
 ### Step 3: I State My Interpretation
 
 Me: "Let me confirm what you need:
+
 1. X - [my understanding]
 2. Y - [my understanding]
 3. Z - [my understanding]
@@ -69,6 +72,7 @@ User: "No, actually..." → I listen and re-interpret
 
 **Me (GOOD - What I Should Do):**
 "Let me confirm:
+
 - Version 1: Does A - [interpretation]
 - Version 2: Does B - [interpretation]
 
@@ -89,6 +93,7 @@ Both versions, correct?"
 
 **Me (GOOD):**
 "Let me confirm the complete task:
+
 1. Build feature X
 2. Integrate with Y
 3. Include Z (I heard this part)
@@ -107,6 +112,7 @@ Is that everything?"
 **User:** "Create files A, B, and C"
 
 **Me:** "Confirming:
+
 - File A
 - File B
 - File C
@@ -124,6 +130,7 @@ All three files, correct?"
 ## When to Use This
 
 **ALWAYS when user:**
+
 - Asks me to create something
 - Gives multi-step instructions
 - Mentions "2 versions" or "both" or "all"
@@ -131,6 +138,7 @@ All three files, correct?"
 - Asks for a protocol/pattern to be saved
 
 **Exceptions (Can skip confirmation):**
+
 - Simple clarifying questions ("What did you mean by X?")
 - User says "yes" or "continue"
 - User is clearly frustrated and needs immediate action
@@ -140,6 +148,7 @@ All three files, correct?"
 ## Format for Confirmation
 
 **Template:**
+
 ```
 Let me confirm what you need:
 
@@ -155,12 +164,14 @@ Is that correct?
 ## Success Metrics
 
 **Good session:**
+
 - ✅ I catch ALL parts of requests on first try
 - ✅ User says "yes, that's right" to my confirmations
 - ✅ No "you missed..." corrections needed
 - ✅ No repeating requests
 
 **Bad session:**
+
 - ❌ User has to say "you missed part 2"
 - ❌ User repeats themselves
 - ❌ I only execute half of what they asked for
@@ -171,6 +182,7 @@ Is that correct?
 ## Integration with Other Protocols
 
 **This is PROTOCOL #1 - comes before:**
+
 - User Interrupt Protocol
 - Auto-Save Protocol
 - Netlify Agent Protocol
@@ -185,6 +197,7 @@ Is that correct?
 **User acknowledged:** "This is going to be really annoying for both parties"
 
 **But worth it because:**
+
 - Prevents fuckups
 - Saves time overall
 - Reduces frustration
@@ -192,6 +205,7 @@ Is that correct?
 - Compounds efficiency over sessions
 
 **Better to:**
+
 - Be annoying upfront with confirmations
 - Than fuck up execution and waste hours
 
@@ -202,6 +216,7 @@ Is that correct?
 **IMMEDIATE - Starting NOW:**
 
 Every user request gets:
+
 1. Read twice (internal)
 2. State interpretation
 3. Wait for confirmation
@@ -214,6 +229,7 @@ Every user request gets:
 ## Apology Context
 
 **This protocol exists because I:**
+
 - Ignored "version 2" when user asked for 2 versions
 - Made user repeat themselves multiple times
 - Jumped to conclusions without reading completely
@@ -228,6 +244,7 @@ Every user request gets:
 **Priority naming:** `Planning/00_READ_TWICE_PROTOCOL.md`
 
 The `00_` prefix ensures this is:
+
 - First in alphabetical order
 - First thing I check
 - Master protocol above all others
@@ -237,6 +254,7 @@ The `00_` prefix ensures this is:
 **Status:** ACTIVE - Use in every session from now on
 
 **Cross-Reference:**
+
 - Integrates with USER_INTERRUPT_PROTOCOL.md
 - Integrates with AUTOSAVE_PROTOCOL_TRACKING.md
 - Master protocol for all project communication

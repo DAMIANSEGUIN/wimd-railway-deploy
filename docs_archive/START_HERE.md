@@ -22,18 +22,21 @@
 ## Your Role (Required - Identify Before Proceeding)
 
 ### **Claude Code** - Infrastructure Debugger
+
 - **Access**: Railway logs, deployment analysis, infrastructure troubleshooting
 - **Tasks**: Railway deployment failures, health check issues, environment config
 - **Read**: OPERATIONS_MANUAL.md, DEPLOYMENT_STATUS_*.md
 - **Do NOT**: Make code changes without CODEX planning
 
 ### **CODEX** - Systematic Planning Engineer
+
 - **Access**: Code analysis, file reading, systematic planning
 - **Tasks**: Implementation planning, architecture review, gap analysis
 - **Read**: All architecture docs, source documents
 - **Do NOT**: Implement without creating plan and getting human approval
 
 ### **Claude in Cursor** - Local Implementation Engineer
+
 - **Access**: Full local environment, git, file system, terminal
 - **Tasks**: Code implementation, testing, git operations, Railway deployment execution
 - **Read**: Implementation plans from CODEX
@@ -79,28 +82,33 @@ Follow this decision tree:
 ## Document Types (Critical - Know the Difference)
 
 ### **SOURCE Documents** (Contains Actual Content)
+
 - **PS101_Intro_and_Prompts.docx** - The 10-step guided sequence
 - **Mosaic_Foundation_v1.0.md** - Foundation principles
 - **prompts_clean.csv** - 607 coaching prompts for tangent support
 - **Purpose**: These ARE the requirements, content, and design
 
 ### **ANALYSIS Documents** (Gap Analysis)
+
 - **MOSAIC_USER_EXPERIENCE_SOURCE_DOC.md** - What's built vs. what's planned
 - **FORENSIC_ANALYSIS_*.md** - Investigation of issues
 - **Purpose**: When these say "Missing", it means "not implemented in product", NOT "document doesn't exist"
 - **When to read**: Before implementing features to understand gaps
 
 ### **OPERATIONS Documents** (How to Deploy/Maintain)
+
 - **OPERATIONS_MANUAL.md** - Deployment procedures, troubleshooting
 - **PROJECT_STRUCTURE.md** - File locations, git remotes, deployment targets
 - **Purpose**: How to operate the system
 
 ### **ARCHITECTURE Documents** (How System Works)
+
 - **AI_ROUTING_PLAN.md** - CSV → AI → Fallback coaching flow
 - **CODEX_INSTRUCTIONS.md** - Role definitions, handoff protocols
 - **Purpose**: How the system is designed to function
 
 ### **STATUS Documents** (Current State)
+
 - **DEPLOYMENT_STATUS_*.md** - Latest deployment state
 - **NARS_DEPLOYMENT_STATUS_*.md** - Recent deployment results
 - **Purpose**: What's currently live, what changed recently
@@ -110,20 +118,24 @@ Follow this decision tree:
 ## Common Mistakes to Avoid
 
 ### ❌ **Mistake 1: "Deployment successful = job done"**
+
 - Health checks passing ≠ product matches design
 - Always verify: Does user experience match MOSAIC_USER_EXPERIENCE_SOURCE_DOC.md vision?
 
 ### ❌ **Mistake 2: "Missing in docs = doesn't exist"**
+
 - MOSAIC_USER_EXPERIENCE_SOURCE_DOC.md lists implementation gaps
 - Source documents exist at paths in PROJECT_STRUCTURE.md
 - Check both before assuming anything is missing
 
 ### ❌ **Mistake 3: "Fix symptoms without understanding system"**
+
 - User reports error → Read architecture first
 - Is this a missing feature? Check gap analysis docs
 - Is this a bug? Check recent deployment status
 
 ### ❌ **Mistake 4: "Skip role boundaries"**
+
 - Claude Code should not plan implementations (that's CODEX)
 - CODEX should not execute deployments (that's Claude in Cursor)
 - Follow handoff protocols in CODEX_INSTRUCTIONS.md
@@ -133,31 +145,37 @@ Follow this decision tree:
 ## Quick Reference Card
 
 ### **I'm starting a new session**
+
 → Read: This document (START_HERE.md)
 → Then: CODEX_INSTRUCTIONS.md
 → Then: PROJECT_STRUCTURE.md
 
 ### **User says feature doesn't work**
+
 → Read: MOSAIC_USER_EXPERIENCE_SOURCE_DOC.md first
 → Check: Is it in "What's Missing"? → Needs implementation, not debugging
 → If not missing: Follow debugging protocol for your role
 
 ### **I'm debugging a deployment issue**
+
 → Read: OPERATIONS_MANUAL.md, latest DEPLOYMENT_STATUS_*.md
 → Role: Claude Code
 → Check: Railway logs, health checks, environment variables
 
 ### **I'm implementing a feature**
+
 → Read: Source documents in `/projects/mosaic-platform/`
 → Read: Architecture docs (AI_ROUTING_PLAN.md)
 → Process: CODEX plans → Human approves → Claude in Cursor implements
 
 ### **I need to understand the architecture**
+
 → Read: AI_ROUTING_PLAN.md (coaching flow)
 → Read: MOSAIC_WAYFINDING_DIAGRAM.md (user journey)
 → Read: PROJECT_STRUCTURE.md (where everything lives)
 
 ### **I don't know what to do**
+
 → Read: This document again
 → Read: CODEX_INSTRUCTIONS.md (role definitions)
 → Ask: Human for clarification
@@ -182,6 +200,7 @@ Follow this decision tree:
 ## Protocol Enforcement
 
 **If an AI violates these protocols:**
+
 1. Human will stop the session
 2. AI must re-read this document
 3. AI must explain what they should have done differently

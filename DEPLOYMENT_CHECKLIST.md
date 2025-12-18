@@ -5,12 +5,14 @@
 ## Pre-Deployment
 
 - [ ] Ensure enforcement hooks are installed
+
   ```bash
   ./scripts/setup_hooks.sh
   # If config is locked, run: git config core.hooksPath .githooks
   ```
 
 - [ ] Verify git remote configuration
+
   ```bash
   git remote -v
   # PRODUCTION = railway-origin (what-is-my-delta-site)
@@ -18,12 +20,14 @@
   ```
 
 - [ ] Ensure you're on the correct branch
+
   ```bash
   git branch
   # Should show: * main
   ```
 
 - [ ] All changes committed
+
   ```bash
   git status
   # Should show: "nothing to commit, working tree clean"
@@ -34,9 +38,11 @@
   - Record checkpoints in `.verification_audit.log` or relevant handoff files
 
 - [ ] Run PS101 continuity helper scripts
+
   ```bash
   ./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh
   ```
+
   - Confirm `check_spec_hash.sh` reports the expected SHA
   - `inject_build_id.js` now runs against a temporary deploy artefact (handled by `scripts/deploy_frontend_netlify.sh`)
   - No manual `BUILD_ID` commit required; repository should remain clean before and after deploy
@@ -49,11 +55,13 @@
 ## Deployment
 
 - [ ] Push to **PRODUCTION** using wrapper (not origin!)
+
   ```bash
   ./scripts/push.sh railway-origin main
   ```
 
 - [ ] Confirm push succeeded
+
   ```bash
   git log railway-origin/main --oneline -1
   # Should show your latest commit
@@ -62,18 +70,21 @@
 ## Post-Deployment Verification
 
 - [ ] Wait for Railway backend rebuild (2 minutes)
+
   ```bash
   # Check Railway deployment status
   curl -s https://what-is-my-delta-site-production.up.railway.app/health | jq
   ```
 
 - [ ] Wait for Netlify frontend rebuild (1 minute)
+
   ```bash
   # Check Netlify deployment status
   curl -I https://whatismydelta.com/ | grep -i "x-nf-request-id\|age"
   ```
 
 - [ ] Verify specific changes are live
+
   ```bash
   # Example: Check if new function exists in deployed code
   curl -s https://whatismydelta.com/ | grep "LOGGING_OUT"
@@ -94,8 +105,8 @@
 
 ## If Deployment Failed
 
-- [ ] Check Railway logs: https://railway.app/dashboard
-- [ ] Check Netlify logs: https://app.netlify.com/sites/resonant-crostata-90b706/deploys
+- [ ] Check Railway logs: <https://railway.app/dashboard>
+- [ ] Check Netlify logs: <https://app.netlify.com/sites/resonant-crostata-90b706/deploys>
 - [ ] Verify correct remote was used: `git remote -v`
 - [ ] Rollback if needed: `git revert <commit-hash> && git push railway-origin main`
 
@@ -138,6 +149,7 @@
 ```
 
 **Emergency bypass (logged to audit):**
+
 ```bash
 SKIP_VERIFICATION=true BYPASS_REASON="Production hotfix" ./scripts/push.sh railway-origin main
 ```
@@ -168,6 +180,7 @@ git commit -m "message"
 ---
 
 **Remember:**
+
 - If you can't verify it's live, it's NOT deployed
 - Always use wrapper scripts (`./scripts/push.sh`, `./scripts/deploy.sh`)
 - Never use raw `git push` or `netlify deploy` commands

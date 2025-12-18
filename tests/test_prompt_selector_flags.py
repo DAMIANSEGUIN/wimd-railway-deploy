@@ -1,6 +1,3 @@
-import sqlite3
-import os
-
 import pytest
 
 from api import storage

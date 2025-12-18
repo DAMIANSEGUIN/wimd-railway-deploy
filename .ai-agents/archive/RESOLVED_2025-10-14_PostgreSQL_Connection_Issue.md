@@ -11,6 +11,7 @@
 PostgreSQL migration code is deployed but **silently failing back to SQLite**. We cannot diagnose the root cause without seeing the actual error message from the deployment logs.
 
 **Evidence:**
+
 - Health check shows: `"database":true` (SQLite fallback working)
 - Users getting "Invalid credentials" (database still wiping on deploys)
 - DATABASE_URL correctly set to `postgresql://...@postgres.railway.internal:5432/...`
@@ -32,6 +33,7 @@ PostgreSQL migration code is deployed but **silently failing back to SQLite**. W
    - `connection failed`
 
 5. **Copy the EXACT error message** from this line:
+
    ```
    [STORAGE] ❌ PostgreSQL connection failed: <ERROR MESSAGE HERE>
    ```
@@ -52,6 +54,7 @@ except Exception as e:
 ```
 
 **Without the actual exception message (`{e}`), we cannot diagnose:**
+
 - Wrong DATABASE_URL format?
 - Network connectivity blocked?
 - PostgreSQL credentials invalid?
@@ -63,7 +66,8 @@ except Exception as e:
 
 ## Expected Log Output
 
-### If PostgreSQL Working (Success):
+### If PostgreSQL Working (Success)
+
 ```
 Starting up...
 [STORAGE] Attempting PostgreSQL connection...
@@ -71,7 +75,8 @@ Starting up...
 Running feature flag sync migration...
 ```
 
-### If PostgreSQL Failing (Current State):
+### If PostgreSQL Failing (Current State)
+
 ```
 Starting up...
 [STORAGE] Attempting PostgreSQL connection...
@@ -101,22 +106,27 @@ Running feature flag sync migration...
 ## Possible Root Causes (Based on Error Message)
 
 ### Error: "could not connect to server"
+
 - **Cause:** Network routing issue, PostgreSQL not accessible
 - **Fix:** Check Railway private networking configuration
 
 ### Error: "password authentication failed"
+
 - **Cause:** DATABASE_URL credentials don't match PostgreSQL service
 - **Fix:** Regenerate DATABASE_URL from PostgreSQL service
 
 ### Error: "SSL required"
+
 - **Cause:** PostgreSQL requires SSL, connection string missing `?sslmode=require`
 - **Fix:** Append `?sslmode=require` to DATABASE_URL
 
 ### Error: "no pg_hba.conf entry"
+
 - **Cause:** PostgreSQL not configured to accept connections from app
 - **Fix:** Check PostgreSQL access controls in Railway
 
 ### Error: "database does not exist"
+
 - **Cause:** DATABASE_URL points to wrong database name
 - **Fix:** Verify database name in PostgreSQL service matches URL
 
@@ -127,15 +137,18 @@ Running feature flag sync migration...
 **The silent fallback was a design mistake.**
 
 **Why it exists:**
+
 - Allows local development without PostgreSQL (uses SQLite)
 - Prevents total application crash if database unavailable
 
 **Why it's problematic in production:**
+
 - Masks configuration errors
 - App appears healthy while using wrong database
 - No clear signal that PostgreSQL isn't working
 
 **Should have done:**
+
 - Fail loudly in production if DATABASE_URL set but connection fails
 - Add health check endpoint that verifies PostgreSQL specifically
 - Log connection errors to Railway dashboard prominently

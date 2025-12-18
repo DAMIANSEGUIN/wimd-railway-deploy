@@ -9,6 +9,7 @@
 ## Current Situation
 
 **Migration Status:**
+
 - ✅ Code migrated to PostgreSQL (committed: `2b9fbc1`)
 - ✅ Railway PostgreSQL service provisioned
 - ✅ DATABASE_URL added to app service environment variables
@@ -16,6 +17,7 @@
 - ❌ **App still using SQLite fallback - PostgreSQL connection failing**
 
 **Evidence:**
+
 - Deployment logs show: `data/migration_backups/backup_...db` (SQLite paths)
 - User registration returns "Invalid credentials" (SQLite being wiped on deploy)
 - No PostgreSQL connection errors in logs (failing silently)
@@ -53,6 +55,7 @@
 ### Step 4: Verify Connection
 
 13. Check deployment logs for:
+
     ```
     [STORAGE] Attempting PostgreSQL connection...
     [STORAGE] ✅ PostgreSQL connection pool created successfully
@@ -62,7 +65,7 @@
 
 ### Step 5: Test Persistence
 
-15. Go to https://whatismydelta.com
+15. Go to <https://whatismydelta.com>
 16. Register test user: `nars-test@example.com` / `testpass123`
 17. Verify login works
 18. Trigger another deployment (any code change)
@@ -77,12 +80,14 @@
 If private URL doesn't exist or connection still fails:
 
 **Possible issues:**
+
 1. PostgreSQL service not fully provisioned yet (wait 5 more minutes)
 2. Network connectivity between services not configured
 3. PostgreSQL credentials incorrect
 4. PostgreSQL not accepting connections
 
 **Check PostgreSQL service:**
+
 - Status should be **"Active"** or **"Running"**
 - Check **"Metrics"** - should show database activity
 - Check **"Logs"** - look for initialization complete messages
@@ -92,15 +97,18 @@ If private URL doesn't exist or connection still fails:
 ## Debugging Information
 
 **Current DATABASE_URL format (confirmed by user):**
+
 - Starts with: `postgresql://`
 - Ends with: `railway.app:5432/railway`
 
 **Code Status:**
+
 - `api/storage.py` has PostgreSQL connection pool initialization
 - Fallback to SQLite if `DATABASE_URL` not set or connection fails
 - Debug logging added (commit pending user approval)
 
 **Files Changed:**
+
 - `requirements.txt` - Added `psycopg2-binary`
 - `api/storage.py` - PostgreSQL migration complete
 - `api/storage_sqlite_backup.py` - Original SQLite backup
@@ -110,6 +118,7 @@ If private URL doesn't exist or connection still fails:
 ## If All Else Fails
 
 **Rollback to SQLite:**
+
 ```bash
 cp api/storage_sqlite_backup.py api/storage.py
 sed -i '' '/psycopg2-binary/d' requirements.txt
@@ -125,6 +134,7 @@ git push railway-origin main
 ## What Was Attempted
 
 **Session work (90 minutes):**
+
 1. ✅ Diagnosed root cause (Railway ephemeral SQLite storage)
 2. ✅ Migrated all SQL queries to PostgreSQL syntax
 3. ✅ Added connection pooling
@@ -134,6 +144,7 @@ git push railway-origin main
 7. ❌ **Connection not working - needs Railway dashboard troubleshooting**
 
 **Claude Code limitation:**
+
 - Cannot access Railway dashboard interactively
 - Cannot view visual UI elements (tabs, panels, buttons)
 - Cannot switch between Railway services via CLI in non-TTY mode
@@ -144,6 +155,7 @@ git push railway-origin main
 ## Expected Outcome
 
 Once DATABASE_URL is correctly configured:
+
 - PostgreSQL connection succeeds
 - Database schema auto-created on first connection
 - User accounts persist across deployments

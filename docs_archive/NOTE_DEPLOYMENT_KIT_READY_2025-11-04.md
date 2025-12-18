@@ -1,6 +1,6 @@
 # ✅ PS101 Mosaic Deployment Kit - Ready for Use
 
-**Date:** 2025-11-04  
+**Date:** 2025-11-04
 **Status:** All scripts installed and ready
 
 ## 📦 New Deployment Scripts (Root `scripts/` Directory)
@@ -66,6 +66,7 @@ All scripts are now available in the root `scripts/` directory with corrected pa
 ## 🎯 Expected Outcome
 
 After running the cutover flow:
+
 - Production site serves Mosaic/PS101 UI
 - Automatic 5-minute trial mode for unauthenticated users
 - No login wall on fresh load
@@ -75,5 +76,3 @@ After running the cutover flow:
 ---
 
 **Ready for production cutover when you are.**
-
-

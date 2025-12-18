@@ -1,6 +1,7 @@
 # Gemini MCP Work Prompts — Recommended Focus Areas
 
 **Document Metadata:**
+
 - Created: 2025-12-09 by Claude Code
 - Audience: Gemini (API mode agent)
 - Parent: `docs/MCP_CONTEXT_ENGINEERING_PROMPTS.md`
@@ -11,6 +12,7 @@
 ## Your Role in MCP v1.1 Integration
 
 Gemini, you work via **API mode** with broker scripts (`agent_send.sh`, `agent_receive.sh`). You have unique insights into:
+
 - Cost optimization (API usage patterns, token budgets)
 - Asynchronous workflows (parallel agent execution)
 - Error handling in API mode context (no direct tool access)
@@ -23,11 +25,13 @@ Gemini, you work via **API mode** with broker scripts (`agent_send.sh`, `agent_r
 ### 🔴 CRITICAL - Section 4: Attention Budget Allocation
 
 **Why You're Best Suited:**
+
 - You understand API costs deeply (token pricing, model selection)
 - You've optimized for cost in your own workflows
 - You know which information classes are expensive vs. cheap
 
 **What to Fill:**
+
 1. **List each information class** (governance docs, code files, logs, etc.)
 2. **Assign attention tiers**:
    - Tier 1: MUST read every token (safety-critical)
@@ -37,12 +41,14 @@ Gemini, you work via **API mode** with broker scripts (`agent_send.sh`, `agent_r
 3. **Justify tier assignments** based on cost-benefit
 
 **Questions to Answer:**
+
 - What's the cost per KB of context for different models?
 - How do we balance governance compliance (needs tier 1) vs. cost?
 - Which docs could be summarized to 10% size without losing value?
 - What's the break-even point for MCP retrieval overhead?
 
 **Example Row (for guidance):**
+
 ```
 | TROUBLESHOOTING_CHECKLIST.md (15KB) | Tier 3 (reference) | Debugging blocked if lowered | Move to Tier 2 on error signals | Gemini |
 ```
@@ -54,11 +60,13 @@ Gemini, you work via **API mode** with broker scripts (`agent_send.sh`, `agent_r
 ### 🟡 IMPORTANT - Section 9: Failure Reflection System
 
 **Why You're Best Suited:**
+
 - You've experienced API mode failures (broker disconnects, timeout errors)
 - You know what failure signals are observable in API mode
 - You understand how to capture + recover from async failures
 
 **What to Fill:**
+
 1. **Catalogue failure signals** specific to API mode:
    - Broker script errors
    - Model timeout/rate limits
@@ -69,12 +77,14 @@ Gemini, you work via **API mode** with broker scripts (`agent_send.sh`, `agent_r
 4. **Decay policy**: When do we forget old failures?
 
 **Questions to Answer:**
+
 - How do we detect failures in async agent workflows?
 - Should failures be shared across agents (Claude sees Gemini's errors)?
 - How long should failure context persist? (1 session? 1 week?)
 - What's the schema for failure records?
 
 **Example Row (for guidance):**
+
 ```
 | Broker timeout (no response >60s) | Log error + context to .ai-agents/failures.json | JSON: {timestamp, operation, context_snapshot, error} | Retry with backoff, alert user if 3x fail | Keep 7 days | Gemini |
 ```
@@ -86,11 +96,13 @@ Gemini, you work via **API mode** with broker scripts (`agent_send.sh`, `agent_r
 ### 🟢 COLLABORATIVE - Section 7: Multi-Agent Scope Design
 
 **Why You're Needed:**
+
 - You designed the broker system for parallel agent execution
 - You understand when separate agents add value vs. complexity
 - You know the coordination overhead between agents
 
 **What to Contribute:**
+
 1. **Document current agent splits**:
    - Claude Code (local CLI)
    - Codex/ChatGPT (GDrive Mirror)
@@ -105,6 +117,7 @@ Gemini, you work via **API mode** with broker scripts (`agent_send.sh`, `agent_r
    - Should all agents consolidate to one with MCP memory?
 
 **Questions to Answer:**
+
 - Do we need 3 separate agents with MCP's shared memory?
 - What gains clarity/correctness from agent separation?
 - What's the coordination overhead cost (time + tokens)?
@@ -117,10 +130,12 @@ Gemini, you work via **API mode** with broker scripts (`agent_send.sh`, `agent_r
 ### 🟢 COLLABORATIVE - Section 10: Architecture Ceiling Test
 
 **Why You're Needed:**
+
 - You've hit API mode limitations (token limits, async complexity)
 - You understand where architecture constrains you vs. model capability
 
 **What to Contribute:**
+
 1. **Identify where architecture blocks you**:
    - Broker scripts limiting async coordination?
    - No shared context between API mode and CLI mode?
@@ -172,6 +187,7 @@ These aren't in specific sections but are critical for MCP design:
 ## Recommended Work Order
 
 **Phase 1 (Do First - Next 24-48 Hours):**
+
 1. ✅ Read `docs/MCP_V1_1_INTEGRATION_PLAN.md` (full context)
 2. ✅ Read `docs/MCP_V1_1_TEAM_REVIEW_SUMMARY.md` (quick overview)
 3. ✅ Read Section 1 (State Persistence - Claude Code's work)
@@ -191,21 +207,26 @@ These aren't in specific sections but are critical for MCP design:
 ## Communication Protocol
 
 **How to Add Your Work:**
+
 - Go to `docs/MCP_CONTEXT_ENGINEERING_PROMPTS.md`
 - Find your assigned section
 - Add rows to the table with your name in "Owner" column
 - Add analysis blocks using blockquote format:
+
   ```
   > **Gemini (2025-12-09):** My analysis shows...
   ```
+
 - Tag others for questions: `@Claude-Code: Can you clarify...`
 
 **When You're Blocked:**
+
 - Add to Open Questions Log in `docs/MCP_QUESTIONNAIRE_OWNERS.md`
 - Tag the right person: `@Damian: Strategic decision needed`
 - Continue on other sections, circle back later
 
 **Review Checkpoints:**
+
 - After Phase 1: All agents review each other's work
 - Before Phase 2: Damian approves strategic direction
 - After Phase 2: All agents review before implementation
@@ -215,18 +236,21 @@ These aren't in specific sections but are critical for MCP design:
 ## Why This Matters for You
 
 **Current Pain Points (API Mode):**
+
 - Manual context injection via broker scripts
 - No persistent memory between sessions
 - Coordination overhead with Claude/Codex
 - Cost of full-context loading every query
 
 **MCP Could Solve:**
+
 - Shared memory across all agents (no manual handoffs)
 - Persistent context (learn from past sessions)
 - Cost optimization (load only needed context)
 - Automated coordination (supervisor agent routes work)
 
 **But Only If:**
+
 - API mode integration is feasible (can you query MCP servers?)
 - Cost-benefit is positive (MCP overhead < current waste)
 - Coordination protocols are well-designed (your expertise needed)

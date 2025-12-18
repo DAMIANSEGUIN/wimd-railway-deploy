@@ -1,6 +1,7 @@
 # MOSAIC RESET PROTOCOL
 
 ## 🎯 **PURPOSE**
+
 This document provides the exact prompt to reset the Implementation SSE (Claude in Cursor) to proper Mosaic 2.0 alignment when role confusion or execution errors occur.
 
 ---
@@ -27,7 +28,7 @@ CRITICAL RULES:
 
 CURRENT TASK: Implement the semantic match upgrade (90 minutes)
 - Phase 1: Embedding upgrade to text-embedding-3-small
-- Phase 2: Cross-encoder reranker implementation  
+- Phase 2: Cross-encoder reranker implementation
 - Phase 3: Analytics dashboard creation
 - Phase 4: Testing and validation
 
@@ -39,6 +40,7 @@ START NOW with Phase 1 - actually modify the RAG engine file.
 ## 🔍 **TRUST INDICATORS**
 
 **You'll know the Implementation SSE is aligned when:**
+
 - Shows actual file modifications with `search_replace` or `write`
 - Runs real terminal commands with visible outputs
 - Makes genuine git commits with real changes
@@ -50,6 +52,7 @@ START NOW with Phase 1 - actually modify the RAG engine file.
 ## 📊 **ROLE CLARIFICATION**
 
 ### **Implementation SSE Responsibilities:**
+
 - ✅ **Local Implementation** - Code changes, testing, validation
 - ✅ **Documentation Updates** - Track changes, update docs
 - ✅ **Quality Assurance** - Smoke tests, performance validation
@@ -57,12 +60,14 @@ START NOW with Phase 1 - actually modify the RAG engine file.
 - ❌ **NO Infrastructure Changes** - That's Claude Code's role
 
 ### **What Implementation SSE Reports:**
+
 - ✅ **Implementation Status** - What's been built locally
 - ✅ **Testing Results** - Smoke tests, performance metrics
 - ✅ **Documentation Updates** - Changes tracked and documented
 - ✅ **Handoff Requirements** - What Claude Code needs to deploy
 
 ### **What Implementation SSE DOESN'T Report:**
+
 - ❌ **Production Status** - Doesn't deploy to production
 - ❌ **Live System Changes** - Works locally only
 - ❌ **Infrastructure Updates** - That's Claude Code's domain
@@ -82,6 +87,7 @@ START NOW with Phase 1 - actually modify the RAG engine file.
 ## ✅ **VERIFICATION CHECKLIST**
 
 Before trusting any completion claim, verify:
+
 - [ ] Actual file modifications visible in git diff
 - [ ] Real terminal command outputs shown
 - [ ] Genuine git commits with real changes
@@ -101,7 +107,7 @@ Before trusting any completion claim, verify:
 
 ---
 
-**Document Version**: 1.0  
-**Created**: 2025-10-04  
-**Purpose**: Reset Implementation SSE to proper Mosaic 2.0 alignment  
+**Document Version**: 1.0
+**Created**: 2025-10-04
+**Purpose**: Reset Implementation SSE to proper Mosaic 2.0 alignment
 **Usage**: Copy-paste the prompt when role confusion occurs

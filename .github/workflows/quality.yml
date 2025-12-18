@@ -1,0 +1,272 @@
+# Automated Quality Gates - ISO/IEC 5055:2021 Compliance
+# Enforces code quality, security, and testing standards
+# Fails CI if quality gates not met
+
+name: Code Quality & Security
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # Job 1: Python Code Quality
+  python-quality:
+    name: Python Quality Gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff black mypy bandit safety pytest pytest-cov
+
+      - name: Ruff linter (PEP 8 + Security)
+        run: |
+          ruff check api/ --output-format=github
+        continue-on-error: false
+
+      - name: Ruff format check
+        run: |
+          ruff format --check api/
+        continue-on-error: false
+
+      - name: Black format check
+        run: |
+          black --check api/
+        continue-on-error: false
+
+      - name: MyPy type checking
+        run: |
+          mypy api/ --ignore-missing-imports
+        continue-on-error: true  # Warnings only for now
+
+      - name: Bandit security scan
+        run: |
+          bandit -r api/ -c pyproject.toml -f json -o bandit-report.json
+          bandit -r api/ -c pyproject.toml
+        continue-on-error: false
+
+      - name: Safety dependency check
+        run: |
+          safety check --json || true
+        continue-on-error: true  # Advisory only
+
+      - name: Upload Bandit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bandit-security-report
+          path: bandit-report.json
+
+  # Job 2: Testing & Coverage
+  test-coverage:
+    name: Tests & Coverage (≥80%)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+
+      - name: Run tests with coverage
+        run: |
+          pytest tests/ \
+            --cov=api \
+            --cov-branch \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            --cov-report=html \
+            --cov-fail-under=80 \
+            -v
+        env:
+          DATABASE_URL: sqlite:///./test.db
+          OPENAI_API_KEY: test-key
+          CLAUDE_API_KEY: test-key
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+      - name: Upload HTML coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-html-report
+          path: htmlcov/
+
+  # Job 3: Security Scans
+  security:
+    name: Security Scans
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: GitLeaks secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+      - name: Detect hardcoded secrets
+        run: |
+          pip install detect-secrets
+          detect-secrets scan --baseline .secrets.baseline || true
+        continue-on-error: true
+
+  # Job 4: Complexity & Maintainability
+  complexity:
+    name: Code Complexity Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install radon
+        run: pip install radon
+
+      - name: Check cyclomatic complexity (≤10)
+        run: |
+          radon cc api/ -a -s --total-average
+          radon cc api/ -n C -s  # Fail on complexity > 10
+        continue-on-error: false
+
+      - name: Check maintainability index
+        run: |
+          radon mi api/ -s
+        continue-on-error: true
+
+  # Job 5: Mosaic-Specific Patterns
+  mosaic-patterns:
+    name: Mosaic Pattern Enforcement
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check PostgreSQL context manager pattern
+        run: |
+          if grep -r "conn = get_conn()" api/*.py | grep -v "# OK:" | grep -v "with get_conn()"; then
+            echo "❌ FAILED: Found incorrect get_conn() usage"
+            echo "Required: with get_conn() as conn:"
+            exit 1
+          fi
+          echo "✅ PASSED: Context manager pattern correct"
+
+      - name: Check no SQLite syntax in PostgreSQL code
+        run: |
+          if grep -r '\.execute.*".*\?.*"' api/*.py | grep -v "# OK:"; then
+            echo "❌ FAILED: SQLite syntax detected"
+            echo "Required: Use %s placeholders for PostgreSQL"
+            exit 1
+          fi
+          echo "✅ PASSED: PostgreSQL syntax correct"
+
+      - name: Check critical features present
+        run: |
+          if [ -f "./scripts/verify_critical_features.sh" ]; then
+            bash ./scripts/verify_critical_features.sh
+          else
+            echo "⚠️ WARNING: verify_critical_features.sh not found"
+          fi
+        continue-on-error: true
+
+  # Job 6: Documentation Quality
+  docs:
+    name: Documentation Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Markdown lint
+        uses: articulate/actions-markdownlint@v1
+        with:
+          config: .markdownlint.json
+          files: '**/*.md'
+          ignore: node_modules
+        continue-on-error: true
+
+      - name: Check metadata headers in governance docs
+        run: |
+          if [ -f "./scripts/validate_metadata.sh" ]; then
+            bash ./scripts/validate_metadata.sh
+          fi
+        continue-on-error: true
+
+  # Job 7: Quality Summary
+  quality-summary:
+    name: Quality Gate Summary
+    runs-on: ubuntu-latest
+    needs: [python-quality, test-coverage, security, complexity, mosaic-patterns]
+    if: always()
+
+    steps:
+      - name: Check all gates passed
+        run: |
+          echo "## Quality Gate Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Python Quality: ${{ needs.python-quality.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Test Coverage: ${{ needs.test-coverage.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Security Scans: ${{ needs.security.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Complexity: ${{ needs.complexity.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Mosaic Patterns: ${{ needs.mosaic-patterns.result }}" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${{ needs.python-quality.result }}" != "success" ]] || \
+             [[ "${{ needs.test-coverage.result }}" != "success" ]] || \
+             [[ "${{ needs.complexity.result }}" != "success" ]] || \
+             [[ "${{ needs.mosaic-patterns.result }}" != "success" ]]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Quality gates FAILED - Fix issues before merge**" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **All quality gates PASSED**" >> $GITHUB_STEP_SUMMARY
+          fi

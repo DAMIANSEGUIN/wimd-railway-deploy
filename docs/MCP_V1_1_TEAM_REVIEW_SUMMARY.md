@@ -1,6 +1,7 @@
 # MCP v1.1 Integration — Team Review Summary
 
 **Document Metadata:**
+
 - Created: 2025-12-09 by Claude Code
 - Audience: Codex (ChatGPT), Gemini, and all AI agents
 - Status: REVIEW REQUIRED - DO NOT IMPLEMENT YET
@@ -24,6 +25,7 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 **Location:** `docs/mosaic_mcp_v1_1/`
 
 **Contents:**
+
 - `README.md` - Master overview (7 lines)
 - `00_bootstrap/` - Bootstrap kit, supervisor agent, MCP framework docs (all placeholders)
 - `01_config/` - 4 empty JSON files (constraints, agent roles, retrieval triggers, summarization schema)
@@ -35,21 +37,25 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 ## 🔍 What MCP v1.1 Proposes to Change
 
 ### 1. **Memory & Context Management**
+
 - **Current:** Agents load `.md` governance files each session manually
 - **Proposed:** Agents query MCP servers for context dynamically
 - **Impact:** Changes how we access governance, troubleshooting guides, etc.
 
 ### 2. **Agent Coordination**
+
 - **Current:** Manual handoff notes between agents (honor system)
 - **Proposed:** Supervisor agent routes tasks, enforces agent roles
 - **Impact:** Changes how we coordinate across ChatGPT/Claude/Gemini
 
 ### 3. **Session Initialization**
+
 - **Current:** `./scripts/start_session.sh` → load macro → read 5 governance files
 - **Proposed:** Bootstrap kit → supervisor agent → MCP server queries
 - **Impact:** Changes how sessions start and context is loaded
 
 ### 4. **Configuration-Driven Governance**
+
 - **Current:** Hardcoded governance rules in markdown files
 - **Proposed:** JSON-defined constraints, roles, retrieval triggers, summarization schemas
 - **Impact:** More flexible but requires JSON schema design
@@ -61,6 +67,7 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 ### Critical Questions (Need Answers Before Proceeding)
 
 **Architecture:**
+
 1. **Where do MCP servers run?** (Railway? Local? Separate service?)
 2. **How do agents connect to MCP?** (HTTP API? WebSocket? Local socket?)
 3. **What happens if MCP servers are down?** (Fallback to files? Fail?)
@@ -95,26 +102,31 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 ## 🚩 Potential Conflicts Identified
 
 ### 1. **File-Based vs. MCP-Based Context**
+
 - **Current:** Agents read `TROUBLESHOOTING_CHECKLIST.md` directly from filesystem
 - **MCP v1.1:** Agents query MCP server for troubleshooting context
 - **Conflict:** Need to maintain both during transition? What's the truth source?
 
 ### 2. **Session Start Protocol**
+
 - **Current:** `start_session.sh` → `UPDATED_SESSION_START_MACRO_v1.1.2.md` → load 5 files
 - **MCP v1.1:** Bootstrap kit → supervisor agent → MCP queries
 - **Conflict:** Two different initialization paths, which takes precedence?
 
 ### 3. **Agent Coordination**
+
 - **Current:** ChatGPT manually writes handoff notes, Claude manually reads them
 - **MCP v1.1:** Supervisor agent automatically routes tasks
 - **Conflict:** How do we transition from manual to automated? Who supervises supervisor?
 
 ### 4. **Governance Truth Source**
+
 - **Current:** LOCAL markdown files are authoritative (3-layer: LOCAL → GDRIVE MASTER → MIRROR)
 - **MCP v1.1:** MCP servers hold context (where does truth live?)
 - **Conflict:** Potential violation of "LOCAL AUTHORITATIVE" principle if MCP becomes truth source
 
 ### 5. **Infrastructure Dependency**
+
 - **Current:** Zero external dependencies for governance (just read files)
 - **MCP v1.1:** Requires MCP servers running (new infrastructure)
 - **Conflict:** What happens if servers unavailable? Agents can't load context?
@@ -124,6 +136,7 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 ## 🎨 Proposed Integration Strategies (Draft)
 
 ### Option A: Parallel Operation (Conservative)
+
 - Keep v1.1.2 intact, add MCP layer on top
 - Test with one agent first (Claude Code)
 - Gradual migration over weeks/months
@@ -131,6 +144,7 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 - **Cons:** Dual maintenance burden
 
 ### Option B: Clean Migration (Aggressive)
+
 - Freeze v1.1.2, implement MCP v1.1 completely
 - Migrate all governance to MCP format
 - Cut over in single deployment
@@ -138,6 +152,7 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 - **Cons:** High risk, harder rollback
 
 ### Option C: Hybrid (Pragmatic - RECOMMENDED)
+
 - Implement MCP for *new* features only (session persistence, inter-agent messaging)
 - Keep existing governance files as-is
 - Use MCP for coordination layer only
@@ -149,9 +164,11 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 ## ✅ Your Review Tasks
 
 ### For Codex (ChatGPT - Mirror Agent)
+
 **Background:** You work from GDrive Mirror (read-only), summarize governance docs for team.
 
 **Questions:**
+
 1. How does MCP affect your GDrive Mirror reads?
 2. Can ChatGPT query MCP servers from your context? (or just file reads?)
 3. What happens to your governance document summaries if MCP holds context?
@@ -163,9 +180,11 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 ---
 
 ### For Gemini (API Mode Agent)
+
 **Background:** You work via API mode with broker scripts, parallel to Claude/ChatGPT.
 
 **Questions:**
+
 1. How does API mode interact with MCP architecture?
 2. What changes needed to your broker scripts (`agent_send.sh`, `agent_receive.sh`)?
 3. How do you authenticate to MCP servers?
@@ -177,7 +196,9 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 ---
 
 ### For All Agents (Including Claude Code)
+
 **General Questions:**
+
 1. Do you understand what MCP v1.1 proposes to change?
 2. What concerns do you have about this integration?
 3. What questions need answering before we proceed?
@@ -185,6 +206,7 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 5. What's your recommended approach (Option A/B/C/other)?
 
 **Critical:** Do NOT implement anything until:
+
 - [ ] Full team review completed
 - [ ] All critical questions answered
 - [ ] Config JSON schemas defined
@@ -196,12 +218,14 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 ## 📋 Next Steps
 
 ### Immediate (This Week)
+
 1. **All agents:** Review full integration plan
 2. **All agents:** Submit concerns/questions/recommendations
 3. **Claude Code:** Expand placeholder bootstrap docs with actual content (if available)
 4. **Human (Damian):** Clarify strategic goals for MCP integration
 
 ### Before Implementation (Required)
+
 1. Populate all 4 empty config JSON files with schemas
 2. Answer all 20 critical questions above
 3. Define success criteria for MCP integration
@@ -210,6 +234,7 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 6. Get approval from all agents + human
 
 ### Implementation (Future - NOT NOW)
+
 1. TBD based on team review outcomes
 
 ---
@@ -221,6 +246,7 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 **MCP v1.1 Files:** `docs/mosaic_mcp_v1_1/` (skeleton structure, needs population)
 
 **Current Governance (v1.1.2):**
+
 - `META_GOVERNANCE_CANON_MVP_v1.0.md`
 - `GLOBAL_META_INSTRUCTION_v2.0.md`
 - `MOSAIC_CODESTYLE_CODEX_MVP_v1.0.md`

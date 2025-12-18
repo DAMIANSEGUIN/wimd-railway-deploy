@@ -4,12 +4,12 @@ Agent Orchestrator - Routes tasks between AI agents automatically
 This is the REAL automation - runs continuously, no human in the loop
 """
 
-import subprocess
 import json
+import subprocess
 import time
-import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 
 class AgentOrchestrator:
     """Manages multiple AI agents and routes work between them"""
@@ -27,7 +27,7 @@ class AgentOrchestrator:
                 "type": "api",
                 "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
                 "capabilities": ["sql", "analysis", "verification"],
-            }
+            },
         }
 
     def watch_for_tasks(self):
@@ -55,11 +55,11 @@ class AgentOrchestrator:
 
                         if response:
                             # Send response back
-                            self._send_response(msg['from_agent'], msg['id'], response)
+                            self._send_response(msg["from_agent"], msg["id"], response)
                             print(f"✅ Response sent back to {msg['from_agent']}")
 
                         # Mark as processed
-                        self._ack_message(msg['id'])
+                        self._ack_message(msg["id"])
 
                 time.sleep(5)  # Poll every 5 seconds
 
@@ -76,7 +76,7 @@ class AgentOrchestrator:
             result = subprocess.run(
                 ["curl", "-s", f"{self.broker_url}/messages/{agent_name}"],
                 capture_output=True,
-                text=True
+                text=True,
             )
             return json.loads(result.stdout) if result.stdout else []
         except:
@@ -84,8 +84,8 @@ class AgentOrchestrator:
 
     def _execute_task(self, agent_name, message):
         """Execute task using appropriate agent"""
-        msg_type = message['message_type']
-        body = message['body']
+        msg_type = message["message_type"]
+        body = message["body"]
 
         if agent_name == "Gemini":
             return self._execute_gemini_task(msg_type, body)
@@ -103,7 +103,7 @@ class AgentOrchestrator:
             # Return results
             return {
                 "status": "completed",
-                "result": "SQL query executed (stub - needs real implementation)"
+                "result": "SQL query executed (stub - needs real implementation)",
             }
 
         return {"status": "unsupported", "task_type": task_type}
@@ -119,36 +119,47 @@ class AgentOrchestrator:
         # Stub implementation:
         return {
             "status": "completed",
-            "result": "Task processed (stub - needs Claude Code CLI integration)"
+            "result": "Task processed (stub - needs Claude Code CLI integration)",
         }
 
     def _send_response(self, to_agent, original_msg_id, response):
         """Send response back via broker"""
-        payload = json.dumps({
-            "from_agent": "Orchestrator",
-            "to_agent": to_agent,
-            "message_type": "RESPONSE",
-            "body": json.dumps(response),
-            "reply_to": original_msg_id
-        })
+        payload = json.dumps(
+            {
+                "from_agent": "Orchestrator",
+                "to_agent": to_agent,
+                "message_type": "RESPONSE",
+                "body": json.dumps(response),
+                "reply_to": original_msg_id,
+            }
+        )
 
         subprocess.run(
-            ["curl", "-s", "-X", "POST", f"{self.broker_url}/messages",
-             "-H", "Content-Type: application/json",
-             "-d", payload],
-            capture_output=True
+            [
+                "curl",
+                "-s",
+                "-X",
+                "POST",
+                f"{self.broker_url}/messages",
+                "-H",
+                "Content-Type: application/json",
+                "-d",
+                payload,
+            ],
+            capture_output=True,
         )
 
     def _ack_message(self, msg_id):
         """Mark message as processed"""
         subprocess.run(
             ["curl", "-s", "-X", "POST", f"{self.broker_url}/messages/{msg_id}/ack"],
-            capture_output=True
+            capture_output=True,
         )
 
 
 if __name__ == "__main__":
-    print("""
+    print(
+        """
 ╔══════════════════════════════════════════════════════════════╗
 ║  AI Agent Orchestrator                                       ║
 ║  Automatic task routing between agents                       ║
@@ -163,7 +174,8 @@ if __name__ == "__main__":
 ║                                                              ║
 ║  Current state: Demonstrates message routing only           ║
 ╚══════════════════════════════════════════════════════════════╝
-    """)
+    """
+    )
 
     orchestrator = AgentOrchestrator()
     orchestrator.watch_for_tasks()

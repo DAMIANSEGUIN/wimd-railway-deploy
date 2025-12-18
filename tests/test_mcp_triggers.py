@@ -1,7 +1,8 @@
-import pytest
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import pytest
 
 # Add the directory containing trigger_detector.py to the Python path
 sys.path.insert(0, str(Path(__file__).parent.parent / ".ai-agents" / "session_context"))
@@ -17,6 +18,7 @@ except ImportError:
         print("WARNING: Using placeholder detect_retrieval_triggers. Ensure module is importable.")
         return []
 
+
 def load_golden_dataset():
     """Load the golden dataset for trigger detection"""
     dataset_path = Path(".ai-agents/test_data/TRIGGER_TEST_DATASET.json")
@@ -29,10 +31,12 @@ def load_golden_dataset():
     with open(dataset_path) as f:
         return json.load(f)
 
+
 @pytest.fixture
 def golden_dataset():
     """Pytest fixture to load golden dataset"""
     return load_golden_dataset()
+
 
 def test_golden_dataset_format(golden_dataset):
     """Validate the golden dataset format is correct"""
@@ -44,7 +48,8 @@ def test_golden_dataset_format(golden_dataset):
         assert "user_message" in case, f"Case missing 'user_message': {case}"
         assert "expected_triggers" in case, f"Case missing 'expected_triggers': {case}"
         assert "should_not_trigger" in case, f"Case missing 'should_not_trigger': {case}"
-        assert "rationale" in case, f"Case missing 'rationale': {case}" # Added rationale check
+        assert "rationale" in case, f"Case missing 'rationale': {case}"  # Added rationale check
+
 
 def test_trigger_detection_precision(golden_dataset):
     """Test that trigger detector has high precision (>90%)"""
@@ -63,7 +68,9 @@ def test_trigger_detection_precision(golden_dataset):
         # Check for false positives against should_not_trigger
         false_positives_against_should_not = detected_triggers.intersection(should_not_trigger)
         if false_positives_against_should_not:
-            errors.append(f"Case {case['id']}: False positives against should_not_trigger: {false_positives_against_should_not} (Detected: {detected_triggers}, Should not trigger: {should_not_trigger})")
+            errors.append(
+                f"Case {case['id']}: False positives against should_not_trigger: {false_positives_against_should_not} (Detected: {detected_triggers}, Should not trigger: {should_not_trigger})"
+            )
 
         # Check if all detected triggers are either expected or not explicitly forbidden
         # This focuses on precision by checking if detected triggers are "correct"
@@ -80,15 +87,18 @@ def test_trigger_detection_precision(golden_dataset):
                 correct_detections += 1
             else:
                 # Some detected triggers were not in expected, or were in should_not_trigger.
-                errors.append(f"Case {case['id']}: Incorrect detections. Detected: {detected_triggers}, Expected: {expected_triggers}, Should not: {should_not_trigger}")
+                errors.append(
+                    f"Case {case['id']}: Incorrect detections. Detected: {detected_triggers}, Expected: {expected_triggers}, Should not: {should_not_trigger}"
+                )
         elif len(expected_triggers) == 0 and total_detected_for_this_case == 0:
-            correct_detections += 1 # No expected and no detected, counts as correct.
+            correct_detections += 1  # No expected and no detected, counts as correct.
         elif len(expected_triggers) > 0 and total_detected_for_this_case == 0:
             # Missed all expected triggers, not precise for what it did detect (nothing).
-            errors.append(f"Case {case['id']}: No triggers detected but expected some. Expected: {expected_triggers}")
+            errors.append(
+                f"Case {case['id']}: No triggers detected but expected some. Expected: {expected_triggers}"
+            )
 
-
-        total_cases_with_expected += 1 # Count each case for overall precision.
+        total_cases_with_expected += 1  # Count each case for overall precision.
 
     # Precision calculation needs refinement depending on exact definition.
     # If precision is "out of what it detected, how many were correct?", then:
@@ -101,7 +111,7 @@ def test_trigger_detection_precision(golden_dataset):
 
     true_positives_total = 0
     false_positives_total = 0
-    
+
     for case in golden_dataset:
         user_msg = case["user_message"]
         agent_resp = case.get("agent_response", "")
@@ -111,15 +121,20 @@ def test_trigger_detection_precision(golden_dataset):
         detected = set(detect_retrieval_triggers(user_msg, agent_resp))
 
         true_positives_total += len(detected.intersection(expected))
-        
+
         # False positives are triggers detected that are NOT in expected,
         # OR triggers detected that are in should_not_trigger.
-        false_positives_total += len(detected - expected) # Detected but not expected
-        false_positives_total += len(detected.intersection(should_not)) # Detected and should not trigger
+        false_positives_total += len(detected - expected)  # Detected but not expected
+        false_positives_total += len(
+            detected.intersection(should_not)
+        )  # Detected and should not trigger
 
     # Prevent division by zero if no triggers are detected at all
-    precision = true_positives_total / (true_positives_total + false_positives_total) if (true_positives_total + false_positives_total) > 0 else 1.0
-
+    precision = (
+        true_positives_total / (true_positives_total + false_positives_total)
+        if (true_positives_total + false_positives_total) > 0
+        else 1.0
+    )
 
     if precision < 0.90:
         print("\n".join(errors))
@@ -141,22 +156,30 @@ def test_trigger_detection_recall(golden_dataset):
 
         total_expected_triggers += len(expected)
         total_found_expected_triggers += len(detected.intersection(expected))
-        
+
         if not expected.issubset(detected) and len(expected) > 0:
-             missed = expected - detected
-             errors.append(f"Case {case['id']}: Missed expected triggers: {missed} (Detected: {detected}, Expected: {expected})")
+            missed = expected - detected
+            errors.append(
+                f"Case {case['id']}: Missed expected triggers: {missed} (Detected: {detected}, Expected: {expected})"
+            )
 
-
-    recall = total_found_expected_triggers / total_expected_triggers if total_expected_triggers > 0 else 1.0
+    recall = (
+        total_found_expected_triggers / total_expected_triggers
+        if total_expected_triggers > 0
+        else 1.0
+    )
 
     if recall < 0.90:
         print("\n".join(errors))
         pytest.fail(f"Recall {recall:.2%} < 90% target")
 
+
 def test_false_positive_rate(golden_dataset):
     """Test that false positive rate is <10%"""
-    total_should_not_possible = 0 # Total count of triggers that should NOT fire across all cases
-    actual_false_positives = 0 # Count of triggers that erroneously fired from should_not_trigger list
+    total_should_not_possible = 0  # Total count of triggers that should NOT fire across all cases
+    actual_false_positives = (
+        0  # Count of triggers that erroneously fired from should_not_trigger list
+    )
 
     for case in golden_dataset:
         user_msg = case["user_message"]
@@ -168,9 +191,12 @@ def test_false_positive_rate(golden_dataset):
         total_should_not_possible += len(should_not)
         actual_false_positives += len(detected.intersection(should_not))
 
-    fp_rate = actual_false_positives / total_should_not_possible if total_should_not_possible > 0 else 0.0
+    fp_rate = (
+        actual_false_positives / total_should_not_possible if total_should_not_possible > 0 else 0.0
+    )
 
     assert fp_rate < 0.10, f"False positive rate {fp_rate:.2%} >= 10% target"
+
 
 def test_trigger_detection_performance(golden_dataset):
     """Test that trigger detection is fast (<100ms average)"""

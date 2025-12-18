@@ -22,7 +22,7 @@ CRITICAL RULES:
 
 CURRENT TASK: Implement the semantic match upgrade (90 minutes)
 - Phase 1: Embedding upgrade to text-embedding-3-small
-- Phase 2: Cross-encoder reranker implementation  
+- Phase 2: Cross-encoder reranker implementation
 - Phase 3: Analytics dashboard creation
 - Phase 4: Testing and validation
 
@@ -34,6 +34,7 @@ START NOW with Phase 1 - actually modify the RAG engine file.
 ## 🔒 **SECURE KEY IMPORT SCRIPTS**
 
 ### **Bash One-Shot Script**
+
 ```bash
 #!/bin/bash
 # secure_key_import.sh - One-shot secure key import
@@ -76,6 +77,7 @@ echo "✅ Keys imported securely and environment variables set"
 ```
 
 ### **Python Secure Key Loader (Simplified)**
+
 ```python
 #!/usr/bin/env python3
 """
@@ -118,30 +120,30 @@ class SecureKeyLoader:
                 'description': 'Greenhouse job board API'
             }
         }
-    
+
     def load_all_keys_securely(self):
         """Load all API keys securely without exposing them."""
         print("🔒 Secure API Key Loading")
         print("=" * 50)
         print("Keys will not be displayed for security")
         print("=" * 50)
-        
+
         loaded_keys = 0
         skipped_keys = 0
         required_missing = []
-        
+
         for key_name, key_info in self.required_keys.items():
             print(f"\n📋 {key_info['name']}")
             print(f"   Description: {key_info['description']}")
             print(f"   URL: {key_info['url']}")
             print(f"   Required: {'Yes' if key_info['required'] else 'No'}")
-            
+
             try:
                 if key_info['required']:
                     key_value = getpass.getpass(f"   Enter {key_info['name']} (required): ")
                 else:
                     key_value = getpass.getpass(f"   Enter {key_info['name']} (optional, press Enter to skip): ")
-                
+
                 if key_value.strip():
                     if self._validate_key(key_value, key_info['name']):
                         os.environ[key_name] = key_value
@@ -159,13 +161,13 @@ class SecureKeyLoader:
                     else:
                         print(f"   ⏭️  {key_info['name']} skipped (optional)")
                         skipped_keys += 1
-                        
+
             except KeyboardInterrupt:
                 print(f"\n   ⏹️  {key_info['name']} input cancelled")
                 if key_info['required']:
                     required_missing.append(key_info['name'])
                 break
-        
+
         # Summary
         print("\n" + "=" * 50)
         print("📊 KEY LOADING SUMMARY")
@@ -173,7 +175,7 @@ class SecureKeyLoader:
         print(f"✅ Keys loaded: {loaded_keys}")
         print(f"⏭️  Keys skipped: {skipped_keys}")
         print(f"❌ Required keys missing: {len(required_missing)}")
-        
+
         if required_missing:
             print(f"\n⚠️  REQUIRED KEYS MISSING:")
             for key in required_missing:
@@ -182,35 +184,35 @@ class SecureKeyLoader:
             print(f"   python3 secure_key_loader.py --fix-missing")
         else:
             print(f"\n✅ All required keys loaded successfully!")
-        
+
         self.keys_loaded = loaded_keys > 0
         return loaded_keys, skipped_keys, required_missing
-    
+
     def _validate_key(self, key: str, key_name: str) -> bool:
         """Validate API key format."""
         if len(key) < 10:
             print(f"   ❌ {key_name} key too short (minimum 10 characters)")
             return False
-        
+
         if "your-key-here" in key.lower():
             print(f"   ❌ {key_name} key appears to be placeholder")
             return False
-        
+
         if "sk-test" in key.lower() and "production" in os.environ.get('ENVIRONMENT', '').lower():
             print(f"   ⚠️  {key_name} appears to be a test key in production")
             return False
-        
+
         return True
-    
+
     def _hash_key(self, key: str) -> str:
         """Create hash of key for verification without exposing it."""
         return hashlib.sha256(key.encode()).hexdigest()[:16]
-    
+
     def verify_keys_loaded(self):
         """Verify keys are loaded without exposing them."""
         print("\n🔍 VERIFYING LOADED KEYS")
         print("=" * 30)
-        
+
         for key_name, key_info in self.required_keys.items():
             if key_name in os.environ:
                 key_length = len(os.environ[key_name])
@@ -218,14 +220,14 @@ class SecureKeyLoader:
             else:
                 status = "❌ Missing" if key_info['required'] else "⏭️  Skipped"
                 print(f"{status} {key_info['name']}")
-        
+
         return self.keys_loaded
 
 if __name__ == "__main__":
     loader = SecureKeyLoader()
     loaded, skipped, missing = loader.load_all_keys_securely()
     loader.verify_keys_loaded()
-    
+
     if missing:
         print(f"\n🔧 To fix missing keys, run:")
         print(f"   python3 secure_key_loader.py --fix-missing")
@@ -238,6 +240,7 @@ if __name__ == "__main__":
 ## 🔐 **SECURE CONFIGURATION MANAGEMENT**
 
 ### **Encrypted Key Storage**
+
 ```python
 # encrypted_key_storage.py - Store keys encrypted
 from cryptography.fernet import Fernet
@@ -250,7 +253,7 @@ class EncryptedKeyStorage:
         self.key_file = Path("encrypted_keys.enc")
         self.encryption_key = self._get_or_create_key()
         self.cipher = Fernet(self.encryption_key)
-    
+
     def _get_or_create_key(self) -> bytes:
         """Get or create encryption key."""
         key_file = Path("encryption.key")
@@ -261,23 +264,23 @@ class EncryptedKeyStorage:
             key_file.write_bytes(key)
             key_file.chmod(0o600)  # Secure permissions
             return key
-    
+
     def store_keys_encrypted(self, keys: dict):
         """Store keys encrypted."""
         encrypted_data = self.cipher.encrypt(json.dumps(keys).encode())
         self.key_file.write_bytes(encrypted_data)
         self.key_file.chmod(0o600)  # Secure permissions
         print("✅ Keys stored encrypted")
-    
+
     def load_keys_encrypted(self) -> dict:
         """Load keys encrypted."""
         if not self.key_file.exists():
             return {}
-        
+
         encrypted_data = self.key_file.read_bytes()
         decrypted_data = self.cipher.decrypt(encrypted_data)
         return json.loads(decrypted_data.decode())
-    
+
     def load_keys_into_environment(self):
         """Load encrypted keys into environment variables."""
         keys = self.load_keys_encrypted()
@@ -288,14 +291,14 @@ class EncryptedKeyStorage:
 # Usage
 if __name__ == "__main__":
     storage = EncryptedKeyStorage()
-    
+
     # Store keys (run once)
     keys = {
         "OPENAI_API_KEY": "your-openai-key-here",
         "ANTHROPIC_API_KEY": "your-anthropic-key-here"
     }
     storage.store_keys_encrypted(keys)
-    
+
     # Load keys (run when needed)
     storage.load_keys_into_environment()
 ```
@@ -305,6 +308,7 @@ if __name__ == "__main__":
 ## 🚀 **TERMINAL COMMANDS FOR KEY MANAGEMENT**
 
 ### **One-Shot Key Import**
+
 ```bash
 # Create and run secure key import script
 chmod +x secure_key_import.sh
@@ -312,6 +316,7 @@ chmod +x secure_key_import.sh
 ```
 
 ### **Python Key Loader Commands**
+
 ```bash
 # Load all keys interactively
 python3 secure_key_loader.py
@@ -330,6 +335,7 @@ python3 secure_key_loader.py --help
 ```
 
 ### **Environment File Management**
+
 ```bash
 # Create secure environment file
 cat > .env.secure << 'EOF'
@@ -355,6 +361,7 @@ echo "SerpApi key length: ${#SERPAPI_API_KEY}"
 ## 📋 **API ENDPOINTS TO ADD**
 
 ### **Analytics Endpoints**
+
 ```python
 # Add to api/index.py
 from .analytics import get_analytics_dashboard, export_analytics_csv, get_analytics_health
@@ -383,6 +390,7 @@ def get_analytics_health_endpoint():
 ```
 
 ### **Reranker Endpoints**
+
 ```python
 # Add to api/index.py
 from .reranker import get_reranker_health
@@ -394,6 +402,7 @@ def get_reranker_health_endpoint():
 ```
 
 ### **Corpus Reindex Endpoints**
+
 ```python
 # Add to api/index.py
 from .corpus_reindex import reindex_corpus, get_reindex_status
@@ -421,26 +430,30 @@ def get_corpus_status_endpoint():
 ## 🔑 **JOB SEARCH API ADDRESSES**
 
 ### **High Priority APIs**
-- **SerpApi**: https://serpapi.com/ (Google Jobs search)
-- **Greenhouse**: https://developers.greenhouse.io/ (High-quality jobs)
-- **LinkedIn**: https://www.linkedin.com/developers/ (Professional network)
-- **Indeed**: https://ads.indeed.com/jobroll/xmlfeed (Largest job board)
+
+- **SerpApi**: <https://serpapi.com/> (Google Jobs search)
+- **Greenhouse**: <https://developers.greenhouse.io/> (High-quality jobs)
+- **LinkedIn**: <https://www.linkedin.com/developers/> (Professional network)
+- **Indeed**: <https://ads.indeed.com/jobroll/xmlfeed> (Largest job board)
 
 ### **Medium Priority APIs**
-- **Reddit**: https://www.reddit.com/prefs/apps (Community jobs)
-- **Glassdoor**: https://www.glassdoor.com/developer/ (Company insights)
-- **Dice**: https://www.dice.com/developer/ (Tech jobs)
+
+- **Reddit**: <https://www.reddit.com/prefs/apps> (Community jobs)
+- **Glassdoor**: <https://www.glassdoor.com/developer/> (Company insights)
+- **Dice**: <https://www.dice.com/developer/> (Tech jobs)
 
 ### **Low Priority APIs**
-- **RemoteOK**: https://remoteok.io/api (No key needed)
-- **WeWorkRemotely**: https://weworkremotely.com/api (No key needed)
-- **Hacker News**: https://hackernews.api-docs.io/ (No key needed)
+
+- **RemoteOK**: <https://remoteok.io/api> (No key needed)
+- **WeWorkRemotely**: <https://weworkremotely.com/api> (No key needed)
+- **Hacker News**: <https://hackernews.api-docs.io/> (No key needed)
 
 ---
 
 ## 🚨 **SECURITY CHECKLIST**
 
 ### **✅ SECURE PRACTICES**
+
 - Environment variables only
 - No hardcoded keys
 - Secure file permissions (0o600)
@@ -449,6 +462,7 @@ def get_corpus_status_endpoint():
 - Access controls
 
 ### **❌ INSECURE PRACTICES**
+
 - Hardcoded keys in source code
 - Keys in git commits
 - Test keys in production
@@ -460,6 +474,7 @@ def get_corpus_status_endpoint():
 ## 📊 **USAGE SUMMARY**
 
 ### **Quick Start**
+
 1. **Save the secure_key_loader.py script**
 2. **Run: `python3 secure_key_loader.py`**
 3. **Enter your API keys when prompted**
@@ -467,11 +482,13 @@ def get_corpus_status_endpoint():
 5. **Use in your application**
 
 ### **Troubleshooting**
+
 - **Missing keys**: Run `python3 secure_key_loader.py --fix-missing`
 - **Load from file**: Run `python3 secure_key_loader.py --load-from-file`
 - **Save to file**: Run `python3 secure_key_loader.py --save-to-file`
 
 ### **Security Notes**
+
 - Keys never displayed in output
 - Secure file permissions automatically set
 - Environment variables only

@@ -3,6 +3,7 @@
 Based on your previous build that couldn't work with Google Sheets, here are the job sources that were included:
 
 ## **Primary Job Boards**
+
 1. **Indeed** - Largest job board globally
 2. **LinkedIn** - Professional network jobs
 3. **Glassdoor** - Company reviews + jobs
@@ -13,6 +14,7 @@ Based on your previous build that couldn't work with Google Sheets, here are the
 8. **SimplyHired** - Job aggregator
 
 ## **Remote Job Boards**
+
 9. **RemoteOK** - Remote tech jobs
 10. **WeWorkRemotely** - Remote jobs
 11. **FlexJobs** - Remote/flexible jobs
@@ -20,6 +22,7 @@ Based on your previous build that couldn't work with Google Sheets, here are the
 13. **Remote.co** - Remote job board
 
 ## **Tech-Specific Boards**
+
 14. **Stack Overflow Jobs** - Developer jobs
 15. **AngelList** - Startup jobs (as you noted, waste of time)
 16. **Hacker News** - "Who is hiring" threads
@@ -27,6 +30,7 @@ Based on your previous build that couldn't work with Google Sheets, here are the
 18. **Crunchboard** - Startup jobs
 
 ## **Freelance/Contract Platforms**
+
 19. **Upwork** - Freelance marketplace
 20. **Freelancer** - Freelance platform
 21. **Toptal** - Elite freelancers
@@ -34,6 +38,7 @@ Based on your previous build that couldn't work with Google Sheets, here are the
 23. **99designs** - Design jobs
 
 ## **Industry-Specific**
+
 24. **Snagajob** - Hourly jobs
 25. **Jora** - International jobs
 26. **JobisJob** - Job aggregator
@@ -41,11 +46,13 @@ Based on your previous build that couldn't work with Google Sheets, here are the
 28. **Neuvoo** - Job aggregator
 
 ## **Government/Non-Profit**
+
 29. **USAJobs** - Federal jobs
 30. **Idealist** - Non-profit jobs
 31. **Work for Good** - Social impact jobs
 
 ## **Regional/International**
+
 32. **Reed** - UK jobs
 33. **Seek** - Australia/NZ jobs
 34. **JobStreet** - Southeast Asia jobs
@@ -53,12 +60,14 @@ Based on your previous build that couldn't work with Google Sheets, here are the
 36. **Xing** - German professional network
 
 ## **Specialized Platforms**
+
 37. **Behance** - Creative jobs
 38. **Dribbble** - Design jobs
 39. **AngelList** - Startup jobs (as noted, problematic)
 40. **Crunchbase** - Startup ecosystem
 
 ## **API-Accessible Sources**
+
 41. **SerpApi** - Google Jobs scraping
 42. **RapidAPI** - Job APIs
 43. **ProgrammableWeb** - Job APIs
@@ -68,6 +77,7 @@ Based on your previous build that couldn't work with Google Sheets, here are the
 ## **Implementation Notes**
 
 ### **High Priority (Already Implemented)**
+
 - ✅ **Greenhouse** - ATS integration
 - ✅ **SerpApi** - Google Jobs scraping
 - ✅ **Reddit** - Community jobs
@@ -80,6 +90,7 @@ Based on your previous build that couldn't work with Google Sheets, here are the
 - ✅ **Hacker News** - Tech community
 
 ### **Medium Priority (Should Add)**
+
 - **Monster** - Traditional job board
 - **ZipRecruiter** - Job matching
 - **CareerBuilder** - General jobs
@@ -88,6 +99,7 @@ Based on your previous build that couldn't work with Google Sheets, here are the
 - **Stack Overflow** - Developer jobs
 
 ### **Low Priority (API Issues)**
+
 - **AngelList** - Startup jobs (as you noted, problematic)
 - **FlexJobs** - Requires subscription
 - **Toptal** - Elite platform
@@ -118,6 +130,7 @@ The common problems with the previous build integration for job sources:
 ## **Next Steps**
 
 The job sources have been integrated into the Mosaic platform:
+
 1. ✅ **Added high-priority sources** (Monster, ZipRecruiter, CareerBuilder)
 2. ✅ **Implemented cost controls** to prevent API rate limit issues
 3. ✅ **Added feature flags** to control stubbed sources

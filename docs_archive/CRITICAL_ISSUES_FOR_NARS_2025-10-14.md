@@ -1,4 +1,5 @@
 # CRITICAL ISSUES REPORT FOR NARS
+
 **Date:** 2025-10-14
 **Session:** Claude Code troubleshooting session
 **Status:** ✅ ROOT CAUSE CONFIRMED - Railway SQLite Ephemeral Storage
@@ -17,29 +18,34 @@ The Mosaic platform is experiencing **persistent authentication and session mana
 ## SYMPTOMS OBSERVED (In Order)
 
 ### 1. ❌ PS101 Flow Not Working
+
 - **Symptom:** Users get "huge pile of generic advice" instead of guided PS101 questions
 - **Expected:** One question at a time, iterative flow
 - **Fix Attempted:** Auto-activate PS101, track prompt_index for one-at-a-time
 - **Status:** Fixed in code, deployed, but...
 
 ### 2. ❌ Login Credentials Invalid
+
 - **Symptom:** User registers, logs out, tries to login → "Invalid credentials"
 - **Expected:** Login should work with same credentials
 - **Fix Attempted:** Created backend `/auth/logout` endpoint, session deletion
 - **Status:** Worked initially, now broken again
 
 ### 3. ❌ Chat History Persists After Logout
+
 - **Symptom:** User logs out, page reloads, chat window still has old messages
 - **Expected:** Chat should be completely empty after logout
 - **Fix Attempted:** Clear localStorage, chatLog.innerHTML, sessionStorage flag
 - **Status:** Code deployed, but still not clearing
 
 ### 4. ❌ Login Form Pre-fills After Logout
+
 - **Symptom:** Email/password fields populated after logout
 - **Expected:** Clean login form
 - **Note:** Partially browser autofill (expected), but suggests state not clearing
 
 ### 5. ❌ Invalid Credentials (Again)
+
 - **Symptom:** After all fixes deployed, getting "Invalid credentials" again
 - **Expected:** Login should work
 - **Status:** RECURRING ISSUE - suggests deeper problem
@@ -51,7 +57,9 @@ The Mosaic platform is experiencing **persistent authentication and session mana
 Based on symptoms pattern, the underlying issue is likely **ONE** of:
 
 ### Hypothesis 1: Railway SQLite Ephemeral Storage (MOST LIKELY)
+
 **Evidence:**
+
 - Railway uses ephemeral filesystem for SQLite
 - Database at `data/mosaic.db` gets wiped on every deployment
 - User registers → user created in DB
@@ -62,27 +70,34 @@ Based on symptoms pattern, the underlying issue is likely **ONE** of:
 > "Railway ephemeral storage - SQLite resets on deployment (CRITICAL)"
 
 **This explains:**
+
 - ✅ Why login works initially, then breaks after deployments
 - ✅ Why session state persists (session never actually deleted from DB)
 - ✅ Why fixes "work" but then fail (DB reset destroys all data)
 - ✅ Why PS101 state persists (old sessions in DB that don't get cleared)
 
 ### Hypothesis 2: Multiple Concurrent Sessions Per User
+
 **Evidence:**
+
 - No session cleanup on logout (fixed, but may not have deployed correctly)
 - User creates session A, logs out, session A still in DB
 - User logs in again → creates session B, but session A still exists
 - Backend might be loading wrong session
 
 ### Hypothesis 3: Browser Aggressive Caching
+
 **Evidence:**
+
 - Changes deployed to production
 - Browser still serving old JavaScript
 - Hard refresh (Ctrl+Shift+R) required but user may not be doing it
 - Service worker or CDN caching
 
 ### Hypothesis 4: Deployment Not Actually Reaching Production
+
 **Evidence:**
+
 - We pushed to wrong repo for 9 commits (wimd-railway-deploy vs what-is-my-delta-site)
 - Fixed the repo issue, but Netlify might still not auto-deploying
 - Code shows as deployed via `curl`, but actual runtime might be cached/old
@@ -92,12 +107,14 @@ Based on symptoms pattern, the underlying issue is likely **ONE** of:
 ## EVIDENCE FOR HYPOTHESIS 1 (Railway SQLite)
 
 **From `api/storage.py:12-13`:**
+
 ```python
 DATA_ROOT = Path(os.getenv("DATA_ROOT", "data"))
 DB_PATH = Path(os.getenv("DATABASE_PATH", DATA_ROOT / "mosaic.db"))
 ```
 
 **Railway Deployment Behavior:**
+
 1. Git push triggers rebuild
 2. Container rebuilt from scratch
 3. `data/` directory **not persisted** (no Railway volume configured)
@@ -105,10 +122,11 @@ DB_PATH = Path(os.getenv("DATABASE_PATH", DATA_ROOT / "mosaic.db"))
 5. All users, sessions, PS101 state → **GONE**
 
 **From CLAUDE.md:**
-> "Production URL: https://whatismydelta.com (LIVE ✅)"
+> "Production URL: <https://whatismydelta.com> (LIVE ✅)"
 > "Backend API: Railway deployment"
 
 **No mention of:**
+
 - Railway PostgreSQL setup
 - Railway volume mount for SQLite persistence
 - Database backup strategy
@@ -121,6 +139,7 @@ DB_PATH = Path(os.getenv("DATABASE_PATH", DATA_ROOT / "mosaic.db"))
 ## WHY SYMPTOMS KEEP RECURRING
 
 **Timeline:**
+
 1. User registers → works (user in DB)
 2. Claude deploys PS101 fix → Railway rebuilds → **DB wiped**
 3. User tries to login → "Invalid credentials" (user gone from DB)
@@ -129,6 +148,7 @@ DB_PATH = Path(os.getenv("DATABASE_PATH", DATA_ROOT / "mosaic.db"))
 6. User tries to login → "Invalid credentials" **AGAIN**
 
 **We're in a cycle:**
+
 ```
 Register → Works → Deploy → DB wiped → Login fails → Repeat
 ```
@@ -140,6 +160,7 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 **To confirm Hypothesis 1 (Railway SQLite), check:**
 
 1. **SSH into Railway container and check DB:**
+
    ```bash
    railway shell
    ls -la data/
@@ -147,12 +168,14 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
    ```
 
 2. **Check Railway environment variables:**
+
    ```bash
    railway variables
    # Look for DATABASE_PATH, DATABASE_URL
    ```
 
 3. **Check Railway volumes:**
+
    ```bash
    railway volumes list
    # Should be EMPTY if using ephemeral storage
@@ -175,9 +198,11 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 ## RECOMMENDED SOLUTION (P0 CRITICAL)
 
 ### Option 1: Migrate to Railway PostgreSQL (RECOMMENDED)
+
 **Why:** Production-grade, persistent, backed up
 **Timeline:** 2-4 hours
 **Steps:**
+
 1. Provision Railway PostgreSQL database
 2. Update `api/storage.py` to use PostgreSQL instead of SQLite
 3. Add `psycopg2` to `requirements.txt`
@@ -186,6 +211,7 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 6. Deploy
 
 **Impact:**
+
 - ✅ Database persists across deployments
 - ✅ Production-ready
 - ✅ Automatic backups
@@ -193,20 +219,24 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 - ✅ Fixes all symptoms
 
 ### Option 2: Configure Railway Volume for SQLite
+
 **Why:** Quick fix, keeps SQLite
 **Timeline:** 30 minutes
 **Steps:**
+
 1. Create Railway volume mounted at `/app/data`
 2. Update `DATA_ROOT` env var to point to volume
 3. Test that DB persists across deployments
 
 **Drawbacks:**
+
 - SQLite not ideal for production
 - No automatic backups
 - Single point of failure
 - Doesn't scale
 
 ### Option 3: External Database (AWS RDS, etc.)
+
 **Why:** Maximum control and reliability
 **Timeline:** 4-8 hours
 **Drawbacks:** Cost, complexity, overkill for MVP
@@ -240,6 +270,7 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 ## WHAT CLAUDE CODE DID (Session Summary)
 
 **Fixes Attempted:**
+
 1. ✅ PS101 auto-activation (deployed)
 2. ✅ PS101 one-question-at-a-time (deployed)
 3. ✅ Backend `/auth/logout` endpoint (deployed)
@@ -249,12 +280,14 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 7. ✅ Debug logging for troubleshooting (deployed)
 
 **Process Failures:**
+
 1. ❌ Pushed 9 commits to wrong repo (wimd-railway-deploy instead of what-is-my-delta-site)
 2. ❌ Didn't verify deployments were live before claiming "fixed"
 3. ❌ Treated symptoms instead of investigating root cause
 4. ❌ Should have checked infrastructure first (Railway config, database persistence)
 
 **Correct Actions:**
+
 1. ✅ Identified deployment process issue
 2. ✅ Fixed repo configuration
 3. ✅ Created deployment safety hooks
@@ -272,12 +305,14 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 **Priority 3:** Retest all symptoms with persistent database
 
 **Priority 4:** Address remaining P0 issues from Architecture Audit:
+
 - Session management (httpOnly cookies instead of localStorage)
 - Password hashing (bcrypt instead of SHA-256)
 - Rate limiting
 - Security headers
 
 **DO NOT:**
+
 - Deploy more symptom fixes
 - Continue troubleshooting without confirming root cause
 - Waste more time on chat clearing / logout issues until DB persistence confirmed
@@ -287,18 +322,21 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 ## FILES CHANGED THIS SESSION
 
 **Code:**
+
 - `api/index.py` - Added `/auth/logout` endpoint
 - `api/storage.py` - Added `delete_session()` function
 - `api/ps101_flow.py` - Fixed one-question-at-a-time, added prompt_index tracking
 - `mosaic_ui/index.html` - Logout logic, sessionStorage flag, console logging
 
 **Documentation:**
+
 - `ARCHITECTURE_AUDIT_2025-10-14.md` - Comprehensive audit (322 lines)
 - `DEPLOYMENT_CHECKLIST.md` - Deployment process documentation
 - `.github/PULL_REQUEST_TEMPLATE.md` - PR deployment verification
 - `.git/hooks/pre-push` - Git safety hook
 
 **Tools:**
+
 - `mosaic_ui/debug.html` - Logout debugging tool
 
 ---
@@ -353,11 +391,13 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 **Estimated Fix Time:** 4 hours (PostgreSQL migration + schema migration + testing)
 
 **DO NOT:**
+
 - Deploy any more symptom fixes
 - Continue troubleshooting authentication/session issues
 - Create new user accounts for testing (will be wiped on next deploy)
 
 **DO:**
+
 - Provision Railway PostgreSQL database immediately
 - Migrate schema from SQLite to PostgreSQL
 - Update `api/storage.py` connection logic

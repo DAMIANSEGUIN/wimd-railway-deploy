@@ -1,4 +1,5 @@
 # Mosaic Platform Troubleshooting Checklist
+
 **Custom Dashboard Filter for Claude Code**
 
 ---
@@ -505,6 +506,7 @@ LONG TERM:
 ## Checklist Summary (Print This)
 
 **Before Every Code Change:**
+
 ```
 □ Read SELF_DIAGNOSTIC_FRAMEWORK.md
 □ Context manager pattern? (with get_conn() as conn:)
@@ -516,6 +518,7 @@ LONG TERM:
 ```
 
 **Before Every Deploy:**
+
 ```
 □ Run ./pre_deploy_check.sh
 □ Golden dataset tests pass?
@@ -526,6 +529,7 @@ LONG TERM:
 ```
 
 **After Every Deploy:**
+
 ```
 □ Monitor logs 5 minutes
 □ Check /health endpoint
@@ -535,6 +539,7 @@ LONG TERM:
 ```
 
 **When Things Break:**
+
 ```
 □ Get full error message from logs
 □ Classify error (INFRA/DATA/MODEL/PROMPT/INTEGRATION)

@@ -28,6 +28,7 @@ I built a message broker, but you still have to tell agents to check it. That's 
 ### 🥇 Option 1: Give ONE Agent All Capabilities (BEST)
 
 **Instead of:**
+
 ```
 Claude Code: "I need SQL results"
     ↓ (you copy message)
@@ -37,6 +38,7 @@ Claude Code: *uses results*
 ```
 
 **Just do:**
+
 ```
 Gemini with Railway CLI + database access:
 - Reads diagnostic files
@@ -47,6 +49,7 @@ Gemini with Railway CLI + database access:
 ```
 
 **How to set this up:**
+
 ```bash
 # Give Gemini access to Railway database
 railway login
@@ -102,6 +105,7 @@ agent.run("Fix the login issue for damian.seguin@gmail.com")
 ```
 
 **Frameworks:**
+
 - **LangChain** - Most popular, Python-based
 - **AutoGPT** - Autonomous task execution
 - **BabyAGI** - Simple autonomous agent
@@ -114,6 +118,7 @@ agent.run("Fix the login issue for damian.seguin@gmail.com")
 Use git as the coordination mechanism:
 
 **Setup:**
+
 ```bash
 # .git/hooks/post-commit
 #!/bin/bash
@@ -133,6 +138,7 @@ done
 ```
 
 **Workflow:**
+
 ```
 Claude Code creates request file → commits
     ↓
@@ -262,7 +268,7 @@ User involvement: 3 words, then nothing
 
 **For this project RIGHT NOW:**
 
-### Just give Gemini database access and let it do everything:
+### Just give Gemini database access and let it do everything
 
 ```bash
 # In Gemini's environment:
@@ -285,6 +291,7 @@ export DATABASE_URL="your-railway-postgres-url"
 ## Honest Assessment of What I Built
 
 **The message broker I built:**
+
 - ✅ Works technically
 - ✅ Reduces copy/paste from 100 words to 2 words
 - ❌ Still requires human trigger
@@ -292,6 +299,7 @@ export DATABASE_URL="your-railway-postgres-url"
 - ❌ Overly complex for the actual use case
 
 **What you ACTUALLY need:**
+
 - One agent with full access, OR
 - Agentic framework (LangChain/AutoGPT), OR
 - Accept that some human coordination is needed
@@ -317,9 +325,9 @@ Either:
 ## What Should I Actually Build?
 
 **Ask yourself:**
+
 - Do you want to deploy autonomous agents? → Use LangChain
 - Do you want one agent to do everything? → Give it full access
 - Do you just want less copying/pasting? → The broker helps a bit
 
 **Let me know which direction and I'll build the RIGHT thing.**
-

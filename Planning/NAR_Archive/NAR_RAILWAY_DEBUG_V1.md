@@ -1,4 +1,5 @@
 # Netlify Agent Task - Fix Railway Booking Routes
+
 **Date:** 2025-10-26
 **Priority:** HIGH - Production Issue
 **Task Type:** Diagnose and Fix
@@ -8,12 +9,13 @@
 ## Problem
 
 Railway deployment successful but booking routes NOT loading:
+
 - ❌ `/booking/promo/WIMD25` returns 404 (should be 401 auth required)
 - ❌ Booking routes missing from `/openapi.json` spec
 - ✅ API health works: `/health`
 - ✅ Other routes work: `/wimd`, `/ob`, `/resume`
 
-**Railway Service:** https://what-is-my-delta-site-production.up.railway.app
+**Railway Service:** <https://what-is-my-delta-site-production.up.railway.app>
 
 ---
 
@@ -29,6 +31,7 @@ data/migrations/002_seed_booking_data.sql
 ```
 
 Router registered in `api/index.py` lines 106-113:
+
 ```python
 try:
     from api.booking import router as booking_router
@@ -65,6 +68,7 @@ except Exception as e:
 ## Expected Fix
 
 After fix:
+
 - `/booking/promo/WIMD25` returns 401, NOT 404
 - Booking routes in `/openapi.json`
 - Migrations log shows tables created

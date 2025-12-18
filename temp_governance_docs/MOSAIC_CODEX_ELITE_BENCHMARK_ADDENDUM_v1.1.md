@@ -1,5 +1,7 @@
 # MOSAIC CODEX — ELITE BENCHMARK ADDENDUM v1.1
+
 **Document Metadata:**
+
 - Created: 2025-12-06 by ChatGPT
 - Status: ACTIVE
 - Governing Canon: META_GOVERNANCE_CANON_MVP_v1.0.md

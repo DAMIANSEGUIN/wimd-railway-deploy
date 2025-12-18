@@ -11,6 +11,7 @@
 ### PS101 v2 Implementation: ✅ COMPLETE (Needs Fixes Before Deploy)
 
 **What was delivered:**
+
 - ✅ 10-step canonical flow (42 prompts total)
 - ✅ Multi-prompt UI system with prompt-by-prompt navigation
 - ✅ Small Experiments Framework (Steps 6-9: Canvas, Obstacles, Actions, Reflection)
@@ -19,6 +20,7 @@
 - ✅ Peripheral Calm aesthetic maintained
 
 **Current blockers (documented in `docs/CURSOR_FIXES_REQUIRED.md`):**
+
 1. 🚨 **CRITICAL**: Replace browser `prompt()`/`confirm()` dialogs (lines 3014-3051)
 2. 🚨 **HIGH**: Fix experiment validation timing (lines 2320-2370)
 3. ⚠️ **MEDIUM**: Add Step 10 placeholder or Mastery Dashboard
@@ -26,9 +28,11 @@
 **Estimated fix time:** 2.5-4 hours
 
 **Files modified:**
+
 - `frontend/index.html` (3128 lines, ~400 new + 200 modified)
 
 **Git status:**
+
 - Branch: `main`
 - 22 commits ahead of origin/main
 - Changes staged but NOT COMMITTED
@@ -38,7 +42,7 @@
 
 ## 🚨 CRITICAL: BEFORE ANY ACTION
 
-### 🛑 STOP - Run This Checklist First:
+### 🛑 STOP - Run This Checklist First
 
 ```
 MANDATORY PRE-WORK CHECKLIST:
@@ -65,6 +69,7 @@ IF USER SHARES EXTERNAL DIAGNOSIS (NARs, etc.):
 
 **ACCOUNTABILITY TRIGGER:**
 If you skip this checklist, you WILL:
+
 1. Firefight instead of diagnose
 2. Ignore expert input (NARs, user)
 3. Waste time and deployments
@@ -72,18 +77,21 @@ If you skip this checklist, you WILL:
 
 **EXTERNAL TRIGGER:**
 System reminders will check:
+
 - "Have you run TROUBLESHOOTING_CHECKLIST.md?"
 - "Have you classified this error?"
 - "Are you following NARs' guidance?"
 
-### Must-Read Documentation (After Checklist):
+### Must-Read Documentation (After Checklist)
+
 1. **`docs/TEAM_REVIEW_CHECKLIST.md`** - Comprehensive review checklist
 2. **`docs/CURSOR_FIXES_REQUIRED.md`** - Detailed fix instructions
 3. **`docs/PS101_CANONICAL_SPEC_V2.md`** - Authoritative product spec
 4. **`docs/IMPLEMENTATION_SUMMARY_PS101_V2.md`** - Technical summary
 8. **`CLAUDE.md`** - Main project context (backend/API/deployment info)
 
-### Supporting Docs:
+### Supporting Docs
+
 - **`backups/20251031_095426_ps101_v2_implementation/`** - Backup of all work
 
 ---
@@ -91,6 +99,7 @@ System reminders will check:
 ## ROLE DEFINITION: Troubleshooting SSE
 
 **You are NOT the implementer.** Your job is to:
+
 1. ✅ Review implementation quality
 2. ✅ Identify bugs and risks
 3. ✅ Document fixes for Cursor to implement
@@ -98,12 +107,14 @@ System reminders will check:
 5. ✅ Provide clear, actionable recommendations
 
 **You should:**
+
 - Focus on code review, testing, and documentation
 - Create fix instructions, not implement fixes yourself (unless critical)
 - Follow TROUBLESHOOTING_CHECKLIST.md for all code changes
 - Think defensively: "What could go wrong?"
 
 **You should NOT:**
+
 - Immediately jump to implementation
 - Make changes without reviewing full context first
 - Skip the pre-flight checklist
@@ -114,6 +125,7 @@ System reminders will check:
 ## IMMEDIATE NEXT STEPS (If Session Just Started)
 
 ### Step 1: Context Gathering (5 min)
+
 ```bash
 # Check git status
 git status
@@ -128,18 +140,22 @@ git branch --show-current
 ```
 
 ### Step 2: Identify Active Work (2 min)
+
 - Read latest docs in `docs/` folder (sorted by date)
 - Check if there's a `CURSOR_FIXES_REQUIRED.md` or similar
 - Review any uncommitted changes in `git status`
 
 ### Step 3: Determine Session Goal (1 min)
+
 Ask yourself:
+
 - Is this a continuation of PS101 v2 review? → Continue from CURSOR_FIXES_REQUIRED.md
 - Is this a new feature request? → Start with requirements gathering
 - Is this a bug fix? → Follow TROUBLESHOOTING_CHECKLIST.md
 - Is this deployment prep? → Run pre-deploy checks
 
 ### Step 4: Load Troubleshooting Tools (30 sec)
+
 ```bash
 # Quick health check
 curl https://what-is-my-delta-site-production.up.railway.app/health
@@ -153,17 +169,20 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 ## MOSAIC PROJECT QUICK REFERENCE
 
 ### Architecture
+
 - **Backend:** FastAPI on Railway (PostgreSQL database)
 - **Frontend:** Vanilla JS (ES6+) on Netlify, single-file `frontend/index.html`
 - **LLM:** OpenAI (GPT-4, embeddings) + Anthropic (Claude)
 - **State:** localStorage (frontend) + PostgreSQL (backend)
 
 ### Production URLs
-- **Live Site:** https://whatismydelta.com
-- **Backend API:** https://what-is-my-delta-site-production.up.railway.app
+
+- **Live Site:** <https://whatismydelta.com>
+- **Backend API:** <https://what-is-my-delta-site-production.up.railway.app>
 - **Health Check:** `curl $API_URL/health`
 
 ### Feature Flags (Check Before Debugging)
+
 ```python
 # In api/config.py or Railway env vars
 RAG_BASELINE: ENABLED          # RAG-powered job search
@@ -173,6 +192,7 @@ EXPERIMENTS_ENABLED: DISABLED  # Experiment engine (gated)
 ```
 
 ### Common Commands
+
 ```bash
 # Deploy to Railway
 git push railway-origin main
@@ -205,7 +225,8 @@ When debugging, classify errors:
 
 ## SAFETY PROTOCOLS (Never Skip These)
 
-### Before Making ANY Code Change:
+### Before Making ANY Code Change
+
 ```
 □ Read TROUBLESHOOTING_CHECKLIST.md
 □ Context manager pattern correct? (with get_conn() as conn:)
@@ -216,7 +237,8 @@ When debugging, classify errors:
 □ Tested locally?
 ```
 
-### Before Every Deploy:
+### Before Every Deploy
+
 ```
 □ Run ./pre_deploy_check.sh (if exists)
 □ Golden dataset tests pass?
@@ -225,7 +247,8 @@ When debugging, classify errors:
 □ Git commit message clear?
 ```
 
-### After Every Deploy:
+### After Every Deploy
+
 ```
 □ Monitor logs 5 minutes
 □ Check /health endpoint
@@ -256,6 +279,7 @@ When debugging, classify errors:
    - **Action:** Add validation plan or test harness reference
 
 **Next Steps Queued (from Codex):**
+
 - [ ] Assign owners/dates for each open checklist task
 - [ ] Add "operations" section covering:
   - Key rotation
@@ -305,12 +329,14 @@ The session is working now but the interruption caused context loss. Please cont
 ## SESSION RESTART PROTOCOL
 
 When Damian runs `~/restart_wimd.sh`:
+
 1. Script loads APP_URL from `wimd_config.sh`
 2. Runs `update_status.sh`
 3. Logs to `DEPLOY_STATUS_NOTE.md`
 4. Prints last 10 lines of status
 
 **You should then:**
+
 1. Read this file (SESSION_START_README.md)
 2. Read DEPLOY_STATUS_NOTE.md for latest status
 3. Check git status
@@ -322,6 +348,7 @@ When Damian runs `~/restart_wimd.sh`:
 ## ROLE INVOCATION: "invoke Mosaic"
 
 When Damian says **"invoke Mosaic"**, it means:
+
 - Activate full context awareness of Mosaic platform
 - Read all relevant docs (CLAUDE.md, specs, checklists)
 - Be ready for deep technical discussion
@@ -329,6 +356,7 @@ When Damian says **"invoke Mosaic"**, it means:
 - Think holistically about system architecture
 
 **Do NOT ask basic questions** - you should already know:
+
 - System architecture
 - Deployment setup
 - File structure
@@ -339,6 +367,7 @@ When Damian says **"invoke Mosaic"**, it means:
 ## CONFIDENCE CHECK (Before Replying)
 
 Ask yourself:
+
 - [ ] Have I read the key docs listed above?
 - [ ] Do I understand what's blocking deployment?
 - [ ] Do I know what files were modified?

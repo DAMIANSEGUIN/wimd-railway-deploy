@@ -1,7 +1,9 @@
 # MCP v1.1 Implementation - Master Checklist
+
 **Critical Infrastructure - Regressive Plan with Failsafes**
 
 **Document Metadata:**
+
 - Created: 2025-12-09 by Claude Code
 - Status: ACTIVE - Living document
 - Update Protocol: Any agent marks items complete as work progresses
@@ -22,6 +24,7 @@
 ## Pre-Implementation (Phase 0) - TESTING & VALIDATION
 
 ### 0.1 Documentation Review
+
 - [x] ✅ Critical infrastructure doc created (Claude Code, 2025-12-09 14:00)
   - File: `docs/CONTEXT_ENGINEERING_CRITICAL_INFRASTRUCTURE.md`
 - [x] ✅ Action plan created (Claude Code, 2025-12-09 14:30)
@@ -34,6 +37,7 @@
   - File: `docs/MCP_V1_1_MASTER_CHECKLIST.md` (this file)
 
 ### 0.2 Baseline Measurements (CRITICAL - DO FIRST)
+
 - [x] ✅ **Measure current session start context size** (Claude Code, 2025-12-09 16:00 - DONE)
   - Command: `wc -c CLAUDE.md TROUBLESHOOTING_CHECKLIST.md SELF_DIAGNOSTIC_FRAMEWORK.md docs/README.md`
   - Expected: ~60KB
@@ -56,6 +60,7 @@
 - [ ] **Create golden dataset for trigger detection**
   - File: `.ai-agents/test_data/TRIGGER_TEST_DATASET.json`
   - Format:
+
     ```json
     [
       {
@@ -66,6 +71,7 @@
       // ... 20+ test cases
     ]
     ```
+
   - Owner: _____ (who does this?)
   - **Why:** Can't validate trigger detector without test data
 
@@ -77,6 +83,7 @@
   - **Why:** Summaries can't include what isn't documented
 
 ### 0.3 Failsafe Infrastructure (BEFORE ANY CHANGES)
+
 - [x] ✅ **Create backup of current system** (Claude Code, 2025-12-09 15:55 - DONE)
   - Git tag: `pre-mcp-v1.1-baseline`
   - Command: `git tag -a pre-mcp-v1.1-baseline -m "Baseline before MCP v1.1 implementation"`
@@ -86,6 +93,7 @@
 - [x] ✅ Create feature flag system (Gemini, 2025-12-09 14:55 - DONE)
   - File: `.ai-agents/config/feature_flags.json`
   - Format:
+
     ```json
     {
       "MCP_ENABLED": false,
@@ -94,6 +102,7 @@
       "MCP_STRUCTURED_LOGS": false
     }
     ```
+
   - Integration: `scripts/start_session.sh` checks flags before loading summaries
   - Owner: _____ (who does this?)
   - **Why:** Can disable without code changes
@@ -115,6 +124,7 @@
   - **Why:** Prevent accidental deletion of critical docs
 
 ### 0.4 Test Framework Setup
+
 - [ ] **Create test harness for session start**
   - File: `tests/test_mcp_session_start.py`
   - Tests:
@@ -152,6 +162,7 @@
 ### 1.1 Session Macro Reduction (Claude Code)
 
 #### 1.1.1 Create Directory Structure
+
 - [ ] **Create `.ai-agents/session_context/` directory**
   - Command: `mkdir -p .ai-agents/session_context`
   - Verify: `ls -la .ai-agents/session_context`
@@ -165,6 +176,7 @@
   - **FAILSAFE:** Backup location for rollback
 
 #### 1.1.2 Generate Governance Summary
+
 - [ ] **Backup original governance docs**
   - Copy CLAUDE.md → `.ai-agents/backups/CLAUDE.md.$(date +%Y%m%d)`
   - Copy TROUBLESHOOTING_CHECKLIST.md → backups
@@ -182,6 +194,7 @@
     - Recent changes (last 3 git commits)
     - Emergency procedures (from TROUBLESHOOTING_CHECKLIST.md)
   - Provenance format:
+
     ```markdown
     ---
     source: CLAUDE.md
@@ -191,6 +204,7 @@
     schema_version: v1.0
     ---
     ```
+
   - Owner: _____ (who does this?)
   - **FAILSAFE:** Original files untouched, summary is additive
 
@@ -202,6 +216,7 @@
   - **Why:** Ensure no information loss
 
 #### 1.1.3 Define Retrieval Triggers
+
 - [ ] **Create retrieval triggers document**
   - File: `.ai-agents/session_context/RETRIEVAL_TRIGGERS.md`
   - Target size: ~1KB
@@ -222,6 +237,7 @@
   - **Why:** Validate trigger → doc mappings before automation
 
 #### 1.1.4 Refactor Session Start Script
+
 - [ ] **Backup original start_session.sh**
   - Copy: `scripts/start_session.sh` → `.ai-agents/backups/start_session.sh.$(date +%Y%m%d)`
   - Verify backup is executable: `bash .ai-agents/backups/start_session.sh.*`
@@ -231,6 +247,7 @@
 - [ ] **Create new session start script with feature flag**
   - File: `scripts/start_session_mcp.sh` (NEW FILE, don't modify original yet)
   - Logic:
+
     ```bash
     if [ "$MCP_ENABLED" = "true" ]; then
       cat .ai-agents/session_context/GOVERNANCE_SUMMARY.md
@@ -242,6 +259,7 @@
       # ... etc
     fi
     ```
+
   - Owner: _____ (who does this?)
   - **FAILSAFE:** Original script untouched, new script side-by-side
 
@@ -279,6 +297,7 @@
 ### 1.2 Structured Session Log (Codex)
 
 #### 1.2.1 Define Event Schema
+
 - [ ] **Create session log schema document**
   - File: `.ai-agents/session_context/SESSION_LOG_SCHEMA.json`
   - Required fields (from Codex's analysis):
@@ -314,6 +333,7 @@
   - **Why:** Validate schema before production use
 
 #### 1.2.2 Implement Log Writer
+
 - [ ] **Create append-only log writer**
   - File: `.ai-agents/session_context/session_logger.py`
   - Function: `append_event(session_id: str, event: dict) -> bool`
@@ -341,6 +361,7 @@
   - **Why:** Validate before integration
 
 #### 1.2.3 Implement Summarizer
+
 - [ ] **Create schema-driven summarizer**
   - File: `.ai-agents/session_context/summarize_session.py`
   - Function: `summarize_session(session_id: str) -> dict`
@@ -382,6 +403,7 @@
 
 - [x] ✅ **Document expected behavior for each test case** (Gemini, 2025-12-10 10:10 - DONE)
   - Format:
+
     ```json
     {
       "id": "test_001",
@@ -392,10 +414,12 @@
       "rationale": "Contains both 'failed' (error) and 'deploy' (deployment)"
     }
     ```
+
   - Owner: Gemini
   - **Why:** Clear acceptance criteria
 
 #### 1.3.2 Implement Trigger Detector
+
 - [x] ✅ **Create trigger detection module** (Gemini, 2025-12-10 10:10 - DONE)
   - File: `.ai-agents/session_context/trigger_detector.py`
   - Function: `detect_triggers(user_message: str, agent_response: str) -> List[str]`
@@ -427,6 +451,7 @@
   - **Why:** Can't add latency to every message
 
 #### 1.3.3 Integration Testing
+
 - [ ] **Test trigger detector with real messages**
   - Source: Recent session transcripts (if available)
   - Run: Detector on real messages
@@ -446,6 +471,7 @@
 ## Phase 1 Validation (CRITICAL - GATE TO PHASE 2)
 
 ### 1.4 Integration Testing
+
 - [ ] **Test complete Phase 1 workflow**
   - Start session with MCP enabled
   - Verify context size <10KB
@@ -478,6 +504,7 @@
   - **Why:** Ensure no regressions
 
 ### 1.5 Go/No-Go Decision for Phase 2
+
 - [ ] **Review Phase 1 results with team**
   - Document: `.ai-agents/validation/PHASE_1_GO_NO_GO.md`
   - Decision criteria:
@@ -497,6 +524,7 @@
 **STATUS:** Blocked until Phase 1 complete and validated
 
 ### 2.1 Broker Integration (Gemini)
+
 - [ ] **Design broker MCP client**
   - File: `scripts/broker_mcp_client.sh` or `.py`
   - Behavior: Query MCP for context before sending to Gemini
@@ -517,9 +545,11 @@
   - **Why:** Validate before production use
 
 ### 2.2 Mirror Exports (Codex)
+
 - [ ] **Design export directory structure**
   - Directory: `docs/mcp_exports/`
   - Structure:
+
     ```
     docs/mcp_exports/
       GOVERNANCE_SUMMARY.md
@@ -528,6 +558,7 @@
       metadata/
         provenance.json
     ```
+
   - Owner: _____ (who does this?)
   - **FAILSAFE:** New directory, doesn't touch existing docs
 
@@ -544,6 +575,7 @@
   - **Why:** Prevent Codex from using outdated info
 
 ### 2.3 Handoff Standardization (ALL)
+
 - [ ] **Create handoff template**
   - File: `.ai-agents/templates/HANDOFF_TEMPLATE.md`
   - Structure: Use Codex's 7-field schema
@@ -564,6 +596,7 @@
 **STATUS:** Blocked until Phase 2 complete
 
 ### 3.1 Observability
+
 - [ ] **Create `/debug dump-context` command**
   - Owner: _____ (who does this?)
 
@@ -574,6 +607,7 @@
   - Owner: _____ (who does this?)
 
 ### 3.2 Failure Recovery
+
 - [ ] **Test all failure modes**
   - MCP server down
   - Corrupt session logs
@@ -589,6 +623,7 @@
   - Owner: _____ (who does this?)
 
 ### 3.3 Success Metrics
+
 - [ ] **Measure agent session duration improvement**
   - Baseline: 10-20 minutes before degradation
   - Target: 30+ minutes without degradation
@@ -603,6 +638,7 @@
 ## Failsafe Summary (Quick Reference)
 
 ### ONE-COMMAND ROLLBACK
+
 ```bash
 git checkout pre-mcp-v1.1-baseline
 # OR
@@ -610,6 +646,7 @@ git checkout pre-mcp-v1.1-baseline
 ```
 
 ### CRITICAL FILES (NEVER DELETE)
+
 - CLAUDE.md
 - TROUBLESHOOTING_CHECKLIST.md
 - SELF_DIAGNOSTIC_FRAMEWORK.md
@@ -617,6 +654,7 @@ git checkout pre-mcp-v1.1-baseline
 - All files in `docs/` (additive only)
 
 ### FEATURE FLAGS (DISABLE ANYTIME)
+
 ```json
 {
   "MCP_ENABLED": false  // Instant disable
@@ -624,6 +662,7 @@ git checkout pre-mcp-v1.1-baseline
 ```
 
 ### BACKUPS LOCATION
+
 - `.ai-agents/backups/` (all original files timestamped)
 
 ---
@@ -631,12 +670,14 @@ git checkout pre-mcp-v1.1-baseline
 ## Team Coordination
 
 ### Status Update Protocol
+
 1. Mark checkbox when starting work: 🔄
 2. Mark checkbox when complete: ✅
 3. Add timestamp and your name
 4. If blocked, add: ⛔ and reason
 
-### Example:
+### Example
+
 - [x] 🔄 Create governance summary (Claude Code, 2025-12-09 16:00 - IN PROGRESS)
 - [x] ✅ Create governance summary (Claude Code, 2025-12-09 17:30 - DONE)
 

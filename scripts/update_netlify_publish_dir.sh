@@ -56,5 +56,3 @@ echo "1. Trigger a new deploy: netlify deploy --prod --dir=mosaic_ui"
 echo "2. Or push a new commit to trigger auto-deploy"
 echo ""
 echo "Verify in dashboard: https://app.netlify.com/sites/$SITE_ID/configuration/deploys"
-
-

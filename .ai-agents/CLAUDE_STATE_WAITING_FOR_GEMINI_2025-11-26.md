@@ -10,6 +10,7 @@
 ### ✅ Merge from Main → phase1-incomplete (Commit 2686993)
 
 **Added:**
+
 - Agent messaging broker system
 - Session management (status.sh, commit_work.sh)
 - Context persistence infrastructure
@@ -18,6 +19,7 @@
 - Full handoff protocols
 
 **Conflicts Resolved:**
+
 - `local_dev_server.py`: KEPT ours (needed for Phase 1 testing)
 - `mosaic_ui/index.html`: KEPT ours (Phase 1 module initialization)
 - `scripts/show_latest_context.sh`: KEPT ours (simpler version)
@@ -29,6 +31,7 @@
 **Root Cause:** Auth modal stays open on login failure, covering coach-strip
 
 **Technical Details:**
+
 - **File:** `mosaic_ui/index.html`
 - **Line 71:** `.modal{position:fixed;inset:0;...z-index:2000}` - Fullscreen overlay
 - **Line 2049:** Modal close ONLY happens on login success
@@ -37,6 +40,7 @@
 
 **Proposed Fix:**
 Add this after line 2061 in the error handler:
+
 ```javascript
 $('#authModal').style.display = 'none';
 ```
@@ -59,6 +63,7 @@ OR add a close button to the modal so user can dismiss it.
 Per Damian: "Gemini is currently doing another local deployment from fixes"
 
 **This means:**
+
 - Gemini may be fixing the same bug I found
 - Gemini may be working on different files
 - Need to coordinate after their deployment completes
@@ -81,6 +86,7 @@ Per Damian: "Gemini is currently doing another local deployment from fixes"
 ## Files to Watch for Conflicts
 
 If Gemini modified these, we'll need to merge:
+
 - `mosaic_ui/index.html` (auth modal code)
 - `frontend/index.html` (Netlify version)
 - `local_dev_server.py` (if they changed it)
@@ -90,6 +96,7 @@ If Gemini modified these, we'll need to merge:
 ## Communication Files
 
 **For Gemini to read:**
+
 - `.ai-agents/CLAUDE_UPDATE_FOR_GEMINI_2025-11-26.md` - Merge status + bug findings
 - `.ai-agents/CLAUDE_STATE_WAITING_FOR_GEMINI_2025-11-26.md` (this file) - Current pause state
 
@@ -100,7 +107,7 @@ If Gemini modified these, we'll need to merge:
 ## Local Dev Server
 
 **Status:** Running on port 3000 (PID 77043)
-**URL:** http://localhost:3000
+**URL:** <http://localhost:3000>
 **Backend:** Proxying to Railway production
 
 Can be used for testing after Gemini's deployment.

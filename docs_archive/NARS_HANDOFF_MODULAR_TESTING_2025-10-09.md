@@ -23,6 +23,7 @@ Break down the changes I made into modules and test each one independently to id
 **Location**: Railway service `what-is-my-delta-site`
 
 **Key characteristics**:
+
 - Simple health check (no "checks" field)
 - No AI client initialization
 - No feature flag migration
@@ -34,6 +35,7 @@ Break down the changes I made into modules and test each one independently to id
 ## Failed Deployments (My Attempts)
 
 **Commits**:
+
 1. `7c2807e` - Fix health check 503: Force boolean conversion for SQLite feature flags
 2. `2888657` - Force Railway cache clear
 
@@ -47,7 +49,9 @@ Break down the changes I made into modules and test each one independently to id
 ## Changes Made (067f33a → 2888657)
 
 ### 1. AI Client Initialization (`api/ai_clients.py`)
+
 **Commit**: `ee6712f`
+
 ```python
 # BEFORE: Commented out
 # import openai
@@ -67,9 +71,11 @@ except ImportError:
 ---
 
 ### 2. Feature Flag Migration (`api/migrations.py` + `api/startup_checks.py`)
+
 **Commits**: `79f9395`, `79f9395`
 
 **Added migration 004**:
+
 ```python
 "004_sync_feature_flags_from_json": """
     UPDATE feature_flags SET enabled = TRUE WHERE flag_name = 'AI_FALLBACK_ENABLED';
@@ -81,6 +87,7 @@ except ImportError:
 ```
 
 **Startup hook** (`api/startup_checks.py:36-54`):
+
 ```python
 async def run():
     init_db()
@@ -99,9 +106,11 @@ async def run():
 ---
 
 ### 3. Prompt Selector Caching Fix (`api/prompt_selector.py`)
+
 **Commit**: `6d7e578`
 
 **BEFORE**:
+
 ```python
 def __init__(self):
     self.settings = get_settings()
@@ -110,6 +119,7 @@ def __init__(self):
 ```
 
 **AFTER**:
+
 ```python
 def __init__(self):
     self.settings = get_settings()
@@ -118,6 +128,7 @@ def __init__(self):
 ```
 
 All references changed to dynamic checks:
+
 ```python
 fallback_enabled = self._check_feature_flag("AI_FALLBACK_ENABLED")
 ```
@@ -127,9 +138,11 @@ fallback_enabled = self._check_feature_flag("AI_FALLBACK_ENABLED")
 ---
 
 ### 4. Boolean Conversion Fix (`api/prompt_selector.py:34`)
+
 **Commit**: `7c2807e`
 
 **BEFORE**:
+
 ```python
 def _check_feature_flag(self, flag_name: str) -> bool:
     row = conn.execute(...).fetchone()
@@ -137,6 +150,7 @@ def _check_feature_flag(self, flag_name: str) -> bool:
 ```
 
 **AFTER**:
+
 ```python
 def _check_feature_flag(self, flag_name: str) -> bool:
     row = conn.execute(...).fetchone()
@@ -149,9 +163,11 @@ def _check_feature_flag(self, flag_name: str) -> bool:
 ---
 
 ### 5. Enhanced Health Check (`api/index.py:423-489`)
+
 **Commits**: `027eaf2`, `7c2807e`
 
 **BEFORE**:
+
 ```python
 @app.get("/health")
 def health():
@@ -159,6 +175,7 @@ def health():
 ```
 
 **AFTER**:
+
 ```python
 @app.get("/health")
 def health():
@@ -192,14 +209,17 @@ def health():
 ---
 
 ### 6. Monitoring System (`api/monitoring.py`)
+
 **Commit**: `027eaf2`
 
 **Added**: New file `api/monitoring.py` (199 lines)
+
 - PromptMonitor class
 - Health check logging
 - Auto-recovery system
 
 **Import** in `api/index.py:46`:
+
 ```python
 from .monitoring import run_health_check, attempt_system_recovery
 ```
@@ -209,9 +229,11 @@ from .monitoring import run_health_check, attempt_system_recovery
 ---
 
 ### 7. Debug Endpoint (`api/index.py:501-534`)
+
 **Commit**: `7c2807e` (later removed by CODEX)
 
 **Added**:
+
 ```python
 @app.get("/debug/system-state")
 def debug_system_state():
@@ -225,9 +247,11 @@ def debug_system_state():
 ---
 
 ### 8. Railway Configuration (`railway.toml`)
+
 **Commit**: `027eaf2`
 
 **Added**:
+
 ```toml
 [deploy]
 healthcheckPath = "/health"
@@ -246,6 +270,7 @@ httpMethod = "GET"
 ---
 
 ### 9. Cache Busting File
+
 **Commit**: `2888657`
 
 **Added**: `.railwaybust` (dummy file to force cache clear)
@@ -270,6 +295,7 @@ httpMethod = "GET"
 10. Railway keeps old deployment (a583d26a) active
 
 **Evidence**:
+
 - Deploy logs show: "✅ Migration executed successfully"
 - Deploy logs show: "✅ Feature flags synced to database"
 - But also show: `INFO: "GET /health HTTP/1.1" 503 Service Unavailable`
@@ -282,9 +308,11 @@ httpMethod = "GET"
 **NARs, please test these changes in isolation:**
 
 ### Test 1: AI Client Initialization Only
+
 **Branch**: Create from `067f33a` + only AI client changes from `ee6712f`
 
 Files to modify:
+
 - `api/ai_clients.py` - Uncomment imports
 
 **Expected**: Should deploy successfully (no health check changes)
@@ -292,9 +320,11 @@ Files to modify:
 ---
 
 ### Test 2: Feature Flag Migration Only
+
 **Branch**: Create from `067f33a` + only migration from `79f9395`
 
 Files to modify:
+
 - `api/migrations.py` - Add migration 004
 - `api/startup_checks.py` - Add migration call
 
@@ -303,9 +333,11 @@ Files to modify:
 ---
 
 ### Test 3: Prompt Selector Caching Fix Only
+
 **Branch**: Create from `067f33a` + only caching fix from `6d7e578`
 
 Files to modify:
+
 - `api/prompt_selector.py` - Remove cached flag, make dynamic
 
 **Expected**: Should deploy successfully (no health check enforcement)
@@ -313,9 +345,11 @@ Files to modify:
 ---
 
 ### Test 4: Boolean Conversion Only
+
 **Branch**: Create from `067f33a` + only bool fix from `7c2807e`
 
 Files to modify:
+
 - `api/prompt_selector.py:34` - Add `bool()` conversion
 
 **Expected**: Should deploy successfully (no health check enforcement)
@@ -323,9 +357,11 @@ Files to modify:
 ---
 
 ### Test 5: Health Check Enhancement Only
+
 **Branch**: Create from `067f33a` + only health check from `027eaf2`
 
 Files to modify:
+
 - `api/index.py:423-489` - Enhanced health check logic
 - `railway.toml` - Health check configuration
 
@@ -334,9 +370,11 @@ Files to modify:
 ---
 
 ### Test 6: Monitoring System Only
+
 **Branch**: Create from `067f33a` + only monitoring from `027eaf2`
 
 Files to modify:
+
 - `api/monitoring.py` - New file
 - `api/index.py:46` - Import statement
 
@@ -345,9 +383,11 @@ Files to modify:
 ---
 
 ### Test 7: Railway Config Only
+
 **Branch**: Create from `067f33a` + only `railway.toml` from `027eaf2`
 
 Files to modify:
+
 - `railway.toml` - Health check configuration
 
 **Expected**: Should deploy successfully (simple health check still passes)
@@ -355,6 +395,7 @@ Files to modify:
 ---
 
 ### Test 8: Combined (Phased Approach)
+
 If individual tests pass, combine in phases:
 
 **Phase A**: Tests 1-4 together (AI + migration + caching + bool fix)
@@ -380,6 +421,7 @@ Check if migration is actually running and succeeding:
 **Could AI clients be failing to initialize despite logs saying success?**
 
 Test:
+
 1. Add `/health/prompts` endpoint test during deployment
 2. Verify `ai_available` value during health check
 3. Check if API keys are set in Railway environment
@@ -389,19 +431,23 @@ Test:
 ## Files to Review
 
 **Working deployment code**:
+
 - `git show 067f33a:api/index.py` - Simple health check
 - `git show 067f33a:api/ai_clients.py` - Commented imports
 - `git show 067f33a:api/prompt_selector.py` - Cached flags
 
 **Failed deployment code**:
+
 - `git show 2888657:api/index.py` - Enhanced health check
 - `git show 2888657:api/ai_clients.py` - Initialized clients
 - `git show 2888657:api/prompt_selector.py` - Dynamic flags with bool()
 
 **Diff summary**:
+
 ```bash
 git diff 067f33a..2888657 --stat
 ```
+
 Shows 21 files changed, 451 insertions, 19 deletions
 
 ---
@@ -423,11 +469,13 @@ Shows 21 files changed, 451 insertions, 19 deletions
 ## Success Criteria
 
 **Immediate**:
+
 1. Identify which specific change breaks Railway deployment
 2. Determine if it's the enhanced health check or something else
 3. Propose minimal fix that gets new code deployed
 
 **Validation**:
+
 1. Deployment succeeds (health check passes)
 2. Production serves new code
 3. User can test site without "CSV prompts not found" error
@@ -462,6 +510,7 @@ Shows 21 files changed, 451 insertions, 19 deletions
 **Hypothesis**: This is the breaking change due to timing issue
 
 **Step 2**: If health check breaks deployment, test two solutions:
+
 - **A)** Add startup grace period (health check returns 200 for first 60s)
 - **B)** Make health check less strict (return 200 if database OK, even if prompt system not ready)
 

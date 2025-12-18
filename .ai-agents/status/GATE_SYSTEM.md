@@ -13,6 +13,7 @@ Each agent monitors `.ai-agents/status/*.complete` files to determine their next
 **Filename:** `<phase>_<task>_<agent>.complete`
 
 **Content:**
+
 ```json
 {
   "task": "phase1_task1c",
@@ -32,14 +33,17 @@ Each agent monitors `.ai-agents/status/*.complete` files to determine their next
 ## Phase 1 Gates
 
 ### Gate 1: Task 1A Complete (Claude Code)
+
 **File:** `phase1_task1a_claude.complete`
 **Triggers:** Nothing (waits for Task 1C)
 
 ### Gate 2: Task 1C Complete (Gemini)
+
 **File:** `phase1_task1c_gemini.complete`
 **Triggers:** Phase 1 validation (Claude Code checks both 1A + 1C done)
 
 ### Gate 3: Phase 1 Validation Complete (Claude Code)
+
 **File:** `phase1_validation.complete`
 **Triggers:** Phase 2 Task 2.1 (Gemini starts broker work)
 
@@ -48,10 +52,12 @@ Each agent monitors `.ai-agents/status/*.complete` files to determine their next
 ## Phase 2 Gates
 
 ### Gate 4: Task 2.1 Complete (Gemini)
+
 **File:** `phase2_task2.1_gemini.complete`
 **Triggers:** Task 2.2 (structured logging - Codex or Claude)
 
 ### Gate 5: Task 2.2 Complete
+
 **File:** `phase2_task2.2_<agent>.complete`
 **Triggers:** Task 2.3 (handoff protocols - all agents)
 
@@ -59,9 +65,10 @@ Each agent monitors `.ai-agents/status/*.complete` files to determine their next
 
 ## Agent Responsibilities
 
-### On Session Start, Each Agent Must:
+### On Session Start, Each Agent Must
 
 1. **Check for their trigger:**
+
    ```bash
    ls .ai-agents/status/*.complete
    ```
@@ -122,6 +129,7 @@ The **single source of truth** is:
 `docs/MCP_V1_1_MASTER_CHECKLIST.md`
 
 Each task has:
+
 - **Assigned agent**
 - **Dependencies** (which gates must exist)
 - **Deliverables** (what to create)
@@ -132,11 +140,13 @@ Each task has:
 ## Example: Gemini's Next Task
 
 **Current state:**
+
 - ✅ `phase1_task1a_claude.complete` exists
 - ✅ `phase1_task1c_gemini.complete` exists
 - ✅ `phase1_validation.complete` exists (just created)
 
 **Gemini checks:**
+
 ```python
 next_task = get_next_task("gemini")
 # Returns: "phase2_task2.1_broker_integration"
@@ -167,6 +177,7 @@ deps_met = check_dependencies(deps)
 ## Implementation Priority
 
 **Critical for Phase 2:**
+
 - Create gate files for completed Phase 1 tasks
 - Implement `get_next_task.py` and `check_dependencies.py`
 - Update master checklist with gate specifications

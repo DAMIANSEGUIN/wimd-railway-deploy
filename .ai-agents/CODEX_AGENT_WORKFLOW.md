@@ -1,7 +1,7 @@
 # Codex Agent Workflow – Two-Agent Tandem Model
 
-**Date:** 2025-11-05  
-**Status:** Active  
+**Date:** 2025-11-05
+**Status:** Active
 **Model:** Terminal Codex + Codex Agent (Browser-Based)
 
 ---
@@ -14,6 +14,7 @@ We run **two Codex agents in tandem**:
 2. **Codex Agent** – Browser-based, traces real user flows in production
 
 **Purpose:**
+
 - Eliminate manual browser checks
 - Provide hard data for Terminal Codex to act on
 - Reduce context regressions between sessions
@@ -40,6 +41,7 @@ We run **two Codex agents in tandem**:
 **Trigger:** After deployment or when production issue detected
 
 **Codex Agent Actions:**
+
 1. Opens WhatIsMyDelta in isolated browser session
 2. Runs DevTools probes:
    - `typeof window.initApp` check
@@ -51,6 +53,7 @@ We run **two Codex agents in tandem**:
 3. Captures evidence into `.ai-agents/STAGE2_DIAGNOSIS_2025-11-05.md`
 
 **Output:**
+
 - Hard data (console logs, network requests, element states)
 - No manual interpretation needed
 - Terminal Codex can act immediately on evidence
@@ -58,10 +61,12 @@ We run **two Codex agents in tandem**:
 ### Stage 3: Verification
 
 **Local Verification:**
+
 - `./scripts/verify_live_deployment.sh`
 - `./scripts/verify_critical_features.sh`
 
 **Codex Agent Confirmation:**
+
 - Re-run probes on live site
 - Confirm fixes are working
 - Update diagnosis doc with verification results
@@ -97,6 +102,7 @@ We run **two Codex agents in tandem**:
 ### Triggering Codex Agent
 
 **After Deployment:**
+
 ```bash
 # 1. Deploy
 ./scripts/deploy.sh netlify
@@ -108,12 +114,14 @@ We run **two Codex agents in tandem**:
 ```
 
 **For Stage 2 Diagnosis:**
+
 - Codex Agent runs automatically when Stage 2 is triggered
 - Captures evidence into `.ai-agents/STAGE2_DIAGNOSIS_YYYY-MM-DD.md`
 - **Terminal Codex reads evidence from Stage docs and implements fixes immediately**
 - No human relay needed – Terminal Codex acts on hard data
 
 **For Stage 3 Verification:**
+
 - Codex Agent confirms fixes are working
 - Updates diagnosis doc with verification results
 - Provides final confirmation before closing incident
@@ -123,6 +131,7 @@ We run **two Codex agents in tandem**:
 ## Evidence Captured
 
 **DevTools Probes:**
+
 - `typeof window.initApp` → Function existence check
 - `document.getElementById('authModal')?.style.display` → Modal visibility
 - Network tab → `/wimd` request status (200/202/error)
@@ -131,6 +140,7 @@ We run **two Codex agents in tandem**:
 - Network requests/responses → API integration status
 
 **Output Format:**
+
 - Structured evidence in diagnosis doc
 - Console logs with timestamps
 - Network request details (URL, method, status, response)
@@ -141,10 +151,12 @@ We run **two Codex agents in tandem**:
 ## Integration Points
 
 **Diagnosis Documents:**
+
 - `.ai-agents/STAGE2_DIAGNOSIS_2025-11-05.md` → Evidence section auto-populated
 - `.ai-agents/STAGE3_VERIFICATION_2025-11-05.md` → Codex Agent confirmation results
 
 **Handoff Documents:**
+
 - `.ai-agents/SESSION_RESTART_HANDOFF_2025-11-05.md` → References Codex Agent workflow
 - `.ai-agents/NEXT_SESSION_START_HERE.md` → Quick reference for Codex Agent usage
 
@@ -155,6 +167,7 @@ We run **two Codex agents in tandem**:
 **When to invoke:** Whenever an agent drifts or loses context
 
 **Process:**
+
 1. Both agents (Terminal Codex + Codex Agent) re-run `.ai-agents/SESSION_START_PROTOCOL.md` Steps 1–5
 2. Restate **Present State → Desired Outcome**
 3. Re-log the session in `.ai-agents/session_log.txt`
@@ -169,6 +182,7 @@ We run **two Codex agents in tandem**:
 **Critical:** Keep staging notes current – they are the shared source of truth
 
 **Files to maintain:**
+
 - `.ai-agents/STAGE1_CURRENT_STATE_YYYY-MM-DD.md` – Problem statement
 - `.ai-agents/STAGE2_DIAGNOSIS_YYYY-MM-DD.md` – Evidence and diagnosis
 - `.ai-agents/STAGE3_VERIFICATION_YYYY-MM-DD.md` – Verification results
@@ -181,12 +195,14 @@ We run **two Codex agents in tandem**:
 ## Team Roles
 
 **Codex Agent (Browser-Based):**
+
 - Runs Mosaic through real user flows in isolated session
 - Captures DevTools evidence (initializer, auth modal, chat network, API base)
 - Updates `.ai-agents/STAGE2_DIAGNOSIS_YYYY-MM-DD.md` with evidence
 - Provides hard data for Terminal Codex to act on
 
 **Terminal Codex:**
+
 - Reads Codex Agent evidence from Stage 2 diagnosis docs
 - Implements fixes/tests based on hard data
 - Runs verify scripts
@@ -195,21 +211,23 @@ We run **two Codex agents in tandem**:
 - **No waiting on human relays** – acts directly on Codex Agent evidence
 
 **Cursor:**
+
 - Triggers Codex Agent when needed
 - Reviews Codex Agent evidence before proceeding
 - Coordinates between Terminal Codex and Codex Agent
 
 **CIT:**
+
 - Reviews Codex Agent evidence for accuracy
 - Validates diagnosis based on captured data
 
 **Codex (Review):**
+
 - Reviews Stage 2 diagnosis with Codex Agent evidence
 - Approves fixes based on hard data
 - Signs off on incident closure
 
 ---
 
-**Status:** Active  
+**Status:** Active
 **Last Updated:** 2025-11-05
-

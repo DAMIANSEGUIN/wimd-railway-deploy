@@ -1,4 +1,5 @@
 # WIMD PROJECT STATE ASSESSMENT
+
 **Date**: 2025-10-07
 **Phase**: 4 - Project State Analysis
 **Status**: COMPLETE
@@ -18,6 +19,7 @@
 ## GIT REPOSITORY STATE
 
 ### Branch Status
+
 - **Branch**: main
 - **Ahead of origin**: 10 commits (unpushed)
 - **Modified files**: 11 (mostly documentation + migration + database)
@@ -26,11 +28,13 @@
 ### Last 10 Commits Analysis
 
 **Most Recent (f439633)**: "HANDOFF: Mosaic Team implementation package ready"
+
 - **Status**: Last known stable commit
 - **Phase**: 1-3 complete, Phase 4 not started
 - **Recommendation**: Rollback target
 
 **Commits 003f1a5 → f439633** (9 commits):
+
 - Multiple "Semantic Match Upgrade" claims
 - "REAL Implementation", "ACTUAL Implementation", "Production Ready"
 - **CODEX Assessment**: All false claims, no real implementation
@@ -39,6 +43,7 @@
 ### Changes in Last 10 Commits
 
 **Documentation Added** (2,690+ lines):
+
 - CODEX_CRITICAL_REPORT_2025-10-06.md (596 lines)
 - JOB_SEARCH_CHANNELS_IMPLEMENTATION.md (298 lines)
 - FREE_API_SOURCES_DECISION.md (269 lines)
@@ -48,6 +53,7 @@
 - env_template.txt, api_keys.md
 
 **Code Changes** (minimal):
+
 - api/rag_engine.py: 45 line changes
 - api/reranker.py: 21 line changes
 - api/corpus_reindex.py: 2 line changes
@@ -59,11 +65,13 @@
 ### Uncommitted Changes
 
 **Modified Documentation Files** (11 files):
+
 - Various handoff documents with timestamp edits
 - api/migrations/004_add_rag_tables.sql
 - data/mosaic.db
 
 **New Files Created Today** (5 files):
+
 - CODEX_NOTE_FOR_CLAUDE_CODE_2025-10-06.md
 - DOWNLOADS_INVENTORY_2025-10-07.md
 - MOSAIC_MISSION_RECOVERY_PLAN_2025-10-07.md
@@ -75,10 +83,12 @@
 ## FEATURE FLAGS STATUS
 
 ### Currently Enabled (2/7)
+
 1. ✅ **SELF_EFFICACY_METRICS** - Phase 3 feature, working
 2. ✅ **COACH_ESCALATION** - Phase 3 feature, working
 
 ### Currently Disabled (5/7)
+
 1. ❌ **AI_FALLBACK_ENABLED** - CSV→AI fallback (Phase 1)
 2. ❌ **EXPERIMENTS_ENABLED** - Experiment engine (Phase 2)
 3. ❌ **RAG_BASELINE** - RAG functionality (Phase 4) **← Critical**
@@ -92,16 +102,19 @@
 ## API KEYS & ENVIRONMENT
 
 ### .env File Status
+
 - **OpenAI API Key**: ✅ Present (real key, not placeholder)
 - **Claude API Key**: ✅ Present (real key, not placeholder)
 - **File Note**: Says "Copy this file to .env and add your actual API keys"
 - **Reality**: This IS the .env file with real keys
 
 **Security Concern**:
+
 - Real API keys in .env file (should be in Railway environment variables)
 - Also found OpenAI key in .zshrc (discovered in system audit)
 
 ### Free Public APIs Listed
+
 - Greenhouse, Indeed, RemoteOK, WeWorkRemotely, Hacker News, Reddit
 - Notes say "no keys needed"
 - But implementations still disabled by feature flag
@@ -111,6 +124,7 @@
 ## RAG ENGINE STATUS
 
 ### Current Implementation
+
 ```python
 # Line 172 in api/rag_engine.py
 embedding = [random.random() for _ in range(1536)]  # text-embedding-3-small has 1536 dimensions
@@ -119,6 +133,7 @@ embedding = [random.random() for _ in range(1536)]  # text-embedding-3-small has
 **Status**: ❌ **Still using random embeddings**
 
 **Why Not Using OpenAI**:
+
 - Real API key is present in .env
 - Code has OpenAI import capability
 - BUT: Falls back to random on any error
@@ -131,6 +146,7 @@ embedding = [random.random() for _ in range(1536)]  # text-embedding-3-small has
 ## JOB SOURCES STATUS
 
 ### Job Source Files Present
+
 ```
 api/job_sources/
 ├── angelist.py
@@ -161,10 +177,12 @@ api/job_sources/
 ## DATABASE STATUS
 
 ### Modified Files
+
 - `api/migrations/004_add_rag_tables.sql` - 2 line changes
 - `data/mosaic.db` - binary changes (uncommitted)
 
 **Questions**:
+
 - Have migrations been run on Railway production?
 - Are RAG tables present in production database?
 - Is local database in sync with production?
@@ -176,17 +194,20 @@ api/job_sources/
 ## PRODUCTION STATUS
 
 ### Railway Deployment
+
 - **Project**: wimd-career-coaching
 - **Environment**: production
 - **Service**: what-is-my-delta-site
 - **Status**: Active
 
 ### Frontend
-- **URL**: https://whatismydelta.com
+
+- **URL**: <https://whatismydelta.com>
 - **Status**: ✅ Responding (HTTP/2 200)
 
 ### Backend Health
-- **URL**: https://what-is-my-delta-site-production.up.railway.app/health
+
+- **URL**: <https://what-is-my-delta-site-production.up.railway.app/health>
 - **Status**: Unable to verify (command blocked)
 - **Assumption**: Likely operational based on Railway status
 
@@ -195,21 +216,25 @@ api/job_sources/
 ## PHASE ASSESSMENT
 
 ### Phase 1: Migration Framework + CSV→AI Fallback + Feature Flags
+
 - **Status**: ✅ Implemented
 - **Feature Flag**: AI_FALLBACK_ENABLED = false (disabled but code present)
 - **Production Status**: Framework working, fallback disabled
 
 ### Phase 2: Experiment Engine Backend
+
 - **Status**: ✅ Implemented
 - **Feature Flag**: EXPERIMENTS_ENABLED = false (safely disabled)
 - **Production Status**: Backend code present, not active
 
 ### Phase 3: Self-Efficacy Metrics + Coach Escalation + Focus Stack UI
+
 - **Status**: ✅ Implemented and ENABLED
 - **Feature Flags**: SELF_EFFICACY_METRICS = true, COACH_ESCALATION = true
 - **Production Status**: ✅ OPERATIONAL
 
 ### Phase 4: RAG Baseline + Job Feeds
+
 - **Status**: ⚠️ **Prototype only, not production-ready**
 - **Feature Flags**: RAG_BASELINE = false, JOB_SOURCES_STUBBED_ENABLED = false
 - **Issues**:
@@ -225,6 +250,7 @@ api/job_sources/
 
 **CODEX Report Date**: 2025-10-06
 **Key Claims**:
+
 1. ✅ "5+ false 'complete' commits" - CONFIRMED (e417158, 4e2fd4c, 1b26633, a160157, e337e7c, bacd3eb, 2c326b0)
 2. ✅ "Random embeddings still in use" - CONFIRMED (line 172)
 3. ✅ "Feature flags show most disabled" - CONFIRMED (5/7 disabled)
@@ -238,6 +264,7 @@ api/job_sources/
 ## WHAT WORKS vs. WHAT DOESN'T
 
 ### ✅ Working in Production
+
 - Frontend (whatismydelta.com)
 - Backend API (Railway deployment)
 - Phase 1-3 features (partially enabled)
@@ -247,6 +274,7 @@ api/job_sources/
 - Chat/coach interface
 
 ### ❌ Not Working / Not Enabled
+
 - RAG semantic matching (using random, not real embeddings)
 - Job search integrations (disabled by flag)
 - AI fallback (disabled by flag)
@@ -254,6 +282,7 @@ api/job_sources/
 - Phase 4 features (disabled by design)
 
 ### ⚠️ Unclear Status
+
 - Database migrations (004_add_rag_tables.sql) - run on production?
 - Netlify rewrites for new Phase 4 endpoints
 - Cost controls monitoring
@@ -264,6 +293,7 @@ api/job_sources/
 ## SALVAGEABLE vs. DISCARD
 
 ### Worth Keeping
+
 1. ✅ **Documentation** - FREE_API_SOURCES_DECISION.md, JOB_SEARCH_CHANNELS_IMPLEMENTATION.md (good research)
 2. ✅ **Feature flag structure** - Well-designed safety system
 3. ✅ **Migration file** - 004_add_rag_tables.sql (if needed for Phase 4)
@@ -271,6 +301,7 @@ api/job_sources/
 5. ⚠️ **secure_key_loader.py** - Useful concept, never tested
 
 ### Should Discard
+
 1. ❌ **False "complete" commits** - Misleading history
 2. ❌ **Uncommitted database changes** - Unknown state
 3. ❌ **Current RAG implementation** - Using random, not functional
@@ -283,6 +314,7 @@ api/job_sources/
 ### Option A: Clean Rollback to f439633 (RECOMMENDED)
 
 **Rationale**:
+
 1. ✅ Last verified stable state
 2. ✅ Phase 1-3 confirmed working
 3. ✅ Clean starting point for Phase 4
@@ -290,11 +322,13 @@ api/job_sources/
 5. ✅ Fastest to known-good state (15-30 min)
 
 **What We Keep**:
+
 - All Phase 1-3 working features
 - Clean git history
 - Production stability
 
 **What We Lose**:
+
 - 10 commits of mostly documentation
 - Prototype Phase 4 code (not functional anyway)
 - Research docs (can reference from this branch)
@@ -304,11 +338,13 @@ api/job_sources/
 ### What to Preserve Before Rollback
 
 **Create Reference Branch**:
+
 ```bash
 git branch phase-4-cursor-attempt-reference
 ```
 
 **Cherry-Pick Useful Docs** (after rollback):
+
 - FREE_API_SOURCES_DECISION.md
 - JOB_SEARCH_CHANNELS_IMPLEMENTATION.md
 - feature_flags.json structure (if improved)
@@ -320,6 +356,7 @@ git branch phase-4-cursor-attempt-reference
 ### If Starting Phase 4 Fresh After Rollback
 
 **Must Have**:
+
 1. Real OpenAI embeddings (not random)
 2. Real job source implementations (3 minimum: RemoteOK, WeWorkRemotely, HackerNews)
 3. Working cost controls
@@ -329,6 +366,7 @@ git branch phase-4-cursor-attempt-reference
 7. **TESTS** - unit and integration
 
 **Must Avoid**:
+
 1. Mock implementations in production code
 2. Fallback to random without failing loudly
 3. Claiming "complete" without verification
@@ -341,10 +379,12 @@ git branch phase-4-cursor-attempt-reference
 ## SECURITY ISSUES IDENTIFIED
 
 ### Critical
+
 1. ⚠️ **OpenAI API key in .zshrc** (found in system audit)
 2. ⚠️ **API keys in .env file** (should be Railway env vars only)
 
 ### Recommended Actions
+
 1. Move all API keys to Railway environment variables
 2. Clear .env file (make it template-only with placeholders)
 3. Remove API key from .zshrc
@@ -355,6 +395,7 @@ git branch phase-4-cursor-attempt-reference
 ## DEPLOYMENT CHECKLIST STATUS
 
 ### Pre-Deployment Requirements
+
 - [ ] Database migrations verified on Railway
 - [ ] Netlify rewrites updated for Phase 4 endpoints
 - [ ] Railway environment variables configured
@@ -382,6 +423,7 @@ git branch phase-4-cursor-attempt-reference
 ## NEXT STEPS (Pending Approval)
 
 ### Phase 5: Recovery Decision
+
 1. User confirms Option A (clean rollback)
 2. CODEX reviews and approves
 3. Create backup branch for reference

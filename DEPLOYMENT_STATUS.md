@@ -9,6 +9,7 @@
 ## Current Situation
 
 ### ✅ Code Complete
+
 - All 4 critical blockers fixed
 - Gemini re-review approved
 - Code verified in source
@@ -16,9 +17,11 @@
 - Pushed to GitHub (origin/main)
 
 ### ⚠️ Deployment Not Triggered
+
 **Issue**: Railway's GitHub integration is NOT configured to auto-deploy from the `wimd-railway-deploy` repository.
 
 **Evidence**:
+
 - Pushed to origin/main at ~3:45 PM (commit 799046f)
 - Waited 10+ minutes
 - Schema version still shows "v1" (should be "v2")
@@ -34,7 +37,8 @@
 ### Option 1: Railway Dashboard (RECOMMENDED)
 
 **Steps**:
-1. Go to Railway dashboard: https://railway.app/project/[project-id]
+
+1. Go to Railway dashboard: <https://railway.app/project/[project-id>]
 2. Select service: "what-is-my-delta-site"
 3. Go to "Deployments" tab
 4. Click "Deploy" or "Redeploy"
@@ -43,6 +47,7 @@
 ### Option 2: Configure GitHub Integration
 
 **Steps**:
+
 1. Railway dashboard → Service settings
 2. Connect GitHub repository: `DAMIANSEGUIN/wimd-railway-deploy`
 3. Set branch: `main`
@@ -63,14 +68,16 @@ railway deploy --force
 
 ## What Will Happen When Deployed
 
-### Files Changed (from commit 799046f):
+### Files Changed (from commit 799046f)
+
 ```
 api/ps101.py (NEW FILE - 308 lines)
 api/settings.py (1 line changed - schema version)
 api/index.py (3 lines changed - router integration)
 ```
 
-### Expected Build Output:
+### Expected Build Output
+
 ```
 ✓ Installing dependencies from requirements.txt
 ✓ Building Python application
@@ -79,7 +86,8 @@ api/index.py (3 lines changed - router integration)
 ✓ Server listening on port [assigned by Railway]
 ```
 
-### Expected Runtime Behavior:
+### Expected Runtime Behavior
+
 - Schema version changes from "v1" → "v2"
 - New endpoint available: `/api/ps101/extract-context`
 - Authentication enforced (X-User-ID header required)
@@ -93,18 +101,21 @@ api/index.py (3 lines changed - router integration)
 **Run these tests AFTER manual deployment:**
 
 ### Test 1: Schema Version
+
 ```bash
 curl https://whatismydelta.com/config | jq '.schemaVersion'
 # Expected: "v2"
 ```
 
 ### Test 2: Authentication (Missing Header)
+
 ```bash
 curl -X POST https://whatismydelta.com/api/ps101/extract-context -v
 # Expected: HTTP 422 (missing required header)
 ```
 
 ### Test 3: Authentication (Invalid User)
+
 ```bash
 curl -X POST https://whatismydelta.com/api/ps101/extract-context \
   -H "X-User-ID: invalid-test-user" -v
@@ -112,12 +123,14 @@ curl -X POST https://whatismydelta.com/api/ps101/extract-context \
 ```
 
 ### Test 4: Health Check
+
 ```bash
 curl https://whatismydelta.com/health
 # Expected: HTTP 200 with {"ok": true}
 ```
 
 ### Test 5: Endpoint Routing
+
 ```bash
 curl -X OPTIONS https://whatismydelta.com/api/ps101/extract-context -v
 # Expected: HTTP 200 with CORS headers including "x-user-id"
@@ -130,20 +143,24 @@ curl -X OPTIONS https://whatismydelta.com/api/ps101/extract-context -v
 ### Common Issues & Solutions
 
 **Issue**: Build fails with "Module not found"
+
 - **Solution**: Check requirements.txt includes all dependencies
 - **Check**: `anthropic`, `psycopg2-binary`, `pydantic`, `fastapi`
 
 **Issue**: App crashes on startup
+
 - **Solution**: Check Railway logs for Python exceptions
 - **Likely cause**: Import error in api/ps101.py
 - **Action**: Verify api/storage.py exports `get_conn`, `get_user_by_id`
 
 **Issue**: Schema version still shows "v1"
+
 - **Solution**: Check if Railway is using correct branch
 - **Verify**: Railway settings → Source → Branch is "main"
 - **Check**: Latest commit on Railway matches 799046f
 
 **Issue**: Endpoint returns 404
+
 - **Solution**: Verify router integration in api/index.py
 - **Check line 178**: `app.include_router(ps101_router)`
 - **Check line 104**: `from .ps101 import router as ps101_router`
@@ -155,6 +172,7 @@ curl -X OPTIONS https://whatismydelta.com/api/ps101/extract-context -v
 **If deployment causes issues:**
 
 ### Immediate Rollback
+
 ```bash
 # Option 1: Via Railway dashboard
 # Go to Deployments → Previous deployment → "Redeploy"
@@ -166,6 +184,7 @@ git push origin main
 ```
 
 ### Verify Rollback
+
 ```bash
 curl https://whatismydelta.com/config | jq '.schemaVersion'
 # Should show: "v1" (reverted)

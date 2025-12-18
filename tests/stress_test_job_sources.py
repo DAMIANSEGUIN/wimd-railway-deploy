@@ -7,17 +7,20 @@ Tests all job sources with realistic user queries based on persona framework
 import json
 import sys
 import time
-import requests
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Dict, List
-from dataclasses import dataclass, asdict
+
+import requests
 
 # Base API URL
 API_BASE = "https://what-is-my-delta-site-production.up.railway.app"
 
+
 @dataclass
 class TestPersona:
     """Simplified persona for job search testing"""
+
     id: str
     name: str
     query: str  # Job search query
@@ -26,9 +29,11 @@ class TestPersona:
     maslow_level: str
     career_stage: str
 
+
 @dataclass
 class SourceTestResult:
     """Results from testing a single job source"""
+
     source_name: str
     query: str
     success: bool
@@ -36,9 +41,11 @@ class SourceTestResult:
     response_time_ms: float
     error_message: str = None
 
+
 @dataclass
 class PersonaTestResult:
     """Aggregated results for one persona's test run"""
+
     persona_id: str
     persona_name: str
     query: str
@@ -50,6 +57,7 @@ class PersonaTestResult:
     avg_response_time_ms: float
     source_results: List[SourceTestResult]
 
+
 # Test persona cohort covering diverse search patterns
 TEST_PERSONAS = [
     TestPersona(
@@ -59,7 +67,7 @@ TEST_PERSONAS = [
         location="San Francisco, CA",
         expected_sources=8,  # Most sources have tech jobs
         maslow_level="esteem",
-        career_stage="senior"
+        career_stage="senior",
     ),
     TestPersona(
         id="career_changer",
@@ -68,7 +76,7 @@ TEST_PERSONAS = [
         location="Austin, TX",
         expected_sources=6,
         maslow_level="belonging",
-        career_stage="transition"
+        career_stage="transition",
     ),
     TestPersona(
         id="remote_seeker",
@@ -77,7 +85,7 @@ TEST_PERSONAS = [
         location="",
         expected_sources=7,  # Remote-focused sources should hit
         maslow_level="safety",
-        career_stage="mid"
+        career_stage="mid",
     ),
     TestPersona(
         id="entry_level",
@@ -86,7 +94,7 @@ TEST_PERSONAS = [
         location="New York, NY",
         expected_sources=5,
         maslow_level="belonging",
-        career_stage="entry"
+        career_stage="entry",
     ),
     TestPersona(
         id="specialized",
@@ -95,7 +103,7 @@ TEST_PERSONAS = [
         location="Seattle, WA",
         expected_sources=6,
         maslow_level="self_actualization",
-        career_stage="senior"
+        career_stage="senior",
     ),
     TestPersona(
         id="underemployed",
@@ -104,7 +112,7 @@ TEST_PERSONAS = [
         location="Chicago, IL",
         expected_sources=4,
         maslow_level="survival",
-        career_stage="entry"
+        career_stage="entry",
     ),
     TestPersona(
         id="returning",
@@ -113,7 +121,7 @@ TEST_PERSONAS = [
         location="Denver, CO",
         expected_sources=5,
         maslow_level="safety",
-        career_stage="returning"
+        career_stage="returning",
     ),
     TestPersona(
         id="tech_specialist",
@@ -122,18 +130,16 @@ TEST_PERSONAS = [
         location="Remote",
         expected_sources=6,
         maslow_level="esteem",
-        career_stage="senior"
+        career_stage="senior",
     ),
 ]
+
 
 def test_job_search_endpoint(query: str, location: str = None, limit: int = 5) -> Dict:
     """Test the /jobs/search endpoint with persona query"""
 
     url = f"{API_BASE}/jobs/search"
-    params = {
-        "query": query,
-        "limit": limit
-    }
+    params = {"query": query, "limit": limit}
 
     if location:
         params["location"] = location
@@ -149,21 +155,18 @@ def test_job_search_endpoint(query: str, location: str = None, limit: int = 5) -
                 "success": True,
                 "jobs": data.get("jobs", []),
                 "sources_used": data.get("sources_used", []),
-                "response_time_ms": response_time_ms
+                "response_time_ms": response_time_ms,
             }
         else:
             return {
                 "success": False,
                 "error": f"HTTP {response.status_code}: {response.text}",
-                "response_time_ms": response_time_ms
+                "response_time_ms": response_time_ms,
             }
 
     except requests.RequestException as e:
-        return {
-            "success": False,
-            "error": f"Request failed: {str(e)}",
-            "response_time_ms": 0
-        }
+        return {"success": False, "error": f"Request failed: {e!s}", "response_time_ms": 0}
+
 
 def test_persona(persona: TestPersona) -> PersonaTestResult:
     """Run complete job search test for one persona"""
@@ -186,7 +189,7 @@ def test_persona(persona: TestPersona) -> PersonaTestResult:
             sources_failed=0,
             total_jobs_found=0,
             avg_response_time_ms=result["response_time_ms"],
-            source_results=[]
+            source_results=[],
         )
 
     jobs = result["jobs"]
@@ -201,13 +204,15 @@ def test_persona(persona: TestPersona) -> PersonaTestResult:
 
     source_results = []
     for source, count in source_job_counts.items():
-        source_results.append(SourceTestResult(
-            source_name=source,
-            query=persona.query,
-            success=True,
-            jobs_returned=count,
-            response_time_ms=response_time
-        ))
+        source_results.append(
+            SourceTestResult(
+                source_name=source,
+                query=persona.query,
+                success=True,
+                jobs_returned=count,
+                response_time_ms=response_time,
+            )
+        )
 
     total_jobs = len(jobs)
     sources_succeeded = len(source_job_counts)
@@ -229,8 +234,9 @@ def test_persona(persona: TestPersona) -> PersonaTestResult:
         sources_failed=12 - sources_succeeded,
         total_jobs_found=total_jobs,
         avg_response_time_ms=response_time,
-        source_results=source_results
+        source_results=source_results,
     )
+
 
 def run_full_stress_test() -> Dict:
     """Run stress test with all personas"""
@@ -284,10 +290,12 @@ def run_full_stress_test() -> Dict:
                 source_performance[source_result.source_name] = {
                     "queries_served": 0,
                     "total_jobs": 0,
-                    "success_rate": 0.0
+                    "success_rate": 0.0,
                 }
             source_performance[source_result.source_name]["queries_served"] += 1
-            source_performance[source_result.source_name]["total_jobs"] += source_result.jobs_returned
+            source_performance[source_result.source_name][
+                "total_jobs"
+            ] += source_result.jobs_returned
 
     # Calculate success rates
     for source, stats in source_performance.items():
@@ -297,15 +305,19 @@ def run_full_stress_test() -> Dict:
     print(f"📈 Avg Sources per Query: {avg_sources_per_query:.1f}")
     print(f"⏱️  Avg Response Time: {avg_response_time:.0f}ms")
 
-    print(f"\n📊 Source Performance:")
+    print("\n📊 Source Performance:")
     print(f"{'Source':<20} {'Queries':<10} {'Jobs':<10} {'Success Rate':<15}")
     print("─" * 60)
 
-    for source, stats in sorted(source_performance.items(), key=lambda x: x[1]["total_jobs"], reverse=True):
-        print(f"{source:<20} {stats['queries_served']:<10} {stats['total_jobs']:<10} {stats['success_rate']:.1f}%")
+    for source, stats in sorted(
+        source_performance.items(), key=lambda x: x[1]["total_jobs"], reverse=True
+    ):
+        print(
+            f"{source:<20} {stats['queries_served']:<10} {stats['total_jobs']:<10} {stats['success_rate']:.1f}%"
+        )
 
     # Identify issues
-    print(f"\n⚠️  Issues Detected:")
+    print("\n⚠️  Issues Detected:")
     issues_found = False
 
     for result in persona_results:
@@ -325,24 +337,25 @@ def run_full_stress_test() -> Dict:
             "test_timestamp": datetime.now().isoformat(),
             "api_base": API_BASE,
             "total_personas_tested": len(TEST_PERSONAS),
-            "total_jobs_found": total_jobs_found
+            "total_jobs_found": total_jobs_found,
         },
         "summary": {
             "avg_sources_per_query": avg_sources_per_query,
             "avg_response_time_ms": avg_response_time,
-            "source_performance": source_performance
+            "source_performance": source_performance,
         },
-        "persona_results": [asdict(r) for r in persona_results]
+        "persona_results": [asdict(r) for r in persona_results],
     }
 
     filename = f"stress_test_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         json.dump(export_data, f, indent=2)
 
     print(f"\n💾 Results exported to: {filename}")
     print("=" * 80)
 
     return export_data
+
 
 if __name__ == "__main__":
     results = run_full_stress_test()

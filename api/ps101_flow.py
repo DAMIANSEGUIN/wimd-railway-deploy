@@ -4,8 +4,8 @@
 Includes tangent detection and gentle redirection to keep users engaged.
 """
 
-from typing import Dict, Any, Optional, List
 from datetime import datetime
+from typing import Any, Dict, Optional
 
 # PS101 10-Step Guided Sequence
 PS101_STEPS = [
@@ -18,9 +18,18 @@ PS101_STEPS = [
             "Reduce this to a simple problem statement",
             "If you were to wake up tomorrow and this problem was solved, what would be different? (Miracle Question)",
             "What is the 'delta' or gap between your current situation and your desired state?",
-            "How would solving this problem align with your long-term goals or values?"
+            "How would solving this problem align with your long-term goals or values?",
         ],
-        "keywords": ["challenge", "problem", "facing", "delta", "gap", "goals", "values", "miracle"]
+        "keywords": [
+            "challenge",
+            "problem",
+            "facing",
+            "delta",
+            "gap",
+            "goals",
+            "values",
+            "miracle",
+        ],
     },
     {
         "step": 2,
@@ -29,9 +38,18 @@ PS101_STEPS = [
             "Describe your current situation in detail. What factors are contributing to the problem?",
             "What attempts have you made so far to address this issue? What were the outcomes?",
             "Are there any patterns or recurring themes you've noticed related to this problem?",
-            "How is this problem affecting different areas of your life (e.g., career, relationships, personal growth)?"
+            "How is this problem affecting different areas of your life (e.g., career, relationships, personal growth)?",
         ],
-        "keywords": ["situation", "factors", "contributing", "attempts", "outcomes", "patterns", "themes", "affecting"]
+        "keywords": [
+            "situation",
+            "factors",
+            "contributing",
+            "attempts",
+            "outcomes",
+            "patterns",
+            "themes",
+            "affecting",
+        ],
     },
     {
         "step": 3,
@@ -40,9 +58,18 @@ PS101_STEPS = [
             "What do you believe are the underlying causes of this problem?",
             "Are there any assumptions you're making about the problem or its causes?",
             "How might your own beliefs, habits, or past experiences be contributing to the situation?",
-            "If you were to view this problem from an outsider's perspective, what insights might you gain?"
+            "If you were to view this problem from an outsider's perspective, what insights might you gain?",
         ],
-        "keywords": ["causes", "underlying", "assumptions", "beliefs", "habits", "experiences", "perspective", "insights"]
+        "keywords": [
+            "causes",
+            "underlying",
+            "assumptions",
+            "beliefs",
+            "habits",
+            "experiences",
+            "perspective",
+            "insights",
+        ],
     },
     {
         "step": 4,
@@ -51,9 +78,19 @@ PS101_STEPS = [
             "On a scale of 1-10, how confident do you feel in your ability to solve this problem? Why?",
             "What past experiences or skills can you draw upon to address this challenge?",
             "How might your perception of your own capabilities be influencing your approach to this problem?",
-            "What small wins or successes have you had in the past that you can build upon?"
+            "What small wins or successes have you had in the past that you can build upon?",
         ],
-        "keywords": ["confident", "scale", "1-10", "ability", "skills", "experiences", "capabilities", "wins", "successes"]
+        "keywords": [
+            "confident",
+            "scale",
+            "1-10",
+            "ability",
+            "skills",
+            "experiences",
+            "capabilities",
+            "wins",
+            "successes",
+        ],
     },
     {
         "step": 5,
@@ -62,9 +99,18 @@ PS101_STEPS = [
             "List at least five potential solutions to your problem, no matter how unconventional they may seem.",
             "For each solution, what are the potential benefits and drawbacks?",
             "Which solution feels most aligned with your values and long-term goals?",
-            "How might you combine elements from different solutions to create a more comprehensive approach?"
+            "How might you combine elements from different solutions to create a more comprehensive approach?",
         ],
-        "keywords": ["solutions", "potential", "five", "benefits", "drawbacks", "aligned", "combine", "approach"]
+        "keywords": [
+            "solutions",
+            "potential",
+            "five",
+            "benefits",
+            "drawbacks",
+            "aligned",
+            "combine",
+            "approach",
+        ],
     },
     {
         "step": 6,
@@ -73,9 +119,18 @@ PS101_STEPS = [
             "Based on your chosen solution(s), what small, low-risk experiment could you conduct to test its effectiveness?",
             "What specific, measurable outcome would indicate that your experiment was successful?",
             "What resources or support might you need to carry out this experiment?",
-            "How long will you run this experiment before evaluating its results?"
+            "How long will you run this experiment before evaluating its results?",
         ],
-        "keywords": ["experiment", "test", "low-risk", "measurable", "outcome", "resources", "support", "evaluate"]
+        "keywords": [
+            "experiment",
+            "test",
+            "low-risk",
+            "measurable",
+            "outcome",
+            "resources",
+            "support",
+            "evaluate",
+        ],
     },
     {
         "step": 7,
@@ -84,9 +139,18 @@ PS101_STEPS = [
             "What external factors (e.g., time, resources, other people) might hinder your progress?",
             "What internal obstacles (e.g., self-doubt, fear, lack of knowledge) do you anticipate facing?",
             "For each obstacle identified, brainstorm at least one strategy to overcome or mitigate it.",
-            "How can you reframe these obstacles as opportunities for growth or learning?"
+            "How can you reframe these obstacles as opportunities for growth or learning?",
         ],
-        "keywords": ["obstacles", "factors", "hinder", "self-doubt", "fear", "strategy", "overcome", "opportunities"]
+        "keywords": [
+            "obstacles",
+            "factors",
+            "hinder",
+            "self-doubt",
+            "fear",
+            "strategy",
+            "overcome",
+            "opportunities",
+        ],
     },
     {
         "step": 8,
@@ -95,9 +159,18 @@ PS101_STEPS = [
             "What specific steps will you take to implement your chosen experiment?",
             "How will you measure and track your progress throughout the experiment?",
             "What milestones can you set to celebrate small wins along the way?",
-            "Who can you enlist to provide support or accountability during this process?"
+            "Who can you enlist to provide support or accountability during this process?",
         ],
-        "keywords": ["steps", "implement", "measure", "track", "milestones", "celebrate", "accountability", "support"]
+        "keywords": [
+            "steps",
+            "implement",
+            "measure",
+            "track",
+            "milestones",
+            "celebrate",
+            "accountability",
+            "support",
+        ],
     },
     {
         "step": 9,
@@ -106,9 +179,18 @@ PS101_STEPS = [
             "After conducting your experiment, what were the results? What did you learn?",
             "How has this experience affected your confidence in problem-solving?",
             "Based on what you've learned, what adjustments would you make to your approach?",
-            "What new experiments or actions will you take based on these insights?"
+            "What new experiments or actions will you take based on these insights?",
         ],
-        "keywords": ["results", "learned", "experience", "confidence", "adjustments", "approach", "insights", "actions"]
+        "keywords": [
+            "results",
+            "learned",
+            "experience",
+            "confidence",
+            "adjustments",
+            "approach",
+            "insights",
+            "actions",
+        ],
     },
     {
         "step": 10,
@@ -117,10 +199,20 @@ PS101_STEPS = [
             "Reflecting on this problem-solving process, what new skills or knowledge have you gained?",
             "How can you apply what you've learned to future challenges or goals?",
             "What strategies will you use to maintain momentum and continue building your problem-solving abilities?",
-            "How has this experience changed your perception of your own capabilities?"
+            "How has this experience changed your perception of your own capabilities?",
         ],
-        "keywords": ["skills", "knowledge", "gained", "apply", "future", "strategies", "momentum", "perception", "capabilities"]
-    }
+        "keywords": [
+            "skills",
+            "knowledge",
+            "gained",
+            "apply",
+            "future",
+            "strategies",
+            "momentum",
+            "perception",
+            "capabilities",
+        ],
+    },
 ]
 
 
@@ -170,7 +262,9 @@ def get_redirect_message(step_number: int) -> str:
         return "Are you ready to resume with the clarifying questions?"
 
     first_prompt = step_data["prompts"][0]
-    return f"Are you ready to resume with the clarifying questions?\n\nLet's return to: {first_prompt}"
+    return (
+        f"Are you ready to resume with the clarifying questions?\n\nLet's return to: {first_prompt}"
+    )
 
 
 def format_step_for_user(step: Dict[str, Any], prompt_index: int = 0) -> str:
@@ -200,17 +294,15 @@ def create_ps101_session_data() -> Dict[str, Any]:
         "ps101_prompt_index": 0,  # Track which prompt within current step
         "ps101_started_at": datetime.utcnow().isoformat(),
         "ps101_responses": [],
-        "ps101_tangent_count": 0  # Track tangents per step
+        "ps101_tangent_count": 0,  # Track tangents per step
     }
 
 
 def record_ps101_response(session_data: Dict[str, Any], step: int, response: str) -> Dict[str, Any]:
     """Record user's response to a PS101 step"""
-    session_data["ps101_responses"].append({
-        "step": step,
-        "response": response,
-        "timestamp": datetime.utcnow().isoformat()
-    })
+    session_data["ps101_responses"].append(
+        {"step": step, "response": response, "timestamp": datetime.utcnow().isoformat()}
+    )
     return session_data
 
 
@@ -290,4 +382,6 @@ Your responses have been saved. You can now:
 - Design new experiments based on what you've learned
 
 What would you like to do next?"""
+
+
 # Cache bust: 1760083676_ps101_fixes

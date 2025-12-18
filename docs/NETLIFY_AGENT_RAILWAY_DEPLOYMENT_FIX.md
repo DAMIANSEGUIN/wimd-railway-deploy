@@ -1,8 +1,8 @@
 # Railway Deployment Fix - For Netlify Agent Runners
 
-**Date:** 2025-11-01  
-**Issue:** Railway deployment failing with `python: command not found`  
-**Status:** 🔴 BLOCKING - Deployment cannot start  
+**Date:** 2025-11-01
+**Issue:** Railway deployment failing with `python: command not found`
+**Status:** 🔴 BLOCKING - Deployment cannot start
 **Priority:** HIGH
 
 ---
@@ -10,6 +10,7 @@
 ## Executive Summary
 
 Railway deployments are failing during container startup with error:
+
 ```
 /bin/bash: line 1: python: command not found
 ```
@@ -21,6 +22,7 @@ This prevents any new deployments from going live. The **old deployment is still
 ## Error Details
 
 **Deployment Logs Show:**
+
 ```
 Starting Container
 /bin/bash: line 1: python: command not found
@@ -30,8 +32,8 @@ Starting Container
 Stopping Container
 ```
 
-**Error occurs:** During container startup, before application can run  
-**Root cause:** Railway cannot find Python executable  
+**Error occurs:** During container startup, before application can run
+**Root cause:** Railway cannot find Python executable
 **Impact:** Zero successful deployments since Oct 31, 2025
 
 ---
@@ -43,6 +45,7 @@ Stopping Container
 **Problem:** Railway might be building from wrong directory (e.g., `mosaic_ui/` instead of repository root).
 
 **Action:**
+
 1. Open Railway Dashboard → Your Service → Settings → Source
 2. Check **"Root Directory"** setting
 3. **Should be:** Empty or `.` (repository root)
@@ -55,6 +58,7 @@ Stopping Container
 ### Step 2: Verify Repository Structure
 
 **Check that these files exist in repository root:**
+
 ```
 what-is-my-delta-site/          # Railway source repository
 ├── api/                         # Python backend code
@@ -65,6 +69,7 @@ what-is-my-delta-site/          # Railway source repository
 ```
 
 **Action:**
+
 ```bash
 # Verify in Railway repository (what-is-my-delta-site)
 cd /path/to/what-is-my-delta-site
@@ -72,6 +77,7 @@ ls -la requirements.txt Procfile api/
 ```
 
 **Expected:**
+
 - ✅ `requirements.txt` exists at root
 - ✅ `Procfile` exists at root
 - ✅ `api/` directory exists with Python code
@@ -83,6 +89,7 @@ ls -la requirements.txt Procfile api/
 **Problem:** Previous attempts added `nixpacks.toml` which may be interfering with auto-detection.
 
 **Action:**
+
 ```bash
 # Check if nixpacks.toml exists
 ls -la nixpacks.toml
@@ -92,11 +99,13 @@ cat nixpacks.toml
 ```
 
 **NARs Recommendation (from 2025-10-31):**
+
 - **Remove `nixpacks.toml`** if it exists
 - **Let Railway auto-detect** Python from `requirements.txt`
 - Railway's auto-detection works better than manual nixpacks config
 
 **Fix:**
+
 ```bash
 git rm nixpacks.toml
 git commit -m "Remove nixpacks.toml - let Railway auto-detect Python"
@@ -114,6 +123,7 @@ cat Procfile
 ```
 
 **Expected content:**
+
 ```
 web: python -m uvicorn api.index:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 120
 ```
@@ -133,6 +143,7 @@ head -20 requirements.txt
 ```
 
 **Should include:**
+
 - `fastapi`
 - `gunicorn`
 - `uvicorn`
@@ -151,6 +162,7 @@ head -20 requirements.txt
    - Save changes
 
 2. **Trigger redeploy:**
+
    ```bash
    # Make trivial change to force rebuild
    echo "# $(date)" >> README.md
@@ -166,6 +178,7 @@ head -20 requirements.txt
 ### Option B: Remove nixpacks.toml (If Present)
 
 1. **Remove file:**
+
    ```bash
    git rm nixpacks.toml
    git commit -m "Remove nixpacks.toml - let Railway auto-detect"
@@ -181,6 +194,7 @@ head -20 requirements.txt
 **Problem:** Railway might be building from stale/incorrect repository state.
 
 **Check:**
+
 1. Verify Railway is connected to: `DAMIANSEGUIN/what-is-my-delta-site`
 2. Verify latest commits are present in Railway repository
 3. Force rebuild if needed (Railway dashboard → Redeploy)
@@ -189,12 +203,13 @@ head -20 requirements.txt
 
 ## What NOT To Do
 
-❌ **DON'T:** Modify `nixpacks.toml` to fix Python path  
-❌ **DON'T:** Add more buildpack configurations  
-❌ **DON'T:** Change `Procfile` to use `python3` instead of `python`  
+❌ **DON'T:** Modify `nixpacks.toml` to fix Python path
+❌ **DON'T:** Add more buildpack configurations
+❌ **DON'T:** Change `Procfile` to use `python3` instead of `python`
 ❌ **DON'T:** Guess at solutions - follow NARs diagnosis
 
 **Previous failed attempts:**
+
 - Added `nixpacks.toml` with python311 → Still failed
 - Added `python311Packages.pip` → Still failed
 - Changed to `python -m pip` → Still failed
@@ -212,6 +227,7 @@ After applying fix:
    - Should NOT see: "python: command not found"
 
 2. **Check container starts:**
+
    ```
    Starting Container
    Detected Python 3.x
@@ -220,24 +236,28 @@ After applying fix:
    ```
 
 3. **Verify health check:**
+
    ```bash
    curl https://what-is-my-delta-site-production.up.railway.app/health
    ```
+
    Should return: `{"ok": true, ...}`
 
 ---
 
 ## Context
 
-**Source Repository:** `DAMIANSEGUIN/what-is-my-delta-site`  
+**Source Repository:** `DAMIANSEGUIN/what-is-my-delta-site`
 **Working Repository:** `DAMIANSEGUIN/wimd-railway-deploy` (we push to `railway-origin`)
 
 **Git Remote:**
+
 ```bash
 railway-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 ```
 
 **Current Status:**
+
 - ✅ Old deployment: Healthy (serving requests)
 - ❌ New deployments: Failing (can't start container)
 
@@ -248,9 +268,9 @@ railway-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 
 ## Success Criteria
 
-✅ Deployment completes without "python: command not found"  
-✅ Container starts successfully  
-✅ Health endpoint returns 200  
+✅ Deployment completes without "python: command not found"
+✅ Container starts successfully
+✅ Health endpoint returns 200
 ✅ New code changes deploy successfully
 
 ---
@@ -273,12 +293,11 @@ railway-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 ## Questions?
 
 - **Repository location:** Check `railway-origin` remote in local repo
-- **Railway dashboard:** https://railway.app/dashboard
-- **Health check:** https://what-is-my-delta-site-production.up.railway.app/health
+- **Railway dashboard:** <https://railway.app/dashboard>
+- **Health check:** <https://what-is-my-delta-site-production.up.railway.app/health>
 
 ---
 
-**Created:** 2025-11-01  
-**For:** Netlify Agent Runners (Railway infrastructure fix)  
+**Created:** 2025-11-01
+**For:** Netlify Agent Runners (Railway infrastructure fix)
 **Reference:** RAILWAY_DEPLOYMENT_FACTS.md (previous diagnosis)
-

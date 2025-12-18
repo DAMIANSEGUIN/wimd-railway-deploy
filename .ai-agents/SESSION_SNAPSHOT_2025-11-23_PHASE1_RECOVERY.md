@@ -1,9 +1,10 @@
 /Users/damianseguin/homebrew/Library/Homebrew/cmd/shellenv.sh: line 18: /bin/ps: Operation not permitted
+
 # Session Snapshot – Phase 1 Recovery & Verification Hardening
 
-**Date:** 2025-11-23  
-**Agent (role):** Terminal SSE (ChatGPT in Gemini/Codex slot)  
-**Scope:** Frontend initialization, Phase 1 modularization recovery hooks, deployment verification scripts  
+**Date:** 2025-11-23
+**Agent (role):** Terminal SSE (ChatGPT in Gemini/Codex slot)
+**Scope:** Frontend initialization, Phase 1 modularization recovery hooks, deployment verification scripts
 
 ---
 
@@ -85,4 +86,3 @@
    - Do **not** enable `USE_MODULES` for production deploys until:
      - Local integration is complete.
      - New verification checks for the modules-on path pass.
-

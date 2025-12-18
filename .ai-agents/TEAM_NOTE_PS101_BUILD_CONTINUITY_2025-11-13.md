@@ -1,8 +1,10 @@
 # Team Note — PS101 Build Continuity
-**Date:** 2025-11-13  
+
+**Date:** 2025-11-13
 **Agent:** Codex (GPT-5 CLI)
 
 ## Work Completed
+
 - Pulled the latest PS101 backup context (`AI_Workspace/WIMD-Railway-Deploy-Project`, commit `913f14e`) and captured baseline snapshot `BASELINE_SNAPSHOT_20251113-085236.md`.
 - Re-ran continuity gates: `verify_critical_features.sh` (auth/PS101 checks green; prod auth fetch still warns) and `Mosaic/PS101_Continuity_Kit/check_spec_hash.sh` (hash `7795ae25`).
 - Synced `frontend/index.html` and `mosaic_ui/index.html` so Netlify and Railway now share the same PS101 UI: relative `API_BASE`, metrics lock copy, resume upload hooks, live resource links, and BUILD_ID footer (`5cf9088c…|SHA:7795ae25`).
@@ -14,11 +16,13 @@
 - Removed the temporary Web Audio chime hook from the UI (no product audio cues) and tightened knowledge-base matching (stop words + overlap threshold) to avoid irrelevant third-person responses.
 
 ## Outstanding / Needs Follow-up
+
 - **verify_critical_features warning:** Script still prints the production auth warning because the embedded curl occasionally returns `0`. Live HTML does include `authModal` (manual curl count = 19); consider adjusting the script to treat `PROD_AUTH` strings >0 even if pipefail triggers.
 - **Prompt-match fix verification:** Production matches the new 4344-line build; keep an eye on knowledge-base behaviour and update `.verification_audit.log` if additional tuning is needed.
 - **Manual QA:** No new end-to-end login / password-reset validation was executed this session. Keep the checklist item open before sign-off.
 
 ## Suggested Next Actions
+
 1. Deploy updated PS101 UI via Netlify wrapper scripts; confirm BUILD_ID and metrics gating on the live site.
 2. Re-run `verify_mosaic_ui.sh` and `verify_critical_features.sh` post-deploy; record results in `.verification_audit.log`.
 3. If warnings persist, capture the fetched HTML snapshot and attach it to `SESSION_SUMMARY_2025-11-12.md` for debugging.

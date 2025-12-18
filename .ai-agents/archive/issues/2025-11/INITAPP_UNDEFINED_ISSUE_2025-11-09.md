@@ -48,17 +48,20 @@ CURRENT CODE STRUCTURE:
 ```
 
 USER TEST RESULTS:
+
 - Typed in browser console: `typeof initApp` → "undefined"
 - Typed in browser console: `window.initApp` → "undefined"
 - Typed in browser console: `document.readyState` → "loading"
 
 WHAT WE TRIED:
+
 1. Added document.readyState check (didn't fix it)
 2. Verified code deployed correctly (curl confirms correct code on server)
 3. User did hard refresh (not a cache issue)
 4. Checked source in DevTools (user sees same code as server)
 
 CONSTRAINTS:
+
 - Must keep all code in single HTML file (no separate JS files)
 - Must use IIFE for scope isolation
 - Script tag is at END of HTML body (after all DOM elements)
@@ -68,6 +71,7 @@ QUESTION:
 Why is initApp undefined at line 4020 when it's defined at line 2017 in the same IIFE scope? Function declarations should be hoisted to the top of the scope.
 
 Please read the full diagnostic context below for additional details.
+
 ```
 
 ---
@@ -106,6 +110,7 @@ Please read the full diagnostic context below for additional details.
 ### File Structure
 
 ```
+
 mosaic_ui/index.html (single file containing):
 ├── Lines 1-1102: HTML structure + CSS
 ├── Line 1103: <script> tag starts
@@ -117,6 +122,7 @@ mosaic_ui/index.html (single file containing):
 ├── Line 4024: })(); - IIFE closes
 ├── Line 4027: </script>
 └── Line 4028: <!-- BUILD_ID footer -->
+
 ```
 
 ### Current Deployed Code (Verified)
@@ -202,7 +208,7 @@ Uncaught (in promise) TypeError: Cannot read properties of null (reading 'append
 **Action:** Used curl to check deployed code
 
 ```bash
-$ curl -s https://whatismydelta.com | sed -n '4016,4026p'
+curl -s https://whatismydelta.com | sed -n '4016,4026p'
 ```
 
 **Result:** Code matches local repository exactly
@@ -216,6 +222,7 @@ $ curl -s https://whatismydelta.com | sed -n '4016,4026p'
 ### Attempt 4: Check Document State (FOUND CLUE)
 
 **Action:** User typed in console:
+
 - `typeof initApp` → "undefined"
 - `window.initApp` → "undefined"
 - `document.readyState` → **"loading"**
@@ -229,12 +236,14 @@ $ curl -s https://whatismydelta.com | sed -n '4016,4026p'
 ### Why This Shouldn't Be Possible
 
 **JavaScript function hoisting rules:**
+
 - Function declarations are hoisted to top of their scope
 - `initApp` is declared at line 2017 inside IIFE
 - Line 4020 (reference) is also inside same IIFE
 - `initApp` should be available at line 4020
 
 **Scope analysis:**
+
 ```javascript
 (function(){ // IIFE scope starts - line 1105
 
@@ -263,15 +272,18 @@ $ curl -s https://whatismydelta.com | sed -n '4016,4026p'
 **Hypothesis:** When `addEventListener` is called, the browser tries to resolve `initApp` reference at PARSE TIME (while still reading the file), not at EVENT TIME (when event fires).
 
 **Evidence FOR:**
+
 - `document.readyState === 'loading'` means browser still parsing HTML
 - Script is at END of file (line 1103-4027 out of 4028 total)
 - Error happens synchronously, not when event fires
 
 **Evidence AGAINST:**
+
 - JavaScript should resolve function references at runtime, not parse time
 - Function hoisting happens during compilation phase
 
 **Test:** Wrap `initApp` in anonymous function to defer resolution:
+
 ```javascript
 document.addEventListener('DOMContentLoaded', function() { initApp(); }, { once: true });
 ```
@@ -281,11 +293,13 @@ document.addEventListener('DOMContentLoaded', function() { initApp(); }, { once:
 **Hypothesis:** Script starts executing while `readyState === 'loading'`, but because script is at end of HTML, by the time JavaScript runs, DOM should be ready.
 
 **Evidence FOR:**
+
 - Script tag at line 1103 of HTML (near end)
 - Most DOM elements already parsed when script runs
 - Common pattern to put scripts at end of body
 
 **Evidence AGAINST:**
+
 - User confirmed `document.readyState === 'loading'` in console
 - If DOM was ready, readyState would be 'interactive' or 'complete'
 
@@ -294,15 +308,18 @@ document.addEventListener('DOMContentLoaded', function() { initApp(); }, { once:
 **Hypothesis:** The IIFE is executing, but something is preventing `initApp` from being defined.
 
 **Possible causes:**
+
 - Syntax error before line 2017 (but no other errors shown)
 - Exception thrown before line 2017 (but no other errors shown)
 - Different scope issue we're missing
 
 **Evidence FOR:**
+
 - `typeof initApp === 'undefined'` means it was never defined
 - Should see other errors if script failed earlier
 
 **Evidence AGAINST:**
+
 - No other console errors before the initApp error
 - Browser would show parse/syntax errors first
 
@@ -311,10 +328,12 @@ document.addEventListener('DOMContentLoaded', function() { initApp(); }, { once:
 **Hypothesis:** Chrome has specific behavior with script parsing at document end.
 
 **Evidence FOR:**
+
 - User is on Chrome
 - Behavior might differ across browsers
 
 **Evidence AGAINST:**
+
 - Standard JavaScript should work consistently
 - No Chrome-specific code being used
 
@@ -325,21 +344,25 @@ document.addEventListener('DOMContentLoaded', function() { initApp(); }, { once:
 ### Solution A: Defer Reference Resolution (RECOMMENDED)
 
 **Change line 4020 from:**
+
 ```javascript
 document.addEventListener('DOMContentLoaded', initApp, { once: true });
 ```
 
 **To:**
+
 ```javascript
 document.addEventListener('DOMContentLoaded', function() { initApp(); }, { once: true });
 ```
 
 **Why this might work:**
+
 - Wraps initApp call in anonymous function
 - Reference to initApp resolved when EVENT FIRES, not when listener added
 - Gives JavaScript time to finish parsing and define initApp
 
 **Risks:**
+
 - Adds extra function call in stack
 - Should still work due to hoisting, so might not fix it
 
@@ -366,10 +389,12 @@ document.addEventListener('DOMContentLoaded', function() { initApp(); }, { once:
 ```
 
 **Why this might work:**
+
 - Eliminates any possibility of forward reference issues
 - initApp clearly defined before it's referenced
 
 **Risks:**
+
 - Requires moving 2000+ lines of code
 - Doesn't address root cause
 
@@ -388,11 +413,13 @@ document.addEventListener('DOMContentLoaded', function() { initApp(); }, { once:
 ```
 
 **Why this might work:**
+
 - `defer` ensures script runs AFTER DOM fully parsed
 - `document.readyState` would be 'interactive' or 'complete'
 - Would hit `else` block, calling initApp() directly
 
 **Risks:**
+
 - Major structural change
 - Might break other assumptions in code
 
@@ -405,11 +432,13 @@ document.addEventListener('DOMContentLoaded', function() { initApp(); }, { once:
 ```
 
 **Why this might work:**
+
 - Simplifies logic
 - Always waits for DOMContentLoaded
 - Uses function wrapper to defer initApp resolution
 
 **Risks:**
+
 - If DOMContentLoaded already fired, listener never executes
 - Defeats purpose of original fix
 
@@ -429,10 +458,12 @@ if (document.readyState === 'loading') {
 ```
 
 **Why this might work:**
+
 - Forces explicit reference through window object
 - Makes initApp available for debugging
 
 **Risks:**
+
 - Pollutes global scope (defeats purpose of IIFE)
 - Doesn't fix root cause
 
@@ -445,6 +476,7 @@ To narrow down the root cause, we need:
 ### From Browser Console
 
 1. **After page loads, type these commands:**
+
    ```javascript
    // Check if IIFE executed at all
    typeof $
@@ -462,6 +494,7 @@ To narrow down the root cause, we need:
    - Look for exceptions in earlier code
 
 3. **Check execution timing:**
+
    ```javascript
    // In console immediately after page load
    document.readyState  // Should be 'loading', 'interactive', or 'complete'
@@ -481,6 +514,7 @@ To narrow down the root cause, we need:
 2. **Set breakpoint at line 4020** (addEventListener line)
    - Reload page
    - When breakpoint hits, check console:
+
      ```javascript
      typeof initApp  // Should be 'function' if hoisted properly
      ```
@@ -528,12 +562,14 @@ To narrow down the root cause, we need:
 - **Business Impact:** Site completely non-functional
 
 **Broken features:**
+
 - ❌ Cannot log in or register
 - ❌ Cannot use chat functionality
 - ❌ Cannot access PS101 framework
 - ❌ Cannot interact with any features
 
 **Working features:**
+
 - ✅ Page loads and displays static content
 - ✅ Help dialog opens (but doesn't work)
 
@@ -551,8 +587,8 @@ To narrow down the root cause, we need:
 
 - **Commit:** 21144cd9d74e20b69f3c1c699f67670ac1659c4d
 - **Deploy ID:** 6910f394e882c4ad31fac09b
-- **Production URL:** https://whatismydelta.com
-- **Unique Deploy URL:** https://6910f394e882c4ad31fac09b--resonant-crostata-90b706.netlify.app
+- **Production URL:** <https://whatismydelta.com>
+- **Unique Deploy URL:** <https://6910f394e882c4ad31fac09b--resonant-crostata-90b706.netlify.app>
 
 ### Recent Commits
 

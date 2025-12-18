@@ -1,4 +1,5 @@
 # AI SESSION RESUME STATE
+
 **Last Updated:** 2025-11-27T21:00:00Z
 **Last Agent:** Codex (terminal) via Claude/Gemini handoff
 **Status:** PARTIALLY RESOLVED – Login/Chat stable, PS101 still blocked (hoisting)
@@ -8,17 +9,20 @@
 ## QUICK START (Copy this to new AI)
 
 **For Gemini:**
+
 ```
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 Read .ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md then read AI_RESUME_STATE.md
 ```
 
 **For Claude:**
+
 ```
 Read .ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md then read AI_RESUME_STATE.md
 ```
 
 **Detailed Steps (if needed):**
+
 1. (Gemini only) `cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
 2. Read .ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md (PRIMARY FOCUS)
 3. Read AI_RESUME_STATE.md for current bugs and backup location
@@ -39,6 +43,7 @@ Read .ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md then read AI_RESUME_STAT
 5. ❌ **Completion screen says "Next Prompt"** instead of completion message
 
 **Actual Root Cause (Found by Codex):**
+
 - mosaic_ui/index.html was MISSING core PS101 objects:
   - PS101_STEPS (step definitions)
   - PS101State (state management)
@@ -47,6 +52,7 @@ Read .ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md then read AI_RESUME_STAT
 - Previous "scope fix" attempt had accidentally removed critical code
 
 **Resolution:**
+
 - ✅ Restored mosaic_ui/index.html from `backups/pre-scope-fix_20251126_233100Z/`
 - ✅ Verified PS101 objects present (lines 3420, 3545, 3557)
 - ✅ Created post-restore backup at `backups/post-restore_20251127_171057Z/`
@@ -61,11 +67,13 @@ Read .ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md then read AI_RESUME_STAT
 **Why:** After restoring mosaic_ui/index.html with working PS101 objects
 
 **Files:**
+
 - mosaic_ui_index.html - Restored from pre-scope-fix backup, has PS101 objects
 - frontend_index.html - Original (for comparison)
 - BACKUP_MANIFEST.md - Full details
 
 **To Restore:**
+
 ```bash
 cp backups/post-restore_20251127_171057Z/mosaic_ui_index.html mosaic_ui/index.html
 ```
@@ -77,13 +85,15 @@ cp backups/post-restore_20251127_171057Z/mosaic_ui_index.html mosaic_ui/index.ht
 ## CURRENT STATE
 
 **Modified Files:**
+
 - mosaic_ui/index.html - Multiple bugs during testing
 - AI_RESUME_STATE.md - This file
 - .ai-agents/CURRENT_BACKUP_REFERENCE.md - Updated
 
 **Server Status:**
+
 - Local server running on port 3000 (PID unknown - check with `ps aux | grep local_dev_server`)
-- User testing at http://localhost:3000/
+- User testing at <http://localhost:3000/>
 
 **Branch:** phase1-incomplete
 
@@ -107,6 +117,7 @@ cp backups/post-restore_20251127_171057Z/mosaic_ui_index.html mosaic_ui/index.ht
 ## USER FEEDBACK
 
 **Testing Progress:**
+
 - User tested through Step 9 of PS101
 - Found bugs incrementally during testing
 - Requested backup before more changes
@@ -119,6 +130,7 @@ cp backups/post-restore_20251127_171057Z/mosaic_ui_index.html mosaic_ui/index.ht
 ## TECHNICAL DETAILS
 
 **Function Scope Issue:**
+
 ```javascript
 // Lines 2531-2671: Helper functions (currently at global scope? needs verification)
 function updateCharCount(current, minRequired, max) { ... }
@@ -137,6 +149,7 @@ function renderCurrentStep() {
 ```
 
 **Need to verify:**
+
 - Are helper functions truly at global scope?
 - Can renderCurrentStep() access them?
 - If not, attach to window object or restructure
@@ -146,9 +159,11 @@ function renderCurrentStep() {
 ## HANDOFF DOCUMENTS
 
 **🎯 PRIMARY GUIDANCE (READ FIRST):**
+
 - `.ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md` - **Gemini's architectural direction**
 
 **Context & Background:**
+
 - `.ai-agents/FOR_GEMINI_PS101_TESTING_BUGS_2025-11-26.md` - All bugs found during testing
 - `.ai-agents/FOR_GEMINI_PS101_HOISTING_ISSUE_2025-11-26.md` - Original hoisting issue
 - `.ai-agents/CURRENT_BACKUP_REFERENCE.md` - Points to latest backup

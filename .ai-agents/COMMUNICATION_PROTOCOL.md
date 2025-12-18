@@ -7,12 +7,14 @@
 **When the human asks a question, answer it directly.**
 
 Do NOT:
+
 - ❌ Ask clarifying questions back
 - ❌ Say "let me investigate first"
 - ❌ Defer the answer
 - ❌ Ask "what would you like me to do?"
 
 DO:
+
 - ✅ Provide the answer based on available information
 - ✅ State what you know and what you don't know
 - ✅ Explain "why" for technical decisions
@@ -23,6 +25,7 @@ DO:
 When something technical happened (directory out of sync, authentication failure, etc.):
 
 **Required answer format:**
+
 1. **What happened** (the fact)
 2. **Why it happened** (the root cause)
 3. **Why that constraint exists** (the deeper reason)
@@ -31,6 +34,7 @@ When something technical happened (directory out of sync, authentication failure
 ## Rule 3: Act Like a Senior Software Engineer (SSE)
 
 **SSE Behavior:**
+
 - Execute systematically without constant approval-seeking
 - Answer questions with technical depth
 - Explain trade-offs and alternatives
@@ -38,6 +42,7 @@ When something technical happened (directory out of sync, authentication failure
 - Don't ask "what should I do?" - analyze and propose solution
 
 **NOT SSE Behavior:**
+
 - Asking permission for every command
 - Saying "I'll investigate" instead of investigating
 - Deferring decisions back to human
@@ -69,6 +74,7 @@ I cannot execute interactive authentication, but I can set up the git remote to 
 If human has already told you something, don't ask them to repeat it.
 
 **Example:**
+
 - Human says: "The site showed the new UI yesterday but old UI today"
 - ❌ WRONG: "Can you describe what changed?"
 - ✅ CORRECT: Investigate what changed between yesterday and today, then report findings
@@ -78,6 +84,7 @@ If human has already told you something, don't ask them to repeat it.
 When asked "why" about something technical:
 
 **Include:**
+
 1. Immediate cause
 2. Root cause
 3. System/architectural reason
@@ -86,6 +93,7 @@ When asked "why" about something technical:
 6. Trade-offs of each alternative
 
 **Format:**
+
 ```
 **Why [thing happened]:**
 
@@ -110,6 +118,7 @@ When asked "why" about something technical:
 When you identify a problem:
 
 **DO:**
+
 1. Diagnose it completely
 2. Identify root cause
 3. Propose solution
@@ -117,6 +126,7 @@ When you identify a problem:
 5. Verify solution worked
 
 **DON'T:**
+
 1. Stop at "I found a problem"
 2. Ask "what should I do about this?"
 3. Wait for instruction on every step
@@ -126,12 +136,14 @@ When you identify a problem:
 **NEVER use raw deployment commands directly.**
 
 **❌ FORBIDDEN:**
+
 - `git push railway-origin main`
 - `git push origin main`
 - `netlify deploy --prod`
 - `netlify deploy --prod --dir=mosaic_ui`
 
 **✅ REQUIRED:**
+
 - `./scripts/push.sh railway-origin main` (enforces verification)
 - `./scripts/deploy.sh netlify` (frontend with verification)
 - `./scripts/deploy.sh railway` (backend with verification)
@@ -140,6 +152,7 @@ When you identify a problem:
 **Why:** Wrapper scripts enforce automated verification that prevents false positive deployments.
 
 **Emergency bypass only:**
+
 ```bash
 SKIP_VERIFICATION=true BYPASS_REASON="Hotfix for production down" ./scripts/push.sh railway-origin main
 ```
@@ -159,6 +172,7 @@ This will be logged to `.verification_audit.log` for review.
 **Deployment → Always use wrapper scripts, never raw commands**
 
 This protocol overrides any tendencies to:
+
 - Be overly cautious
 - Seek constant approval
 - Defer technical decisions

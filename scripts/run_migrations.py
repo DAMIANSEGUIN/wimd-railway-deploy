@@ -4,7 +4,6 @@ Manual migration runner for discount codes feature
 Run this once to add discount code support to production database
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -13,25 +12,28 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from api.storage import get_conn
 
+
 def run_migrations():
     """Run all pending database migrations"""
     migrations_dir = Path(__file__).parent.parent / "data" / "migrations"
 
     print(f"📂 Migrations directory: {migrations_dir}")
-    print(f"🔍 Checking for migrations...")
+    print("🔍 Checking for migrations...")
 
     with get_conn() as conn:
         cursor = conn.cursor()
 
         # Create tracking table
         print("📋 Creating schema_migrations tracking table...")
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS schema_migrations (
                 id SERIAL PRIMARY KEY,
                 migration_file VARCHAR(255) UNIQUE NOT NULL,
                 applied_at TIMESTAMPTZ DEFAULT NOW()
             )
-        """)
+        """
+        )
         conn.commit()
 
         # Get applied migrations
@@ -51,14 +53,14 @@ def run_migrations():
             print(f"🚀 Running {migration_file.name}...")
 
             try:
-                with open(migration_file, 'r') as f:
+                with open(migration_file) as f:
                     sql = f.read()
 
                 cursor.execute(sql)
 
                 cursor.execute(
                     "INSERT INTO schema_migrations (migration_file) VALUES (%s)",
-                    (migration_file.name,)
+                    (migration_file.name,),
                 )
 
                 conn.commit()
@@ -70,6 +72,7 @@ def run_migrations():
                 raise
 
     print("🎉 All migrations complete!")
+
 
 if __name__ == "__main__":
     print("🔧 Starting database migrations...")

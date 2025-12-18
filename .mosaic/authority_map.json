@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "repo": {
+    "slug": "DAMIANSEGUIN/what-is-my-delta-site",
+    "origin_ssh": "https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git",
+    "deploy_branch": "main"
+  },
+  "services": [
+    {
+      "name": "mosaic-frontend",
+      "platform": "railway",
+      "railway_project": "wimd-career-coaching",
+      "railway_service": "mosaic-frontend",
+      "runtime_base_url": {
+        "mode": "template",
+        "template": "https://${RAILWAY_STATIC_URL}",
+        "required_env": ["RAILWAY_STATIC_URL"]
+      },
+      "runtime_version_path": "/__version"
+    },
+    {
+      "name": "mosaic-backend",
+      "platform": "railway",
+      "railway_project": "wimd-career-coaching",
+      "railway_service": "mosaic-backend",
+      "runtime_base_url": {
+        "mode": "template",
+        "template": "https://${RAILWAY_STATIC_URL}",
+        "required_env": ["RAILWAY_STATIC_URL"]
+      },
+      "runtime_version_path": "/__version"
+    }
+  ]
+}

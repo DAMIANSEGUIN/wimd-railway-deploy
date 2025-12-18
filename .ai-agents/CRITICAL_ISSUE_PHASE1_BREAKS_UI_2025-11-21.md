@@ -9,6 +9,7 @@
 ## Problem
 
 Phase 1 modularization successfully extracts modules but **breaks the UI**:
+
 - ❌ No login button visible
 - ❌ Chat does not work
 - ❌ "Start with questions" does not work
@@ -19,17 +20,20 @@ Phase 1 modularization successfully extracts modules but **breaks the UI**:
 
 **The IIFE code in index.html doesn't wait for or call the ES6 modules.**
 
-### What Happens:
+### What Happens
+
 1. `<script type="module" src="./js/main.js">` loads
 2. Modules initialize (`initModules()` runs)
 3. IIFE code executes immediately
 4. IIFE expects its own duplicate functions (not yet replaced with module imports)
 5. UI initialization fails silently
 
-### The Gap:
+### The Gap
+
 The handoff document stated: **"Modules NOT yet integrated with IIFE - extracted code duplicated"**
 
 This means:
+
 - Modules exist and work ✅
 - IIFE has duplicate code ✅
 - But IIFE doesn't call the modules ❌
@@ -38,15 +42,19 @@ This means:
 ## Evidence
 
 ### CodexCapture: 2025-11-21T21-53-08-528Z
+
 **Network:**
+
 - main.js: 200 OK
 - state.js: 200 OK
 - api.js: 200 OK
 
 **Console:**
+
 - "Console buffer not instrumented" (no errors captured)
 
 **Screenshot:**
+
 - Page visible
 - No login button
 - Chat input present but non-functional
@@ -62,6 +70,7 @@ This means:
 ## Why This Happened
 
 Phase 1 scope was:
+
 1. ✅ Extract state.js + api.js
 2. ✅ Write unit tests (31 passing)
 3. ✅ Verify no circular dependencies
@@ -74,6 +83,7 @@ This violates the principle: "Don't deploy code that breaks existing functionali
 ## Required Fix
 
 ### Option 1: Rollback (RECOMMENDED)
+
 ```bash
 # Revert to before Phase 1
 git revert 1c6c013
@@ -86,7 +96,9 @@ git checkout -b phase1-wip 1c6c013
 **Result:** Production works again, Phase 1 saved for future
 
 ### Option 2: Emergency Integration (RISKY)
+
 Update IIFE to call modules:
+
 1. Make IIFE wait for `window.__WIMD_MODULES__`
 2. Call `initModules()` before IIFE runs
 3. Replace IIFE functions with module imports
@@ -94,7 +106,9 @@ Update IIFE to call modules:
 **Risk:** May introduce new bugs, needs extensive testing
 
 ### Option 3: Hybrid Approach
+
 Keep modules loaded but have them do nothing:
+
 1. Comment out module initialization in main.js
 2. Let IIFE run as before
 3. Test Phase 2 integration offline before deploying
@@ -102,6 +116,7 @@ Keep modules loaded but have them do nothing:
 ## Lesson Learned
 
 **Phase 1 should have been:**
+
 1. Extract modules ✅
 2. Test in isolation ✅
 3. **Integrate with IIFE** ❌ (skipped)
@@ -112,7 +127,8 @@ Keep modules loaded but have them do nothing:
 
 ## Team Notes
 
-### For Gemini:
+### For Gemini
+
 Your risk analysis was correct: "Initialization Sequence Brittleness"
 
 Quote from your document:
@@ -120,13 +136,16 @@ Quote from your document:
 
 We preserved the init sequence in the modules, but didn't make the IIFE call them.
 
-### For Codex:
+### For Codex
+
 The function mapping was accurate. The issue isn't what was extracted, but that the extraction wasn't integrated.
 
 The IIFE still has its duplicate code and runs it, not realizing modules exist.
 
-### For Claude Code (me):
+### For Claude Code (me)
+
 I should have:
+
 1. Made IIFE wait for modules before deploying
 2. Or clearly stated "DO NOT DEPLOY - integration incomplete"
 3. Or created a feature flag to disable modules
@@ -136,12 +155,14 @@ I committed code that passed tests but broke production functionality.
 ## Recommended Action Plan
 
 1. **Immediate (next 5 min):**
+
    ```bash
    git revert 1c6c013
    git push origin main
    ```
 
 2. **Save work (next 5 min):**
+
    ```bash
    git checkout -b phase1-incomplete 1c6c013
    ```
@@ -160,11 +181,13 @@ I committed code that passed tests but broke production functionality.
 ## Files for Rollback
 
 **Keep (documentation):**
+
 - All `.ai-agents/*.md` files
 - `LOCAL_DEV_QUICKSTART.md`
 - `local_dev_server.py`
 
 **Revert (code):**
+
 - `mosaic_ui/js/state.js`
 - `mosaic_ui/js/api.js`
 - `mosaic_ui/js/main.js`
@@ -176,6 +199,7 @@ I committed code that passed tests but broke production functionality.
 ## Prevention for Future
 
 **Before deploying extracted code:**
+
 - [ ] Extract module
 - [ ] Write tests
 - [ ] **Integrate with existing code**
@@ -184,6 +208,7 @@ I committed code that passed tests but broke production functionality.
 - [ ] THEN deploy
 
 **Feature flag pattern:**
+
 ```javascript
 const USE_MODULES = false; // Set to true when integration complete
 

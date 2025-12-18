@@ -11,12 +11,14 @@
 Successfully migrated Mosaic platform from **ephemeral SQLite** to **persistent PostgreSQL**.
 
 ### Root Cause (Confirmed by NARs)
+
 - Railway uses ephemeral container filesystem
 - `railway.json` `include` directive only packages files, does NOT create persistent storage
 - SQLite database at `data/mosaic.db` was wiped on every deployment
 - All user accounts, sessions, and application state lost on each deploy
 
 ### Solution Implemented
+
 - ✅ Added `psycopg2-binary` to `requirements.txt`
 - ✅ Migrated `api/storage.py` to PostgreSQL-compatible version
 - ✅ Updated all SQL syntax (? → %s, AUTOINCREMENT → SERIAL)
@@ -29,12 +31,14 @@ Successfully migrated Mosaic platform from **ephemeral SQLite** to **persistent 
 ## Deployment Steps Completed
 
 ### Phase 1: ✅ Code Migration
+
 - Dependencies updated
 - Storage layer rewritten for PostgreSQL
 - All queries converted to PostgreSQL syntax
 - Backup of original SQLite version created
 
 ### Phase 2: ✅ Deployment
+
 - Committed to git: `2b9fbc1`
 - Pushed to railway-origin main
 - Railway rebuild triggered
@@ -43,7 +47,7 @@ Successfully migrated Mosaic platform from **ephemeral SQLite** to **persistent 
 
 **You must provision Railway PostgreSQL before the application will work:**
 
-1. Go to Railway dashboard: https://railway.app/project/5b2d701c-9d14-4d56-8836-149c0cbc8511
+1. Go to Railway dashboard: <https://railway.app/project/5b2d701c-9d14-4d56-8836-149c0cbc8511>
 2. Click "New" → "Database" → "PostgreSQL"
 3. Wait for PostgreSQL to provision (~2 minutes)
 4. Copy the `DATABASE_URL` connection string
@@ -58,18 +62,21 @@ Successfully migrated Mosaic platform from **ephemeral SQLite** to **persistent 
 ## Verification Steps (After PostgreSQL Provisioned)
 
 ### Step 1: Check Railway Build
+
 ```bash
 # Monitor Railway deployment logs
 # Should show: "Successfully built" and "Deployment successful"
 ```
 
 ### Step 2: Register Test User
-1. Go to https://whatismydelta.com
+
+1. Go to <https://whatismydelta.com>
 2. Click "Register"
-3. Create test account: test@example.com / testpass123
+3. Create test account: <test@example.com> / testpass123
 4. Verify login works
 
 ### Step 3: Trigger Deployment (Test Persistence)
+
 ```bash
 # Make trivial change to trigger rebuild
 echo "\n# PostgreSQL migration complete" >> README.md
@@ -79,13 +86,15 @@ git push railway-origin main
 ```
 
 ### Step 4: Verify User Persists
+
 1. Wait for Railway rebuild to complete (~2 minutes)
-2. Go to https://whatismydelta.com
-3. Try to login with test@example.com / testpass123
+2. Go to <https://whatismydelta.com>
+3. Try to login with <test@example.com> / testpass123
 4. **Expected:** Login succeeds (user account survived deployment)
 5. **Previous behavior:** "Invalid credentials" (user wiped)
 
 ### Step 5: Test All Flows
+
 - ✅ Registration works
 - ✅ Login works
 - ✅ Logout works
@@ -98,22 +107,26 @@ git push railway-origin main
 ## What This Fixes
 
 ### ✅ Authentication Issues
+
 - Users can now login after deployments
 - User accounts persist permanently
 - No more "Invalid credentials" after fixes deployed
 
 ### ✅ Session Management
+
 - Sessions persist across deployments
 - Users don't get logged out mid-deployment
 - Session state maintained properly
 
 ### ✅ Application State
+
 - PS101 progress saved permanently
 - Chat history persists
 - File uploads tracked correctly
 - Job matches stored reliably
 
 ### ✅ Development Workflow
+
 - Can deploy fixes without wiping test data
 - User accounts remain for testing
 - No more register-deploy-repeat cycle

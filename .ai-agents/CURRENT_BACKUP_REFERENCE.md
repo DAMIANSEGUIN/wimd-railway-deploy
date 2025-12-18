@@ -12,11 +12,13 @@
 **Reason:** Before fixing function scope issues (character counter, prompt counter not updating)
 
 **Status:**
+
 - ✅ mosaic_ui/index.html - PS101 fix applied and tested locally
 - ⏳ frontend/index.html - Auth modal fix applied, PS101 fix pending
 - ✅ local_dev_server.py - Working test server
 
 **Files:**
+
 - `mosaic_ui_index.html` - Local version with PS101 fix
 - `frontend_index.html` - Production version awaiting PS101 fix
 - `local_dev_server.py` - Test server

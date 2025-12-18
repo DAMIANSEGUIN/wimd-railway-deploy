@@ -9,11 +9,12 @@ Date: 2025-10-26
 
 ## 0) Canon & Scope
 
-**Canonical root:** `~/Mosaic/`  
-**Planning location:** `~/Mosaic/Planning/` (mirrored to `Drive:/Mosaic/Planning/`)  
+**Canonical root:** `~/Mosaic/`
+**Planning location:** `~/Mosaic/Planning/` (mirrored to `Drive:/Mosaic/Planning/`)
 **This file:** `UI_Redesign_Master_Plan_v1.0.md` — the *single* source for UI redesign scope, rules, and hand‑off to implementation.
 
 **Do first (preflight for all AIs):**
+
 1. Read `~/Mosaic/manifest.json` and confirm directories + rules.
 2. Confirm `~/Mosaic/Documentation/task_registry.json` exists.
 3. Obey `never_edit_in_place = true`; create new files/branches, archive on replace.
@@ -43,17 +44,19 @@ Date: 2025-10-26
 ## 3) Architecture & Contracts (unchanged)
 
 **APIs (read-only for UI):**
+
 - `GET /ux/state -> {state, since, reason}`
 - `POST /ux/signal -> {event, value}`
 - `GET /flags -> {guided_mode, dense_cards, reveal_helper}`
 - `GET /copy?key=… -> {text}`
 
-**States (XState):** `calm`, `focus`, `recovery`, `explore`  
-**Window:** rolling 120s (10s hop)  
-**Guards:**  
-- `STRUGGLE` if `backtrack>=3 || errors>=2 || idle>=45000`  
-- `STABLE_FOCUS` if `task_duration>=90s && errors==0`  
-- `COMPLETE→explore` when completion then `open_suggestions` ≤ 30s  
+**States (XState):** `calm`, `focus`, `recovery`, `explore`
+**Window:** rolling 120s (10s hop)
+**Guards:**
+
+- `STRUGGLE` if `backtrack>=3 || errors>=2 || idle>=45000`
+- `STABLE_FOCUS` if `task_duration>=90s && errors==0`
+- `COMPLETE→explore` when completion then `open_suggestions` ≤ 30s
 **Dwell:** min 20s between transitions
 
 ---
@@ -82,10 +85,11 @@ body[data-state="explore"]{--mx-surface-1:oklch(95% .02 230);--mx-accent:oklch(6
 
 ## 5) Channel Chooser (user‑facing)
 
-**UX:** Settings → Appearance (“Experience Mode: Standard | Beta”).  
-**Rules:**  
-- No mid‑task switches: defer until step end.  
-- Precedence: URL `?channel=` → account pref → localStorage → Unleash cohort → env default.  
+**UX:** Settings → Appearance (“Experience Mode: Standard | Beta”).
+**Rules:**
+
+- No mid‑task switches: defer until step end.
+- Precedence: URL `?channel=` → account pref → localStorage → Unleash cohort → env default.
 **Telemetry:** log `channel_resolved` and `channel_set` with `{channel, source}` and tag all subsequent events.
 
 ---
@@ -93,6 +97,7 @@ body[data-state="explore"]{--mx-surface-1:oklch(95% .02 230);--mx-accent:oklch(6
 ## 6) Deliverables (implementation package)
 
 **Files (repo paths illustrative):**
+
 ```
 /components/ChannelChooser.tsx
 /components/UxFrame.tsx
@@ -106,27 +111,28 @@ body[data-state="explore"]{--mx-surface-1:oklch(95% .02 230);--mx-accent:oklch(6
 /docs/a11y-checks.md            # focus order, contrast matrix, motion policy
 ```
 
-**Copy keys (examples):**  
+**Copy keys (examples):**
+
 - `resume_guided_intro`, `resume_focus_hint`, `recovery_breath_prompt`, `explore_suggestions_title` (each has `standard`/`guided`).
 
 ---
 
 ## 7) Acceptance Criteria (Definition of Done)
 
-- Dual-mode UI loads via Channel Chooser; selection persists and is reversible.  
-- No IA or route changes; APIs untouched.  
-- FSM fixtures pass (all states & guards) and dwell prevents flapping.  
-- Token swaps produce visual deltas without component conditionals.  
-- A11y Lighthouse ≥ 95; `prefers-reduced-motion` honored.  
-- Telemetry cleanly separates `channel` and `source`; p95 error parity with Alpha.  
+- Dual-mode UI loads via Channel Chooser; selection persists and is reversible.
+- No IA or route changes; APIs untouched.
+- FSM fixtures pass (all states & guards) and dwell prevents flapping.
+- Token swaps produce visual deltas without component conditionals.
+- A11y Lighthouse ≥ 95; `prefers-reduced-motion` honored.
+- Telemetry cleanly separates `channel` and `source`; p95 error parity with Alpha.
 - README & file paths comply with `manifest.json`; no writes outside canon.
 
 ---
 
 ## 8) File Governance & Backups
 
-- Before first commit: run `~/Mosaic/bin/mosaic_preflight.command`. Fail if manifest/registry missing.  
-- Archive any non‑canonical `README*` to `~/Mosaic/Archive/old_readmes_YYYYMMDD/`.  
+- Before first commit: run `~/Mosaic/bin/mosaic_preflight.command`. Fail if manifest/registry missing.
+- Archive any non‑canonical `README*` to `~/Mosaic/Archive/old_readmes_YYYYMMDD/`.
 - Create a dated ZIP in `~/Mosaic/Backups/` on each Beta iteration.
 
 ---
@@ -143,8 +149,8 @@ body[data-state="explore"]{--mx-surface-1:oklch(95% .02 230);--mx-accent:oklch(6
 
 ## 10) Risks & Mitigations
 
-- Token drift → lock `ux-tokens@1.0.x` snapshots  
-- State flapping → enforce 20s dwell + guard debouncing  
+- Token drift → lock `ux-tokens@1.0.x` snapshots
+- State flapping → enforce 20s dwell + guard debouncing
 - Learner fatigue → reflection frequency caps + opt‑out Beta
 
 ---

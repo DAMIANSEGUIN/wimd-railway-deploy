@@ -1,4 +1,5 @@
 # Post-Deployment Testing Plan
+
 **For**: Day 1 Blocker Fixes (Commit 799046f)
 **Date**: 2025-12-03
 **Status**: Ready for Railway deployment testing
@@ -53,10 +54,12 @@ curl -X POST https://whatismydelta.com/api/ps101/extract-context \
 ```
 
 **Expected**:
+
 - HTTP Status: `422 Unprocessable Entity`
 - Body contains: `"field required"` or similar validation error about X-User-ID
 
 **If fails**:
+
 - Check CORS headers include "x-user-id"
 - Verify router is mounted in api/index.py
 
@@ -72,10 +75,12 @@ curl -X POST https://whatismydelta.com/api/ps101/extract-context \
 ```
 
 **Expected**:
+
 - HTTP Status: `404 Not Found`
 - Body: `{"detail": "User not found"}`
 
 **If fails**:
+
 - Check get_user_by_id() is being called
 - Verify users table exists in database
 
@@ -88,10 +93,12 @@ curl https://whatismydelta.com/health | jq '.'
 ```
 
 **Expected**:
+
 - HTTP Status: `200 OK`
 - Body contains: `"ok": true`
 
 **If fails**:
+
 - Check Railway deployment logs
 - Verify all environment variables set
 
@@ -104,11 +111,13 @@ curl -X OPTIONS https://whatismydelta.com/api/ps101/extract-context -v
 ```
 
 **Expected**:
+
 - HTTP Status: `200 OK` or `204 No Content`
 - CORS headers present
 - `access-control-allow-headers` includes `x-user-id`
 
 **If fails**:
+
 - Verify router included: `app.include_router(ps101_router)`
 - Check CORS middleware updated
 
@@ -119,12 +128,14 @@ curl -X OPTIONS https://whatismydelta.com/api/ps101/extract-context -v
 ### Simulate Rate Limiting
 
 **Not easily testable without Claude API access**, but the retry logic will:
+
 - Catch `anthropic.RateLimitError` (429)
 - Retry up to 3 times with exponential backoff
 - Log warnings on each retry
 - Fail with 503 after exhausting retries
 
 **Monitor in Railway logs**:
+
 ```bash
 railway logs --follow | grep -i "retry\|rate limit"
 ```
@@ -136,11 +147,13 @@ railway logs --follow | grep -i "retry\|rate limit"
 **Cannot easily test** without mocking Claude API to delay >30s.
 
 **What happens**:
+
 - If Claude API takes >30s, `timeout=CLAUDE_API_TIMEOUT` will raise exception
 - Caught by retry logic
 - After 3 retries, returns 503 to client
 
 **Monitor in Railway logs**:
+
 ```bash
 railway logs --follow | grep -i "timeout"
 ```
@@ -161,17 +174,20 @@ railway logs --follow | grep -i "timeout"
 ## Expected Railway Logs (Error Case - if broken)
 
 **If authentication not working**:
+
 ```
 # No specific logs - client gets 422/404 correctly
 ```
 
 **If timeout not working** (would see hung requests):
+
 ```
 # Request takes >30s, no timeout error
 # Server may appear unresponsive
 ```
 
 **If retry logic broken**:
+
 ```
 ERROR: Claude API call failed: [original error]
 # Should see retry warnings first
@@ -182,18 +198,21 @@ ERROR: Claude API call failed: [original error]
 ## Deployment Checklist
 
 **Before deploying:**
+
 - ✅ All 4 fixes verified in code
 - ✅ Gemini re-review approved
 - ✅ Changes committed (799046f)
 - ✅ TEAM_PLAYBOOK.md updated
 
 **Deploy:**
+
 ```bash
 git push railway-origin phase1-incomplete:main
 # Or: git push origin main (if using GitHub integration)
 ```
 
 **After deploying (run tests above):**
+
 - ✅ Test 1: Schema version = "v2"
 - ✅ Test 2: Auth blocks missing header (422)
 - ✅ Test 3: Auth blocks invalid user (404)
@@ -201,11 +220,13 @@ git push railway-origin phase1-incomplete:main
 - ✅ Test 5: Endpoint routing works
 
 **Monitor:**
+
 ```bash
 railway logs --follow
 ```
 
 Watch for:
+
 - ✅ PostgreSQL connection successful
 - ✅ No startup errors
 - ✅ Server starts without exceptions
@@ -233,6 +254,7 @@ git push railway-origin HEAD:main --force
 ## Success Criteria
 
 **All tests must pass:**
+
 - ✅ Schema version reports "v2"
 - ✅ Missing X-User-ID header returns 422
 - ✅ Invalid user ID returns 404
@@ -240,6 +262,7 @@ git push railway-origin HEAD:main --force
 - ✅ CORS headers include "x-user-id"
 
 **Deployment successful when:**
+
 - All 5 integration tests pass
 - Railway logs show clean startup
 - No errors in first 10 minutes of deployment
@@ -249,11 +272,13 @@ git push railway-origin HEAD:main --force
 ## Notes
 
 **Why no local testing?**
+
 - Local environment has dependency conflicts (DB_PATH import, etc.)
 - Code verification + Railway testing is sufficient
 - Gemini already approved implementation
 
 **Confidence level**: HIGH
+
 - All fixes verified in source code
 - Follows existing patterns (X-User-ID auth already used)
 - Gemini re-review confirmed correctness

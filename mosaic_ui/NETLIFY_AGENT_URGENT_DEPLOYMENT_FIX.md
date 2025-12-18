@@ -1,8 +1,8 @@
 # URGENT: Netlify Deployment Configuration Fix
 
-**Date:** 2025-11-03  
-**Status:** 🔴 CRITICAL - Blocking NEW UI deployment  
-**Assigned To:** Netlify Agent Runners (NARs)  
+**Date:** 2025-11-03
+**Status:** 🔴 CRITICAL - Blocking NEW UI deployment
+**Assigned To:** Netlify Agent Runners (NARs)
 **Priority:** HIGH - User has been waiting days for this fix
 
 ---
@@ -18,6 +18,7 @@ The NEW UI (with authentication) has been merged and committed locally, but **Ne
 ## Current State
 
 ### On Origin (GitHub - What Netlify Uses)
+
 ```toml
 [build]
   base = "frontend"
@@ -25,6 +26,7 @@ The NEW UI (with authentication) has been merged and committed locally, but **Ne
 ```
 
 ### Local (Correct Configuration)
+
 ```toml
 [build]
   base = "mosaic_ui"
@@ -32,6 +34,7 @@ The NEW UI (with authentication) has been merged and committed locally, but **Ne
 ```
 
 ### Impact
+
 - Netlify is serving from root directory (`.`)
 - No `index.html` exists in root
 - Netlify may be serving cached/stale files or failing silently
@@ -42,6 +45,7 @@ The NEW UI (with authentication) has been merged and committed locally, but **Ne
 ## Solution
 
 ### Step 1: Push the Fix Commit
+
 The fix commit `c336607` exists locally and needs to be pushed:
 
 ```bash
@@ -50,6 +54,7 @@ git push origin main
 ```
 
 ### Step 2: Verify Push Success
+
 After push, verify the configuration is updated on origin:
 
 ```bash
@@ -57,6 +62,7 @@ git show origin/main:netlify.toml | grep -A 2 "\[build\]"
 ```
 
 Should show:
+
 ```toml
 [build]
   base = "mosaic_ui"
@@ -64,6 +70,7 @@ Should show:
 ```
 
 ### Step 3: Trigger Netlify Rebuild
+
 Netlify should auto-rebuild on push. If not, trigger manually:
 
 ```bash
@@ -76,6 +83,7 @@ netlify deploy --prod --dir=mosaic_ui
 ```
 
 ### Step 4: Verify Deployment
+
 After rebuild completes (~2 minutes), verify:
 
 ```bash
@@ -97,14 +105,17 @@ curl -s https://whatismydelta.com/ | grep -c "Step 1 of 10"
 ## Files Involved
 
 ### Changed Files
+
 - `netlify.toml` - Updated `base` and `publish` to `mosaic_ui`
 - `frontend/index.html` - NEW UI with auth (3,873 lines)
 - `mosaic_ui/index.html` - NEW UI with auth (3,873 lines, synced)
 
 ### Commits to Push
+
 - `c336607` - "FIX: Update Netlify to publish from mosaic_ui/ (matches GitHub workflow)"
 
 ### Previous Commits (Already Pushed)
+
 - `ffbd9f8` - "MERGE: Add auth to NEW UI (3,427 line base + auth components)"
 
 ---
@@ -112,6 +123,7 @@ curl -s https://whatismydelta.com/ | grep -c "Step 1 of 10"
 ## Technical Details
 
 ### Why This Matters
+
 1. **NEW UI** is in `mosaic_ui/index.html` (3,873 lines, includes auth)
 2. **OLD UI** was in root or cached (2,766 lines, no auth)
 3. Netlify reads `netlify.toml` to determine publish directory
@@ -119,6 +131,7 @@ curl -s https://whatismydelta.com/ | grep -c "Step 1 of 10"
 5. With `publish = "mosaic_ui"`, Netlify serves from `mosaic_ui/` (correct)
 
 ### File Structure
+
 ```
 WIMD-Railway-Deploy-Project/
 ├── netlify.toml          # Configuration (needs push)
@@ -129,9 +142,10 @@ WIMD-Railway-Deploy-Project/
 ```
 
 ### Netlify Configuration
+
 - **Site ID:** `resonant-crostata-90b706`
-- **Site URL:** https://whatismydelta.com/
-- **Dashboard:** https://app.netlify.com/sites/resonant-crostata-90b706/deploys
+- **Site URL:** <https://whatismydelta.com/>
+- **Dashboard:** <https://app.netlify.com/sites/resonant-crostata-90b706/deploys>
 - **Repo:** `origin` → `https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git`
 
 ---
@@ -189,7 +203,6 @@ curl -s https://whatismydelta.com/ | grep -c "authModal"
 
 ---
 
-**Status:** Waiting for push to complete  
-**Next Action:** Push commit `c336607` to origin  
+**Status:** Waiting for push to complete
+**Next Action:** Push commit `c336607` to origin
 **Expected Result:** NEW UI with authentication deployed and visible
-

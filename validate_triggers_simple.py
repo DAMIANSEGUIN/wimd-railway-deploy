@@ -2,13 +2,15 @@
 """
 Simple trigger validation - bypasses import issues
 """
+
 import json
 import sys
-sys.path.insert(0, '.ai-agents/session_context')
+
+sys.path.insert(0, ".ai-agents/session_context")
 from trigger_detector import TriggerDetector
 
 # Load golden dataset
-with open('.ai-agents/test_data/TRIGGER_TEST_DATASET.json') as f:
+with open(".ai-agents/test_data/TRIGGER_TEST_DATASET.json") as f:
     dataset = json.load(f)
 
 detector = TriggerDetector()
@@ -27,7 +29,7 @@ for case in dataset:
     fp = detected - expected
     fn = expected - detected
 
-    is_correct = (not fp and not fn)
+    is_correct = not fp and not fn
 
     if is_correct:
         correct += 1
@@ -48,4 +50,4 @@ fp_rate = fp_cases / total
 print(f"Results: {correct}/{total} correct ({precision*100:.1f}%)")
 print(f"FP cases: {fp_cases} ({fp_rate*100:.1f}%)")
 print(f"FN cases: {fn_cases}")
-print(f"\n✅ PASS" if (precision >= 0.90 and fp_rate < 0.10) else "\n❌ FAIL")
+print("\n✅ PASS" if (precision >= 0.90 and fp_rate < 0.10) else "\n❌ FAIL")

@@ -29,6 +29,7 @@
 ## What User Said
 
 User insists there WAS a working backup where:
+
 - ✅ Login worked
 - ✅ Chat worked
 - ✅ PS101 advanced through steps

@@ -20,10 +20,11 @@
 ### Frontend (Netlify - whatismydelta.com)
 
 ```bash
-$ curl -s https://whatismydelta.com/health
+curl -s https://whatismydelta.com/health
 ```
 
 **Result:**
+
 ```json
 {
   "ok": true,
@@ -42,10 +43,11 @@ $ curl -s https://whatismydelta.com/health
 ### Backend (Railway)
 
 ```bash
-$ curl -s https://what-is-my-delta-site-production.up.railway.app/health
+curl -s https://what-is-my-delta-site-production.up.railway.app/health
 ```
 
 **Result:**
+
 ```json
 {
   "ok": true,
@@ -64,10 +66,11 @@ $ curl -s https://what-is-my-delta-site-production.up.railway.app/health
 ### Critical Features Verification
 
 ```bash
-$ ./scripts/verify_critical_features.sh
+./scripts/verify_critical_features.sh
 ```
 
 **Result:**
+
 ```
 ✅ Authentication UI present (40 occurrences)
 ✅ PS101 flow present (172 references)
@@ -94,11 +97,13 @@ Result: 0
 **Interpretation:** Production is serving the rolled-back version WITHOUT Phase 1 modules.
 
 **Verified Absence of:**
+
 - ❌ `USE_MODULES` feature flag
 - ❌ `<script type="module" src="./js/main.js">`
 - ❌ `initPhase1ModulesIfEnabled()` hook
 
 **Verified Presence of:**
+
 - ✅ Authentication modal (40 occurrences)
 - ✅ PS101 flow (172 references)
 - ✅ Legacy IIFE pattern (working correctly)
@@ -112,10 +117,11 @@ Result: 0
 ### Recent Commits
 
 ```bash
-$ git log --oneline -5
+git log --oneline -5
 ```
 
 **Result:**
+
 ```
 95f2f12 Update CLAUDE_CODE_README.md - mark as outdated, point to AI_START_HERE.txt
 d20bd41 docs: Add restart instructions for team - browser cache blocking verification
@@ -129,11 +135,13 @@ b37aed7 docs: Complete timeline and lessons learned from Phase 1 rollback
 ### Local Changes (Not Deployed)
 
 **Modified Files:**
+
 - `mosaic_ui/index.html` - Contains Codex's USE_MODULES hook (local only)
 - `AI_START_HERE.txt` - Updated context
 - `README.md` - Updated docs
 
 **Local File Status:**
+
 ```bash
 $ grep -c "USE_MODULES" mosaic_ui/index.html
 Result: 3
@@ -162,10 +170,11 @@ Result: 3
 **Health Endpoint:** `/health` - returning `ok:true`
 
 **Environment Variables Status:**
+
 - ✅ `DATABASE_URL` - Set (PostgreSQL)
 - ✅ `OPENAI_API_KEY` - Set
 - ✅ `CLAUDE_API_KEY` - Set
-- ✅ `PUBLIC_SITE_ORIGIN` - Set (https://whatismydelta.com)
+- ✅ `PUBLIC_SITE_ORIGIN` - Set (<https://whatismydelta.com>)
 - ✅ `PUBLIC_API_BASE` - Set (Railway URL)
 
 ---
@@ -179,6 +188,7 @@ Result: 3
 **Result:** All checks passed
 
 **Checks Performed:**
+
 - Authentication UI presence (local files)
 - PS101 flow presence (local files)
 - API_BASE configuration (local files)
@@ -193,12 +203,14 @@ Result: 3
 **Impact:** Creates false positives (e.g., PS101 reported as missing when actually present)
 
 **Root Cause:**
+
 - PS101 containers start with `display:none`
 - JavaScript shows them based on application state
 - Playwright visibility check fails on hidden elements
 - Reports false negative: "PS101 missing"
 
 **Evidence of Bug:**
+
 - `curl` check: Shows 4 ps101-container elements in HTML ✅
 - `verify_critical_features.sh`: Reports PS101 present ✅
 - `verify_deployment_improved.sh`: Reports PS101 missing ❌ (false negative)
@@ -217,16 +229,19 @@ Result: 3
 **Railway Auto-Deploy:** ✅ Enabled for `main` branch
 
 **Protection Mechanisms:**
+
 - Local changes not pushed to `main` (manual gate)
 - Gemini verification completed before any deploy
 - USE_MODULES=false ensures no behavior change
 
 **Risk Assessment:**
+
 - If local changes pushed: Netlify will auto-deploy
 - But: USE_MODULES=false means no functional change
 - Safe to deploy when ready (no breaking changes)
 
 **Recommendation:**
+
 - Keep auto-deploy enabled (faster iteration)
 - Use feature flag (USE_MODULES) for controlled rollout
 - Push to `main` only after full verification
@@ -245,6 +260,7 @@ Result: 3
 ### Next Steps (Coordination Required)
 
 **For Codex (Implementation):**
+
 1. Confirm Phase 1 module files exist locally (`mosaic_ui/js/state.js`, `api.js`, `main.js`)
 2. Ensure modules export `window.__WIMD_MODULES__ = { initModules, ... }`
 3. Test locally with `USE_MODULES = true`
@@ -252,12 +268,14 @@ Result: 3
 5. Manually test: login/register, chat, PS101 flow
 
 **For Claude Code (Infrastructure) - After Codex Testing:**
+
 1. Monitor first deploy with USE_MODULES=false (should be no-op)
 2. Set up staging branch for USE_MODULES=true testing (optional)
 3. Coordinate controlled rollout plan
 4. Document rollback procedure if modules cause issues
 
 **For Gemini (Verification) - After Codex Testing:**
+
 1. Verify modules work correctly when enabled locally
 2. Sign off on production deploy plan
 3. Monitor first production deploy with modules enabled
@@ -269,16 +287,19 @@ Result: 3
 ### Current Risks: LOW
 
 **Production Stability:** 🟢 LOW RISK
+
 - Rollback baseline is stable and verified
 - All critical features working
 - No active incidents
 
 **Deployment Safety:** 🟢 LOW RISK
+
 - Local changes verified safe by Gemini
 - USE_MODULES=false prevents behavior change
 - Rollback path clear (revert local changes)
 
 **Phase 1 Unblocking:** 🟡 MEDIUM RISK
+
 - Requires local testing with USE_MODULES=true (not yet done)
 - Module integration untested in live environment
 - Mitigation: Feature flag allows instant disable
@@ -302,15 +323,18 @@ All infrastructure prerequisites met for Phase 1 unblocking work.
 ### Dependencies for Next Phase
 
 **Depends on Codex:**
+
 - Bring Phase 1 modules back from `phase1-incomplete` branch (or confirm present)
 - Test locally with USE_MODULES=true
 - Verify all features work with modules enabled
 
 **Depends on Gemini:**
+
 - Verify Codex's local testing results
 - Sign off on deploy strategy
 
 **Depends on Claude Code:**
+
 - Monitor infrastructure during testing
 - Coordinate deploy sequence when ready
 
@@ -321,14 +345,17 @@ All infrastructure prerequisites met for Phase 1 unblocking work.
 ### Current Monitoring
 
 **Health Endpoints:**
-- Frontend: https://whatismydelta.com/health (checked every session)
-- Backend: https://what-is-my-delta-site-production.up.railway.app/health (checked every session)
+
+- Frontend: <https://whatismydelta.com/health> (checked every session)
+- Backend: <https://what-is-my-delta-site-production.up.railway.app/health> (checked every session)
 
 **Verification Scripts:**
+
 - `verify_critical_features.sh` (run before/after changes)
 - `verify_deployment_improved.sh` (use with caution, has false positives)
 
 **Manual Checks:**
+
 - Railway dashboard (deployment status, logs)
 - Netlify dashboard (deployment status, logs)
 - Git status (confirm what's deployed vs local)
@@ -336,11 +363,13 @@ All infrastructure prerequisites met for Phase 1 unblocking work.
 ### Alert Thresholds
 
 **CRITICAL (stop all work):**
+
 - `/health` endpoint returns `ok: false`
 - `verify_critical_features.sh` reports missing auth or PS101
 - Railway or Netlify service down
 
 **WARNING (investigate but don't stop):**
+
 - `verify_deployment_improved.sh` false positives
 - Slow response times (>2s)
 - High error rates in logs
@@ -377,12 +406,14 @@ All infrastructure prerequisites met for Phase 1 unblocking work.
 **Infrastructure Status:** ✅ READY FOR PHASE 1 UNBLOCKING
 
 **Key Achievements:**
+
 - Production verified stable and healthy
 - Rollback baseline confirmed locked in
 - Safe integration hook verified by Gemini
 - No blockers from infrastructure perspective
 
 **Next Critical Path:**
+
 - Codex tests modules locally (USE_MODULES=true)
 - Gemini verifies testing results
 - Coordinate controlled deploy when ready

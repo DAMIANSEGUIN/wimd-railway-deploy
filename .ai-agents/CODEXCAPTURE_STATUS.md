@@ -8,6 +8,7 @@
 ## What It Is
 
 CodexCapture is a Chrome/Chromium extension that captures:
+
 - Console logs (all errors, warnings, info)
 - Network requests (XHR, fetch, with headers and payloads)
 - Screenshots (visual state at capture time)
@@ -31,6 +32,7 @@ CodexCapture is a Chrome/Chromium extension that captures:
 ## When to Capture
 
 Capture at these critical moments:
+
 - After login failure
 - When UI disappears/breaks
 - When network request fails
@@ -41,6 +43,7 @@ Capture at these critical moments:
 ## Repair Script
 
 If CodexCapture stops working:
+
 ```bash
 bash ~/scripts/codexcapturerepair.sh
 ```
@@ -50,11 +53,13 @@ bash ~/scripts/codexcapturerepair.sh
 ## Reading Captures
 
 Captures are timestamped directories containing:
+
 - `console.json` - All console output
 - `network.json` - All HTTP requests/responses
 - `screenshot.jpeg` - Visual state
 
 **To analyze:**
+
 ```bash
 # Latest capture
 ls -t ~/Downloads/CodexAgentCaptures/ | head -1

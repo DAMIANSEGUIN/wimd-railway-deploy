@@ -12,9 +12,11 @@
 ## Task Brief
 
 ### What Problem Are We Solving?
+
 Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs for collecting obstacle and action data (lines 3014-3051 in frontend/index.html). This blocks the UI, is not accessible to screen readers, and provides poor mobile UX.
 
 ### Why Is This Important?
+
 - **Accessibility:** Screen readers cannot navigate browser prompts
 - **User Experience:** Dialogs block entire UI, feel clunky
 - **Mobile:** Poor experience on mobile devices
@@ -22,11 +24,13 @@ Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs 
 - **Deployment blocker:** P0 issue preventing PS101 v2 production deploy
 
 ### Current State
+
 - `Add Obstacle` button (line 3011) triggers browser `prompt()` for label, `confirm()` for type, `prompt()` for strategy
 - `Add Action` button (line 3033) triggers browser `prompt()` for label, due date, accountability
 - Users cannot Tab navigate, screen readers announce poorly, mobile keyboards cover prompts
 
 ### Desired End State
+
 - Inline forms appear below buttons when clicked
 - Forms use HTML inputs styled with Peripheral Calm aesthetic
 - Tab navigation works correctly
@@ -39,16 +43,19 @@ Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs 
 ## Inputs
 
 ### Required Reading (MUST read before starting)
+
 - [ ] `docs/CURSOR_FIXES_REQUIRED.md` (lines 15-202 - complete implementation guide)
 - [ ] `docs/ARCHITECTURAL_DECISIONS.md` (Decision #003 - Inline forms approved)
 - [ ] `docs/PS101_CANONICAL_SPEC_V2.md` (Section 4.2 Obstacle Mapping, 4.3 Action Plan)
 
 ### Context Files
+
 - `frontend/index.html` lines 476-546 - Existing experiment components HTML (add forms here)
 - `frontend/index.html` lines 179-208 - Experiment components CSS (reference for styling)
 - `frontend/index.html` lines 3010-3052 - Event listeners to replace
 
 ### Code Files to Modify
+
 - `frontend/index.html` lines ~546 - Add obstacle form HTML
 - `frontend/index.html` lines ~546 - Add action form HTML
 - `frontend/index.html` lines 3010-3030 - Replace obstacle event listeners
@@ -59,6 +66,7 @@ Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs 
 ## Constraints
 
 ### Do NOT
+
 - [ ] Do NOT use modal dialogs (Decision #003: inline forms approved)
 - [ ] Do NOT add external libraries or dependencies
 - [ ] Do NOT use `alert()` for validation (use inline error messages)
@@ -67,6 +75,7 @@ Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs 
 - [ ] Do NOT modify PS101State methods (addObstacle, addAction)
 
 ### MUST Follow
+
 - [ ] MUST use Peripheral Calm aesthetic (Decision #007)
 - [ ] MUST use existing CSS variables (--fg, --muted, --line, etc.)
 - [ ] MUST match existing form styling patterns
@@ -77,6 +86,7 @@ Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs 
 - [ ] MUST test screen reader announcements (basic check)
 
 ### Architecture Decisions to Honor
+
 - Decision #001: Single-file frontend architecture
 - Decision #003: Inline forms for experiment data collection
 - Decision #007: Peripheral Calm design aesthetic
@@ -86,6 +96,7 @@ Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs 
 ## Success Criteria
 
 ### Functional Requirements
+
 - [ ] Add Obstacle button shows inline form (obstacle form hidden by default)
 - [ ] Form includes: text input (label), radio buttons (external/internal), textarea (strategy)
 - [ ] Save button validates inputs and calls `PS101State.addObstacle()`
@@ -97,6 +108,7 @@ Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs 
 - [ ] Remove buttons still work for both obstacles and actions
 
 ### Quality Requirements
+
 - [ ] Code passes no linter errors
 - [ ] No browser console errors
 - [ ] Keyboard navigation works (Tab through fields, Enter to submit, Esc to cancel)
@@ -106,6 +118,7 @@ Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs 
 - [ ] Auto-focus works when form appears
 
 ### Documentation Requirements
+
 - [ ] No new architectural decisions (following existing Decision #003)
 - [ ] Add inline code comments for complex form logic
 - [ ] Note in commit message: "Implements Decision #003 - Inline forms"
@@ -117,6 +130,7 @@ Current PS101 v2 implementation uses browser `prompt()` and `confirm()` dialogs 
 ### Checkpoint 1: Understanding Verification ✋ STOP HERE FIRST
 
 **Agent must output:**
+
 ```
 I understand this task requires:
 1. Adding two inline forms (obstacle + action) to HTML around line 546
@@ -143,6 +157,7 @@ Questions/clarifications: [Any uncertainties]
 ### Checkpoint 2: Approach Approval ✋ STOP HERE BEFORE CODING
 
 **Agent must output:**
+
 ```
 Implementation approach:
 
@@ -189,6 +204,7 @@ Risks: None identified (straightforward implementation)
 ### Checkpoint 3: Implementation Review ✋ STOP AFTER CODING
 
 **Agent must:**
+
 - [ ] Show HTML additions (full form markup)
 - [ ] Show CSS changes (if any inline styles needed)
 - [ ] Show event listener replacements (full functions)
@@ -196,6 +212,7 @@ Risks: None identified (straightforward implementation)
 - [ ] Note any deviations from approved approach
 
 **Damian will:**
+
 - [ ] Read all code changes
 - [ ] Check forms match Peripheral Calm style
 - [ ] Verify validation logic is sound
@@ -211,6 +228,7 @@ Risks: None identified (straightforward implementation)
 **Agent must complete and report:**
 
 **Manual Tests:**
+
 1. ✅/❌ Click "Add Obstacle" - form appears, button hides
 2. ✅/❌ Tab through obstacle form - reaches all fields in order
 3. ✅/❌ Try to save with empty label - inline error shows
@@ -225,6 +243,7 @@ Risks: None identified (straightforward implementation)
 12. ✅/❌ Check console - no errors
 
 **Accessibility Check:**
+
 1. ✅/❌ Tab order logical
 2. ✅/❌ Focus visible (outline shows)
 3. ✅/❌ Labels associated with inputs
@@ -233,6 +252,7 @@ Risks: None identified (straightforward implementation)
 **Agent reports:** "All tests passed" or "Test X failed with error Y"
 
 **Damian will:**
+
 - [ ] Verify test results make sense
 - [ ] Run manual tests yourself
 - [ ] Check for any regressions
@@ -243,6 +263,7 @@ Risks: None identified (straightforward implementation)
 ### Checkpoint 5: Final Approval ✋ STOP BEFORE COMMIT
 
 **Agent confirms:**
+
 - [ ] All checkpoints passed
 - [ ] All success criteria met
 - [ ] No console errors
@@ -250,6 +271,7 @@ Risks: None identified (straightforward implementation)
 - [ ] Forms match Peripheral Calm aesthetic
 
 **Suggested commit message:**
+
 ```
 Fix PS101 v2 Issue #1: Replace browser prompts with inline forms
 
@@ -263,12 +285,14 @@ Closes: PS101-FIX-001
 ```
 
 **Damian:**
+
 - [ ] Final review
 - [ ] Verify backup exists: `backups/20251031_095426_ps101_v2_implementation/`
 - [ ] Approve commit message
 - [ ] Execute commit: `git add frontend/index.html && git commit -m "[message]"`
 
 **After commit:**
+
 - [ ] Monitor browser console for 5 minutes
 - [ ] Test on live page (if deployed)
 - [ ] Mark task PS101-FIX-001 as complete
@@ -278,9 +302,11 @@ Closes: PS101-FIX-001
 ## Testing Plan
 
 ### Automated Tests
+
 None available (frontend-only, manual testing required)
 
 ### Manual Testing Steps
+
 1. **Obstacle form test:**
    - Navigate to PS101 Step 7
    - Click "Add Obstacle" button
@@ -319,6 +345,7 @@ None available (frontend-only, manual testing required)
    - Verify both still present
 
 ### Edge Cases
+
 - [ ] Very long obstacle label (>200 chars) - should handle gracefully
 - [ ] Special characters in inputs (quotes, HTML tags) - should escape properly
 - [ ] Rapid clicking Add button - should not create duplicate forms
@@ -329,15 +356,18 @@ None available (frontend-only, manual testing required)
 ## Rollback Plan
 
 ### If Implementation Fails
+
 1. `git checkout frontend/index.html` (undo changes)
 2. Restore from backup: `cp backups/20251031_095426_ps101_v2_implementation/frontend/index.html frontend/`
 3. Notify Damian of issue
 
 ### Backup Location
+
 - **Pre-fix backup:** `backups/20251031_095426_ps101_v2_implementation/frontend/index.html`
 - **Git commit before:** Check `git log -1` before making changes
 
 ### Recovery Time
+
 - **Rollback:** <1 minute (git checkout)
 - **Diagnose:** 10-30 minutes (check console errors, review code)
 - **Fix and retry:** 30-60 minutes (depends on issue)
@@ -349,6 +379,7 @@ None available (frontend-only, manual testing required)
 **If task exceeds 30 minutes:**
 
 Agent must pause and output:
+
 ```
 Context refresh:
 - Current task: PS101-FIX-001 - Replace browser prompts with inline forms
@@ -365,14 +396,18 @@ Damian: Verify still on track, approve continuation.
 ## Communication Protocol
 
 ### Status Updates
+
 Agent provides update every **30 minutes**:
+
 - Completed: [What's done]
 - In progress: [Current work]
 - Blockers: [None / Issue description]
 - Time remaining: [Estimate]
 
 ### When to Ask for Help
+
 Stop and ask if:
+
 - Unsure how to style forms to match Peripheral Calm
 - Can't figure out how to show inline validation errors
 - Event listeners not firing correctly
@@ -380,7 +415,9 @@ Stop and ask if:
 - Taking longer than 2 hours
 
 ### When to Escalate
+
 Stop immediately if:
+
 - Breaking existing functionality (obstacles/actions not saving)
 - Cannot undo changes (git issues)
 - Security concern (code injection risk)
@@ -391,6 +428,7 @@ Stop immediately if:
 ## Post-Task Documentation
 
 ### Agent Completes
+
 - [x] Decision #003 already documents inline forms approach
 - [x] No new decisions needed
 - [x] Add inline comments to complex form show/hide logic ✅ (added to lines 3093-3318)
@@ -398,6 +436,7 @@ Stop immediately if:
 - [x] Established inline validation protocol ✅ (created `docs/PS101_INLINE_VALIDATION_PROTOCOL.md`)
 
 ### Damian Completes
+
 - [ ] Update PROJECT_PLAN_ADJUSTMENTS.md: Mark Issue #1 as complete
 - [ ] Update PS101_FIX_PROMPTS_TASK_BRIEF.md with actual time taken
 - [ ] If lessons learned: Update AGENT_TASK_TEMPLATE.md

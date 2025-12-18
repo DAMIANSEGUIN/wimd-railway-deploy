@@ -88,7 +88,7 @@ fi
 ```
 
 Add to `~/.zshrc`:
+
 ```bash
 source ~/.ai_agent_init.sh
 ```
-

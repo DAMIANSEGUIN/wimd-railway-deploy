@@ -1,4 +1,5 @@
 # MOSAIC PROJECT - COMPLETE SELF-CONTAINED HANDOFF
+
 **All Information Embedded - No External Files Required**
 
 **Date**: 2025-12-01
@@ -16,6 +17,7 @@ This document is **100% self-contained**. All critical information from external
 **Your Mission**: Complete Mosaic platform overhaul, test Phase 4 features, implement missing components.
 
 **Constraints**:
+
 - GitHub access may be limited in Claude Desktop
 - Work from local directory (provided below)
 - Production system is LIVE - changes must be safe
@@ -26,11 +28,13 @@ This document is **100% self-contained**. All critical information from external
 ## 📍 PROJECT LOCATION
 
 **Primary Working Directory**:
+
 ```
 /Users/damianseguin/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Railway-Deploy-Project
 ```
 
 **How to Access** (if Google Drive path is difficult):
+
 ```bash
 # Alternative: Ask user to create a symlink or copy to easier path
 # For now, navigate using full path or tab completion
@@ -38,6 +42,7 @@ cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Rai
 ```
 
 **GitHub Repository** (reference only):
+
 ```
 https://github.com/DAMIANSEGUIN/wimd-railway-deploy
 ```
@@ -47,16 +52,19 @@ https://github.com/DAMIANSEGUIN/wimd-railway-deploy
 ## 🎯 PROJECT OVERVIEW
 
 **What Is Mosaic?**
+
 - **Mosaic**: Career transition platform helping users find jobs using AI/LLM
 - **Foundation**: Safety & evidence layer (planned integration)
 - **Stack**: FastAPI backend (Railway) + Vanilla JS frontend (Netlify) + PostgreSQL
 
 **Production URLs**:
-- Main site: https://whatismydelta.com
-- Backend API: https://what-is-my-delta-site-production.up.railway.app
+
+- Main site: <https://whatismydelta.com>
+- Backend API: <https://what-is-my-delta-site-production.up.railway.app>
 - Netlify: Site ID `resonant-crostata-90b706`
 
 **Architecture**:
+
 ```
 User Browser
     ↓
@@ -76,6 +84,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 ### ✅ **What's Working (DEPLOYED & OPERATIONAL)**
 
 **Frontend**:
+
 - ✅ UI fully deployed and functional
 - ✅ All navigation buttons working (explore, find, apply, chat, guide, upload)
 - ✅ 5-minute trial mode for unauthenticated users
@@ -84,6 +93,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 - ✅ Event listeners use null checks to prevent crashes
 
 **Backend API**:
+
 - ✅ FastAPI on Railway - operational
 - ✅ Authentication: login, register, password reset flows
 - ✅ Chat/Coach interface operational
@@ -92,6 +102,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 - ✅ Context manager pattern: `with get_conn() as conn:`
 
 **Phase 1-3** (Completed):
+
 - ✅ Migration framework from SQLite → PostgreSQL
 - ✅ CSV→AI fallback system
 - ✅ Feature flags implemented
@@ -101,6 +112,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 - ✅ Focus Stack UI
 
 **Phase 4** (Deployed Oct 2025):
+
 - ✅ RAG baseline (OpenAI embeddings - NO fallback)
 - ✅ 12 job sources implemented:
   - **6 Direct API sources** (production-ready):
@@ -113,6 +125,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 - ✅ Domain-adjacent search
 
 **Monitoring & Health**:
+
 - ✅ Railway health checks configured (`railway.toml`)
 - ✅ Multi-layer monitoring (`/health`, `/health/comprehensive`, `/health/recover`)
 - ✅ Automatic recovery on failure
@@ -121,6 +134,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 ### ❌ **What's Broken / NEEDS WORK**
 
 **CRITICAL** (Must fix immediately):
+
 1. ⚠️ **Job Sources UNTESTED**: All 12 sources deployed but NOT tested in production
    - Web scraping sources may need CSS selector adjustments
    - Need to verify real job data returns from each source
@@ -152,6 +166,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 ### **Pattern 1: Database Context Manager** (SACRED RULE)
 
 **✅ ALWAYS USE THIS**:
+
 ```python
 with get_conn() as conn:
     cursor = conn.cursor()
@@ -160,6 +175,7 @@ with get_conn() as conn:
 ```
 
 **❌ NEVER DO THIS** (Will cause AttributeError):
+
 ```python
 conn = get_conn()
 cursor = conn.execute(...)  # WRONG - crashes in PostgreSQL
@@ -172,6 +188,7 @@ cursor = conn.execute(...)  # WRONG - crashes in PostgreSQL
 ### **Pattern 2: PostgreSQL Syntax** (NOT SQLite)
 
 **✅ CORRECT PostgreSQL**:
+
 ```python
 # Use %s for parameters (NOT ?)
 cursor.execute("INSERT INTO table VALUES (%s, %s)", (val1, val2))
@@ -189,6 +206,7 @@ result = cursor.fetchone()
 ```
 
 **❌ WRONG SQLite syntax**:
+
 ```python
 # Don't use ?
 cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
@@ -202,6 +220,7 @@ CREATE TABLE users (id INTEGER AUTOINCREMENT PRIMARY KEY, ...)
 ### **Pattern 3: Error Handling** (NO SILENT FAILURES)
 
 **✅ CORRECT**:
+
 ```python
 import logging
 logger = logging.getLogger(__name__)
@@ -215,6 +234,7 @@ except SpecificException as e:
 ```
 
 **❌ WRONG**:
+
 ```python
 try:
     risky_operation()
@@ -227,6 +247,7 @@ except:
 ### **Pattern 4: Idempotent Operations**
 
 **✅ CORRECT**:
+
 ```python
 # Use ON CONFLICT for idempotency
 cursor.execute("""
@@ -238,6 +259,7 @@ cursor.execute("""
 ```
 
 **❌ WRONG**:
+
 ```python
 # Will fail on duplicate
 cursor.execute("INSERT INTO users VALUES (%s, %s)", (email, password))
@@ -334,6 +356,7 @@ curl http://localhost:8000/prompts/active
 ## 📋 API ENDPOINTS (Complete List)
 
 ### **Health & Config**
+
 - `GET /health` - Basic health check
 - `GET /health/comprehensive` - Detailed health with metrics
 - `GET /health/recover` - Manual recovery endpoint
@@ -343,29 +366,34 @@ curl http://localhost:8000/prompts/active
 - `GET /config` - Returns `{apiBase, schemaVersion}`
 
 ### **Prompts & WIMD**
+
 - `GET /prompts/active` - Active prompt (may be null)
 - `POST /wimd/ask` - Chat/coach interface
 - `POST /wimd/upload` - File upload
 - `/wimd/*` - Other WIMD endpoints
 
 ### **Jobs (Phase 4)**
+
 - `POST /jobs/search` - Job search (traditional)
 - `POST /jobs/search/rag` - Job search (RAG-powered)
 - `GET /jobs/{job_id}` - Get specific job
 
 ### **Resume**
+
 - `POST /resume/rewrite` - Rewrite resume
 - `POST /resume/customize` - Customize for job
 - `POST /resume/feedback` - Get feedback
 - `GET /resume/versions` - List versions
 
 ### **Authentication**
+
 - `POST /auth/register` - User registration
 - `POST /auth/login` - User login
 - `GET /auth/me` - Current user
 - `POST /auth/reset-password` - Password reset (placeholder email)
 
 ### **RAG Engine**
+
 - `POST /rag/embed` - Generate embedding
 - `POST /rag/batch-embed` - Batch embeddings
 - `POST /rag/retrieve` - Retrieve similar docs
@@ -373,6 +401,7 @@ curl http://localhost:8000/prompts/active
 - `POST /rag/domain-adjacent` - Domain-adjacent search
 
 ### **Intelligence & OSINT**
+
 - `GET /intelligence/company/{company_name}` - Company analysis
 - `POST /intelligence/positioning` - Positioning advice
 - `POST /intelligence/resume-targeting` - Resume targeting
@@ -381,12 +410,14 @@ curl http://localhost:8000/prompts/active
 - `GET /osint/health` - OSINT service health
 
 ### **Sources & Cost**
+
 - `POST /sources/discover` - Dynamic source discovery
 - `GET /sources/analytics` - Source analytics
 - `GET /cost/analytics` - Cost analytics
 - `GET /cost/limits` - Cost limits status
 
 ### **Domain Adjacent**
+
 - `POST /domain-adjacent/discover` - Discover adjacent roles
 - `GET /domain-adjacent/health` - Service health
 
@@ -557,6 +588,7 @@ git push railway-origin HEAD:main --force
 ### **Debugging Workflow**
 
 **Step 1: Classify the Issue**
+
 ```
 When did it start? (recent deploy? always?)
 Who is affected? (all users? one user? specific action?)
@@ -565,6 +597,7 @@ Where is it? (frontend? API? database? LLM?)
 ```
 
 **Step 2: Gather Context**
+
 ```
 □ Railway deployment logs (last 200 lines)
 □ Health endpoint response (/health)
@@ -575,6 +608,7 @@ Where is it? (frontend? API? database? LLM?)
 ```
 
 **Step 3: Form Hypothesis**
+
 ```
 If INFRA error → Check DATABASE_URL, PostgreSQL status
 If DATA error → Check schema, foreign keys
@@ -584,6 +618,7 @@ If INTEGRATION error → Check external API status
 ```
 
 **Step 4: Test Hypothesis**
+
 ```
 □ Can I reproduce locally?
 □ Does the log match the hypothesis?
@@ -591,6 +626,7 @@ If INTEGRATION error → Check external API status
 ```
 
 **Step 5: Implement Fix**
+
 ```
 □ Check pre-flight checklist
 □ Test locally first
@@ -604,6 +640,7 @@ If INTEGRATION error → Check external API status
 ## 📞 HEALTH CHECK INTERPRETATION
 
 **Good Health Response**:
+
 ```json
 {
   "ok": true,
@@ -625,6 +662,7 @@ If INTEGRATION error → Check external API status
 ```
 
 **Bad Health Response**:
+
 ```json
 {
   "ok": false,  // ❌ BAD
@@ -641,6 +679,7 @@ If INTEGRATION error → Check external API status
 ```
 
 **If SQLite fallback active**:
+
 1. DATABASE_URL is wrong or missing
 2. PostgreSQL service is down
 3. Network routing issue (using railway.app instead of railway.internal)
@@ -652,6 +691,7 @@ If INTEGRATION error → Check external API status
 ### **CRITICAL - Do First**
 
 **1. Test All 12 Job Sources** (HIGHEST PRIORITY)
+
 ```bash
 # Create test script for each job source
 # File: tests/test_job_sources.py
@@ -687,6 +727,7 @@ def test_job_source(source):
 ---
 
 **2. Integrate Email Service** (HIGH PRIORITY)
+
 ```bash
 # Options:
 # A. SendGrid (easier)
@@ -706,6 +747,7 @@ FROM_EMAIL=noreply@whatismydelta.com
 ---
 
 **3. Verify CSV→AI Fallback** (HIGH PRIORITY)
+
 ```bash
 # Test prompt selector with various inputs
 # Confirm cache cleared and flag enabled
@@ -729,16 +771,19 @@ def test_csv_fallback():
 ### **HIGH PRIORITY - Do Soon**
 
 **4. Implement Automated Testing**
+
 - Golden dataset tests (see embedded code below)
 - Persona cloning framework
 - Regression tests for prompts
 
 **5. Set Up Staging Environment**
+
 - Duplicate Railway project for testing
 - Configure separate DATABASE_URL
 - Test deployments before production
 
 **6. Monitor Cost Controls**
+
 - Verify usage tracking working
 - Check daily/monthly limits
 - Set up alerts for quota exceeded
@@ -1200,24 +1245,28 @@ Ready to proceed with fixes?
 ## 📌 FINAL NOTES & REMINDERS
 
 **This is a PRODUCTION system**:
-- Live at https://whatismydelta.com
+
+- Live at <https://whatismydelta.com>
 - Real users depend on it
 - Changes must be tested locally first
 - Always have rollback plan
 
 **Your mission**:
+
 1. Complete job source testing & fixes
 2. Integrate email service
 3. Implement automated testing
 4. Document everything clearly
 
 **Remember**:
+
 - Context manager pattern is SACRED
 - PostgreSQL syntax, not SQLite
 - Explicit error logging, never silent
 - Local testing FIRST, always
 
 **Communication**:
+
 - Update user on progress
 - Report blockers early
 - Be transparent about challenges

@@ -1,4 +1,5 @@
 # Google Drive Auto-Sync Solution
+
 **Date:** 2025-10-26
 **Purpose:** Automatic sync to GDrive so ChatGPT can reference latest files
 
@@ -17,6 +18,7 @@ ChatGPT needs to reference the latest project files to build the interface redes
 **File:** `.git/hooks/post-commit`
 
 **Behavior:**
+
 - Triggers after EVERY git commit
 - Runs `rclone sync` in background (non-blocking)
 - Syncs only essential files (excludes venv, .git, node_modules, etc.)
@@ -27,11 +29,13 @@ ChatGPT needs to reference the latest project files to build the interface redes
 ### 2. Initial Manual Sync (One-Time)
 
 **Command:**
+
 ```bash
 ./scripts/initial_gdrive_sync.sh
 ```
 
 **Purpose:**
+
 - First-time sync of all current files to GDrive
 - After this runs once, git hook handles all future syncs
 - Takes 2-5 minutes for initial upload
@@ -78,6 +82,7 @@ tail -f /tmp/gdrive-sync.log
 ## What Gets Synced
 
 ### ✅ Included
+
 - All source code (`api/`, `mosaic_ui/`, `scripts/`)
 - All documentation (`.md` files)
 - Configuration files (`requirements.txt`, `.env.railway`)
@@ -85,6 +90,7 @@ tail -f /tmp/gdrive-sync.log
 - Database migrations (`data/migrations/`)
 
 ### ❌ Excluded (Not Needed by ChatGPT)
+
 - `.git/` (version control internals)
 - `node_modules/` (huge, not needed)
 - `venv/`, `.venv/`, `.test-venv/`, `.claude-run/` (Python virtual envs)

@@ -1,7 +1,7 @@
 # PS101 Baseline Status – 2025-11-27
 
-**Date:** 2025-11-27  
-**Agents:** User, Claude Code, Gemini, Codex (terminal)  
+**Date:** 2025-11-27
+**Agents:** User, Claude Code, Gemini, Codex (terminal)
 **Purpose:** Capture the current *working baseline* for PS101, login, and chat so future sessions do not re‑break stable features.
 
 ---
@@ -13,8 +13,9 @@
 - **Supporting file:** `mosaic_ui/js/main.js` (dummy file to satisfy `<script type="module" src="./js/main.js">`)
 
 This is the only snapshot currently verified where:
-- ✅ Login works  
-- ✅ Chat works  
+
+- ✅ Login works
+- ✅ Chat works
 - ❌ PS101 does **not** advance (known hoisting/runtime bug)
 
 The later `pre-scope-fix_20251126_233100Z` backup **cannot** be used as a baseline because it re‑introduces a login regression.
@@ -59,6 +60,7 @@ The later `pre-scope-fix_20251126_233100Z` backup **cannot** be used as a baseli
 On `pre-ps101-fix_20251126_220704Z` (now in `mosaic_ui/index.html`):
 
 - `initPS101EventListeners()` is defined in the main IIFE and wires:
+
   ```js
   const textarea = document.getElementById('step-answer');
   if (textarea) {
@@ -66,7 +68,9 @@ On `pre-ps101-fix_20251126_220704Z` (now in `mosaic_ui/index.html`):
     textarea.addEventListener('input', handleStepAnswerInput);
   }
   ```
+
 - `handleStepAnswerInput(e)` is defined **inside the separate PS101 IIFE**, not at the same scope:
+
   ```js
   function handleStepAnswerInput(e) {
     const step = PS101State.getCurrentStep();
@@ -74,10 +78,12 @@ On `pre-ps101-fix_20251126_220704Z` (now in `mosaic_ui/index.html`):
     // updates char count + calls updateNavButtons(...)
   }
   ```
+
 - Because `handleStepAnswerInput` is not in the outer IIFE’s scope (nor on `window`), when `initPS101EventListeners()` runs it effectively hits:
   - `ReferenceError: handleStepAnswerInput is not defined`
 
 This aligns with the CodexCapture evidence (2025‑11‑27) and the user’s observation:
+
 - “Login came up and the first main chat worked but the PS101 prompt did not forward so maybe hoisting again?”
 
 **Key point:** On this baseline the PS101 *data/state objects* exist, but **the event wiring cannot see `handleStepAnswerInput`**, so PS101 cannot progress.
@@ -87,18 +93,21 @@ This aligns with the CodexCapture evidence (2025‑11‑27) and the user’s obs
 ## 4. Backup Status Matrix
 
 **Backup #1 – `pre-ps101-fix_20251126_220704Z`**
-- ✅ Login working  
-- ✅ Chat working  
-- ❌ PS101 advancement broken (hoisting/scope error on `handleStepAnswerInput`)  
+
+- ✅ Login working
+- ✅ Chat working
+- ❌ PS101 advancement broken (hoisting/scope error on `handleStepAnswerInput`)
 - **Role:** **Current working baseline** for all future PS101 fixes.
 
 **Backup #2 – `pre-scope-fix_20251126_233100Z`**
-- ❌ Login UI effectively missing/broken (cannot log in)  
-- ❓ Chat not fully testable (blocked by login regression)  
-- ❓ PS101 status unknown in practice on this snapshot (not testable without login)  
+
+- ❌ Login UI effectively missing/broken (cannot log in)
+- ❓ Chat not fully testable (blocked by login regression)
+- ❓ PS101 status unknown in practice on this snapshot (not testable without login)
 - **Role:** Historical reference only; **not** acceptable as a baseline.
 
 **Post‑restore backup – `backups/post-restore_20251127_171057Z`**
+
 - Contains the restored `mosaic_ui_index.html` based on `pre-scope-fix` (with PS101 objects), but:
   - Shares the **same login regression** and thus is not usable for live work.
 - **Role:** Archive of a broken state; not a deployment candidate.
@@ -120,11 +129,10 @@ This aligns with the CodexCapture evidence (2025‑11‑27) and the user’s obs
 
 **For future sessions (Claude / Codex / Gemini):**
 
-- Start here for PS101 baseline:  
+- Start here for PS101 baseline:
   `.ai-agents/PS101_BASELINE_STATUS_2025-11-27.md`
 - Then read:
   - `.ai-agents/TEAM_DOCUMENTATION_REFERENCE.md` (indexes current docs)
   - `AI_RESUME_STATE.md` (session resume state – references this file)
   - `.ai-agents/FOR_GEMINI_PS101_HOISTING_ISSUE_2025-11-26.md` (initial hoisting report)
   - `.ai-agents/GEMINI_RECOVERY_PLAN_2025-11-27.md` (architectural recovery plan)
-

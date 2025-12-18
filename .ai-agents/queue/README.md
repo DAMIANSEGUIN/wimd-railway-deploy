@@ -27,11 +27,13 @@
 ## Example Flow
 
 **Gemini completes Task 2.1:**
+
 ```bash
 ./scripts/complete_task.sh gemini phase2_task2.1_broker '["broker.sh"]'
 ```
 
 **Script writes to `.ai-agents/queue/codex_inbox.txt`:**
+
 ```
 From: gemini
 Task: phase2_task2.2_logging (Structured Session Logs)
@@ -43,11 +45,13 @@ Run this to start:
 ```
 
 **Later, when YOU start Codex:**
+
 ```bash
 ./scripts/start_session.sh codex
 ```
 
 **Codex sees:**
+
 ```
 📬 Message from gemini:
 ─────────────────────────────────────────
@@ -67,6 +71,7 @@ Dependencies: All satisfied
 ## Your Role
 
 **Start agents when you want them to work:**
+
 - `./scripts/start_session.sh gemini`
 - `./scripts/start_session.sh codex`
 - `./scripts/start_session.sh claude_code`

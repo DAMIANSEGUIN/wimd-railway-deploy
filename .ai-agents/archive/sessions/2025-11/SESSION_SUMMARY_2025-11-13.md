@@ -1,9 +1,11 @@
 # Session Summary — 2025-11-13
-**Agent:** Codex (GPT-5 CLI)  
-**Focus:** PS101 continuity + deployment alignment  
+
+**Agent:** Codex (GPT-5 CLI)
+**Focus:** PS101 continuity + deployment alignment
 **Baseline Snapshot:** `BASELINE_SNAPSHOT_20251113-085236.md`
 
 ## Key Actions
+
 - Validated session start gates (`verify_critical_features.sh`, `check_spec_hash.sh`) and logged results.
 - Updated PS101 UI source (`frontend/`, `mosaic_ui/`) to the unified build: metrics lock copy, upload shortcuts, live resource links, relative `API_BASE`, and BUILD_ID footer.
 - Normalized backend defaults (`api/index.py`, `backend/api/index.py`) so metrics no longer pre-fill with 65/42/33.
@@ -14,11 +16,13 @@
 - Rebound PS101 textarea handlers on every render so the live character counter and Next-button validation stay in sync.
 
 ## Verification Notes
+
 - `./scripts/verify_critical_features.sh` — ✅ local checks; ⚠️ curl-based prod auth test still prints warning (manual curl count 19, so treat as false-positive until script is hardened).
 - `./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh` — ✅ hash `7795ae25`.
 - `./scripts/verify_mosaic_ui.sh https://whatismydelta.com/` — ✅ production now matches the 4344-line build post-redeploy; BUILD_ID comment unchanged.
 
 ## Follow-up Required
+
 1. Deploy the refreshed `mosaic_ui` to Netlify so live HTML matches repo (resolves line-count warning).
 2. Re-run verification scripts post-deploy and append results to `.verification_audit.log` / this summary.
 3. Execute manual auth QA (login + reset) before sign-off; note findings in team docs.

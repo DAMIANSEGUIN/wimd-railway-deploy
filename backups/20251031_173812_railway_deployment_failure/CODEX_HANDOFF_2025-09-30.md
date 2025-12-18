@@ -1,15 +1,18 @@
 # CODEX/CURSOR HANDOFF - 2025-09-30 16:00 EDT
 
 ## HANDOFF REASON
+
 **Claude Code (Senior Debugger) → Codex/Cursor (Implementation Engineer)**
 
 Claude Code has been operating outside role boundaries:
+
 - Made 3 iterative code commits without systematic plan
 - Guessing at CORS fixes without local testing
 - 60+ minutes troubleshooting without team consultation
 - Missing comprehensive dependency mapping
 
 Per CODEX_INSTRUCTIONS.md:
+
 - **Codex/Cursor role**: Systematic implementation, exact specifications, hold the frame
 - **Claude Code role**: Infrastructure debugging, log analysis, deployment issues
 
@@ -17,6 +20,7 @@ Per CODEX_INSTRUCTIONS.md:
 
 **Issue**: Chat window shows `net::ERR_FAILED` when posting to Railway API
 **Browser error**:
+
 ```
 POST https://what-is-my-delta-site-production.up.railway.app/wimd net::ERR_FAILED
 Access to fetch at 'https://what-is-my-delta-site-production.up.railway.app/wimd'
@@ -26,6 +30,7 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 ```
 
 **Verified working**:
+
 - ✅ Railway backend healthy: `/health` returns `{"ok":true}`
 - ✅ Railway API works: `curl -X POST /wimd` returns HTTP 200
 - ✅ Netlify frontend deployed: `https://whatismydelta.com` loads correctly
@@ -36,7 +41,9 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 ## COMMITS MADE (DO NOT REPEAT)
 
 ### Commit 1456992 (2025-09-30 15:20)
+
 **Change**: Added explicit CORS origins
+
 ```python
 origins = [
     os.getenv("PUBLIC_SITE_ORIGIN", "https://whatismydelta.com"),
@@ -50,10 +57,13 @@ app.add_middleware(
     ...
 )
 ```
+
 **Result**: ❌ Deployed but no `access-control-allow-origin` header in response
 
 ### Commit fcad803 (2025-09-30 15:50)
+
 **Change**: Added `expose_headers=["*"]` to CORSMiddleware
+
 ```python
 app.add_middleware(
     CORSMiddleware,
@@ -64,11 +74,13 @@ app.add_middleware(
     expose_headers=["*"],  # ADDED THIS
 )
 ```
+
 **Result**: ❌ Deployed but still no `access-control-allow-origin` header
 
 ## EVIDENCE
 
 ### Test 1: OPTIONS Preflight (FAILING)
+
 ```bash
 curl -I -X OPTIONS https://what-is-my-delta-site-production.up.railway.app/wimd \
   -H "Origin: https://whatismydelta.com" \
@@ -85,6 +97,7 @@ vary: Origin
 ```
 
 ### Test 2: Actual POST (WORKING via curl)
+
 ```bash
 curl -X POST https://what-is-my-delta-site-production.up.railway.app/wimd \
   -H "Content-Type: application/json" \
@@ -99,7 +112,8 @@ content-type: application/json
 ```
 
 ### Test 3: Browser (FAILING)
-- Open https://whatismydelta.com
+
+- Open <https://whatismydelta.com>
 - Open chat window
 - Send message
 - Browser console: `POST /wimd net::ERR_FAILED`
@@ -109,12 +123,14 @@ content-type: application/json
 
 **Symptom**: FastAPI CORSMiddleware configured but not returning `access-control-allow-origin` header
 **Evidence**:
+
 - All other CORS headers present (`allow-credentials`, `allow-headers`, `allow-methods`)
 - `vary: Origin` header present (middleware is running)
 - OPTIONS request returns HTTP 400 (not 200)
 - Missing the critical `access-control-allow-origin` header
 
 **Possible causes**:
+
 1. FastAPI CORSMiddleware requires additional configuration
 2. OPTIONS endpoint not properly configured
 3. Middleware order issue (CORS middleware needs to be first)
@@ -124,6 +140,7 @@ content-type: application/json
 ## SYSTEMATIC APPROACH NEEDED
 
 ### Phase 1: Local Testing (MISSING from previous attempts)
+
 ```bash
 # Run Railway app locally with production env
 cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
@@ -140,19 +157,23 @@ curl -I -X OPTIONS http://localhost:8000/wimd \
 ```
 
 ### Phase 2: Fix CORS Configuration
+
 **Research FastAPI CORSMiddleware documentation**:
+
 - Check if `allow_origin_regex` needed
 - Verify middleware order (must be first middleware added)
 - Check if explicit OPTIONS route handler needed
 - Test with wildcard `allow_origins=["*"]` to isolate issue
 
 **Candidate fixes**:
+
 1. Add explicit OPTIONS route handler
 2. Change middleware order (add CORS first)
 3. Use `allow_origin_regex` instead of `allow_origins`
 4. Add CORS response manually in OPTIONS handler
 
 ### Phase 3: Deploy and Verify
+
 ```bash
 # Commit fix
 git add api/index.py
@@ -171,7 +192,8 @@ curl -I -X OPTIONS https://what-is-my-delta-site-production.up.railway.app/wimd 
 ```
 
 ### Phase 4: End-to-End Test
-1. Open https://whatismydelta.com
+
+1. Open <https://whatismydelta.com>
 2. Open browser DevTools (F12) → Network tab
 3. Open chat window
 4. Send message
@@ -181,7 +203,9 @@ curl -I -X OPTIONS https://what-is-my-delta-site-production.up.railway.app/wimd 
 ## FILES TO REVIEW
 
 ### api/index.py (lines 75-88)
+
 **Current CORS configuration**:
+
 ```python
 origins = [
     os.getenv("PUBLIC_SITE_ORIGIN", "https://whatismydelta.com"),
@@ -200,12 +224,15 @@ app.add_middleware(
 ```
 
 **Check**:
+
 - Is this the FIRST middleware added? (must be first)
 - Does FastAPI need explicit OPTIONS handler?
 - Should we use `allow_origin_regex`?
 
 ### mosaic_ui/index.html (line ~352)
+
 **Frontend API call location**:
+
 - Check what URL frontend is calling
 - Verify fetch headers being sent
 - Check for any CORS-related fetch options
@@ -213,6 +240,7 @@ app.add_middleware(
 ## DEPENDENCIES NOT IN BUILD PLAN
 
 **Missing pre-deployment validation steps**:
+
 1. ❌ Local CORS testing before deployment
 2. ❌ OPTIONS preflight verification step
 3. ❌ Railway webhook validation (auto-deploy)
@@ -220,6 +248,7 @@ app.add_middleware(
 5. ❌ Systematic "test locally → deploy → verify" cycle
 
 **Add to build plan**:
+
 ```markdown
 ## Pre-Deployment Checklist
 - [ ] Run API locally with production env vars
@@ -237,12 +266,14 @@ app.add_middleware(
 ## ESCALATION CRITERIA
 
 **When to escalate to human**:
+
 - After 2 failed local test attempts
 - If FastAPI documentation unclear
 - If Railway-specific CORS issue suspected
 - After 15 minutes without progress
 
 **When to escalate to Claude Code**:
+
 - Railway deployment failures
 - Railway log analysis needed
 - Infrastructure issues (not code issues)
@@ -250,6 +281,7 @@ app.add_middleware(
 ## CURRENT PROJECT STATE
 
 ### Infrastructure
+
 - **Railway**: Connected to GitHub `DAMIANSEGUIN/wimd-railway-deploy`
 - **Railway**: Manual deploy working (CMD+K → Deploy Latest Commit)
 - **Railway**: Auto-deploy working (webhooks functional)
@@ -258,12 +290,14 @@ app.add_middleware(
 - **Netlify**: Proxy rules for GET requests working
 
 ### Environment Variables (Railway)
+
 - ✅ OPENAI_API_KEY: Set
 - ✅ CLAUDE_API_KEY: Set
 - ❌ PUBLIC_SITE_ORIGIN: Not set (but hardcoded in code)
 - Backend URL: `https://what-is-my-delta-site-production.up.railway.app`
 
 ### Code Status
+
 - **Backend**: Complete FastAPI implementation (449 lines)
 - **Frontend**: Deployed to Netlify
 - **Database**: SQLite with 30-day cleanup

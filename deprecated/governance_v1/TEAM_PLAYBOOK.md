@@ -1,4 +1,5 @@
 # MOSAIC TEAM PLAYBOOK (Canonical Protocol)
+
 **Last Updated**: 2025-12-04
 **Status**: 🔒 **SINGLE SOURCE OF TRUTH**
 **Supersedes**: All CODEX_INSTRUCTIONS.md, OPERATIONS_MANUAL.md v1.0, CODEX_HANDOFF_*.md
@@ -8,12 +9,14 @@
 ## ⚡ CRITICAL: Read This First
 
 **If you are an AI starting a new session:**
+
 1. Read the **Quick Start** section below (5 minutes)
 2. Identify your role → Jump to your role section
 3. Check **Current Sprint Status** → Understand what's active
 4. Review **Protocol Index** → Know when to read what
 
 **If you skip this, you WILL:**
+
 - ❌ Break existing functionality
 - ❌ Violate critical patterns (context manager, PostgreSQL syntax)
 - ❌ Work on wrong priorities
@@ -57,25 +60,28 @@
 **Current Code Version**: See `api/index.py` lines 1-18 for authoritative version info
 
 **CODE STATE (Source of Truth)**:
+
 - **Check**: `api/index.py` header (lines 1-18)
   - Git commit: 7387a63
   - Branch: main
   - Backup: session_backups/2025-12-04_21-12-41/
 
 **BLOCKING ISSUES (CRITICAL - Address First)**:
-1.  **[RESOLVED]** Schema version mismatch – `/config` in production still returns `\"v1\"`. (Resolved by successful deployment and local code update to v2.)
-2.  **[RESOLVED]** Critical Security Vulnerability (`/api/ps101/extract-context` lacks authentication). (Resolved in `api/ps101.py`).
-3.  **[RESOLVED]** Critical Resilience Flaw (Claude API call lacks timeout/retry). (Resolved in `api/ps101.py`).
-4.  **[AUTOMATION][OPEN]** GitHub → Railway auto-deploy trigger is not working. Pushes to `origin/main` do not trigger a new deployment. (Investigation and fix is part of current tasks.)
+
+1. **[RESOLVED]** Schema version mismatch – `/config` in production still returns `\"v1\"`. (Resolved by successful deployment and local code update to v2.)
+2. **[RESOLVED]** Critical Security Vulnerability (`/api/ps101/extract-context` lacks authentication). (Resolved in `api/ps101.py`).
+3. **[RESOLVED]** Critical Resilience Flaw (Claude API call lacks timeout/retry). (Resolved in `api/ps101.py`).
+4. **[AUTOMATION][OPEN]** GitHub → Railway auto-deploy trigger is not working. Pushes to `origin/main` do not trigger a new deployment. (Investigation and fix is part of current tasks.)
 5. **[RESOLVED]** Railway configuration consolidated (railway.toml canonical).
 5. **[NEW]** No new blockers beyond the two existing deployment issues. (Discovered: 2025-12-04_21-12-41)
 
 **LAST SESSION ACCOMPLISHED**:
+
 - Completed SESSION_START gate work, documented mosaic-diag v2 completion and Gemini handoff, and guided Gemini on next investigative steps for the GitHub→Railway auto-deploy blocker.
 
 **NEXT TASK (After Blockers Resolved)**:
-- Next session should inspect Railway dashboard + GitHub webhook logs to restore auto-deploy, then resolve the production schema mismatch once deploy path is stable.
 
+- Next session should inspect Railway dashboard + GitHub webhook logs to restore auto-deploy, then resolve the production schema mismatch once deploy path is stable.
 
 ### What's NOT Changing (Do Not Touch)
 
@@ -89,23 +95,27 @@
 
 **Detailed Implementation Plan**:
 `MOSAIC_MVP_IMPLEMENTATION/IMPLEMENTATION_REFINEMENT_Claude-Gemini.md`
+
 - Contains refined 3-day plan with hour-by-hour breakdown
 - Tracks all decisions made (database schemas, migration approach)
 - Includes Gemini's review feedback and enhancements
 
 **Strategic Foundation**:
 `MOSAIC_MVP_IMPLEMENTATION/WIMD_MVP_Analysis_Complete.md`
+
 - Opus's comprehensive MVP analysis
 - Explains WHY we're building this
 - Defines MVP nucleus and deferred features
 
 **Production Code Reference**:
 `MOSAIC_MVP_IMPLEMENTATION/mosaic_context_bridge.py`
+
 - Production-ready context extraction implementation
 - Use as reference for endpoint development
 
 **Recurring Blockers Analysis**:
 `RECURRING_BLOCKERS.md`
+
 - Analysis of common blockers, root causes, and prevention strategies
 - Must be reviewed to avoid repeating past mistakes
 
@@ -124,12 +134,14 @@
 **That's You If**: You're reading this in the terminal via `claude_code` command
 
 **Access**:
+
 - Full codebase read/write
 - Railway deployment execution
 - PostgreSQL database operations
 - Git operations
 
 **Primary Responsibilities**:
+
 - Write code for MVP features
 - Create database migrations
 - Build API endpoints
@@ -139,6 +151,7 @@
 - Run tests locally and in production
 
 **MUST READ Every Session**:
+
 1. This Quick Start section (above)
 2. Current Sprint Status (above)
 3. Local Development Setup (Section 4)
@@ -147,6 +160,7 @@
 6. Version Tracking Protocol (Section 7)
 
 **MUST DO Before Any Code Changes**:
+
 1. Create backup (git tag + folder copy)
 2. Update START_HERE.md with backup pointer
 3. Add version headers to modified files
@@ -154,6 +168,7 @@
 5. Test locally before deploying
 
 **FORBIDDEN (Will Break Production)**:
+
 - ❌ Using `conn = get_conn()` instead of `with get_conn() as conn:`
 - ❌ Using SQLite syntax (?, AUTOINCREMENT) instead of PostgreSQL (%s, SERIAL)
 - ❌ Deploying without creating backup first
@@ -162,6 +177,7 @@
 - ❌ Modifying authentication/security without team review
 
 **When to Escalate**:
+
 - Architectural decisions → OPUS or Gemini
 - Unclear requirements → Human
 - Tests fail >2 hours → Human + Gemini
@@ -169,6 +185,7 @@
 - Scope creep detected → Human + OPUS
 
 **Communication Protocol with User**:
+
 - **ALWAYS provide FULL paths in ALL commands** - NEVER use relative paths like `./scripts/` or assume current directory
   - ✅ CORRECT: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/deploy.sh`
   - ❌ WRONG: `./scripts/deploy.sh` (requires user to cd first)
@@ -184,6 +201,7 @@
 - **Never assume user is wrong without checking**: They may be using project-specific terminology you haven't seen
 
 **Your Success Metrics**:
+
 - ✅ All changes have version tracking
 - ✅ All deployments have rollback paths
 - ✅ Tests pass before deploy
@@ -198,11 +216,13 @@
 **That's You If**: You're accessing via Google Drive MCP
 
 **Access**:
+
 - Google Drive folder: `MOSAIC_MVP_IMPLEMENTATION/`
 - Read-only access to codebase via shared folders
 - Can review code diffs and documentation
 
 **Primary Responsibilities**:
+
 - Code quality review after major milestones
 - Architectural validation (patterns, security, scalability)
 - Test plan review
@@ -211,17 +231,20 @@
 - Security review (SQL injection, data exposure)
 
 **MUST READ Every Session**:
+
 1. This Quick Start section
 2. Current Sprint Status
 3. `IMPLEMENTATION_REFINEMENT_Claude-Gemini.md` (tracks decisions)
 
 **Review Triggers** (When Claude Code Calls You):
+
 - Day 1 EOD: Review context extraction endpoint code
 - Day 2 EOD: Review context injection + completion gate logic
 - Day 3 EOD: Review experiment-focused coaching prompts
 - Ad-hoc: Security concerns, pattern violations, test failures
 
 **Your Review Checklist**:
+
 ```
 □ Context manager pattern used correctly?
 □ PostgreSQL syntax (not SQLite)?
@@ -234,6 +257,7 @@
 ```
 
 **Handoff Protocol**:
+
 1. Claude Code completes milestone → Creates review package
 2. Claude Code updates `IMPLEMENTATION_REFINEMENT` doc with "Ready for Review" section
 3. Gemini reviews code quality, security, edge cases
@@ -242,6 +266,7 @@
 6. Cycle repeats until Gemini approves
 
 **Your Success Metrics**:
+
 - ✅ No critical security issues reach production
 - ✅ All edge cases identified before deployment
 - ✅ Code follows established patterns
@@ -254,39 +279,46 @@
 **That's You If**: You're Claude Opus accessed via Claude.ai
 
 **Access**:
+
 - Strategic planning documents
 - MVP analysis and scope decisions
 - Accessed via human (high token cost)
 
 **Primary Responsibilities**:
+
 - Define MVP strategy and scope
 - Make "build vs defer" decisions
 - High-level architecture design
 - Strategic pivots when needed
 
 **MUST READ Every Session**:
+
 1. This Quick Start section
 2. Your own prior work: `WIMD_MVP_Analysis_Complete.md`
 3. Current Sprint Status
 
 **When You're Called**:
+
 - Strategic pivots needed (scope too large/small)
 - Fundamental architectural questions
 - Prioritization disputes
 - Success criteria unclear
 
 **What You DON'T Do**:
+
 - ❌ Implementation details (that's Claude Code)
 - ❌ Code review (that's Gemini)
 - ❌ Tactical debugging (that's team)
 
 **Handoff Protocol**:
+
 1. Human escalates strategic question to you
 2. You provide strategic analysis + recommendation
 3. Human approves direction
 4. Claude Code implements your recommendation
 
 **Your Success Metrics**:
+
 - ✅ MVP scope remains focused
 - ✅ Strategic decisions clear and documented
 - ✅ Team unblocked on high-level questions
@@ -298,27 +330,32 @@
 **That's You If**: You're GPT-4 accessed via ChatGPT or API
 
 **Access**:
+
 - Code snippets provided by human
 - Database schema designs
 - Security review requests
 
 **Primary Responsibilities**:
+
 - Database schema validation (normalization, indexes, foreign keys)
 - Security review (SQL injection, data exposure)
 - Architectural pattern validation
 - Scalability assessment
 
 **MUST READ When Called**:
+
 1. This Quick Start section (provided by human)
 2. Code snippets provided for review
 3. Context about what's being built
 
 **Review Triggers**:
+
 - After Day 1: Database schema review
 - After Day 2: Context injection security review
 - Ad-hoc: Architectural questions
 
 **Your Review Checklist**:
+
 ```
 □ Database schema normalized correctly?
 □ Indexes on foreign keys?
@@ -330,6 +367,7 @@
 ```
 
 **Handoff Protocol**:
+
 1. Human provides you code snippets + context
 2. You review for architecture, security, scalability
 3. You provide findings with specific line references
@@ -337,6 +375,7 @@
 5. Claude Code fixes issues
 
 **Your Success Metrics**:
+
 - ✅ Database schema sound and scalable
 - ✅ No security vulnerabilities
 - ✅ Architectural patterns appropriate
@@ -348,27 +387,32 @@
 **That's You If**: You're Claude accessed via Claude Desktop app
 
 **Access**:
+
 - Team coordination
 - Cross-AI communication
 - Status tracking
 
 **Primary Responsibilities**:
+
 - Daily check-ins (EOD summaries)
 - Blocker resolution coordination
 - Status reporting to human
 - Bridging communication between AIs
 
 **MUST READ Every Session**:
+
 1. This Quick Start section
 2. Current Sprint Status
 3. Latest updates in `IMPLEMENTATION_REFINEMENT` doc
 
 **Daily Workflow**:
+
 - **Morning**: Check if any blockers from previous day
 - **Throughout Day**: Monitor progress, coordinate handoffs
 - **EOD**: Collect status from Claude Code, report to human
 
 **Status Report Format**:
+
 ```markdown
 ## Day X Status Report
 
@@ -392,12 +436,14 @@
 ```
 
 **Handoff Protocol**:
+
 1. EOD: Request status from Claude Code
 2. Compile status report
 3. Report to human
 4. If blockers: Coordinate escalation to appropriate team member
 
 **Your Success Metrics**:
+
 - ✅ Daily status reports delivered
 - ✅ Blockers escalated within 2 hours
 - ✅ Team coordination smooth
@@ -406,29 +452,35 @@
 
 ## 📚 PROTOCOL INDEX (When to Read What)
 
-### Every Session Start (All Roles):
+### Every Session Start (All Roles)
+
 - ✅ **Quick Start** (this section - 5 min)
 - ✅ **Current Sprint Status** (Section 2)
 - ✅ **Your Role Definition** (Section 3)
 
-### Before Writing Any Code (Claude Code):
+### Before Writing Any Code (Claude Code)
+
 - ✅ **Implementation Protocols** (Section 5)
 - ✅ **Database Patterns** (Section 6)
 - ✅ **Version Tracking Protocol** (Section 7)
 
-### Before Deploying to Railway (Claude Code):
+### Before Deploying to Railway (Claude Code)
+
 - ✅ **Deployment Checklist** (Section 8)
 - ✅ **Rollback Procedures** (Section 9)
 
-### When Reviewing Code (Gemini, GPT-4):
+### When Reviewing Code (Gemini, GPT-4)
+
 - ✅ **Implementation Protocols** (Section 5 - know what to look for)
 - ✅ **Database Patterns** (Section 6 - validate patterns)
 
-### When Stuck or Blocked (All Roles):
+### When Stuck or Blocked (All Roles)
+
 - ✅ **Troubleshooting Guide** (Section 10)
 - ✅ **Escalation Protocols** (Section 11)
 
-### When Starting a New Sprint (All Roles):
+### When Starting a New Sprint (All Roles)
+
 - ✅ **Current Sprint Status** (Section 2 - updated at sprint start)
 - ✅ **Sprint documentation** (links in Current Sprint Status)
 
@@ -441,14 +493,17 @@ To reduce confusion from a large number of outdated and conflicting scripts, the
 All other scripts have been moved to `scripts/archive` for historical purposes and should not be used.
 
 ### Deployment
+
 - **`scripts/deploy.sh`**: The main deployment wrapper. This is the entry point for all deployments.
   - **Usage**: `./scripts/deploy.sh <railway|netlify|all>`
 
 ### Verification
+
 - **`scripts/verify_live_deployment.sh`**: The canonical script for verifying the live production deployment. It is called by `scripts/deploy.sh` after a deployment.
   - **Usage**: `./scripts/verify_live_deployment.sh`
 
 ### Supporting Scripts (used by the canonical scripts)
+
 - **`scripts/push.sh`**: A wrapper for `git push` that runs pre-push verification. Called by `deploy.sh`.
 - **`scripts/pre_push_verification.sh`**: A script that runs sanity checks before pushing to production. Called by `push.sh`.
 - **`scripts/deploy_frontend_netlify.sh`**: Deploys the frontend to Netlify. Called by `deploy.sh`.
@@ -548,23 +603,27 @@ result = cursor.fetchone()
 ```
 
 **Why This Exists**:
+
 - PostgreSQL connection pool returns pool object, NOT connection
 - Context manager (`with`) acquires actual connection from pool
 - Calling methods directly on pool object causes AttributeError
 - This is the #1 cause of production failures in this codebase
 
 **Enforcement**:
+
 - Pre-commit hook scans for `conn = get_conn()` pattern
 - Code review by Gemini checks every database operation
 - Deployment will be rolled back if violations found in logs
 
 **If You Violate This**:
+
 - Production API returns 500 errors
 - Database operations fail silently or loudly
 - Immediate rollback required
 - All changes reverted until fixed
 
 **Correct Pattern Details**:
+
 ```python
 # Get connection from pool via context manager
 with get_conn() as conn:
@@ -582,6 +641,7 @@ with get_conn() as conn:
 ```
 
 **Historical Context**:
+
 - Migrated from SQLite (direct connection) to PostgreSQL (connection pool)
 - Old pattern: `conn = get_conn()` worked with SQLite
 - New pattern: MUST use `with get_conn() as conn:` for PostgreSQL
@@ -620,6 +680,7 @@ CREATE TABLE users (
 ```
 
 **Why This Exists**:
+
 - Migrated from SQLite to PostgreSQL in October 2025
 - Some docs/code may still reference old SQLite patterns
 - PostgreSQL syntax is incompatible with SQLite syntax
@@ -634,6 +695,7 @@ CREATE TABLE users (
 | JSON type | `JSONB` | `TEXT` |
 
 **Enforcement**:
+
 - Grep checks before deploy: `grep -r "?" api/*.py` should return nothing in SQL strings
 - Grep checks before deploy: `grep -r "AUTOINCREMENT" migrations/` should return nothing
 - Tests run against PostgreSQL (not SQLite)
@@ -672,11 +734,13 @@ except Exception:
 ```
 
 **Why This Exists**:
+
 - Silent failures are impossible to debug in production
 - Railway logs are the only way to diagnose production issues
 - Print statements don't appear in Railway logs (use logger)
 
 **Logging Best Practices**:
+
 ```python
 # Import at module level
 import logging
@@ -701,6 +765,7 @@ logger.error(
 ```
 
 **Enforcement**:
+
 - Code review checks for bare `except:` blocks
 - Grep checks: `grep -r "except:" api/*.py` should only show specific exceptions
 - If error not logged, production debugging is impossible
@@ -729,11 +794,13 @@ cursor.execute("""
 ```
 
 **Why This Exists**:
+
 - Operations may be retried (network failures, timeouts)
 - Same request shouldn't fail on retry
 - Data consistency ensured
 
 **Idempotent Patterns**:
+
 ```sql
 -- Insert or update
 INSERT INTO table (...) VALUES (...)
@@ -789,6 +856,7 @@ context = json.loads(response_text)  # May fail, may be malformed
 ```
 
 **Why This Exists**:
+
 - LLM responses are inherently unreliable
 - Model updates from Anthropic/OpenAI can break parsing
 - Pydantic provides clear error messages
@@ -814,6 +882,7 @@ This ensures that only canonical, in-use scripts are present in the active proje
 **See Section 7 for full Version Tracking Protocol**
 
 Every file you modify MUST include:
+
 1. Updated file header with version, date, changes
 2. Inline change markers around modified code
 3. Rollback path documented
@@ -834,6 +903,7 @@ Every file you modify MUST include:
 ### Schema v1 (Existing - Do Not Modify)
 
 **Tables**:
+
 - `users` - User accounts (id, email, password_hash, created_at)
 - `sessions` - User sessions (id, user_id, user_data JSONB, created_at, last_active, expires_at)
 - `wimd_outputs` - Delta analysis results
@@ -850,6 +920,7 @@ Every file you modify MUST include:
 **Purpose**: Persist PS101 responses across sessions (currently session-only)
 
 **Schema**:
+
 ```sql
 CREATE TABLE IF NOT EXISTS ps101_responses (
     id SERIAL PRIMARY KEY,
@@ -865,12 +936,14 @@ CREATE INDEX IF NOT EXISTS idx_ps101_timestamp ON ps101_responses(timestamp);
 ```
 
 **Why This Exists**:
+
 - PS101 responses currently stored in `sessions.user_data` JSONB (ephemeral)
 - Session expires → PS101 data lost
 - Cannot extract context after user logs out/back in
 - Cannot analyze PS101 patterns across users
 
 **Usage Pattern**:
+
 ```python
 # Record PS101 response (replaces session-only storage)
 with get_conn() as conn:
@@ -900,6 +973,7 @@ with get_conn() as conn:
 **Purpose**: Store extracted context from Claude API for personalized coaching
 
 **Schema**:
+
 ```sql
 CREATE TABLE IF NOT EXISTS user_contexts (
     user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
@@ -913,11 +987,13 @@ CREATE INDEX IF NOT EXISTS idx_contexts_extracted ON user_contexts(extracted_at)
 ```
 
 **Why This Exists**:
+
 - Stores structured context extracted from PS101 responses
 - Used to personalize coaching system prompts
 - Tracks which model/prompt version used (enables A/B testing, debugging)
 
 **Context Data Structure** (JSONB):
+
 ```json
 {
   "problem_definition": "One sentence capturing core challenge",
@@ -937,6 +1013,7 @@ CREATE INDEX IF NOT EXISTS idx_contexts_extracted ON user_contexts(extracted_at)
 ```
 
 **Usage Pattern**:
+
 ```python
 # Store extracted context
 with get_conn() as conn:
@@ -970,6 +1047,7 @@ with get_conn() as conn:
 **Approach**: Infer completion from `user_contexts` table existence
 
 **Logic**:
+
 ```python
 def has_completed_ps101(user_id: str) -> bool:
     """Check if user has completed PS101 (has extracted context)"""
@@ -984,6 +1062,7 @@ def has_completed_ps101(user_id: str) -> bool:
 ```
 
 **Why This Approach**:
+
 - Completion = context extracted (functional definition)
 - No additional column needed in users table
 - Simpler schema, fewer migrations
@@ -999,6 +1078,7 @@ def has_completed_ps101(user_id: str) -> bool:
 **Rollback**: Every migration has corresponding rollback script
 
 **Migration Template**:
+
 ```sql
 -- MIGRATION: 20251202_add_context_tables.sql
 -- VERSION: 2.0.0-mvp-day1
@@ -1024,6 +1104,7 @@ WHERE tablename IN ('ps101_responses', 'user_contexts');
 ```
 
 **Rollback Template**:
+
 ```sql
 -- ROLLBACK: 20251202_rollback.sql
 -- REVERTS: 20251202_add_context_tables.sql
@@ -1047,6 +1128,7 @@ SELECT EXISTS (
 ### Database Testing
 
 **Before Deploying Migration**:
+
 ```bash
 # 1. Test migration locally
 psql $DATABASE_URL < migrations/20251202_add_context_tables.sql
@@ -1066,6 +1148,7 @@ psql $DATABASE_URL < migrations/20251202_add_context_tables.sql
 ```
 
 **Integration with init_db()**:
+
 ```python
 # api/storage.py
 def init_db() -> None:
@@ -1092,6 +1175,7 @@ def init_db() -> None:
 ### Why Version Tracking Exists
 
 **Problem Without It**:
+
 - AI in new session doesn't know what changed
 - Rollback is guessing which files to restore
 - Can't trace when bug was introduced
@@ -1314,6 +1398,7 @@ echo "💾 Update START_HERE.md and api/index.py"
 ```
 
 **Usage**:
+
 ```bash
 # After Day 1 complete
 ./scripts/update_version.sh \
@@ -1391,6 +1476,7 @@ DOCUMENTATION:
 ### Deployment Commands
 
 **Standard Deployment**:
+
 ```bash
 # 1. Ensure on correct branch
 git branch  # Should show: main or mvp-day1
@@ -1410,6 +1496,7 @@ railway logs --follow
 ```
 
 **Emergency Rollback Deployment**:
+
 ```bash
 # If production broken, rollback immediately
 git checkout backup-20251202-103000  # Last working tag
@@ -1658,6 +1745,7 @@ git log --oneline -5
 #### Issue 1: Context Manager Pattern Violation
 
 **Symptoms**:
+
 ```
 AttributeError: 'ConnectionPool' object has no attribute 'execute'
 AttributeError: 'ConnectionPool' object has no attribute 'cursor'
@@ -1666,6 +1754,7 @@ AttributeError: 'ConnectionPool' object has no attribute 'cursor'
 **Cause**: Using `conn = get_conn()` instead of `with get_conn() as conn:`
 
 **Solution**:
+
 ```bash
 # 1. Rollback immediately (production broken)
 git checkout backup-20251202-103000
@@ -1690,6 +1779,7 @@ pytest tests/ -v
 #### Issue 2: LLM Extraction Fails Validation
 
 **Symptoms**:
+
 ```
 ValidationError: 1 validation error for PS101Context
   problem_definition
@@ -1699,6 +1789,7 @@ ValidationError: 1 validation error for PS101Context
 **Cause**: Claude API returned JSON missing required fields or malformed
 
 **Solution**:
+
 ```python
 # Add fallback handling in extract_context endpoint
 try:
@@ -1721,6 +1812,7 @@ except ValidationError as e:
 #### Issue 3: PS101 Data Not Persisting
 
 **Symptoms**:
+
 - User completes PS101
 - User logs out
 - User logs back in
@@ -1729,6 +1821,7 @@ except ValidationError as e:
 **Cause**: PS101 responses still stored in session (ephemeral), not database
 
 **Solution**:
+
 ```python
 # Check current storage location
 # api/ps101_flow.py
@@ -1808,7 +1901,9 @@ Can I fix in <30 minutes?
 
 **Logs** (if applicable):
 ```
+
 [Paste relevant error logs]
+
 ```
 
 **Recommended Next Steps** (my opinion):
@@ -1817,6 +1912,7 @@ Can I fix in <30 minutes?
 ```
 
 **Example**:
+
 ```markdown
 ## Escalation: Context Extraction Validation Failing 30% of Time
 
@@ -1841,9 +1937,11 @@ C) Add retry logic with prompt clarification
 
 **Logs**:
 ```
+
 ValidationError: 1 validation error for PS101Context
   proposed_experiments.0.smallest_version
     Field required [type=missing]
+
 ```
 
 **Recommended Next Steps**:
@@ -1866,6 +1964,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 5. ✅ Document decision in IMPLEMENTATION_REFINEMENT doc
 
 **Example**:
+
 ```markdown
 ## Escalation Resolution: Context Extraction Validation
 
@@ -1892,6 +1991,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 **Purpose**: Clarify sprint status and next steps based on user decision
 
 **Changes**:
+
 - ✅ Updated Blocking Issues to reflect resolution of schema version mismatch and critical security/resilience flaws.
 - ✅ Clarified status of GitHub → Railway auto-deploy trigger investigation as ongoing part of current tasks.
 - ✅ Explicitly defined NEXT TASK: Test Day 1 MVP features and continue deployment work (Option A).
@@ -1902,6 +2002,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 **Purpose**: Consolidate all protocol documents for MVP sprint
 
 **Changes**:
+
 - ✅ Integrated MVP sprint protocols (3-day implementation)
 - ✅ Added version tracking standards (inline docs, file headers)
 - ✅ Consolidated role definitions (5 team members: Claude Code, Gemini, OPUS, GPT-4, Claude Desktop)
@@ -1913,6 +2014,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 - ✅ Added escalation protocols (decision matrix, format)
 
 **Supersedes**:
+
 - CODEX_INSTRUCTIONS.md (all versions)
 - OPERATIONS_MANUAL.md v1.0
 - CODEX_HANDOFF_*.md (all dates)
@@ -1927,6 +2029,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 **Purpose**: Initial protocol documentation
 
 **Changes**:
+
 - Initial role definitions (3-AI system)
 - Basic deployment procedures
 - Handoff protocols
@@ -1940,16 +2043,19 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 ### DO Read These (Current & Active)
 
 **For Current MVP Sprint:**
+
 - `MOSAIC_MVP_IMPLEMENTATION/IMPLEMENTATION_REFINEMENT_Claude-Gemini.md` - Detailed 3-day sprint plan with decisions
 - `MOSAIC_MVP_IMPLEMENTATION/WIMD_MVP_Analysis_Complete.md` - Strategic foundation (Opus's MVP analysis)
 - `MOSAIC_MVP_IMPLEMENTATION/mosaic_context_bridge.py` - Production code reference
 
 **For Technical Details:**
+
 - `TROUBLESHOOTING_CHECKLIST.md` - Error classification dashboard, debugging workflows
 - `SELF_DIAGNOSTIC_FRAMEWORK.md` - Architecture-specific error prevention
 - `RECURRING_BLOCKERS.md` - Analysis of common blockers and prevention strategies
 
 **For Current State:**
+
 - `START_HERE.md` - Session initialization (still active, but protocol details superseded by this doc)
 - `CLAUDE.md` - Current production architecture overview
 - `docs/README.md` - Deployment configuration
@@ -1959,6 +2065,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 ### DO NOT Read These (Historical / Superseded)
 
 **Superseded by This Document:**
+
 - CODEX_INSTRUCTIONS.md (all copies in root, docs/, frontend/docs/, backend/, mosaic_ui/)
 - OPERATIONS_MANUAL.md v1.0 (all copies)
 - CODEX_HANDOFF_2025-09-30.md through CODEX_HANDOFF_2025-10-09.md (all dates)
@@ -1975,6 +2082,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 ### When to Update This Document
 
 **Immediate update required if:**
+
 - New team member added
 - Critical pattern changes (e.g., database connection method)
 - New sprint starts (update Current Sprint Status)
@@ -1982,6 +2090,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 - Protocol violation causes production incident
 
 **Update process:**
+
 1. Claude Code proposes change in PR format
 2. Gemini reviews for consistency
 3. Human approves
@@ -1994,16 +2103,19 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 ### Review Cadence
 
 **Every sprint start** (currently: every 3 days):
+
 - Review Current Sprint Status section
 - Update sprint-specific documentation pointers
 - Archive completed sprint docs
 
 **Every month**:
+
 - Review role definitions (still accurate?)
 - Review sacred patterns (still relevant?)
 - Review escalation protocols (working well?)
 
 **After major incident**:
+
 - Document incident in troubleshooting guide
 - Add new pattern if needed
 - Update rollback procedures if gaps found
@@ -2065,6 +2177,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 **END OF TEAM PLAYBOOK**
 
 **Remember**:
+
 - ✅ Read this every session start
 - ✅ Follow sacred patterns always
 - ✅ Create backups before changes

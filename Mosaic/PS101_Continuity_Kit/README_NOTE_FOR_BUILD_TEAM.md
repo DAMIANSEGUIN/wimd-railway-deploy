@@ -4,6 +4,7 @@ This package is the definitive hand-off for the Mosaic PS101 build continuity sy
 It contains manifests, CI/CD workflows, and helper scripts to maintain integrity across builds.
 
 ## Contents
+
 - manifest.can.json — canonical manifest
 - PS101_Continuity_Disambiguation_Plan_2025-11-03.md — rationale + diagnostic plan
 - README_NOTE_FOR_BUILD_TEAM.md — quick setup & Nudge
@@ -13,5 +14,6 @@ It contains manifests, CI/CD workflows, and helper scripts to maintain integrity
 - inject_build_id.js / check_spec_hash.sh — helper scripts
 
 ## Nudge
+
 Adopt the single gate + manifest + footer BUILD_ID immediately.
 That one step prevents ≈ 90% of version drift and chaos across PS101 builds.

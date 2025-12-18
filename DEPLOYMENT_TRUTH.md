@@ -1,6 +1,7 @@
 # DEPLOYMENT TRUTH - SINGLE SOURCE OF AUTHORITY
 
 **Document Metadata:**
+
 - Created: 2025-11-25 by Claude Code
 - Last Updated: 2025-11-25 by Claude Code
 - Last Deployment Tag: prod-2025-11-18 (commit: 31d099c)
@@ -37,11 +38,13 @@ netlify deploy --prod --dir mosaic_ui
 
 **From commit message:**
 > **Problem Found:**
+>
 > - CLAUDE.md said: 'push to railway-origin main'
 > - Reality (Nov 9, 11, 14, 18 deploys): push to origin only
 > - railway-origin is legacy remote with no write access
 >
 > **Root Cause:**
+>
 > - railway-origin (what-is-my-delta-site) is historical mirror
 > - Railway deploys via CLI/API, not git push
 > - Documentation never updated when process changed
@@ -63,6 +66,7 @@ railway-origin  https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 ### Successful Deployments Since Nov 9, 2025
 
 All used `origin` only:
+
 - Nov 9: Deploy logs show origin-only
 - Nov 11: Deploy logs show origin-only
 - Nov 14: Deploy logs show origin-only
@@ -76,7 +80,8 @@ All used `origin` only:
 
 ## WHY CONFUSION PERSISTED
 
-### Timeline:
+### Timeline
+
 1. **Nov 3-9:** Wrapper scripts created (`scripts/deploy.sh`, `scripts/push.sh`)
 2. **Scripts hardcoded:** `railway-origin` as deployment target
 3. **Nov 17:** Documentation updated (CLAUDE.md, SESSION_START_PROTOCOL.md)
@@ -92,6 +97,7 @@ All used `origin` only:
 Railway does **NOT** deploy via git push.
 
 Railway deploys via:
+
 1. **GitHub Integration** - Railway service connected to `wimd-railway-deploy` repo
 2. **Auto-deploy** - Watches `main` branch for changes
 3. **Manual triggers** - Railway CLI (`railway up`) or Dashboard
@@ -103,32 +109,39 @@ Railway deploys via:
 ## WHAT NEEDS TO BE FIXED
 
 ### 1. Update `scripts/deploy.sh`
+
 **Current (BROKEN):**
+
 ```bash
 # Calls push.sh with railway-origin
 ./scripts/push.sh railway-origin main
 ```
 
 **Should be:**
+
 ```bash
 # Calls push.sh with origin
 ./scripts/push.sh origin main
 ```
 
 ### 2. Update `scripts/push.sh`
+
 **Current (BROKEN):**
+
 ```bash
 # Expects railway-origin as argument
 ./scripts/push.sh railway-origin main
 ```
 
 **Should accept:**
+
 ```bash
 # Uses origin by default
 ./scripts/push.sh origin main
 ```
 
 ### 3. Remove `railway-origin` from docs
+
 - Any remaining references to railway-origin should say "LEGACY"
 - Update to reference origin instead
 
@@ -155,12 +168,14 @@ Before considering this issue resolved:
 2. **Do not reference** wrapper scripts (they may be outdated)
 3. **Do not reference** CLAUDE.md alone (it may be outdated)
 4. **Use this process:**
+
    ```bash
    git push origin main
    # Railway auto-deploys
    ```
 
 **If wrapper scripts fail:**
+
 - They are outdated
 - Use manual process above
 - File bug: "Wrapper scripts not updated to match DEPLOYMENT_TRUTH.md"
@@ -179,11 +194,13 @@ Before considering this issue resolved:
 ## HOW TO UPDATE THIS FILE
 
 Only update this file when:
+
 1. **Deployment process actually changes** (verified by multiple successful deploys)
 2. **New evidence emerges** (git logs, Railway dashboard, etc.)
 3. **User confirms** process change
 
 **Do not update based on:**
+
 - Documentation in other files
 - Assumptions
 - "It should work this way"
@@ -196,12 +213,14 @@ Only update this file when:
 ## DEPLOYMENT PROCESS - CANONICAL REFERENCE
 
 **Frontend (Netlify):**
+
 ```bash
 git push origin main
 netlify deploy --prod --dir mosaic_ui
 ```
 
 **Backend (Railway):**
+
 ```bash
 git push origin main
 # Railway auto-deploys within 2-5 minutes

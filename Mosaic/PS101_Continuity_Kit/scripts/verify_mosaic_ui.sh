@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 SITE="https://whatismydelta.com"
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$SITE")

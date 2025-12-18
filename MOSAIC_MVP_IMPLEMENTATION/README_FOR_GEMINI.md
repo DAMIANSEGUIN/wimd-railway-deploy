@@ -20,8 +20,10 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ## Documents in This Package
 
 ### 1. **IMPLEMENTATION_REFINEMENT_Claude-Gemini.md** ⭐ **START HERE**
+
 **What it is:** Comprehensive synthesis of Claude Code + Gemini collaborative review
 **Contains:**
+
 - Gemini's complete review findings (architecture, code, risks)
 - Claude's technical analysis (database gaps, current state)
 - Answered questions vs outstanding decisions needed
@@ -35,8 +37,10 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ---
 
 ### 2. MOSAIC_COMPLETE_HANDOFF.md (1,241 lines)
+
 **What it is:** Complete self-contained handoff document with zero external dependencies
 **Contains:**
+
 - Full architecture overview (FastAPI backend, Vanilla JS frontend, PostgreSQL database)
 - All critical code patterns with examples (context manager, PostgreSQL syntax, error handling)
 - Complete API endpoint documentation (40+ endpoints)
@@ -50,8 +54,10 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ---
 
 ### 3. WIMD_MVP_Analysis_Complete.md (530 lines)
+
 **What it is:** Opus 4.5's comprehensive 6-phase MVP analysis
 **Contains:**
+
 - User purpose analysis (why generic coaching fails)
 - Phase-by-phase evaluation of current 7-phase plan
 - The "Aha" moment: AI already knows user context from PS101
@@ -67,8 +73,10 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ---
 
 ### 4. MOSAIC_IMMEDIATE_ACTION_PLAN.md (429 lines)
+
 **What it is:** Tactical 3-day sprint plan for Claude Code (ORIGINAL - see Refinement doc for UPDATED plan)
 **Contains:**
+
 - Executive summary of MVP nucleus
 - What Opus determined (keep/defer decisions)
 - What Claude Code knows (current working state)
@@ -84,8 +92,10 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ---
 
 ### 5. mosaic_context_bridge.py (282 lines)
+
 **What it is:** Production-ready Python implementation
 **Contains:**
+
 - `extract_ps101_context()` - Transforms PS101 responses into structured JSON using Claude API
 - `build_coaching_system_prompt()` - Injects context into coaching system prompt
 - Complete extraction prompt with rules
@@ -100,6 +110,7 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ## The Big Picture
 
 ### Current State (What Works)
+
 ✅ Authentication (login/register/password reset)
 ✅ PS101 flow (10 questions exist)
 ✅ Chat interface (functional)
@@ -108,6 +119,7 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ✅ Frontend deployed (Netlify)
 
 ### The Gap (What's Missing)
+
 ❌ Context extraction from PS101 responses
 ❌ Context injection into coaching system prompt
 ❌ PS101 completion gate (can't chat until PS101 done)
@@ -116,6 +128,7 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ### The Solution (3-Day Sprint)
 
 **Day 1: Context Extraction Foundation**
+
 - Verify PS101 data persistence
 - Build `/api/ps101/extract-context` endpoint
 - Use Claude API to extract structured context:
@@ -131,6 +144,7 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 - Store context in database
 
 **Day 2: Context Injection + Completion Flow**
+
 - Modify `/api/chat/message` to fetch user context
 - Inject context into system prompt
 - Add PS101 completion gate (redirect to PS101 if incomplete)
@@ -138,6 +152,7 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 - End-to-end test with 3 sample users
 
 **Day 3: Experiment Focus + Beta Launch**
+
 - Refine system prompt to emphasize experiment design
 - Add simple feedback collection (personalization?, concrete experiment?)
 - Beta user outreach (10-15 users)
@@ -148,6 +163,7 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ## Key Technical Patterns (Critical)
 
 ### 1. Database Context Manager Pattern
+
 ```python
 # ✅ CORRECT
 with get_conn() as conn:
@@ -161,6 +177,7 @@ cursor = conn.execute(...)  # CRASHES
 ```
 
 ### 2. PostgreSQL Syntax (NOT SQLite)
+
 ```python
 # ✅ Use %s placeholders
 cursor.execute("INSERT INTO users VALUES (%s, %s)", (val1, val2))
@@ -173,6 +190,7 @@ CREATE TABLE users (id SERIAL PRIMARY KEY, ...)
 ```
 
 ### 3. Idempotent Operations
+
 ```python
 cursor.execute("""
     INSERT INTO user_contexts (user_id, context_data, extracted_at)
@@ -186,6 +204,7 @@ cursor.execute("""
 ## Success Criteria
 
 ### Must Work Before Beta Launch
+
 - [ ] User can create account
 - [ ] User can complete all 10 PS101 questions
 - [ ] PS101 data persists across sessions
@@ -194,12 +213,14 @@ cursor.execute("""
 - [ ] Coaching guides toward experiment design
 
 ### Quality Thresholds
+
 - PS101 completion time: < 45 minutes
 - Context extraction: 100% success rate (no failures)
 - Coaching personalization: Obvious in first 2 exchanges
 - Experiment output: Concrete plan in 80% of sessions
 
 ### Beta Validation Targets
+
 - 10-15 beta users complete full flow
 - "Did coaching feel personalized?" → 70%+ yes
 - "Did you leave with a concrete experiment?" → 70%+ yes
@@ -268,6 +289,7 @@ cursor.execute("""
 ## File Locations
 
 **All files in this folder:**
+
 ```
 ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/MOSAIC_MVP_IMPLEMENTATION/
 
@@ -279,6 +301,7 @@ cursor.execute("""
 ```
 
 **Production codebase:**
+
 ```
 ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Railway-Deploy-Project/
 ```

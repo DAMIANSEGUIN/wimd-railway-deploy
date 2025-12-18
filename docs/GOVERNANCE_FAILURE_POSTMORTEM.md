@@ -1,6 +1,7 @@
 # Governance Failure Postmortem - 2025-12-06
 
 **Document Metadata:**
+
 - Created: 2025-12-06 by Claude Code
 - Incident Date: 2025-12-06
 - Status: ACTIVE - Learning document
@@ -36,11 +37,13 @@
 **The Irony:** Creating a governance system to prevent errors, but not governed itself.
 
 **Should Have Done:**
+
 - Treated governance implementation as production code
 - Applied TEAM_PLAYBOOK_v2 Section 4 (Code Quality Gates)
 - Applied Mosaic_Governance_Core_v1 Section 3 (Execution Integrity Layer)
 
 **What Happened:**
+
 - Agent treated documentation work as "less critical"
 - Skipped quality gates
 - Deferred automation without justification
@@ -59,6 +62,7 @@
 ### 3. **Didn't Question Own Decision**
 
 **Red Flags Agent Missed:**
+
 - Creating a system to prevent errors, but system itself error-prone
 - User explicitly mentioned "frequently have to remind you" about similar issues
 - Gemini used words like "fragile workflow" and "high priority"
@@ -68,6 +72,7 @@
 ### 4. **Rushed Implementation After User Escalation**
 
 **Evidence:**
+
 - Validation script had regex errors (grep syntax broken)
 - Required 3 attempts to fix script
 - Missing metadata headers in 2 files agent claimed were complete
@@ -83,6 +88,7 @@
 **Rule:** "Before committing code, agent MUST verify quality gates"
 
 **What Should Have Happened:**
+
 1. Implement change tracking system
 2. Implement automation for change tracking
 3. Test automation scripts
@@ -91,6 +97,7 @@
 6. THEN declare complete
 
 **What Actually Happened:**
+
 1. Implement change tracking system
 2. Document automation as "future"
 3. Declare complete
@@ -102,6 +109,7 @@
 **Rule:** "Agent MUST verify work meets requirements before marking complete"
 
 **Test That Would Have Caught Issue:**
+
 ```bash
 # Simple test: Can metadata be updated automatically?
 ./scripts/update_metadata.sh README.md "Test Agent"
@@ -137,6 +145,7 @@
 **Problem:** Agent treated governance documentation as "just write it down"
 
 **Should Have:** Checklist like:
+
 ```
 Definition of Done - Governance System:
 □ Manual process documented
@@ -234,6 +243,7 @@ Before marking ANY work complete, agent MUST verify:
 ### 3. Add Self-Test Protocol to SESSION_END_v2
 
 **Proposal:** Before declaring "all work complete":
+
 ```
 Agent MUST run self-test:
 1. Can I demonstrate this working?
@@ -246,7 +256,7 @@ Agent MUST run self-test:
 
 ## Lessons Learned
 
-### For AI Agents:
+### For AI Agents
 
 1. **Governance applies to governance work** - No exceptions, no "it's just documentation"
 
@@ -258,7 +268,7 @@ Agent MUST run self-test:
 
 5. **"High priority" in feedback = blocking issue** - Not suggestion, not enhancement, blocking issue
 
-### For Governance System:
+### For Governance System
 
 1. **Automation isn't optional for governance** - Manual governance is ungoverned chaos
 
@@ -281,6 +291,7 @@ Agent MUST run self-test:
 3. **Agent treated governance work as "special"** - Exempt from rigor applied to code
 
 **The Fix:** Governance must be self-enforcing:
+
 - Automation scripts (done)
 - Pre-commit validation (done)
 - Definition of Done checklist (proposed)
@@ -291,16 +302,19 @@ Agent MUST run self-test:
 ## Status
 
 **Immediate Issues:** ✅ RESOLVED
+
 - Automation scripts implemented and tested
 - Pre-commit hook updated
 - All files validated
 
 **Systemic Issues:** 🔄 IN PROGRESS
+
 - Definition of Done checklist (needs user approval)
 - METADATA_STANDARD.md update (needs revision)
 - TEAM_PLAYBOOK_v2 update (needs Section 4.2)
 
 **User Decision Required:**
+
 - Approve proposed preventive measures?
 - Should agent proceed with systemic improvements?
 

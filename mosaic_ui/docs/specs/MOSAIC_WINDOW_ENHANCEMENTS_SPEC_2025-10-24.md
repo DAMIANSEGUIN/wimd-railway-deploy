@@ -10,6 +10,7 @@
 ## Overview
 
 Enhance the draggable/resizable windows system with:
+
 1. **Persistent layouts** - Save window positions/sizes to localStorage
 2. **Window maximize/fullscreen** - Expand windows to fill viewport
 3. **Snap-to-grid positioning** - Round positions to grid increments for cleaner alignment
@@ -19,6 +20,7 @@ Enhance the draggable/resizable windows system with:
 ## 1. Persistent Layouts (localStorage)
 
 ### Requirement
+
 Save window positions, sizes, and states so they restore on page reload.
 
 ### Implementation
@@ -351,9 +353,11 @@ coachWindow.show();
 ## 2. Window Maximize/Fullscreen
 
 ### Requirement
+
 Allow windows to expand to fill the entire viewport with a maximize button.
 
 ### Features
+
 - **Maximize button** in window header (▭ icon)
 - **Toggle behavior**: Click once to maximize, click again to restore
 - **Preserved state**: Original position/size remembered when maximized
@@ -361,6 +365,7 @@ Allow windows to expand to fill the entire viewport with a maximize button.
 - **Disable dragging/resizing** when maximized
 
 ### Implementation
+
 Already included in the `DraggableWindow` class above (see `toggleMaximize()` method).
 
 ### CSS Enhancements
@@ -387,6 +392,7 @@ Already included in the `DraggableWindow` class above (see `toggleMaximize()` me
 ## 3. Snap-to-Grid Positioning
 
 ### Requirement
+
 Round window positions to a grid (e.g., 20px increments) for cleaner alignment.
 
 ### Configuration
@@ -497,6 +503,7 @@ document.addEventListener('mouseup', () => {
 ## 4. Mobile Responsiveness
 
 ### Requirement
+
 Gracefully disable dragging/resizing on mobile devices (<768px width).
 
 ### Implementation
@@ -569,6 +576,7 @@ window.addEventListener('resize', () => {
 ## Testing Checklist
 
 ### Persistent Layouts
+
 - [ ] Window position saved to localStorage on drag end
 - [ ] Window size saved to localStorage on resize end
 - [ ] Window state restored on page reload
@@ -578,6 +586,7 @@ window.addEventListener('resize', () => {
 - [ ] localStorage quota exceeded handled gracefully
 
 ### Maximize/Fullscreen
+
 - [ ] Maximize button expands window to viewport
 - [ ] Restore button returns to original position/size
 - [ ] Icon toggles between ▭ and ❐
@@ -586,6 +595,7 @@ window.addEventListener('resize', () => {
 - [ ] Maximized state saved and restored
 
 ### Snap-to-Grid
+
 - [ ] Window positions snap to 20px grid
 - [ ] Window sizes snap to 20px increments
 - [ ] Snapping feels natural (not jarring)
@@ -593,6 +603,7 @@ window.addEventListener('resize', () => {
 - [ ] Grid overlay disappears when drag ends
 
 ### Mobile Responsiveness
+
 - [ ] Draggable windows disabled on <768px
 - [ ] Windows become full-screen modals on mobile
 - [ ] Resize handles hidden on mobile

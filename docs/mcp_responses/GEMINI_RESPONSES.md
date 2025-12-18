@@ -9,10 +9,11 @@ This document contains my responses to the prompts from `docs/MCP_CONTEXT_ENGINE
 **Purpose:** To classify information I interact with and determine how it should be managed.
 
 **Agent Description:**
--   **Identity:** Gemini API Mode Agent
--   **Inputs:** I receive prompts and context via a broker shell script (`agent_send.sh`). This includes user instructions and piped file content.
--   **Outputs:** I return text, which is typically a plan, analysis, or a shell command to be executed.
--   **Lifecycle:** My lifecycle is transactional and stateless. I am invoked for a single turn and have no memory beyond the context provided in that turn's prompt.
+
+- **Identity:** Gemini API Mode Agent
+- **Inputs:** I receive prompts and context via a broker shell script (`agent_send.sh`). This includes user instructions and piped file content.
+- **Outputs:** I return text, which is typically a plan, analysis, or a shell command to be executed.
+- **Lifecycle:** My lifecycle is transactional and stateless. I am invoked for a single turn and have no memory beyond the context provided in that turn's prompt.
 
 **State Analysis Table:**
 
@@ -24,6 +25,7 @@ This document contains my responses to the prompts from `docs/MCP_CONTEXT_ENGINE
 | Full content of a large file | **Decision-Relevant** | I cannot perform specific analysis or modifications (e.g., refactoring) on that file. | Wastes significant context space if I only need to check one field or line. | **Solution:** My context should default to including only file paths. I should use a `read_file` tool or an MCP retrieval trigger to get full content or specific snippets on demand. |
 
 ---
+
 ### **Prompt #3: Retrieval Trigger Design**
 
 **Purpose:** To define the specific events that should cause me to fetch additional context from an external source like MCP.
@@ -42,15 +44,17 @@ File: `.ai-agents/session_context/trigger_detector.py`
 | A file path is referenced that I haven't seen. | **Pattern Match:** A string in the prompt matches a file path format but is not in my file listing. | `mcp_get_file_content("path/to/file.py")` | Filesystem / MCP Cache | Gemini |
 
 ---
+
 ### **Prompt #2: View Compilation Design**
 
 **Purpose:** To define what information must be in my context for different types of tasks.
 
 **My Main Step Types:**
-1.  **PLANNING:** Analyzing a user request to form a multi-step plan.
-2.  **EXECUTION:** Issuing a single, specific shell command.
-3.  **ANALYSIS:** Reading command output or file content to decide the next step.
-4.  **SYNTHESIS:** Generating a final answer, creating code, or writing a commit message.
+
+1. **PLANNING:** Analyzing a user request to form a multi-step plan.
+2. **EXECUTION:** Issuing a single, specific shell command.
+3. **ANALYSIS:** Reading command output or file content to decide the next step.
+4. **SYNTHESIS:** Generating a final answer, creating code, or writing a commit message.
 
 **Context View Matrix:**
 
@@ -62,6 +66,7 @@ File: `.ai-agents/session_context/trigger_detector.py`
 | **SYNTHESIS**| The result of my analysis and the user's original goal. | The conversation summary. | The full `stdout`/`stderr` that was already analyzed. | Redundant data that has already been processed into a conclusion. | Gemini |
 
 ---
+
 ### **Prompt #6: External Memory Architecture**
 
 **Purpose:** To decide the appropriate storage mechanism for different types of content.
@@ -76,6 +81,7 @@ File: `.ai-agents/session_context/trigger_detector.py`
 | **Conversation History** | Yes (summary of last 3 turns) | MCP Conversation Database | `mcp_get_conversation(query="...")` | Gemini |
 
 ---
+
 ### **Prompt #9: Failure Reflection System**
 
 **Purpose:** To define how I capture, structure, and learn from failures.
@@ -88,6 +94,7 @@ File: `.ai-agents/session_context/trigger_detector.py`
 | I produce a hallucinated or incorrect response. | User provides feedback: "That's wrong," "That file doesn't exist." | `{ "turn_id": "...", "bad_response": "...", "user_correction": "...", "root_cause": "..." }` | An MCP process flags this for review. A summary is added to my agent profile. | High-severity issues become permanent constraints. Minor ones decay after a few sessions. | Gemini |
 
 ---
+
 ### **Prompt #11: Context Observability Audit**
 
 **Purpose:** To ensure my context can be inspected for debugging and verification.
@@ -101,19 +108,23 @@ File: `.ai-agents/session_context/trigger_detector.py`
 | **Log Exclusions** | None. I don't know what *wasn't* included. | **Complete.** I cannot ask "what did you leave out?" | The broker script should log a summary of excluded items (e.g., "omitted 5 files from directory listing," "truncated conversation history"). | Gemini |
 
 ---
+
 ### Phase 0 Work Completed
 
 **Task 0.4.1: Create Golden Dataset for Trigger Detection**
+
 - **Deliverable:** `.ai-agents/test_data/TRIGGER_TEST_DATASET.json`
 - **Status:** COMPLETED (2025-12-09 14:54)
 - **Findings:** Successfully created 25 test cases covering all 5 trigger types and edge cases, following the specified JSON format.
 
 **Task 0.3.2: Create Feature Flag System**
+
 - **Deliverable:** `.ai-agents/config/feature_flags.json`, `.ai-agents/config/read_flags.py`
 - **Status:** COMPLETED (2025-12-09 14:55)
 - **Findings:** Successfully created JSON configuration for feature flags and a Python utility for reading them, ensuring all flags default to `false`.
 
 ---
+
 ### Phase 1 Task 1C Complete
 
 **Task:** Implement the trigger detector that uses the golden dataset.

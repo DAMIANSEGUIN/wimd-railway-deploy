@@ -6,9 +6,9 @@ Detects failures and automatically falls back to baseline behavior
 
 import json
 import sys
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, Tuple, Optional
+from pathlib import Path
+from typing import Any, Dict, Tuple
 
 
 class MCPRecovery:
@@ -20,7 +20,7 @@ class MCPRecovery:
         self.fallback_docs = [
             "CLAUDE.md",
             "TROUBLESHOOTING_CHECKLIST.md",
-            "SELF_DIAGNOSTIC_FRAMEWORK.md"
+            "SELF_DIAGNOSTIC_FRAMEWORK.md",
         ]
 
     def check_mcp_health(self) -> Tuple[bool, Dict[str, Any]]:
@@ -31,36 +31,27 @@ class MCPRecovery:
             (is_healthy, diagnostics)
         """
 
-        diagnostics = {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
-            "checks": {}
-        }
+        diagnostics = {"timestamp": datetime.utcnow().isoformat() + "Z", "checks": {}}
 
         # Check 1: MCP summary files exist
         required_summaries = [
             "GOVERNANCE_SUMMARY.md",
             "TROUBLESHOOTING_SUMMARY.md",
-            "RETRIEVAL_TRIGGERS.md"
+            "RETRIEVAL_TRIGGERS.md",
         ]
 
         summaries_ok = True
         for filename in required_summaries:
             filepath = self.session_context_dir / filename
             exists = filepath.exists()
-            diagnostics["checks"][f"summary_{filename}"] = {
-                "exists": exists,
-                "path": str(filepath)
-            }
+            diagnostics["checks"][f"summary_{filename}"] = {"exists": exists, "path": str(filepath)}
             if not exists:
                 summaries_ok = False
 
         # Check 2: Session log schema exists
         schema_file = self.session_context_dir / "SESSION_LOG_SCHEMA.json"
         schema_ok = schema_file.exists()
-        diagnostics["checks"]["schema"] = {
-            "exists": schema_ok,
-            "path": str(schema_file)
-        }
+        diagnostics["checks"]["schema"] = {"exists": schema_ok, "path": str(schema_file)}
 
         # Check 3: Feature flags accessible
         flags_file = self.config_dir / "feature_flags.json"
@@ -74,30 +65,24 @@ class MCPRecovery:
                     diagnostics["checks"]["feature_flags"] = {
                         "exists": True,
                         "mcp_enabled": mcp_enabled,
-                        "path": str(flags_file)
+                        "path": str(flags_file),
                     }
             except Exception as e:
                 flags_ok = False
                 diagnostics["checks"]["feature_flags"] = {
                     "exists": True,
                     "error": str(e),
-                    "path": str(flags_file)
+                    "path": str(flags_file),
                 }
         else:
-            diagnostics["checks"]["feature_flags"] = {
-                "exists": False,
-                "path": str(flags_file)
-            }
+            diagnostics["checks"]["feature_flags"] = {"exists": False, "path": str(flags_file)}
 
         # Check 4: Fallback docs exist
         fallback_ok = True
         for doc in self.fallback_docs:
             filepath = Path(doc)
             exists = filepath.exists()
-            diagnostics["checks"][f"fallback_{doc}"] = {
-                "exists": exists,
-                "path": str(filepath)
-            }
+            diagnostics["checks"][f"fallback_{doc}"] = {"exists": exists, "path": str(filepath)}
             if not exists:
                 fallback_ok = False
 
@@ -143,7 +128,7 @@ class MCPRecovery:
             flags["notes"] = "Auto-disabled by recovery system due to MCP component failure"
 
             # Write updated flags
-            with open(flags_file, 'w') as f:
+            with open(flags_file, "w") as f:
                 json.dump(flags, f, indent=2)
 
             return (True, "MCP disabled, system will fallback to baseline docs")
@@ -167,11 +152,11 @@ class MCPRecovery:
             "recovery": {
                 "attempted": True,
                 "success": recovery_result[0],
-                "message": recovery_result[1]
-            }
+                "message": recovery_result[1],
+            },
         }
 
-        with open(incident_file, 'w') as f:
+        with open(incident_file, "w") as f:
             json.dump(incident, f, indent=2)
 
         return str(incident_file)
@@ -182,11 +167,7 @@ class MCPRecovery:
         is_healthy, diagnostics = self.check_mcp_health()
 
         if is_healthy:
-            return {
-                "status": "healthy",
-                "recovery_attempted": False,
-                "diagnostics": diagnostics
-            }
+            return {"status": "healthy", "recovery_attempted": False, "diagnostics": diagnostics}
 
         # Attempt recovery
         success, message = self.attempt_recovery()
@@ -200,7 +181,7 @@ class MCPRecovery:
             "recovery_success": success,
             "recovery_message": message,
             "incident_log": incident_file,
-            "diagnostics": diagnostics
+            "diagnostics": diagnostics,
         }
 
 

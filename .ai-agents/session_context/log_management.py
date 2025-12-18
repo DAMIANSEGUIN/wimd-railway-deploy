@@ -4,12 +4,11 @@ Session Log Management
 Utilities for rotating, archiving, and cleaning session logs
 """
 
-import json
 import gzip
 import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 
 class LogManager:
@@ -29,7 +28,7 @@ class LogManager:
             pattern = "*.jsonl"
             directory = self.sessions_dir
 
-        return [f.stem.replace('.jsonl', '') for f in directory.glob(pattern)]
+        return [f.stem.replace(".jsonl", "") for f in directory.glob(pattern)]
 
     def get_session_size(self, session_id: str) -> int:
         """Get size of session log in bytes"""
@@ -64,8 +63,8 @@ class LogManager:
 
         if compress:
             archive_file = self.archive_dir / f"{session_id}.jsonl.gz"
-            with open(log_file, 'rb') as f_in:
-                with gzip.open(archive_file, 'wb') as f_out:
+            with open(log_file, "rb") as f_in:
+                with gzip.open(archive_file, "wb") as f_out:
                     shutil.copyfileobj(f_in, f_out)
         else:
             archive_file = self.archive_dir / f"{session_id}.jsonl"
@@ -82,8 +81,8 @@ class LogManager:
 
         if archive_file.exists():
             log_file = self.sessions_dir / f"{session_id}.jsonl"
-            with gzip.open(archive_file, 'rb') as f_in:
-                with open(log_file, 'wb') as f_out:
+            with gzip.open(archive_file, "rb") as f_in:
+                with open(log_file, "wb") as f_out:
                     shutil.copyfileobj(f_in, f_out)
             return True
 
@@ -96,11 +95,7 @@ class LogManager:
 
         return False
 
-    def cleanup_old_sessions(
-        self,
-        older_than_days: int = 30,
-        archive_first: bool = True
-    ) -> int:
+    def cleanup_old_sessions(self, older_than_days: int = 30, archive_first: bool = True) -> int:
         """
         Clean up sessions older than threshold
 
@@ -132,9 +127,7 @@ class LogManager:
         active_sessions = self.list_sessions(archived=False)
         archived_sessions = self.list_sessions(archived=True)
 
-        active_size = sum(
-            self.get_session_size(sid) for sid in active_sessions
-        )
+        active_size = sum(self.get_session_size(sid) for sid in active_sessions)
 
         archived_size = sum(
             (self.archive_dir / f"{sid}.jsonl.gz").stat().st_size
@@ -149,7 +142,7 @@ class LogManager:
             "archived_sessions": len(archived_sessions),
             "archived_size_bytes": archived_size,
             "archived_size_mb": round(archived_size / 1024 / 1024, 2),
-            "total_size_mb": round((active_size + archived_size) / 1024 / 1024, 2)
+            "total_size_mb": round((active_size + archived_size) / 1024 / 1024, 2),
         }
 
 

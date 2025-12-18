@@ -120,10 +120,44 @@ auto_fix_command() {
 }
 
 # Export functions for use in subshells
+format_command_for_output() {
+    local COMMAND="$1"
+
+    # Check for unintended line breaks (whitespace + alphanumeric on next line)
+    if echo "$COMMAND" | grep -qE $'\n''[[:space:]]+[[:alnum:]]'; then
+        echo "❌ ERROR: Command has line break mid-word"
+        echo "   This will fail when user copy-pastes"
+        return 1
+    fi
+
+    # Check for line length > 120 chars without proper continuation
+    if [ ${#COMMAND} -gt 120 ]; then
+        if ! echo "$COMMAND" | grep -q '\\$'; then
+            echo "⚠️  WARNING: Long command without backslash continuation"
+            echo "   Consider adding explicit line breaks with \\"
+        fi
+    fi
+
+    # Ensure single line or proper multi-line
+    local LINE_COUNT=$(echo -n "$COMMAND" | grep -c $'\n' || echo 0)
+    if [ "$LINE_COUNT" -gt 0 ]; then
+        # Multi-line must have backslash continuations
+        if ! echo "$COMMAND" | grep -qE '\\$'; then
+            echo "❌ ERROR: Multi-line command without backslash continuation"
+            return 1
+        fi
+    fi
+
+    echo "✅ Command format valid for copy-paste"
+    return 0
+}
+
 export -f validate_before_output
 export -f enforce_absolute_paths
 export -f check_file_exists
 export -f auto_fix_command
+export -f format_command_for_output
 
 echo "✅ Command validation enforcement loaded"
 echo "   Use: validate_before_output \"your command here\""
+echo "   Use: format_command_for_output \"your command here\""

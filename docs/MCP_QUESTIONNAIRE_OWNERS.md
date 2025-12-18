@@ -1,6 +1,7 @@
 # MCP Context Engineering Questionnaire — Owner Assignments
 
 **Document Metadata:**
+
 - Created: 2025-12-09 by Claude Code
 - Status: ACTIVE - Execution phase
 - Parent Document: `docs/MCP_CONTEXT_ENGINEERING_PROMPTS.md`
@@ -11,7 +12,9 @@
 ## Ownership Distribution
 
 ### Claude Code (Local/CLI Agent)
+
 **Assigned Sections:**
+
 - ✅ Section 1: State Persistence Analysis (CRITICAL - Phase 1)
 - Section 3: Retrieval Trigger Design (Phase 2)
 - Section 6: External Memory Architecture (CRITICAL - Phase 1)
@@ -22,7 +25,9 @@
 ---
 
 ### Codex (ChatGPT - Mirror Agent)
+
 **Assigned Sections:**
+
 - Section 2: View Compilation Design (Phase 2)
 - Section 5: Summarization Schema Design (Phase 2)
 - Section 7: Multi-Agent Scope Design (CRITICAL - Phase 1 - COLLABORATIVE)
@@ -33,7 +38,9 @@
 ---
 
 ### Gemini (API Mode Agent)
+
 **Assigned Sections:**
+
 - Section 4: Attention Budget Allocation (Phase 3)
 - Section 9: Failure Reflection System (Phase 4)
 
@@ -42,7 +49,9 @@
 ---
 
 ### All Agents (Collaborative)
+
 **Assigned Sections:**
+
 - Section 7: Multi-Agent Scope Design (CRITICAL - Phase 1)
 - Section 10: Architecture Ceiling Test (Phase 4)
 
@@ -51,8 +60,10 @@
 ---
 
 ### Human (Damian)
+
 **Role:** Final review, strategic approval, non-technical validation
 **Critical Checkpoints:**
+
 - End of Phase 1 (State persistence + External memory + Multi-agent scope)
 - End of Phase 2 (View design + Retrieval + Summarization)
 - Before any MCP implementation
@@ -62,6 +73,7 @@
 ## Execution Timeline
 
 ### Phase 1: CRITICAL (Start Immediately - Target: 24-48 hours)
+
 **Goal:** Answer foundational questions before any architecture decisions.
 
 | Section | Owner | Deadline | Dependencies | Status |
@@ -77,6 +89,7 @@
 ---
 
 ### Phase 2: DESIGN DETAILS (Target: 2-3 days after Phase 1 approval)
+
 **Goal:** Define how context is compiled, retrieved, and summarized.
 
 | Section | Owner | Deadline | Dependencies | Status |
@@ -92,6 +105,7 @@
 ---
 
 ### Phase 3: OPTIMIZATION (Target: 3-5 days after Phase 2 approval)
+
 **Goal:** Performance tuning and observability instrumentation.
 
 | Section | Owner | Deadline | Dependencies | Status |
@@ -107,6 +121,7 @@
 ---
 
 ### Phase 4: QUALITY & COMMUNICATION (Target: After Phase 3 approval)
+
 **Goal:** Failure handling, ceiling tests, and stakeholder communication.
 
 | Section | Owner | Deadline | Dependencies | Status |
@@ -126,27 +141,34 @@
 ### How to Fill Sections
 
 **1. Preserve Prior Work:**
+
 - NEVER overwrite existing entries
 - ALWAYS append to tables (add new rows)
 - Use "Notes / Owner" column to track contributions
 
 **2. Tag Collaborators:**
+
 - If a question is outside your expertise: `@Owner-Name: Please review`
 - If you need input: `@ALL: Need consensus on X`
 - If you're blocked: `@Damian: Strategic decision needed`
 
 **3. Response Format:**
+
 - **For tables:** Add rows with your agent name in Owner column
 - **For narrative:** Use blockquotes with attribution:
+
   ```
   > **Claude Code (2025-12-09):** My analysis shows...
   ```
+
 - **For questions:** Use bullet points with your name:
+
   ```
   - **Claude Code:** What happens if MCP servers are down?
   ```
 
 **4. Review Cadence:**
+
 - After each section: Self-review for completeness
 - After each phase: Cross-agent review (all agents read all sections)
 - Before next phase: Damian approval checkpoint
@@ -170,12 +192,14 @@
 ## Status Dashboard
 
 **Overall Progress:**
+
 - Phase 1: 🟢 CLAUDE CODE COMPLETE (Sections 1, 6 done; awaiting Section 7 collaboration)
 - Phase 2: 🟡 PARTIAL (Section 3 done by Claude Code)
 - Phase 3: 🟢 CLAUDE CODE COMPLETE (Section 11 done)
 - Phase 4: ⚪ NOT STARTED
 
 **Section Completion:**
+
 - Section 1: ✅ COMPLETE (Claude Code - 17 information items classified)
 - Section 2: 🟡 IN REVIEW (Gemini reviewing)
 - Section 3: ✅ COMPLETE (Claude Code - 12 retrieval triggers defined)
@@ -190,6 +214,7 @@
 - Section 12: ⚪ NOT STARTED (Codex assigned)
 
 **Agent Status:**
+
 - Claude Code: ✅ Phase 1-3 work COMPLETE (4/4 sections done)
 - Gemini: 🟡 REVIEWING (Sections 1, 2, 3, 6, 9, 11)
 - Codex: ⏳ AWAITING INPUT (Sections 2, 5, 7, 12)
@@ -202,22 +227,26 @@
 ## Next Actions (Immediate)
 
 **Claude Code:**
+
 1. ✅ Create this owner assignment document
 2. 🟡 Fill Section 1: State Persistence Analysis
 3. ⏳ Fill Section 6: External Memory Architecture
 4. ⏳ Contribute to Section 7: Multi-Agent Scope Design
 
 **Codex:**
+
 1. ⏳ Review this owner assignment
 2. ⏳ Prepare for Section 2, 5, 7, 12
 3. ⏳ Add questions to Open Questions Log
 
 **Gemini:**
+
 1. ⏳ Review this owner assignment
 2. ⏳ Prepare for Section 4, 9
 3. ⏳ Contribute to Section 7, 10
 
 **Damian:**
+
 1. ⏳ Review Phase 1 sections when complete
 2. ⏳ Answer Open Questions Log queries
 3. ⏳ Approve/reject Phase 1 before Phase 2 starts

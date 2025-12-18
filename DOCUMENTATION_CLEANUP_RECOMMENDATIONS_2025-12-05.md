@@ -1,4 +1,5 @@
 # Documentation Cleanup Recommendations
+
 **Date**: 2025-12-05
 **Purpose**: Identify obsolete, incongruent, or duplicate documentation for removal
 **Based On**: MOSAIC_DOCUMENTATION_AUDIT_2025-12-05.md + TEAM_PLAYBOOK.md current state
@@ -9,6 +10,7 @@
 ## 🎯 CURRENT PROJECT SCOPE (As of 2025-12-04)
 
 ### Active Goals
+
 1. **Mosaic Context-Aware Coaching MVP** (3-day sprint, Day 1 complete)
    - PS101 context extraction endpoint
    - Context-aware coaching system prompts
@@ -26,6 +28,7 @@
    - Schema version reporting mismatch (minor)
 
 ### Out of Scope / Deferred
+
 - Advanced experiment tracking
 - Full prompt library integration
 - Job search enhancements
@@ -42,11 +45,13 @@
 **TEAM_PLAYBOOK.md explicitly states these are superseded by v2.0.0:**
 
 **Root Directory:**
+
 - ❌ `OPERATIONS_MANUAL.md` - Superseded by TEAM_PLAYBOOK.md Section 5-11
   - **Reason**: TEAM_PLAYBOOK.md v2.0.0 consolidates all operations
   - **Action**: Move to `/deprecated/` with date stamp
 
 **Docs Directory:**
+
 - ❌ `docs/CODEX_INSTRUCTIONS.md` - Superseded by TEAM_PLAYBOOK.md Section 3
   - **Reason**: TEAM_PLAYBOOK.md Section 3 defines all team member roles
   - **Action**: Move to `/deprecated/`
@@ -72,9 +77,11 @@
 **These documents relate to a booking system that is NOT in current project scope:**
 
 **Root Directory:**
+
 - ❌ None identified in root
 
 **Planning Directory:**
+
 - ❌ `Planning/BOOKING_SESSION_BACKUP_2025-10-25.md`
   - **Reason**: Booking system not in current MVP scope per TEAM_PLAYBOOK
   - **Last Modified**: 2025-10-25 (over 1 month old)
@@ -82,6 +89,7 @@
   - **Recommendation**: Move to `Planning/Archive_20251026/` (where other booking docs already are)
 
 **Planning/Archive_20251026/ (Already Archived):**
+
 - ✅ Already archived correctly:
   - `BOOKING_ENV_SETUP.md`
   - `BOOKING_IMPLEMENTATION_PLAN.md`
@@ -100,6 +108,7 @@
 **.ai-agents Directory:**
 
 **Handoffs from November (1-3 weeks old):**
+
 - 🟡 `.ai-agents/HANDOFF_NETLIFY_RUNNER_2025-11-06.md` (29 days old)
   - **Reason**: Netlify deployment now stable, handoff complete
   - **Recommendation**: Move to `.ai-agents/archive/handoffs/2025-11/`
@@ -171,6 +180,7 @@
 ### Category 4: DUPLICATE PHASE_1_BOUNDARIES (Incomplete Placeholder)
 
 **Root Directory:**
+
 - ⚠️ `PHASE_1_BOUNDARIES.md`
   - **Status**: "DRAFT (Gemini)" - Never completed, just a placeholder template
   - **Last Modified**: 2025-11-25
@@ -186,6 +196,7 @@
 ### Category 5: INCOMPLETE/PLACEHOLDER DOCUMENTS
 
 **Root Directory:**
+
 - ⚠️ `AI_RESUME_STATE.md`
   - **Last Modified**: 2025-11-24
   - **Status**: May be stale (11 days old)
@@ -221,6 +232,7 @@ The following docs are Cursor-specific and may be superseded by TEAM_PLAYBOOK.md
   - **Recommendation**: Move to archive if bug resolved
 
 **.ai-agents Directory:**
+
 - ⚠️ `.ai-agents/CURSOR_COMPLETION_SUMMARY_2025-11-05.md` (30 days old)
 - ⚠️ `.ai-agents/CURSOR_REVIEW_4_COMMITS_DEPLOYMENT_READY_2025-11-04.md` (31 days old)
 - ⚠️ `.ai-agents/CURSOR_REVIEW_CLEANUP_PLAN_2025-11-04.md` (31 days old)
@@ -238,6 +250,7 @@ The following docs are Cursor-specific and may be superseded by TEAM_PLAYBOOK.md
 ### Category 7: OUTDATED API KEYS DOC
 
 **Root Directory:**
+
 - ⚠️ `api_keys.md`
   - **Last Modified**: 2025-10-07 (59 days old - nearly 2 months)
   - **Issue**: API keys documentation from October may be stale
@@ -251,6 +264,7 @@ The following docs are Cursor-specific and may be superseded by TEAM_PLAYBOOK.md
 ### Category 8: UNKNOWN STATUS TEXT FILES
 
 **Root Directory:**
+
 - ⚠️ `AI_DETAILED_PROMPT.txt` (no modification date available)
   - **Question**: Is this currently used or historical?
   - **Recommendation**: Review contents
@@ -274,6 +288,7 @@ The following docs are Cursor-specific and may be superseded by TEAM_PLAYBOOK.md
 ### Category 9: PLANNING DIRECTORY UNKNOWNS
 
 **Planning Directory:**
+
 - ⚠️ `Planning/00_READ_TWICE_PROTOCOL.md` (no modification date)
   - **Question**: Is this still relevant or superseded by SESSION_START.md gate system?
   - **Recommendation**: Review contents
@@ -289,6 +304,7 @@ The following docs are Cursor-specific and may be superseded by TEAM_PLAYBOOK.md
 ### Category 10: ARCHIVED NAR TASKS (Historical)
 
 **Planning/NAR_Archive Directory:**
+
 - 🟡 `Planning/NAR_Archive/NAR_RAILWAY_DEBUG_V1.md`
   - **Status**: In archive directory
   - **Recommendation**: Keep in archive (already properly archived)
@@ -304,6 +320,7 @@ The following docs are Cursor-specific and may be superseded by TEAM_PLAYBOOK.md
 ### Category 11: OLD DIAGNOSTIC REPORTS (November)
 
 **.ai-agents Directory:**
+
 - 🟡 `.ai-agents/DIAGNOSTIC_REPORT_20251102.md` (33 days old)
   - **Status**: Comprehensive diagnostic from Nov 2
   - **Recommendation**: Keep for historical reference OR move to archive
@@ -327,6 +344,7 @@ The following docs are Cursor-specific and may be superseded by TEAM_PLAYBOOK.md
 ### Category 12: OLD STAGE DOCUMENTS (November)
 
 **.ai-agents Directory:**
+
 - 🟡 `.ai-agents/STAGE1_CURRENT_STATE_2025-11-05.md` (30 days old)
 - 🟡 `.ai-agents/STAGE2_ACTION_PLAN_2025-11-05.md` (30 days old)
 - 🟡 `.ai-agents/STAGE2_DIAGNOSIS_2025-11-05.md` (30 days old)
@@ -371,6 +389,7 @@ The following docs are Cursor-specific and may be superseded by TEAM_PLAYBOOK.md
 ### Phase 1: Immediate (No Risk)
 
 **Archive superseded documents:**
+
 ```bash
 # Create deprecated directory
 mkdir -p /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/deprecated/2025-12
@@ -395,6 +414,7 @@ EOF
 ```
 
 **Archive stale dated handoffs:**
+
 ```bash
 # Create archive structure
 mkdir -p .ai-agents/archive/{handoffs,deployments,sessions,testing,issues}/{2025-11,2025-12}
@@ -437,6 +457,7 @@ mkdir -p .ai-agents/archive/{handoffs,deployments,sessions,testing,issues}/{2025
 ### Phase 3: Optional Optimization
 
 **Archive old diagnostics and stage docs** (29 additional files)
+
 - These are historical and may be useful for reference
 - If not needed, can be archived to reduce clutter
 
@@ -447,12 +468,14 @@ mkdir -p .ai-agents/archive/{handoffs,deployments,sessions,testing,issues}/{2025
 **BEFORE DELETING ANY FILES:**
 
 1. ✅ Create timestamped backup:
+
    ```bash
    cd /Users/damianseguin/AI_Workspace
    tar -czf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz WIMD-Railway-Deploy-Project/
    ```
 
 2. ✅ Verify backup created successfully:
+
    ```bash
    ls -lh WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz
    ```
@@ -486,6 +509,7 @@ mkdir -p .ai-agents/archive/{handoffs,deployments,sessions,testing,issues}/{2025
 **END OF CLEANUP RECOMMENDATIONS**
 
 **Next Steps**:
+
 1. User reviews and answers questions
 2. User approves deletion categories
 3. Execute cleanup with approved items only

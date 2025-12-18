@@ -3,11 +3,13 @@
 ## For AI Agents: Two Scripts You Need to Know
 
 ### Session Start (MANDATORY)
+
 ```bash
 ./scripts/status.sh
 ```
 
 **Run this FIRST when starting any session.** It will show you:
+
 - Current production health (live)
 - What's deployed
 - Latest instructions (auto-finds most recent file)
@@ -15,11 +17,13 @@
 - Exactly what to do next
 
 ### Session End (MANDATORY)
+
 ```bash
 ./scripts/commit_work.sh
 ```
 
 **Run this when you complete your assigned task.** It will:
+
 - Show what you changed
 - Create a descriptive commit message
 - Check production health for next agent
@@ -30,6 +34,7 @@
 ## Other Scripts in This Directory
 
 ### Deployment Scripts
+
 - **`deploy.sh`** - Deploy to Netlify/Railway (ALWAYS use this, never raw commands)
   - Usage: `./scripts/deploy.sh netlify|railway|all`
 
@@ -37,6 +42,7 @@
   - Usage: `./scripts/push.sh railway-origin main`
 
 ### Verification Scripts
+
 - **`verify_critical_features.sh`** - Check that auth, PS101, etc. are present
   - Run before ANY deployment
 
@@ -44,6 +50,7 @@
   - Note: Has Playwright bug with hidden elements (use verify_critical_features.sh instead)
 
 ### Legacy Scripts
+
 - **`predeploy_sanity.sh`** - Old pre-deployment checks
 - **`verify_deploy.sh`** - Old deployment verification
 - **`one_shot_new_deploy.sh`** - Create new Railway project
@@ -54,22 +61,26 @@
 ## Quick Reference
 
 **Starting a session:**
+
 ```bash
 ./scripts/status.sh
 ```
 
 **Completing a task:**
+
 ```bash
 ./scripts/commit_work.sh
 ```
 
 **Before deploying:**
+
 ```bash
 ./scripts/verify_critical_features.sh
 ./scripts/deploy.sh netlify  # or railway, or all
 ```
 
 **If stuck:**
+
 ```bash
 ./scripts/status.sh  # Always shows current state
 ```
@@ -97,12 +108,14 @@ The new session management system (as of 2025-11-24) replaces the old multi-file
 ### Why This Works Better
 
 **Old system problems:**
+
 - ❌ Multiple dated files (which one is current?)
 - ❌ Long markdown docs (AI skims and misses things)
 - ❌ Static info (gets stale within hours)
 - ❌ No enforcement (AI could skip reading)
 
 **New system advantages:**
+
 - ✅ One command per phase (start/end)
 - ✅ Always current (reads live system)
 - ✅ Can't be skipped (it's the protocol)
@@ -112,6 +125,7 @@ The new session management system (as of 2025-11-24) replaces the old multi-file
 ### File Locations
 
 All AI session documentation is now in:
+
 - `/scripts/status.sh` - Session start (single source of truth)
 - `/scripts/commit_work.sh` - Task completion (structured handoff)
 - `/.ai-agents/SESSION_START_PROTOCOL.md` - Full protocol documentation
@@ -119,6 +133,7 @@ All AI session documentation is now in:
 - `/AI_START_HERE.txt` - Quick start for new AI agents
 
 Legacy documentation (for reference only):
+
 - `/.ai-agents/START_HERE.md` - Old protocol (deprecated)
 - `/.ai-agents/*_YYYY-MM-DD.md` - Historical incident reports
 - `/CLAUDE.md` - Architecture overview (still valid)
@@ -128,11 +143,13 @@ Legacy documentation (for reference only):
 ## Troubleshooting
 
 **Script not executable:**
+
 ```bash
 chmod +x scripts/status.sh scripts/commit_work.sh
 ```
 
 **Script not found:**
+
 ```bash
 # Make sure you're in project root
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
@@ -140,11 +157,13 @@ cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 ```
 
 **Production health check fails:**
+
 - This is intentional - the script will warn you
 - Do NOT proceed with changes if production is unhealthy
 - Focus on diagnosis and recovery first
 
 **No recent instruction file found:**
+
 - This is normal if no new work has been planned
 - Ask the user: "What should I work on?"
 - Check legacy docs (CLAUDE.md, AI_START_HERE.txt) for context

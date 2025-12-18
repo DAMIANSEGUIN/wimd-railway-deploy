@@ -1,6 +1,7 @@
 # Note for Claude_Code — 2025-11-09
 
 ## What changed
+
 - Implemented the guarded `safeInitApp` bootstrap (with diagnostics and user-facing failover) in both `mosaic_ui/index.html` and `frontend/index.html`. Expect the console breadcrumb sequence documented in `CLAUDE_AI_IMPLEMENTATION_GUIDE.md`.
 - Added execution checkpoints inside the IIFE so we can see whether the parser reaches the `initApp` definition before wiring the listener.
 - Reworked the deployment toolchain:
@@ -11,11 +12,13 @@
 - Follow-up (current session): hardened chat/auth wiring so the “first visit” nudge and chat helpers only run after Phase 2.5 initializes DOM references. `chat`, `chatLog`, `chatInput`, and `sendMsg` now live at module scope with a `chatGuard` helper (which lazily rebinds DOM nodes if init hasn’t wired them yet), and the nudge block moved inside `initApp`. Mirrors applied to both HTML entry points.
 
 ## Verification already run
+
 - `./scripts/verify_critical_features.sh` ✅ (warnings about API_BASE / prod auth unchanged)
 - `./Mosaic/PS101_Continuity_Kit/check_spec_hash.sh` ✅ (`7795ae25`)
 - No deployment executed yet; tree currently has uncommitted working changes and long-standing untracked assets (see `git status`).
 
 ## What to do next
+
 1. Review the updated `mosaic_ui/index.html` / `frontend/index.html` sections (search for `INIT SETUP` logs) and ensure we’re comfortable with the UX around a failed init.
 2. When ready to ship, run `./scripts/deploy.sh netlify`. The wrapper will:
    - Run the verification gate first,

@@ -1,4 +1,5 @@
 # Session Start Baseline Measurement
+
 **Date:** 2025-12-09
 **Measured By:** Claude Code
 **Purpose:** Establish baseline before MCP v1.1 implementation
@@ -11,10 +12,12 @@
 **Total:** 30,887 bytes (30.2 KB)
 
 **Breakdown:**
+
 - `CLAUDE.md`: 16,090 bytes (15.7 KB)
 - `TROUBLESHOOTING_CHECKLIST.md`: 14,797 bytes (14.4 KB)
 
 **Not loaded by default:**
+
 - `SELF_DIAGNOSTIC_FRAMEWORK.md`: 32,015 bytes (loaded on demand for errors)
 
 ---
@@ -36,6 +39,7 @@ From `scripts/start_session.sh`:
 **Goal:** <10 KB total context at session start (67% reduction from 30KB)
 
 **How:**
+
 - Load summaries (~2KB each) with provenance
 - Load retrieval triggers map (~1KB)
 - Fetch full docs only when triggered by keywords/errors
@@ -46,6 +50,7 @@ From `scripts/start_session.sh`:
 ## Validation Criteria
 
 After MCP implementation, measure again and verify:
+
 - ✅ Total context size < 10KB
 - ✅ Can still access all information when needed
 - ✅ No critical constraints lost in summarization

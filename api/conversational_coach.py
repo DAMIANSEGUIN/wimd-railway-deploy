@@ -11,13 +11,14 @@ Pattern based on prompts.csv coaching responses:
 5. Point toward possibility
 """
 
-from typing import Dict, Any, List, Optional, Tuple
-from enum import Enum
 import re
+from enum import Enum
+from typing import Dict, List, Tuple
 
 
 class UserIntent(Enum):
     """Classification of user's message intent"""
+
     ANSWER = "answer"  # Answering the current question
     META_QUESTION = "meta_question"  # Asking about the process itself
     FRUSTRATION = "frustration"  # Expressing frustration or confusion
@@ -30,6 +31,7 @@ class UserIntent(Enum):
 
 class EmotionalTone(Enum):
     """User's emotional state"""
+
     HOPEFUL = "hopeful"
     DISCOURAGED = "discouraged"
     CONFUSED = "confused"
@@ -39,9 +41,7 @@ class EmotionalTone(Enum):
 
 
 def detect_intent(
-    user_message: str,
-    current_question: str,
-    conversation_history: List[Dict]
+    user_message: str, current_question: str, conversation_history: List[Dict]
 ) -> Tuple[UserIntent, EmotionalTone]:
     """Detect user's intent and emotional tone
 
@@ -117,7 +117,9 @@ def detect_intent(
     word_count = len(msg_lower.split())
     if word_count > 10:
         # Check tone
-        if any(word in msg_lower for word in ["hopeless", "anxious", "stressed", "worried", "scared"]):
+        if any(
+            word in msg_lower for word in ["hopeless", "anxious", "stressed", "worried", "scared"]
+        ):
             return (UserIntent.ANSWER, EmotionalTone.DISCOURAGED)
         elif any(word in msg_lower for word in ["excited", "hopeful", "ready", "want", "can"]):
             return (UserIntent.ANSWER, EmotionalTone.ENGAGED)
@@ -131,11 +133,7 @@ def detect_intent(
     return (UserIntent.TANGENT, EmotionalTone.NEUTRAL)
 
 
-def generate_acknowledgment(
-    user_message: str,
-    intent: UserIntent,
-    tone: EmotionalTone
-) -> str:
+def generate_acknowledgment(user_message: str, intent: UserIntent, tone: EmotionalTone) -> str:
     """Generate natural acknowledgment of what user said
 
     Pattern: "I hear that..." / "That makes sense..." / "I understand..."
@@ -174,10 +172,7 @@ def generate_acknowledgment(
 
 
 def generate_validation(
-    user_message: str,
-    intent: UserIntent,
-    tone: EmotionalTone,
-    ps101_context: Dict
+    user_message: str, intent: UserIntent, tone: EmotionalTone, ps101_context: Dict
 ) -> str:
     """Validate/normalize the user's experience
 
@@ -205,10 +200,7 @@ def generate_validation(
 
 
 def generate_reframe_or_insight(
-    user_message: str,
-    intent: UserIntent,
-    tone: EmotionalTone,
-    ps101_context: Dict
+    user_message: str, intent: UserIntent, tone: EmotionalTone, ps101_context: Dict
 ) -> str:
     """Offer gentle reframe or insight
 
@@ -235,14 +227,14 @@ def generate_next_action(
     next_step: int,
     next_prompt_index: int,
     intent: UserIntent,
-    should_advance: bool
+    should_advance: bool,
 ) -> str:
     """Generate next question or action
 
     Returns: next_question_text
     """
     # Import here to avoid circular dependency
-    from api.ps101_flow import get_ps101_step, format_step_for_user
+    from api.ps101_flow import format_step_for_user, get_ps101_step
 
     if intent == UserIntent.META_QUESTION:
         # Answer the meta question, then continue with same question
@@ -278,7 +270,7 @@ def generate_conversational_response(
     ps101_context: Dict,
     current_question: str,
     conversation_history: List[Dict],
-    session_data: Dict
+    session_data: Dict,
 ) -> Tuple[str, bool]:
     """Generate full conversational response
 
@@ -309,11 +301,12 @@ def generate_conversational_response(
         parts.append(reframe)
 
     # 4. Decide if we should advance PS101 state
-    if intent == UserIntent.ANSWER and tone != EmotionalTone.CONFUSED:
-        should_advance = True
-    elif intent == UserIntent.POSSIBILITY_THINKING:
-        should_advance = True
-    elif intent == UserIntent.SIMPLE_CONFIRMATION:
+    if (
+        intent == UserIntent.ANSWER
+        and tone != EmotionalTone.CONFUSED
+        or intent == UserIntent.POSSIBILITY_THINKING
+        or intent == UserIntent.SIMPLE_CONFIRMATION
+    ):
         should_advance = True
 
     # 5. Calculate next position (for generating question text)
@@ -323,6 +316,7 @@ def generate_conversational_response(
     # Temporarily advance to get next position
     if should_advance:
         from api.ps101_flow import get_ps101_step
+
         step_data = get_ps101_step(current_step)
         if step_data:
             total_prompts = len(step_data.get("prompts", []))
@@ -341,12 +335,7 @@ def generate_conversational_response(
 
     # 6. Get next action text
     next_action = generate_next_action(
-        current_step,
-        current_prompt_idx,
-        next_step,
-        next_prompt_idx,
-        intent,
-        should_advance
+        current_step, current_prompt_idx, next_step, next_prompt_idx, intent, should_advance
     )
 
     if next_action:

@@ -52,7 +52,8 @@
 
 ## Agent Instructions
 
-### For Requesting Agent (e.g., Claude Code):
+### For Requesting Agent (e.g., Claude Code)
+
 ```bash
 # 1. Create request file
 cat > .ai-agents/request_for_Gemini_$(date +%s).json << EOF
@@ -71,7 +72,8 @@ git commit -m "Request: Gemini to run SQL query"
 # 3. Tell user: "Created request for Gemini. When you start Gemini next, it will see this automatically."
 ```
 
-### For Responding Agent (e.g., Gemini):
+### For Responding Agent (e.g., Gemini)
+
 ```bash
 # 1. On session start, check for requests
 ls .ai-agents/request_for_Gemini_*.json | while read req; do
@@ -93,7 +95,8 @@ git add .ai-agents/response_*.json
 git commit -m "Response: SQL query results for Claude-Code"
 ```
 
-### For User (Minimal Involvement):
+### For User (Minimal Involvement)
+
 ```bash
 # When switching between agents, just tell them:
 # "Check for pending requests"
@@ -141,6 +144,7 @@ Claude: Got the data! Continuing with fix...
 ## Automation Scripts
 
 ### For start_session.sh (auto-check requests)
+
 ```bash
 # Add to scripts/start_session.sh
 echo "🔍 Checking for pending requests..."
@@ -171,6 +175,7 @@ fi
 ## Reducing User Involvement Further
 
 ### Option A: Git Hooks
+
 ```bash
 # .git/hooks/post-checkout
 # Auto-notify about requests when switching branches/sessions
@@ -178,6 +183,7 @@ fi
 ```
 
 ### Option B: Slack/Discord Bot
+
 - Bot monitors .ai-agents/ folder
 - When request file appears, bot pings target agent
 - Agent processes and commits response
@@ -185,6 +191,7 @@ fi
 - User sees it happen but doesn't touch it
 
 ### Option C: Cron Job (Long-running)
+
 ```bash
 # Run every 5 minutes
 */5 * * * * cd /path/to/project && ./scripts/process_requests.sh
@@ -209,6 +216,7 @@ fi
 ---
 
 For TRUE zero-involvement automation, you'd need:
+
 1. Long-running agent processes (not sessions)
 2. Message broker (RabbitMQ, Redis, etc.)
 3. Agent orchestrator (like LangChain, AutoGPT)

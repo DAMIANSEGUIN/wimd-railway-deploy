@@ -1,11 +1,15 @@
 """
 Dice job source implementation via web scraping.
 """
-import requests
-from typing import List, Optional
+
 from datetime import datetime
+from typing import List, Optional
+
+import requests
 from bs4 import BeautifulSoup
-from .base import JobSource, JobPosting
+
+from .base import JobPosting, JobSource
+
 
 class DiceSource(JobSource):
     """Dice job board integration via web scraping."""
@@ -20,46 +24,48 @@ class DiceSource(JobSource):
             return []
 
         try:
-            params = {
-                'q': query,
-                'location': location or '',
-                'page': 1
-            }
+            params = {"q": query, "location": location or "", "page": 1}
 
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
             }
 
             response = requests.get(self.base_url, params=params, headers=headers, timeout=10)
             response.raise_for_status()
 
-            soup = BeautifulSoup(response.content, 'html.parser')
-            job_cards = soup.find_all('div', class_='card', limit=limit)
+            soup = BeautifulSoup(response.content, "html.parser")
+            job_cards = soup.find_all("div", class_="card", limit=limit)
 
             jobs = []
             for card in job_cards:
                 try:
-                    title_elem = card.find('a', class_='card-title-link')
-                    company_elem = card.find('a', class_='card-company')
-                    location_elem = card.find('span', class_='location')
+                    title_elem = card.find("a", class_="card-title-link")
+                    company_elem = card.find("a", class_="card-company")
+                    location_elem = card.find("span", class_="location")
 
                     if not (title_elem and company_elem):
                         continue
 
                     job_url = f"https://www.dice.com{title_elem.get('href', '')}"
-                    job_id = job_url.split('/')[-1].split('?')[0] if job_url else str(hash(title_elem.text))
+                    job_id = (
+                        job_url.split("/")[-1].split("?")[0]
+                        if job_url
+                        else str(hash(title_elem.text))
+                    )
 
                     job = {
                         "id": f"dice_{job_id}",
                         "title": title_elem.text.strip(),
                         "company": company_elem.text.strip(),
-                        "location": location_elem.text.strip() if location_elem else "See description",
+                        "location": (
+                            location_elem.text.strip() if location_elem else "See description"
+                        ),
                         "description": f"Dice tech job: {title_elem.text.strip()}",
                         "url": job_url,
                         "posted_date": datetime.now(),
-                        "remote": 'remote' in (location_elem.text.lower() if location_elem else ''),
+                        "remote": "remote" in (location_elem.text.lower() if location_elem else ""),
                         "skills": [],
-                        "experience_level": "mid"
+                        "experience_level": "mid",
                     }
 
                     jobs.append(self._normalize_job_data(job))
@@ -75,7 +81,7 @@ class DiceSource(JobSource):
         except Exception as e:
             print(f"Error parsing Dice jobs: {e}")
             return []
-    
+
     def get_job_details(self, job_id: str) -> Optional[JobPosting]:
         """Get detailed job information from Dice."""
         # Job details endpoint not implemented - users should click through to source URL

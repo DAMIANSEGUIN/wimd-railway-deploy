@@ -1,9 +1,11 @@
 # PS101 / Mosaic — Production Deploy & Verification Kit
+
 Date: 2025-11-04
 
 This kit contains **everything** your team needs to (a) finalize the Mosaic/PS101 UI cutover to `https://whatismydelta.com`, (b) fix the login-modal race with robust trial-mode init, (c) verify DNS/cache, and (d) validate production with deterministic checks. All scripts are **zsh-safe**, no heredocs, no inline comments, and assume macOS (Monterey) with Netlify CLI installed.
 
 ## Contents
+
 - `docs/PS101_Mosaic_Deployment_Guardrails_2025-11-04.md` — Guardrails document.
 - `docs/netlify_sanity_check.md` — Where Netlify can still override `mosaic_ui/`.
 - `scripts/deploy_now_zsh.sh` — Add/commit/push + Netlify prod deploy for `mosaic_ui/`.
@@ -16,6 +18,7 @@ This kit contains **everything** your team needs to (a) finalize the Mosaic/PS10
 - `mosaic_deploy_cutover_checklist.md` — One-page cutover checklist.
 
 ### How to use (10‑minute flow)
+
 1. Run `scripts/apply_trial_patch.sh` to inject the snippet into both `frontend/index.html` and `mosaic_ui/index.html`.
 2. Run `scripts/deploy_now_zsh.sh` to push and deploy to Netlify (prod site).
 3. Run `scripts/verify_mosaic_ui.sh` for deterministic validation.

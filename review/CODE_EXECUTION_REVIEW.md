@@ -9,6 +9,7 @@
 These classes define the context and input for code execution.
 
 ### `CodeExecutorContext`
+
 ```python
 class CodeExecutorContext:
     """
@@ -48,6 +49,7 @@ class CodeExecutorContext:
 ```
 
 ### `CodeExecutionInput`
+
 ```python
 @dataclass
 class CodeExecutionInput:
@@ -64,6 +66,7 @@ class CodeExecutionInput:
 The following are different, conflicting implementations of the `execute_code` function. The goal of the review is to select or create a single, robust implementation.
 
 ### Implementation 1: `exec()`-based
+
 ```python
 def execute_code(self, code: str) -> dict:
     # Use exec to execute the code
@@ -75,12 +78,14 @@ def execute_code(self, code: str) -> dict:
 ```
 
 ### Implementation 2: Placeholder
+
 ```python
 def execute_code(self, code: str, context: CodeExecutorContext) -> None:
     pass
 ```
 
 ### Implementation 3: Docker Container-based
+
 ```python
 def execute_code(self, code: str, context: CodeExecutorContext) -> None:
     # Use the container to execute the code
@@ -90,6 +95,7 @@ def execute_code(self, code: str, context: CodeExecutorContext) -> None:
 ```
 
 ### Implementation 4: Placeholder with Docstring
+
 ```python
 def execute_code(self, code: str, context: CodeExecutorContext) -> None:
     """
@@ -99,6 +105,7 @@ def execute_code(self, code: str, context: CodeExecutorContext) -> None:
 ```
 
 ### Implementation 5: Interpreter-based with Output Handling
+
 ```python
 def execute_code(
     self, code: str, context: CodeExecutorContext
@@ -121,6 +128,7 @@ def execute_code(
 ## Helper Functions
 
 ### `_get_code_with_imports`
+
 ```python
 def _get_code_with_imports(self, code: str) -> str:
     # Get the imports from the notebook
@@ -134,6 +142,7 @@ def _get_code_with_imports(self, code: str) -> str:
 ## Related Information
 
 ### AWS CodeConnections Resources
+
 ```
 arn:aws:codeconnections:us-west-2:666177983324:connection/a5825793-51a8-4848-b461-9c6235b263b6
 arn:aws:codeconnections:us-west-2:666177983324:connection/32a74ddc-b035-4435-9694-35805a5a1097
@@ -142,10 +151,10 @@ arn:aws-cn:codeconnections:cn-north-1:666177983324:connection/315e2197-4c12-4217
 ```
 
 ### Evaluation Scenario
+
 ```
 **Evaluation Scenario: Mosaic End-to-End Governance Generation**
 **SoT:** META_GOVERNANCE_CANON_MVP_v1.0.md
 **Instruction:** Regenerate the full governance bundle from the SoT.
 **Benchmark:** Pass/Fail (must match canonical output).
 ```
-

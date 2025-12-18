@@ -21,9 +21,11 @@ The PS101 v2 implementation is **architecturally sound** and matches the canonic
 ## CRITICAL ISSUE #1: Replace Browser Prompts (BLOCKER)
 
 ### Problem
+
 **Lines 3014-3029** (Add Obstacle) and **Lines 3035-3051** (Add Action) use browser `prompt()` and `confirm()` dialogs.
 
 **Why this is a blocker:**
+
 - ❌ Blocks entire UI while waiting for user input
 - ❌ Not accessible (screen readers can't navigate)
 - ❌ Poor mobile experience
@@ -31,6 +33,7 @@ The PS101 v2 implementation is **architecturally sound** and matches the canonic
 - ❌ Users can accidentally close without saving
 
 **Current code:**
+
 ```javascript
 addObstacleBtn.addEventListener('click', () => {
   const label = prompt('What obstacle do you anticipate?');
@@ -46,6 +49,7 @@ addObstacleBtn.addEventListener('click', () => {
 ### Solution Option A: Inline Form (RECOMMENDED - 1 hour)
 
 **Why recommended:**
+
 - Matches existing Peripheral Calm aesthetic
 - No modal library needed
 - Fast to implement
@@ -282,14 +286,17 @@ If you prefer modals, implement a reusable modal component. This is more work bu
 ## CRITICAL ISSUE #2: Fix Experiment Validation Timing (HIGH)
 
 ### Problem
+
 **Lines 2350-2366**: Experiment validation only runs when user is on the last prompt of Steps 6-9. If user navigates back to earlier prompts and then forward again, validation doesn't re-check experiment fields.
 
 **Why this matters:**
+
 - User could bypass experiment requirements by navigating backward
 - Inconsistent validation state
 - Could save incomplete experiment data
 
 **Current code:**
+
 ```javascript
 // Enable/disable based on validation
 const currentAnswer = PS101State.getAnswer(currentStep, promptIndex);
@@ -438,9 +445,11 @@ if (isLastPrompt && [6, 7, 8, 9].includes(state.currentStep)) {
 ## CRITICAL ISSUE #3: Step 10 Placeholder (MEDIUM)
 
 ### Problem
+
 Step 10 (Building Mastery and Self-Efficacy) prompts exist but there's no Mastery Dashboard implementation. Users will complete Step 10 prompts but won't see the aggregated view mentioned in the spec.
 
 **Why this matters:**
+
 - Incomplete user experience
 - Spec promises "aggregated view" and "momentum tracker"
 - Users expect summary at the end
@@ -670,6 +679,7 @@ function showAutosaveIndicator(message) {
 Before deploying, test these scenarios:
 
 ### Basic Flow
+
 - [ ] Start new PS101 session
 - [ ] Answer all prompts in Step 1 (6 prompts)
 - [ ] Navigate back and forward between prompts
@@ -677,6 +687,7 @@ Before deploying, test these scenarios:
 - [ ] Reload page - verify state persists
 
 ### Experiment Flow
+
 - [ ] Reach Step 6, complete all 4 prompts
 - [ ] Fill out Experiment Canvas (hypothesis, metric, dates)
 - [ ] Try to advance without filling required fields - should block
@@ -688,6 +699,7 @@ Before deploying, test these scenarios:
 - [ ] Verify experiment status changes to "reviewed"
 
 ### Edge Cases
+
 - [ ] Very long text in prompts (>1000 chars) - should handle
 - [ ] Special characters in experiment fields (quotes, HTML) - should escape
 - [ ] Navigate back from Step 7 to Step 6 - experiment should persist
@@ -695,18 +707,21 @@ Before deploying, test these scenarios:
 - [ ] Try rapid clicking "Add Obstacle" - should not create duplicates
 
 ### Migration
+
 - [ ] Create v1 state in localStorage manually
 - [ ] Reload page - should migrate to v2
 - [ ] Verify old data preserved
 - [ ] Verify v1 state cleared
 
 ### Validation
+
 - [ ] Try to advance Step 1 prompt 1 with <50 chars - should block
 - [ ] Try to advance Step 5 prompt 1 with <100 chars - should block
 - [ ] Try to advance Step 6 without success metric - should block
 - [ ] Try to complete PS101 without finishing Step 10 - should require all prompts
 
 ### Accessibility
+
 - [ ] Navigate with Tab key - should follow logical order
 - [ ] Use keyboard to check action items (Space bar)
 - [ ] Screen reader test (basic - does it announce steps?)
@@ -726,6 +741,7 @@ Before deploying, test these scenarios:
    - Test on mobile device
 
 3. **Create Git Commit** (5 min)
+
    ```bash
    git add frontend/index.html
    git commit -m "Fix PS101 v2 critical issues: replace browser prompts, fix validation, add Step 10 placeholder"

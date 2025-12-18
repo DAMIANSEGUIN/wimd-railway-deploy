@@ -1,7 +1,7 @@
 (function(){
   const params = new URLSearchParams(location.search);
   const widget = params.get('widget') || 'none';
-  
+
   // Display current widget in footer
   const widgetCode = document.getElementById('widgetCode');
   if (widgetCode) widgetCode.textContent = widget;
@@ -64,7 +64,7 @@
     if (!meta) return;
 
     let csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'";
-    
+
     switch (widget) {
       case 'crisp':
         csp += " https://client.crisp.chat https://*.crisp.chat";
@@ -85,7 +85,7 @@
       default:
         csp += "; connect-src 'self' https://*.supabase.co";
     }
-    
+
     csp += "; style-src 'self' 'unsafe-inline'; img-src 'self' data:; report-uri /csp-report";
     meta.setAttribute('content', csp);
   }

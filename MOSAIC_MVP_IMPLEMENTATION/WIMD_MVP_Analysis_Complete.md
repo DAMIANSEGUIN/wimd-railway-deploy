@@ -1,7 +1,7 @@
 # WIMD MVP ANALYSIS — OPUS 4.5
 
-**Date:** December 1, 2025  
-**Platform:** WIMD (What Is My Delta) / Mosaic  
+**Date:** December 1, 2025
+**Platform:** WIMD (What Is My Delta) / Mosaic
 **Analysis Framework:** 6-Phase MVP Definition with AGILE Modular Rebuild
 
 ---
@@ -90,24 +90,28 @@ The user feels *seen*. The AI isn't a stranger—it's a coach who's "read their 
 ### Task 2.2: Architectural Gaps
 
 **Gap 1: Context Extraction Pipeline**
+
 - **Current state:** PS101 responses stored as raw text
 - **Required state:** Structured context (passions, skills, secret_powers, experiments, obstacles, key_quotes) extracted via Claude API
 - **Technical need:** Endpoint that transforms PS101 → structured JSON
 - **Complexity:** Low (single API call with structured output)
 
 **Gap 2: Context Injection into Coaching**
+
 - **Current state:** Chat interface exists but uses generic system prompt
 - **Required state:** System prompt dynamically includes user's extracted context
 - **Technical need:** Modify chat initialization to fetch and inject context
 - **Complexity:** Low (string interpolation into system prompt)
 
 **Gap 3: PS101 Completion State**
+
 - **Current state:** Unclear if completion is tracked/gated
 - **Required state:** Clear completion flag that unlocks coaching access
 - **Technical need:** Database field + UI state management
 - **Complexity:** Low (boolean flag + conditional rendering)
 
 **Gap 4: Coaching Focus on Experiments**
+
 - **Current state:** Generic coaching prompts
 - **Required state:** Coaching optimized for experiment design output
 - **Technical need:** Refined system prompt + possibly output templates
@@ -466,7 +470,7 @@ This is the minimum path that proves WIMD's core hypothesis. A user completes se
 ### Appendix E: Coaching System Prompt Template
 
 ```
-You are a career coach with deep knowledge of this specific person. 
+You are a career coach with deep knowledge of this specific person.
 They completed structured self-reflection and here's what they discovered:
 
 PROBLEM THEY'RE SOLVING:
@@ -504,7 +508,7 @@ COACHING APPROACH:
 - You're a witness and mirror, not an advice dispenser
 - If they're stuck, ask what their secret powers suggest about a path forward
 
-Never say "based on what you shared"—just know it naturally, 
+Never say "based on what you shared"—just know it naturally,
 like a coach who's been working with them for months.
 ```
 
@@ -524,6 +528,6 @@ Build the nucleus. Test the hypothesis. Expand from validated learning.
 
 ---
 
-**Document Version:** 1.0  
-**Word Count:** ~3,800  
+**Document Version:** 1.0
+**Word Count:** ~3,800
 **Analysis Complete**

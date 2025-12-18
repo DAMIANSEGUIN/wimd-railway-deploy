@@ -9,17 +9,20 @@
 **Issue**: `railway up` returns "Permission denied (os error 13)"
 
 **Fix (USE THIS)**:
+
 ```bash
 git commit --allow-empty -m "Trigger Railway deployment" && git push origin HEAD:main
 ```
 
 **Why it works**:
+
 - Railway watches GitHub repo via webhook
 - Git push triggers auto-deploy
 - Bypasses Railway CLI file system permissions
 - More reliable than `railway up`
 
 **Full command with directory**:
+
 ```bash
 cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && git commit --allow-empty -m "Trigger Railway deployment" && git push origin HEAD:main
 ```
@@ -29,6 +32,7 @@ cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && git commit --
 ## GITHUB_AUTODEPLOY
 
 **Always use this method for Railway deployments**:
+
 ```bash
 # Simple version
 git push origin HEAD:main
@@ -44,6 +48,7 @@ git commit --allow-empty -m "Deploy: [description]" && git push origin HEAD:main
 ## TEST_DEPLOYMENT
 
 **After pushing, wait and test**:
+
 ```bash
 # Wait for deployment
 sleep 90

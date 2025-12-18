@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 [ -z "${OPENAI_API_KEY:-}" ] && { echo "OPENAI_API_KEY missing"; exit 1; }
 [ -z "${CLAUDE_API_KEY:-}" ] && { echo "CLAUDE_API_KEY missing"; exit 1; }

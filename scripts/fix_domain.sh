@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 
 # WIMD Domain Fix - Simple Approach
@@ -32,4 +32,3 @@ echo "curl https://www.whatismydelta.com/health"
 echo ""
 echo "=== Manual DNS Update Required ==="
 echo "Update Netlify DNS first, then Railway will work automatically"
-

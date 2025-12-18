@@ -13,14 +13,16 @@
 - ✅ **Railway origin health** - `/health` returns `{"ok": true}` (verified 2025-09-29)
 
 ## Current Status
-- **API URL:** https://what-is-my-delta-site-production.up.railway.app (direct origin; healthy)
-- **Frontend URL:** https://resonant-crostata-90b706.netlify.app (Netlify production)
-- **Railway URL:** https://what-is-my-delta-site-production.up.railway.app
+
+- **API URL:** <https://what-is-my-delta-site-production.up.railway.app> (direct origin; healthy)
+- **Frontend URL:** <https://resonant-crostata-90b706.netlify.app> (Netlify production)
+- **Railway URL:** <https://what-is-my-delta-site-production.up.railway.app>
 - **Domain Provider:** Netlify (DNS updated; API routes not proxied yet)
 - **SSL:** Working (Railway automatic)
 - **Prompts:** Loaded and active
 
 ## Verifications (2025-09-29)
+
 - `curl https://whatismydelta.com/health` → Netlify HTML 404 (no rewrite)
 - `curl https://whatismydelta.com/config` → Netlify HTML 404
 - `curl https://whatismydelta.com/prompts/active` → Netlify HTML 404
@@ -28,23 +30,28 @@
 - `curl https://what-is-my-delta-site-production.up.railway.app/health` → `{"ok": true}`
 
 ## User Instructions
+
 - **Track everything** user tells me
 - **Update checklist** when steps complete
 - **Annotate conversation** with completed items
 - **Don't forget** what user has already done
 
 ## Next Steps
+
 - ⚠️ Add Netlify rewrite/proxy so domain API routes hit Railway backend
 - ⚠️ Re-run smoke tests (`scripts/verify_deploy.sh`) once domain routes resolve
 
 ## Frontend Deployment (2025-09-25)
+
 - ✅ **Netlify CLI reinstalled** under Node 20
 - ✅ **Bootstrap package added** to resolve missing dependencies
 - ✅ **Frontend deployed** via `scripts/deploy_frontend_netlify.sh`
-- ✅ **Mosaic UI live** at https://resonant-crostata-90b706.netlify.app
+- ✅ **Mosaic UI live** at <https://resonant-crostata-90b706.netlify.app>
 - ⚠️ **Smoke tests pending** - Domain routes still 404 until rewrite in place
 
 ## Last Updated
+
 -2025-09-29 - Railway origin healthy (`{"ok": true}`); Netlify domain still returns 404 for API routes pending rewrite.
+
 - `curl https://whatismydelta.com/health` → Netlify HTML 404
 - `curl https://what-is-my-delta-site-production.up.railway.app/health` → `{"ok": true}`

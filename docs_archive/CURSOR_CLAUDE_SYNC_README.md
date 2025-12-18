@@ -3,21 +3,25 @@
 Use this note at session start. It captures changes since 2025-09-30, guardrails now in force, and actions pending human direction. Read alongside `PROJECT_STRUCTURE.md`, `PROTOCOL_ENFORCEMENT_PLAN.md`, and `CONVERSATION_NOTES.md`.
 
 ## 1. What Changed
+
 - **Prompts loader failsafe**: `api/prompts_loader.py` now derives the active SHA from `data/prompts.csv` (fallback to `_clean`/`_fixed` or latest `prompts_*.json`) when `data/prompts_registry.json` is absent. Expect `/prompts/active` to succeed even if the registry is missing in deployment artifacts.
 - **Structure reference**: `PROJECT_STRUCTURE.md` documents canonical directories, remotes, and drift checks. Treat this as the layout of record.
 - **Protocol gates**: `PROTOCOL_ENFORCEMENT_PLAN.md` defines the session-start checklist, gate system (A–E), handoff triggers, and escalation rules. All agents must complete Gate A before editing.
 
 ## 2. Immediate Expectations
+
 - Run the Session Start Checklist in `PROTOCOL_ENFORCEMENT_PLAN.md` before any edits or tests.
 - Confirm `data/prompts_registry.json` is present locally prior to deploys; if missing, regenerate with `python3 - <<'PY' ... ingest_prompts("data/prompts.csv") ... PY` and document the action.
 - Log every material action or observation in `CONVERSATION_NOTES.md` and update the gated items in `ROLLING_CHECKLIST.md` when applicable.
 
 ## 3. Pending Decisions (await human input)
+
 1. **Prompts registry source control**: Should `data/prompts_registry.json` live in git (no secrets) or remain generated? Current code tolerates absence but deployments will continue to rely on runtime fallback until policy is set.
 2. **Resource audit artifact**: Original CODEX dependency/layout audit has not been located in this workspace; human to mirror the document or confirm deprecation so we can reconcile with `PROJECT_STRUCTURE.md`.
 3. **Workspace cleanup**: `.netlify/` cache artifacts and `mosaic_ui/mosaic_ui_extracted/` are outside the documented layout. Decide whether to keep, ignore, or remove.
 
 ## 4. Action Checklist by Role
+
 - **Cursor (implementation)**
   - Validate `/prompts/active` locally and after any deployment.
   - Stage recent doc updates (`PROJECT_STRUCTURE.md`, `PROTOCOL_ENFORCEMENT_PLAN.md`, `CONVERSATION_NOTES.md`) with the loader change when preparing a commit.
@@ -28,6 +32,7 @@ Use this note at session start. It captures changes since 2025-09-30, guardrails
   - Keep Railway deploys aligned with the Downloads workspace repo (`origin`).
 
 ## 5. Reference Stack
+
 - `PROJECT_STRUCTURE.md`: canonical layout, remotes, drift detection steps.
 - `PROTOCOL_ENFORCEMENT_PLAN.md`: gates, handoffs, escalation.
 - `AI_ROUTING_PLAN.md`: CSV → AI → metrics fallback contract for coach replies.

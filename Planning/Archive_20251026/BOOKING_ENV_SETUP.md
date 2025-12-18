@@ -1,4 +1,5 @@
 # Booking System - Environment Variables Setup
+
 **Status:** Ready for deployment after credentials added
 **Date:** 2025-10-25
 
@@ -23,6 +24,7 @@ COACH_PHONE_NUMBER='+1234567890'
 ```
 
 **How to get `GOOGLE_SERVICE_ACCOUNT_KEY`:**
+
 1. Copy contents of your `client_secrets.json` file
 2. Paste the entire JSON object as the value (keep single quotes around it)
 3. **CRITICAL:** Make sure you've shared your Google Calendar with: `jobleadsmastertracker@jobleadsmastertracker.iam.gserviceaccount.com`
@@ -45,7 +47,8 @@ PAYPAL_CANCEL_URL='https://whatismydelta.com/booking/cancel'
 ```
 
 **How to get PayPal credentials:**
-1. Go to https://developer.paypal.com/dashboard
+
+1. Go to <https://developer.paypal.com/dashboard>
 2. Click "Apps & Credentials"
 3. Select "Live" (for production) or "Sandbox" (for testing)
 4. Copy **Client ID** and **Secret**
@@ -90,7 +93,7 @@ CLAUDE_API_KEY=sk-ant-...
 
 ### Method 1: Railway Dashboard (Recommended)
 
-1. Go to https://railway.app
+1. Go to <https://railway.app>
 2. Select your project: `what-is-my-delta-site`
 3. Click "Variables" tab
 4. Click "New Variable"
@@ -138,11 +141,13 @@ railway variables
 ### Test Google Calendar Service (Mock Mode)
 
 Before adding credentials, the service runs in **mock mode**:
+
 - Returns fake event IDs like `mock_event_1234567890`
 - Logs warnings: "Calendar service not initialized"
 - **Does NOT create real calendar events**
 
 After adding credentials:
+
 - Creates real Google Calendar events
 - Sends email invites to users
 - Logs: "Google Calendar service initialized successfully"
@@ -150,11 +155,13 @@ After adding credentials:
 ### Test PayPal Service (Mock Mode)
 
 Before adding credentials:
+
 - Returns fake order IDs like `ORDER_MOCK_single_session_USD`
 - Logs warnings: "PayPal not initialized"
 - **Does NOT charge real money**
 
 After adding credentials:
+
 - Creates real PayPal orders
 - Redirects users to PayPal for payment
 - Captures real payments
@@ -180,16 +187,19 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 
 ## Security Notes
 
-### ✅ SAFE to commit to git:
+### ✅ SAFE to commit to git
+
 - `BOOKING_ENV_SETUP.md` (this file)
 - `.env.example` (template with fake values)
 
-### ❌ NEVER commit to git:
+### ❌ NEVER commit to git
+
 - `.env` (local development file with real credentials)
 - `client_secrets.json` (Google service account key)
 - Any file with real API keys
 
-### Railway Security:
+### Railway Security
+
 - Environment variables are encrypted at rest
 - Only visible to project collaborators
 - Not exposed in logs or error messages
@@ -202,10 +212,12 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 1. **Verify variables are set** in Railway dashboard
 2. **Redeploy** (Railway auto-deploys when you add variables)
 3. **Check deployment logs** for initialization messages:
+
    ```
    [INFO] Google Calendar service initialized successfully
    [INFO] PayPal payment service initialized successfully (live mode)
    ```
+
 4. **Test health endpoint** (see above)
 5. **Share Google Calendar** with service account email
 6. **Test booking flow** (see testing plan in BOOKING_IMPLEMENTATION_PLAN.md)
@@ -214,26 +226,31 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 
 ## Troubleshooting
 
-### Google Calendar errors:
+### Google Calendar errors
 
 **Error:** "Calendar service not initialized"
+
 - **Fix:** Add `GOOGLE_SERVICE_ACCOUNT_KEY` to Railway variables
 
 **Error:** "403 Forbidden" when creating events
+
 - **Fix:** Share your Google Calendar with `jobleadsmastertracker@jobleadsmastertracker.iam.gserviceaccount.com`
 - Permission: "Make changes to events"
 
 **Error:** "Invalid JSON in GOOGLE_SERVICE_ACCOUNT_KEY"
+
 - **Fix:** Ensure you copied entire JSON object, including outer `{}`
 - Wrap in single quotes in Railway UI
 
-### PayPal errors:
+### PayPal errors
 
 **Error:** "Failed to get PayPal access token"
+
 - **Fix:** Verify `PAYPAL_CLIENT_ID` and `PAYPAL_CLIENT_SECRET` are correct
 - Check `PAYPAL_MODE` matches your credentials (sandbox vs live)
 
 **Error:** "PayPal API error creating order"
+
 - **Fix:** Check PayPal dashboard for API status
 - Verify your PayPal account is active and verified
 

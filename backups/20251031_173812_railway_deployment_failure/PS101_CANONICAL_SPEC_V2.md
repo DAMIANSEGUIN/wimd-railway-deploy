@@ -1,9 +1,9 @@
 # PS101 Canonical Experience Specification (v2)
 
-**Author:** Codex (Product Process Analyst)  
-**Date:** 2025-10-30  
-**Scope:** Corrected product specification for Cursor implementation — replaces `MOSAIC_UI_IMPLEMENTATION_SPEC_V1_FOR_CURSOR.md`  
-**Status:** FINAL for Build Approval  
+**Author:** Codex (Product Process Analyst)
+**Date:** 2025-10-30
+**Scope:** Corrected product specification for Cursor implementation — replaces `MOSAIC_UI_IMPLEMENTATION_SPEC_V1_FOR_CURSOR.md`
+**Status:** FINAL for Build Approval
 
 ---
 
@@ -39,6 +39,7 @@ The PS101 journey is a 10-step linear flow. Each step comprises **multiple promp
 ## 3. Interaction Model
 
 ### 3.1 Multi-Prompt Experience (Micro-Step Pattern)
+
 - Each PS101 step renders as a **card with stacked sub-prompts** (numbered 1..n).
 - For focus, show one prompt at a time with gentle advance:
   1. Active prompt visible with textarea input and character counter.
@@ -51,6 +52,7 @@ The PS101 journey is a 10-step linear flow. Each step comprises **multiple promp
 - Autosave after each prompt completion to localStorage (and backend when available) with a subtle inline “Saved • 12:41” indicator (ARIA live region polite).
 
 ### 3.2 Navigation
+
 - **Primary**: “Next Step →” enabled only after all prompts in current step meet validation.
 - **Secondary**: “← Previous Step” always available.
 - **Prompt Re-entry**: Inline “Edit” links in the step summary and in the completion dashboard reopen any prompt in-place without resetting later data.
@@ -61,6 +63,7 @@ The PS101 journey is a 10-step linear flow. Each step comprises **multiple promp
 - Keyboard support: Arrow keys move between prompts within a step; Tab order respects prompt sequence.
 
 ### 3.3 Peripheral Calm Visuals
+
 - Reuse root token palette (`frontend/index.html:6-30`). Any new colors derive from existing vars (`--fg`, `--muted`, `--line`, `--hair`).
 - Generous whitespace, calm typography (system sans @ 13–15px). Avoid bold reds; use neutral greys for error states and soft amber (#f5d48a) highlight token for focus, matching Mosaic minimal UI cues.
 
@@ -71,6 +74,7 @@ The PS101 journey is a 10-step linear flow. Each step comprises **multiple promp
 The Small Experiments Framework is woven through Steps 6–9 and culminates in Step 10. Ship the following components now:
 
 ### 4.1 Experiment Canvas (Step 6 Primary Output)
+
 - **Captured Fields:**
   - Experiment name (auto-suggest `Experiment 1` editable)
   - Hypothesis statement (textarea)
@@ -81,12 +85,14 @@ The Small Experiments Framework is woven through Steps 6–9 and culminates in S
 - Allow multiple experiments (user can add another experiment card if Step 5 produced multiple options). Additional experiments stay in backlog but mark one as “Active”.
 
 ### 4.2 Obstacle Mapping (Step 7)
+
 - Link obstacles to the active experiment:
   - Capture external/internal obstacles as tagged list.
   - Strategy textarea per obstacle (paired inputs).
   - Display them within the experiment card (“Obstacle: Time — Strategy: Block 30-minute focus sprints”).
 
 ### 4.3 Action Plan (Step 8)
+
 - Convert experiment into a checklist:
   - Step-by-step tasks (minimum 3) with target dates.
   - Progress tracking toggle (checkbox) with timestamp when marked complete.
@@ -94,6 +100,7 @@ The Small Experiments Framework is woven through Steps 6–9 and culminates in S
 - Checklist persists within the experiment card (localStorage structure described in §5).
 
 ### 4.4 Reflection Log (Step 9)
+
 - Post-experiment log fields:
   - Outcomes (rich textarea)
   - Learning summary
@@ -102,6 +109,7 @@ The Small Experiments Framework is woven through Steps 6–9 and culminates in S
 - Logging a reflection automatically archives completed tasks and marks experiment stage to “Reviewed”.
 
 ### 4.5 Mastery Dashboard (Step 10)
+
 - Present aggregated view:
   - Key skills gained (user input from Step 10 prompts).
   - Momentum tracker (auto-calc Action/Momentum metrics vs baseline).
@@ -113,7 +121,9 @@ The Small Experiments Framework is woven through Steps 6–9 and culminates in S
 ## 5. State & Data Model
 
 ### 5.1 Local State (Browser)
+
 - Store in `localStorage` under `ps101_v2_state`.
+
 ```json
 {
   "currentStep": 4,
@@ -157,6 +167,7 @@ The Small Experiments Framework is woven through Steps 6–9 and culminates in S
 ```
 
 ### 5.2 Backend Integration
+
 - When user is authenticated, sync state through existing `/wimd/ask` pipeline (payload extension to include `experiments` array).
 - Debounce network writes (1s) and show inline status (“Syncing… / Saved”).
 - Preserve compatibility with existing chat flow; share `experiments[0]` summary with coach prompts to enable contextual nudges (Phase 3).
@@ -207,6 +218,7 @@ Total estimated effort: 40–48 engineer hours (core flow + experiments).
 ## 9. Outstanding Items (Post-Day-1 Planning)
 
 Track but do not block current build:
+
 - Delta visualization (graphical representation of gap)
 - Explore/Exploit balancing tools
 - Proactive coaching intelligence
@@ -224,4 +236,3 @@ Assign owners and schedule follow-up planning once Day 1 core ships.
 - **Troubleshooting**: Scout on standby for integration/debug support
 
 Once approved, `MOSAIC_UI_IMPLEMENTATION_SPEC_V1_FOR_CURSOR.md` should be archived in favor of this document.
-

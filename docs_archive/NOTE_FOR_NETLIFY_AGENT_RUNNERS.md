@@ -32,11 +32,13 @@ After push, Netlify will auto-rebuild and serve from `mosaic_ui/index.html` (NEW
 ## Full Details
 
 Complete technical documentation is available in multiple locations (same file):
+
 - **`NETLIFY_AGENT_URGENT_DEPLOYMENT_FIX.md`** (root directory)
 - **`frontend/NETLIFY_AGENT_URGENT_DEPLOYMENT_FIX.md`**
 - **`mosaic_ui/NETLIFY_AGENT_URGENT_DEPLOYMENT_FIX.md`**
 
 This document includes:
+
 - Detailed problem analysis
 - Step-by-step solution
 - Verification checklist
@@ -45,7 +47,8 @@ This document includes:
 ## Verification
 
 After push and rebuild, verify:
-- Live site: https://whatismydelta.com/
+
+- Live site: <https://whatismydelta.com/>
 - Title should be: "Find Your Next Career Move" (NEW UI)
 - Auth modal should appear on page load
 - PS101 should show "Step 1 of 10" (not 7)
@@ -61,7 +64,7 @@ Thanks for your help!
 ---
 
 **Reference Files (in Git repo):**
+
 - `NETLIFY_AGENT_URGENT_DEPLOYMENT_FIX.md` - Full technical details (root, frontend/, or mosaic_ui/)
 - `URGENT_TEAM_HANDOFF.md` - Context on the merge work (root)
 - `docs/AUTH_MERGE_EXECUTION_2025-11-03.md` - Merge execution details
-

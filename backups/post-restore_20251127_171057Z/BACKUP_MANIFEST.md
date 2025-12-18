@@ -33,12 +33,14 @@
 ## Codex Findings Summary
 
 **Missing from broken mosaic_ui/index.html:**
+
 - PS101_STEPS array (step definitions)
 - PS101State object (state management)
 - PROMPT_HINTS object (coaching hints)
 - Working initPS101EventListeners()
 
 **Why restore instead of patch:**
+
 - Backup has complete, working PS101 module
 - Patching would require manual reconstruction
 - Cleaner to restore known-good state

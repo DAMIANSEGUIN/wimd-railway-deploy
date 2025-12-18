@@ -1,13 +1,13 @@
+import hashlib
 import json
 import os
-import uuid
-import hashlib
 import secrets
+import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-import psycopg2
+
 from psycopg2 import pool
 from psycopg2.extras import RealDictCursor
 
@@ -22,14 +22,14 @@ DATA_ROOT.mkdir(parents=True, exist_ok=True)
 connection_pool = None
 if DATABASE_URL:
     try:
-        print(f"[STORAGE] Attempting PostgreSQL connection...")
+        print("[STORAGE] Attempting PostgreSQL connection...")
         connection_pool = pool.SimpleConnectionPool(1, 20, DATABASE_URL)
-        print(f"[STORAGE] ✅ PostgreSQL connection pool created successfully")
+        print("[STORAGE] ✅ PostgreSQL connection pool created successfully")
     except Exception as e:
         print(f"[STORAGE] ❌ PostgreSQL connection failed: {e}")
-        print(f"[STORAGE] Falling back to SQLite")
+        print("[STORAGE] Falling back to SQLite")
 else:
-    print(f"[STORAGE] DATABASE_URL not set, using SQLite")
+    print("[STORAGE] DATABASE_URL not set, using SQLite")
 
 
 def _json_dump(data: Any) -> str:
@@ -63,6 +63,7 @@ def get_conn():
             connection_pool.putconn(conn)
     else:
         import sqlite3
+
         DB_PATH = Path(os.getenv("DATABASE_PATH", DATA_ROOT / "mosaic.db"))
         DB_PATH.parent.mkdir(parents=True, exist_ok=True)
         conn = sqlite3.connect(DB_PATH)
@@ -254,7 +255,7 @@ def get_session_data(session_id: str) -> Optional[Dict[str, Any]]:
         cursor.execute("SELECT user_data FROM sessions WHERE id = %s", (session_id,))
         row = cursor.fetchone()
         if row:
-            return _json_load(row['user_data']) or {}
+            return _json_load(row["user_data"]) or {}
     return {}
 
 
@@ -509,10 +510,7 @@ def delete_session(session_id: str) -> None:
     """Delete a session and all related data (used for logout)"""
     with get_conn() as conn:
         cursor = conn.cursor(cursor_factory=RealDictCursor)
-        cursor.execute(
-            "SELECT file_path FROM file_uploads WHERE session_id = %s",
-            (session_id,)
-        )
+        cursor.execute("SELECT file_path FROM file_uploads WHERE session_id = %s", (session_id,))
         file_rows = cursor.fetchall()
 
         cursor.execute("DELETE FROM file_uploads WHERE session_id = %s", (session_id,))
@@ -523,7 +521,7 @@ def delete_session(session_id: str) -> None:
 
         for row in file_rows:
             try:
-                path = Path(row['file_path'])
+                path = Path(row["file_path"])
                 if path.exists() and path.is_file():
                     path.unlink()
             except OSError:
@@ -535,11 +533,10 @@ def cleanup_expired_sessions() -> None:
     with get_conn() as conn:
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT id FROM sessions WHERE expires_at <= %s", (cutoff,))
-        expired_ids = [row['id'] for row in cursor.fetchall()]
+        expired_ids = [row["id"] for row in cursor.fetchall()]
         if expired_ids:
             cursor.execute(
-                "SELECT file_path FROM file_uploads WHERE session_id = ANY(%s)",
-                (expired_ids,)
+                "SELECT file_path FROM file_uploads WHERE session_id = ANY(%s)", (expired_ids,)
             )
             file_rows = cursor.fetchall()
             cursor.execute("DELETE FROM file_uploads WHERE session_id = ANY(%s)", (expired_ids,))
@@ -549,7 +546,7 @@ def cleanup_expired_sessions() -> None:
             cursor.execute("DELETE FROM sessions WHERE id = ANY(%s)", (expired_ids,))
             for row in file_rows:
                 try:
-                    path = Path(row['file_path'])
+                    path = Path(row["file_path"])
                     if path.exists() and path.is_file():
                         path.unlink()
                 except OSError:
@@ -575,10 +572,12 @@ def session_summary(session_id: str) -> Dict[str, Any]:
     data["job_matches"] = fetch_job_matches(session_id)
     return data
 
+
 def hash_password(password: str) -> str:
     """Hash a password using SHA-256 with salt"""
     salt = secrets.token_hex(16)
     return hashlib.sha256((password + salt).encode()).hexdigest() + ":" + salt
+
 
 def verify_password(password: str, hashed: str) -> bool:
     """Verify a password against its hash"""
@@ -588,8 +587,14 @@ def verify_password(password: str, hashed: str) -> bool:
     except:
         return False
 
-def create_user(email: str, password: str, subscription_tier: str = 'free',
-                subscription_status: str = 'active', discount_code: str = None) -> str:
+
+def create_user(
+    email: str,
+    password: str,
+    subscription_tier: str = "free",
+    subscription_status: str = "active",
+    discount_code: str = None,
+) -> str:
     """Create a new user and return user ID"""
     user_id = str(uuid.uuid4())
     password_hash = hash_password(password)
@@ -598,12 +603,25 @@ def create_user(email: str, password: str, subscription_tier: str = 'free',
 
     with get_conn() as conn:
         cursor = conn.cursor()
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT INTO users (id, email, password_hash, created_at, last_login,
                              subscription_tier, subscription_status, discount_code)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """, (user_id, normalized_email, password_hash, now, now, subscription_tier, subscription_status, discount_code))
+        """,
+            (
+                user_id,
+                normalized_email,
+                password_hash,
+                now,
+                now,
+                subscription_tier,
+                subscription_status,
+                discount_code,
+            ),
+        )
     return user_id
+
 
 def authenticate_user(email: str, password: str) -> Optional[str]:
     """Authenticate user and return user ID if successful"""
@@ -612,7 +630,7 @@ def authenticate_user(email: str, password: str) -> Optional[str]:
         cursor = conn.cursor()
         cursor.execute(
             "SELECT id, password_hash FROM users WHERE LOWER(email) = LOWER(%s)",
-            (normalized_email,)
+            (normalized_email,),
         )
         row = cursor.fetchone()
 
@@ -623,10 +641,11 @@ def authenticate_user(email: str, password: str) -> Optional[str]:
         if verify_password(password, password_hash):
             cursor.execute(
                 "UPDATE users SET last_login = %s WHERE id = %s",
-                (datetime.utcnow().isoformat(), user_id)
+                (datetime.utcnow().isoformat(), user_id),
             )
             return user_id
         return None
+
 
 def diagnose_user_hash(email: str) -> Optional[Dict[str, Any]]:
     """Diagnose password hash format for a user (admin debug only)"""
@@ -635,7 +654,7 @@ def diagnose_user_hash(email: str) -> Optional[Dict[str, Any]]:
         cursor = conn.cursor()
         cursor.execute(
             "SELECT id, email, password_hash FROM users WHERE LOWER(email) = LOWER(%s)",
-            (normalized_email,)
+            (normalized_email,),
         )
         row = cursor.fetchone()
 
@@ -668,12 +687,12 @@ def diagnose_user_hash(email: str) -> Optional[Dict[str, Any]]:
 
         # Expected format: 64-char hex hash : 32-char hex salt
         expected_format = (
-            hash_length == 97 and
-            separator_count == 1 and
-            hash_part_length == 64 and
-            salt_part_length == 32 and
-            hash_is_hex and
-            salt_is_hex
+            hash_length == 97
+            and separator_count == 1
+            and hash_part_length == 64
+            and salt_part_length == 32
+            and hash_is_hex
+            and salt_is_hex
         )
 
         return {
@@ -690,10 +709,11 @@ def diagnose_user_hash(email: str) -> Optional[Dict[str, Any]]:
                 "expected_salt_length": 32,
                 "hash_is_hex": hash_is_hex,
                 "salt_is_hex": salt_is_hex,
-                "expected_format_match": expected_format
+                "expected_format_match": expected_format,
             },
-            "diagnosis": "VALID" if expected_format else "INVALID/CORRUPTED"
+            "diagnosis": "VALID" if expected_format else "INVALID/CORRUPTED",
         }
+
 
 def force_reset_user_password(email: str, new_password: str) -> bool:
     """Force reset user password (admin debug only)"""
@@ -706,7 +726,7 @@ def force_reset_user_password(email: str, new_password: str) -> bool:
         cursor = conn.cursor()
         cursor.execute(
             "UPDATE users SET password_hash = %s WHERE LOWER(email) = LOWER(%s)",
-            (new_hash, normalized_email)
+            (new_hash, normalized_email),
         )
 
         # Check if update was successful
@@ -715,6 +735,7 @@ def force_reset_user_password(email: str, new_password: str) -> bool:
 
         return True
 
+
 def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
     """Get user by email"""
     normalized_email = _normalize_email(email)
@@ -722,49 +743,36 @@ def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
         cursor = conn.cursor()
         cursor.execute(
             "SELECT id, email, created_at, last_login FROM users WHERE LOWER(email) = LOWER(%s)",
-            (normalized_email,)
+            (normalized_email,),
         )
         row = cursor.fetchone()
 
         if not row:
             return None
 
-        return {
-            "user_id": row[0],
-            "email": row[1],
-            "created_at": row[2],
-            "last_login": row[3]
-        }
+        return {"user_id": row[0], "email": row[1], "created_at": row[2], "last_login": row[3]}
+
 
 def get_user_by_id(user_id: str) -> Optional[Dict[str, Any]]:
     """Get user by ID"""
     with get_conn() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT id, email, created_at, last_login FROM users WHERE id = %s",
-            (user_id,)
+            "SELECT id, email, created_at, last_login FROM users WHERE id = %s", (user_id,)
         )
         row = cursor.fetchone()
 
         if not row:
             return None
 
-        return {
-            "user_id": row[0],
-            "email": row[1],
-            "created_at": row[2],
-            "last_login": row[3]
-        }
+        return {"user_id": row[0], "email": row[1], "created_at": row[2], "last_login": row[3]}
 
 
 def get_user_id_for_session(session_id: str) -> Optional[str]:
     """Get the user_id associated with a given session_id."""
     with get_conn() as conn:
         cursor = conn.cursor()
-        cursor.execute(
-            "SELECT user_id FROM sessions WHERE id = %s",
-            (session_id,)
-        )
+        cursor.execute("SELECT user_id FROM sessions WHERE id = %s", (session_id,))
         row = cursor.fetchone()
         return row[0] if row else None
 
@@ -773,10 +781,7 @@ def get_user_context(user_id: str) -> Optional[Dict[str, Any]]:
     """Get extracted PS101 context for a user."""
     with get_conn() as conn:
         cursor = conn.cursor(cursor_factory=RealDictCursor)
-        cursor.execute(
-            "SELECT context_data FROM user_contexts WHERE user_id = %s",
-            (user_id,)
-        )
+        cursor.execute("SELECT context_data FROM user_contexts WHERE user_id = %s", (user_id,))
         row = cursor.fetchone()
         if row and row["context_data"]:
             return _json_load(row["context_data"])

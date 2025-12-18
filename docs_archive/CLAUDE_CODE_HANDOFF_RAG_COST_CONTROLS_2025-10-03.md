@@ -1,6 +1,7 @@
 # **CLAUDE CODE HANDOFF - RAG DYNAMIC SOURCES + COST CONTROLS**
-**Date**: 2025-10-03  
-**Status**: LOCAL IMPLEMENTATION COMPLETE - READY FOR DEPLOYMENT  
+
+**Date**: 2025-10-03
+**Status**: LOCAL IMPLEMENTATION COMPLETE - READY FOR DEPLOYMENT
 **Priority**: HIGH - Cost Controls Critical for Production Safety
 
 ## 🚨 **CRITICAL DEPLOYMENT STATUS**
@@ -10,6 +11,7 @@
 ## 📋 **IMPLEMENTATION SUMMARY**
 
 ### **Phase 4 + Extensions Complete (LOCAL)**
+
 - ✅ **RAG Engine**: Embedding pipeline with cost controls
 - ✅ **8 Job Sources**: Greenhouse, SerpApi, Reddit, Indeed, LinkedIn, Glassdoor, AngelList, HackerNews
 - ✅ **RAG Dynamic Source Discovery**: Intelligent source selection based on query analysis
@@ -20,12 +22,14 @@
 ## 🛡️ **COST CONTROLS - CRITICAL FOR DEPLOYMENT**
 
 ### **Cost Limits (MUST BE ENFORCED)**
+
 - **Daily Limit**: $10.00 per day
 - **Monthly Limit**: $100.00 per month
 - **Emergency Stop**: $50.00 (automatic shutdown)
 - **Per-Request Limit**: $0.01 per request
 
 ### **Resource Limits (MUST BE ENFORCED)**
+
 - **Per Minute**: 60 requests
 - **Per Hour**: 1,000 requests
 - **Per Day**: 10,000 requests
@@ -33,6 +37,7 @@
 - **Job Searches**: 500 per day
 
 ### **Cost Control Features**
+
 - **Pre-Request Checks**: Every operation checks limits before execution
 - **Usage Recording**: All operations tracked with cost estimates
 - **Emergency Stop**: Automatic shutdown at $50
@@ -42,32 +47,37 @@
 ## 🔧 **NEW COMPONENTS TO DEPLOY**
 
 ### **1. RAG Engine (`api/rag_engine.py`)**
+
 - **Status**: ✅ Complete with cost controls
 - **Features**: Embedding pipeline, retrieval wrapper, caching
 - **Cost Integration**: Pre-request cost checks, usage recording
 - **Dependencies**: OpenAI API (temporarily disabled for testing)
 
 ### **2. Job Sources (`api/job_sources/`)**
+
 - **Status**: ✅ Complete (8 sources)
 - **Sources**: Greenhouse, SerpApi, Reddit, Indeed, LinkedIn, Glassdoor, AngelList, HackerNews
 - **Features**: Standardized interface, rate limiting, error handling
 - **Dependencies**: Various APIs (temporarily disabled for testing)
 
 ### **3. RAG Source Discovery (`api/rag_source_discovery.py`)**
+
 - **Status**: ✅ Complete
 - **Features**: Intelligent source selection, dynamic integration, confidence scoring
 - **Integration**: Uses RAG to analyze queries and select optimal sources
 - **Performance**: Tracks source performance and optimizes selections
 
 ### **4. Cost Controls (`api/cost_controls.py`)**
+
 - **Status**: ✅ Complete
 - **Features**: Usage tracking, cost limits, resource limits, emergency stops
 - **Integration**: Embedded in all major operations
 - **Monitoring**: Real-time analytics and alerts
 
 ### **5. Database Migrations**
+
 - **Status**: ✅ Complete (applied locally)
-- **Files**: 
+- **Files**:
   - `api/migrations/004_add_rag_tables.sql`
   - `api/migrations/005_add_dynamic_sources.sql`
   - `api/migrations/006_add_usage_tracking.sql`
@@ -75,6 +85,7 @@
 ## 📊 **NEW API ENDPOINTS**
 
 ### **RAG Endpoints**
+
 - `GET /rag/embed` - Compute embedding with cost controls ✅ IMPLEMENTED
 - `GET /rag/batch-embed` - Batch embedding computation ✅ IMPLEMENTED
 - `GET /rag/retrieve` - Retrieve similar content ✅ IMPLEMENTED
@@ -82,21 +93,25 @@
 - `GET /health/rag` - RAG engine health ✅ IMPLEMENTED
 
 ### **Job Search Endpoints**
+
 - `GET /jobs/search` - Standard job search with cost controls
 - `GET /jobs/search/rag` - RAG-powered job search with dynamic source selection
 - `GET /jobs/{job_id}` - Get detailed job information
 
 ### **Source Discovery Endpoints**
+
 - `GET /sources/discover` - Discover optimal sources for query ✅ IMPLEMENTED
 - `GET /sources/analytics` - Get source discovery analytics ✅ IMPLEMENTED
 
 ### **Cost Control Endpoints**
+
 - `GET /cost/analytics` - Get cost and usage analytics ✅ IMPLEMENTED
 - `GET /cost/limits` - Get current limits and usage ✅ IMPLEMENTED
 
 ## 🚀 **DEPLOYMENT REQUIREMENTS**
 
 ### **1. Environment Variables (Railway)**
+
 ```bash
 # Existing variables (already set)
 OPENAI_API_KEY=your_key_here
@@ -112,11 +127,13 @@ ANGELIST_API_KEY=your_angelist_key
 ```
 
 ### **2. Database Migrations (Railway)**
+
 - Run migrations 004, 005, 006 in order
 - Verify all tables created successfully
 - Test cost control tables are functional
 
 ### **3. Feature Flags (Railway)**
+
 ```json
 {
   "AI_FALLBACK_ENABLED": false,
@@ -129,6 +146,7 @@ ANGELIST_API_KEY=your_angelist_key
 ```
 
 ### **4. Dependencies (Railway)**
+
 - All existing dependencies maintained
 - No new Python packages required (temporarily disabled for testing)
 - Re-enable AI clients and job sources after deployment
@@ -136,18 +154,21 @@ ANGELIST_API_KEY=your_angelist_key
 ## ⚠️ **CRITICAL DEPLOYMENT SAFEGUARDS**
 
 ### **1. Cost Protection**
+
 - **MUST** verify cost controls are active before enabling AI clients
 - **MUST** test emergency stop functionality
 - **MUST** monitor usage in first 24 hours
 - **MUST** have manual override capability
 
 ### **2. Resource Protection**
+
 - **MUST** verify resource limits are enforced
 - **MUST** test rate limiting functionality
 - **MUST** monitor system performance
 - **MUST** have manual throttle controls
 
 ### **3. Gradual Rollout**
+
 - **Phase 1**: Deploy with cost controls enabled, AI clients disabled
 - **Phase 2**: Enable basic RAG functionality with strict limits
 - **Phase 3**: Enable job sources with monitoring
@@ -156,18 +177,21 @@ ANGELIST_API_KEY=your_angelist_key
 ## 📈 **MONITORING REQUIREMENTS**
 
 ### **Cost Monitoring**
+
 - Daily cost tracking
 - Emergency stop alerts
 - Usage pattern analysis
 - Cost per operation tracking
 
 ### **Performance Monitoring**
+
 - Response time tracking
 - Success rate monitoring
 - Error rate tracking
 - Resource utilization
 
 ### **Health Checks**
+
 - `/health/rag` - RAG engine status
 - `/health/cost` - Cost control status
 - `/cost/analytics` - Usage analytics
@@ -176,6 +200,7 @@ ANGELIST_API_KEY=your_angelist_key
 ## 🎯 **SUCCESS CRITERIA**
 
 ### **Deployment Success**
+
 - ✅ All migrations applied successfully
 - ✅ Cost controls active and functional
 - ✅ Resource limits enforced
@@ -183,6 +208,7 @@ ANGELIST_API_KEY=your_angelist_key
 - ✅ All endpoints responding correctly
 
 ### **Operational Success**
+
 - ✅ Cost stays under daily limit
 - ✅ System performance stable
 - ✅ No runaway API calls
