@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "repo": {
-    "slug": "DAMIANSEGUIN/what-is-my-delta-site",
+    "slug": "DAMIANSEGUIN/wimd-railway-deploy",
     "origin_ssh": "https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git",
     "deploy_branch": "main"
   },
