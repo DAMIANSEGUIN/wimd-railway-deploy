@@ -19,6 +19,10 @@ rules:
     when: always
     check: git_status_is_clean_or_explicitly_allowed()
 
+  - id: SESSION_START_SSOT
+    when: always
+    check: session_start_ssot_is_valid()
+
   - id: RUNTIME_IDENTITY_MATCH
     when: mode_is("ci")
     check: runtime_commit_equals_git_sha(

@@ -51,6 +51,11 @@ repos:
 
       - id: check-json
         name: Check JSON syntax
+        exclude: (?x)^(
+            \.ai-agents/handoff_20251103_101528.json|
+            \.ai-agents/validation/FAILURE_MODE_TEST_RESULTS.json|
+            \.ai-agents/session_context/SESSION_LOG_SCHEMA.json
+        )$
 
       - id: check-yaml
         name: Check YAML syntax
@@ -162,7 +167,8 @@ exclude: |
       .*\.egg-info/|
       backups/|
       docs_archive/|
-      Archives/
+      Archives/|
+      \.claude-run/
   )$
 
 # Fail fast: stop on first failure

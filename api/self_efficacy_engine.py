@@ -258,18 +258,16 @@ Recommended Action: Contact Damian for personalized coaching intervention.
                 if not stale_experiments:
                     return {"cleaned": 0, "message": "No stale experiments found"}
 
-                # Clean up related data
+                # Clean up related data by iterating to avoid S608 SQL injection warnings.
+                # While less performant than a single IN clause, this is demonstrably safe.
                 experiment_ids = [row[0] for row in stale_experiments]
-                placeholders = ",".join(["?"] * len(experiment_ids))
 
-                # Delete related data
-                conn.execute(
-                    f"DELETE FROM learning_data WHERE experiment_id IN ({placeholders})",
-                    experiment_ids,
-                )
-                conn.execute(
-                    f"DELETE FROM experiments WHERE id IN ({placeholders})", experiment_ids
-                )
+                for experiment_id in experiment_ids:
+                    conn.execute(
+                        "DELETE FROM learning_data WHERE experiment_id = ?",
+                        (experiment_id,),
+                    )
+                    conn.execute("DELETE FROM experiments WHERE id = ?", (experiment_id,))
 
                 return {
                     "cleaned": len(experiment_ids),
