@@ -8,8 +8,24 @@ cd "$REPO_ROOT"
 
 echo "🔒 Validation Gate: Checking for Gemini ALLOW verdict..."
 
-# Find most recent HANDOFF_TO_GEMINI file
-HANDOFF_FILE=$(ls -t HANDOFF_TO_GEMINI_*.md 2>/dev/null | head -1 || echo "")
+# Find most recent HANDOFF_TO_GEMINI file (exclude VALIDATION files)
+HANDOFF_FILE=$(ls -t HANDOFF_TO_GEMINI_*.md 2>/dev/null | grep -v "_VALIDATION.md" | head -1 || echo "")
+
+# Gate: Handoff must reference SESSION_START.md and project_state.json
+if [ -n "$HANDOFF_FILE" ]; then
+    if ! grep -q "SESSION_START.md" "$HANDOFF_FILE"; then
+        echo "🛑 REJECT: Handoff file missing SESSION_START.md reference"
+        echo "   File: $HANDOFF_FILE"
+        echo "   Required: Must document SESSION_START.md for next session"
+        exit 1
+    fi
+    if ! grep -q "project_state.json" "$HANDOFF_FILE"; then
+        echo "🛑 REJECT: Handoff file missing project_state.json reference"
+        echo "   File: $HANDOFF_FILE"
+        echo "   Required: Must document project_state.json for next session"
+        exit 1
+    fi
+fi
 
 if [ -z "$HANDOFF_FILE" ]; then
     echo "✅ SKIP: No handoff file found (no validation required)"
@@ -22,15 +38,15 @@ echo "📄 Found handoff: $HANDOFF_FILE"
 VALIDATION_FILE="${HANDOFF_FILE%.md}_VALIDATION.md"
 
 if [ -f "$VALIDATION_FILE" ]; then
-    # Check if verdict is ALLOW
-    if grep -q "Verdict: ALLOW" "$VALIDATION_FILE" 2>/dev/null; then
+    # Check if verdict is ALLOW (with or without brackets)
+    if grep -qi "Verdict:.*ALLOW" "$VALIDATION_FILE" 2>/dev/null; then
         echo "✅ ALLOW: Gemini has approved (found in $VALIDATION_FILE)"
         exit 0
-    elif grep -q "Verdict: CLARIFY_REQUIRED" "$VALIDATION_FILE" 2>/dev/null; then
+    elif grep -qi "Verdict:.*CLARIFY_REQUIRED" "$VALIDATION_FILE" 2>/dev/null; then
         echo "🛑 REJECT: Gemini requires clarification"
         echo "   Fix issues in handoff and request re-review"
         exit 1
-    elif grep -q "Verdict: REJECT" "$VALIDATION_FILE" 2>/dev/null; then
+    elif grep -qi "Verdict:.*REJECT" "$VALIDATION_FILE" 2>/dev/null; then
         echo "🛑 REJECT: Gemini has rejected implementation"
         echo "   Address violations before pushing"
         exit 1
@@ -42,7 +58,7 @@ if [ -f "$VALIDATION_FILE" ]; then
 fi
 
 # If no validation file, check handoff file itself for verdict
-if grep -q "^Verdict: ALLOW" "$HANDOFF_FILE" 2>/dev/null; then
+if grep -qi "^Verdict:.*ALLOW" "$HANDOFF_FILE" 2>/dev/null; then
     echo "✅ ALLOW: Gemini has approved (found in $HANDOFF_FILE)"
     exit 0
 fi
