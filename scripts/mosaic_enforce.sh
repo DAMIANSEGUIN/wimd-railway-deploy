@@ -24,10 +24,10 @@ done
 # --- Mode Validation ---
 if [ -z "$MODE" ]; then
     echo "🛑 REJECT: Execution mode not provided."
-    echo "   Required fix: Pass '--mode=local' to this script."
+    echo "   Required fix: Pass '--mode=local' or '--mode=ci' to this script."
     exit 1
-elif [ "$MODE" != "local" ]; then
-    echo "🛑 REJECT: Mode '$MODE' is not supported. Only 'local' mode is implemented."
+elif [ "$MODE" != "local" ] && [ "$MODE" != "ci" ]; then
+    echo "🛑 REJECT: Mode '$MODE' is not supported. Supported modes: local, ci."
     exit 1
 fi
 
@@ -129,6 +129,58 @@ else
     else
         echo "✅ PASS: SESSION_START_SSOT"
         GATES_PASSED=$((GATES_PASSED + 1))
+    fi
+fi
+
+# --- Gate: RUNTIME_IDENTITY_MATCH (CI mode only) ---
+if [ "$MODE" == "ci" ]; then
+    GATES_TOTAL=$((GATES_TOTAL + 1))
+    echo "⏳ Checking gate: RUNTIME_IDENTITY_MATCH..."
+
+    # Extract runtime base URL from authority_map.json
+    RUNTIME_URL_TEMPLATE=$(grep -o '"template": *"[^"]*"' "$AUTHORITY_MAP_PATH" | sed -e 's/"template": *//' -e 's/"//g' || true)
+    RUNTIME_IDENTITY_PATH=$(grep -o '"runtime_identity_path": *"[^"]*"' "$AUTHORITY_MAP_PATH" | sed -e 's/"runtime_identity_path": *//' -e 's/"//g' || true)
+
+    if [ -z "$RUNTIME_URL_TEMPLATE" ] || [ -z "$RUNTIME_IDENTITY_PATH" ]; then
+        echo "⚠️  CLARIFY_REQUIRED: RUNTIME_IDENTITY_MATCH - Cannot resolve runtime URL from authority_map.json"
+        echo "   Missing template or runtime_identity_path in authority_map.json"
+        FAILED_GATES+=("RUNTIME_IDENTITY_MATCH")
+    else
+        # For CI, we need RAILWAY_STATIC_URL or similar env var
+        # For now, skip if env var not available (this is expected in GitHub Actions initially)
+        EXPECTED_SHA=$(git rev-parse HEAD)
+
+        # Attempt to resolve URL (this will fail gracefully if env var not set)
+        if [ -n "${RAILWAY_STATIC_URL:-}" ]; then
+            RUNTIME_URL=$(echo "$RUNTIME_URL_TEMPLATE" | sed "s/\${RAILWAY_STATIC_URL}/${RAILWAY_STATIC_URL}/g")
+            FULL_URL="${RUNTIME_URL}${RUNTIME_IDENTITY_PATH}"
+
+            # Fetch runtime commit SHA
+            RUNTIME_RESPONSE=$(curl --fail --silent --max-time 5 "$FULL_URL" 2>&1 || echo "NETWORK_FAILURE")
+
+            if [ "$RUNTIME_RESPONSE" == "NETWORK_FAILURE" ]; then
+                echo "⚠️  CLARIFY_REQUIRED: RUNTIME_IDENTITY_MATCH - Network failure (service unreachable)"
+                FAILED_GATES+=("RUNTIME_IDENTITY_MATCH")
+            else
+                RUNTIME_SHA=$(echo "$RUNTIME_RESPONSE" | grep -o '"git_commit": *"[^"]*"' | sed -e 's/"git_commit": *//' -e 's/"//g' || true)
+
+                if [ -z "$RUNTIME_SHA" ]; then
+                    echo "⚠️  CLARIFY_REQUIRED: RUNTIME_IDENTITY_MATCH - Cannot parse git_commit from runtime response"
+                    FAILED_GATES+=("RUNTIME_IDENTITY_MATCH")
+                elif [ "$RUNTIME_SHA" == "$EXPECTED_SHA" ]; then
+                    echo "✅ PASS: RUNTIME_IDENTITY_MATCH (runtime SHA: $RUNTIME_SHA)"
+                    GATES_PASSED=$((GATES_PASSED + 1))
+                else
+                    echo "🛑 FAIL: RUNTIME_IDENTITY_MATCH - SHA mismatch"
+                    echo "   Expected: $EXPECTED_SHA"
+                    echo "   Runtime:  $RUNTIME_SHA"
+                    FAILED_GATES+=("RUNTIME_IDENTITY_MATCH")
+                fi
+            fi
+        else
+            echo "⏭️  SKIP: RUNTIME_IDENTITY_MATCH - RAILWAY_STATIC_URL not set (expected in initial CI setup)"
+            GATES_PASSED=$((GATES_PASSED + 1))
+        fi
     fi
 fi
 

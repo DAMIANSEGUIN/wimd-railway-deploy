@@ -1,0 +1,45 @@
+name: Mosaic Enforcement (CI Mode)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  enforce:
+    name: Run Mosaic Enforcement Gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git operations
+
+      - name: Set up enforcement environment
+        run: |
+          echo "GIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+
+      - name: Run Mosaic Enforcer (MODE=ci)
+        id: enforce
+        run: |
+          chmod +x scripts/mosaic_enforce.sh
+          bash scripts/mosaic_enforce.sh --mode=ci
+        continue-on-error: true
+
+      - name: Check enforcement result
+        if: steps.enforce.outcome == 'failure'
+        run: |
+          echo "❌ Mosaic enforcement REJECTED"
+          echo "Check the logs above for failing gates"
+          exit 1
+
+      - name: Enforcement passed
+        if: steps.enforce.outcome == 'success'
+        run: |
+          echo "✅ Mosaic enforcement ALLOWED"
+          echo "All gates passed in CI mode"
