@@ -1,0 +1,167 @@
+PREFLIGHT_INSTRUCTION_PACKET:
+  agent: Claude Code (Sonnet 4.5)
+  mode: BUILD (pending approval)
+  created: 2025-12-29
+  governance_compliance:
+    - TEAM_PLAYBOOK_v2 Section 4.1 (Pre-Flight Instruction Protocol)
+    - ENGINEERING_PRINCIPLES.md (All Principles P01-P05)
+    - Mosaic_Governance_Core_v1.md Section 2.2 (BUILD Mode Requirements)
+    - MOSAIC_RAILWAY_RESET_SPEC.yaml PHASE_5
+
+task_objective:
+  summary: Implement /__version endpoint for Runtime Identity Verification
+  purpose: >
+    Enable Railway deployment verification per PHASE_5_RUNTIME_IDENTITY_VERIFICATION
+    requirements. Endpoint must return runtime git SHA, build timestamp, and
+    environment to verify deployment identity without relying on Railway UI.
+  spec_reference: MOSAIC_RAILWAY_RESET_SPEC.yaml lines 115-128
+  governance_authority: User Intent (Decision Hierarchy Level 2)
+
+state_summary:
+  current_backend: api/index.py (FastAPI application)
+  endpoint_status: NOT IMPLEMENTED (confirmed via grep)
+  railway_env_vars_available:
+    - RAILWAY_GIT_COMMIT_SHA
+    - RAILWAY_GIT_BRANCH
+    - RAILWAY_ENVIRONMENT
+    - RAILWAY_SERVICE_ID
+  validation_complete: true
+  blocker: none
+
+applicable_protocols:
+  engineering_principles:
+    - P01_Singular_Purpose: Endpoint serves one purpose - return runtime identity
+    - P02_Declared_Context: Will use os.getenv(), datetime, existing FastAPI app
+    - P03_Minimal_Complexity: Simple GET endpoint, no business logic
+    - P04_Explicit_Robustness: Handle missing env vars with "unknown" fallback
+    - P05_Syntactic_Clarity: Function name "get_version" clearly describes purpose
+
+  governance_core:
+    - Section_2.2_BUILD_Mode: Preflight checks passed, validated paths only
+    - Section_3.1_No_Unverified_Path: File path verified (api/index.py exists)
+    - Section_3.4_No_Hidden_Assumptions: Railway env vars documented, fallback defined
+
+  railway_reset_spec:
+    - PHASE_5: Required endpoint for runtime identity verification
+    - required_fields: git_sha, build_timestamp, environment
+
+success_criteria:
+  functional:
+    - Endpoint /__version returns 200 OK
+    - Response contains required fields (git_sha, build_timestamp, environment)
+    - Missing env vars return "unknown" (not exceptions)
+    - Response is valid JSON
+
+  compliance:
+    - Follows P01-P05 (Engineering Principles)
+    - No unverified paths used
+    - Minimal complexity (< 15 lines of code)
+    - Explicit error handling for missing env vars
+
+  validation_tests:
+    - curl localhost:8000/__version returns valid JSON
+    - Response schema matches Railway Reset Spec requirements
+    - Deploys successfully to Railway
+    - Endpoint accessible from frontend
+
+failure_modes:
+  FM-1_Missing_Env_Vars:
+    symptom: Endpoint returns empty or null values
+    prevention: Use fallback "unknown" for missing env vars
+    mitigation: Log warning but continue (non-critical data)
+    rollback: Remove endpoint (deployment continues without it)
+
+  FM-2_Import_Error:
+    symptom: FastAPI fails to start due to syntax error
+    prevention: Test locally before commit
+    mitigation: Fix syntax, redeploy
+    rollback: Revert commit
+
+  FM-3_Endpoint_404:
+    symptom: /__version not accessible after deployment
+    prevention: Verify route registration in FastAPI app
+    mitigation: Check Railway logs, verify path
+    rollback: Endpoint is optional - can continue without it
+
+proposed_implementation:
+  file: api/index.py
+  location: After line 100 (after imports, before existing endpoints)
+  code: |
+    @app.get("/__version")
+    async def get_version():
+        """Runtime identity endpoint for deployment verification (PHASE_5)"""
+        return {
+            "git_sha": os.getenv("RAILWAY_GIT_COMMIT_SHA", "unknown"),
+            "git_branch": os.getenv("RAILWAY_GIT_BRANCH", "unknown"),
+            "build_timestamp": datetime.utcnow().isoformat(),
+            "environment": os.getenv("RAILWAY_ENVIRONMENT", "production"),
+            "service_id": os.getenv("RAILWAY_SERVICE_ID", "unknown"),
+        }
+
+  dependencies: |
+    - os (already imported)
+    - datetime (already imported)
+    - FastAPI app instance (already exists)
+
+  testing_plan: |
+    1. Local test: python -m uvicorn api.index:app --reload
+    2. Verify: curl http://localhost:8000/__version
+    3. Commit to branch
+    4. Push to GitHub (Railway auto-deploys)
+    5. Verify deployed: curl https://[railway-url]/__version
+
+deployment_impact:
+  risk_level: LOW
+  backwards_compatible: YES (adds new endpoint, doesn't modify existing)
+  database_changes: NONE
+  frontend_changes: NONE (optional future use)
+  rollback_complexity: SIMPLE (git revert single commit)
+
+next_task_impact:
+  current_next_task: Railway Reset Execution
+  impact: ENABLES Phase 5 verification
+  blockers_removed: Runtime identity verification requirement
+
+railway_reset_integration:
+  phase: PHASE_5_RUNTIME_IDENTITY_VERIFICATION
+  service_name_proposal: mosaic-backend
+  service_name_rationale: >
+    Per ENGINEERING_PRINCIPLES.md P05 (Syntactic Clarity), name describes purpose.
+    Serves Mosaic platform backend from wimd-railway-deploy repository.
+    Distinct from legacy "what-is-my-delta-site" per spec requirement.
+
+approval_gate:
+  required_user_decisions:
+    - Approve /__version endpoint implementation (REQUIRED by spec)
+    - Approve proposed service name "mosaic-backend" (or provide alternative)
+    - Approve proceeding with Railway Reset after endpoint deployed
+
+  user_must_confirm:
+    - Understanding that /__version is REQUIRED (not optional) per PHASE_5
+    - Service name proposal or alternative name
+    - Approval to proceed: "APPROVED TO PROCEED"
+
+  blocked_until:
+    - User provides explicit approval
+
+execution_sequence_after_approval:
+  1. Implement /__version endpoint in api/index.py
+  2. Test locally (optional but recommended)
+  3. Commit to branch claude/access-mosaic-project-lyaCz
+  4. Push to GitHub
+  5. Await Railway auto-deploy confirmation
+  6. User creates new Railway service via Dashboard (Phase 2)
+  7. User recreates environment variables (Phase 3)
+  8. Railway auto-deploys from GitHub (Phase 4)
+  9. Verify /__version endpoint returns correct data (Phase 5)
+  10. Update frontend API URL (Phase 6)
+  11. Decommission legacy services (Phase 7)
+
+escalation_conditions:
+  - If Railway env vars not available in production
+  - If endpoint returns 404 after deployment
+  - If user rejects service name proposal without alternative
+
+status: AWAITING_USER_APPROVAL
+gate: TEAM_PLAYBOOK_v2 Section 4.1 Step 4 (Present Packet for Approval)
+next_mode: BUILD (only after approval)
