@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "task_id": "mosaic-railway-deploy-2026-01-05",
+  "objective": "Fix cross-agent coordination and deploy Railway services",
+  "status": "active",
+  "priority": "critical",
+  "assigned_agent": "claude_code_terminal",
+  "created_at": "2026-01-05T00:00:00Z",
+  "updated_at": "2026-01-05T16:00:00Z",
+  "details": {
+    "description": "Enable all AI agents to work on the same repository without path conflicts. Deploy Mosaic platform to Railway using GitHub-based deployment.",
+    "success_criteria": [
+      "All agents can read the same state files",
+      "All documentation uses relative paths only",
+      "Railway backend deployed and responding",
+      "Railway frontend deployed and responding",
+      "No absolute paths in any markdown files"
+    ],
+    "dependencies": [
+      "User approved D1-D4 decisions (COMPLETE)",
+      "GitHub-based deployment strategy selected",
+      "Documentation consolidation approved"
+    ],
+    "user_decisions": {
+      "D1_relative_paths_only": "APPROVED",
+      "D2_archive_old_docs": "APPROVED",
+      "D3_mosaic_json_canonical": "APPROVED",
+      "D4_github_deployment": "APPROVED"
+    }
+  }
+}

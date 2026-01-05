@@ -7,15 +7,33 @@
 
 # 🚦 MOSAIC Project - Quick Start
 
-## 🎯 FOR AI AGENTS: Start Here
+## 🎯 FOR AI AGENTS: MANDATORY SESSION START
 
-**Read this ONE file:**
+**🚨 STOP - Before doing ANYTHING, read this file:**
 
+```bash
+cat .ai-agents/AI_AGENT_PROMPT.md
 ```
-AI_START_HERE.txt
+
+**This prompt contains:**
+- Required state files to read FIRST (.mosaic/*.json)
+- Verification steps you MUST execute
+- Protocol acknowledgments required
+- Absolute prohibitions (paths, patterns, actions)
+
+**THEN run the session gate:**
+
+```bash
+./.mosaic/enforcement/session-gate.sh
 ```
 
-That's it. Everything you need is in that file in the project root.
+**Why this matters:**
+- Prevents breaking cross-agent coordination
+- Ensures you know current state (last commit, user decisions, blockers)
+- Enforces relative paths (breaks for other agents if you use absolute)
+- Validates critical features are preserved
+
+**If you skip these steps, you WILL break things.**
 
 ---
 

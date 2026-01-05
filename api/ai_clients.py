@@ -166,9 +166,26 @@ class AIClientManager:
             return None
 
     def _call_anthropic(
-        self, prompt: str, context: Optional[Dict[str, Any]] = None
+        self, prompt: str, context: Optional[Dict[str, Any]] = None, retry_count: int = 0
     ) -> Optional[str]:
-        """Call Anthropic API with proper error handling."""
+        """Call Anthropic API with timeout and retry logic.
+
+        Args:
+            prompt: User prompt
+            context: Optional context dictionary
+            retry_count: Current retry attempt (for internal use)
+
+        Returns:
+            Response text or None on failure
+
+        Resilience:
+            - 30 second timeout
+            - 3 retry attempts with exponential backoff
+            - Handles transient errors (rate limits, timeouts)
+        """
+        max_retries = 3
+        backoff_delays = [1, 2, 4]  # seconds
+
         try:
             system_prompt = (
                 "You are a helpful career coach assistant. Provide thoughtful, actionable advice."
@@ -190,12 +207,24 @@ class AIClientManager:
                 max_tokens=1000,
                 system=system_prompt,
                 messages=[{"role": "user", "content": full_prompt}],
+                timeout=30.0,  # ✅ RESILIENCE FIX: 30 second timeout
             )
 
             return response.content[0].text
 
         except Exception as e:
-            print(f"Anthropic API error: {e}")
+            error_str = str(e).lower()
+            # ✅ RESILIENCE FIX: Retry on transient errors
+            is_transient = any(x in error_str for x in ['timeout', 'rate', '429', '503', '502', 'connection'])
+
+            if is_transient and retry_count < max_retries:
+                delay = backoff_delays[retry_count]
+                print(f"Anthropic API transient error (attempt {retry_count + 1}/{max_retries}): {e}. Retrying in {delay}s...")
+                import time
+                time.sleep(delay)
+                return self._call_anthropic(prompt, context, retry_count + 1)
+
+            print(f"Anthropic API error (final): {e}")
             return None
 
     def get_health_status(self) -> Dict[str, Any]:

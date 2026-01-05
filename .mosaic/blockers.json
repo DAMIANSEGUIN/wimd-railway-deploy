@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "updated_at": "2026-01-05T16:00:00Z",
+  "blockers": [
+    {
+      "id": "B001",
+      "title": "File Path Divergence",
+      "severity": "critical",
+      "status": "resolving",
+      "description": "Claude Code (terminal) and other AI agents see different absolute paths",
+      "impact": "Cross-agent coordination impossible, session handoffs fail",
+      "solution": "Use relative paths only + .mosaic/ JSON state",
+      "owner": "claude_code_terminal",
+      "created_at": "2026-01-04T00:00:00Z",
+      "resolution_progress": "Phase 1/7 in progress - creating JSON state files"
+    },
+    {
+      "id": "B002",
+      "title": "Railway Deployment Timeout",
+      "severity": "high",
+      "status": "resolved",
+      "description": "railway up times out due to 45MB upload size limit",
+      "impact": "Cannot deploy via Railway CLI",
+      "solution": "Switch to GitHub-based deployment (user approved D4)",
+      "owner": "claude_code_terminal",
+      "created_at": "2026-01-04T00:00:00Z",
+      "resolved_at": "2026-01-05T16:00:00Z",
+      "resolution": "User selected GitHub-based deployment strategy"
+    },
+    {
+      "id": "B003",
+      "title": "Railway CLI Linking Ambiguity",
+      "severity": "high",
+      "status": "resolved",
+      "description": "railway link fails with 'Project not found'",
+      "impact": "Cannot use Railway CLI commands",
+      "solution": "GitHub deployment makes CLI linking unnecessary",
+      "owner": "user",
+      "created_at": "2025-12-15T00:00:00Z",
+      "resolved_at": "2026-01-05T16:00:00Z",
+      "resolution": "GitHub-based deployment eliminates need for CLI linking"
+    },
+    {
+      "id": "B004",
+      "title": "Documentation Overload",
+      "severity": "medium",
+      "status": "resolved",
+      "description": "131 session docs + 500+ total markdown files create confusion",
+      "impact": "Agents waste time reading stale docs, cannot find canonical state",
+      "solution": "Archive pre-2025-12-01 docs to docs_archive/sessions_2025/",
+      "owner": "claude_code_terminal",
+      "created_at": "2026-01-04T00:00:00Z",
+      "resolved_at": "2026-01-05T16:30:00Z",
+      "resolution": "Created DOCUMENTATION_MAP.md (canonical index), archive script ready, .mosaic/ system now canonical"
+    }
+  ]
+}

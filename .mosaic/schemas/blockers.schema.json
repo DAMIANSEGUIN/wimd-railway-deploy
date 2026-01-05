@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://whatismydelta.com/schemas/blockers.json",
+  "title": "Blockers Schema",
+  "description": "Schema for .mosaic/blockers.json - tracks known blockers and resolutions",
+  "type": "object",
+  "required": ["version", "updated_at", "blockers"],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "severity", "status", "description", "impact", "solution", "owner", "created_at"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^B[0-9]{3}$",
+            "description": "Blocker ID (B001, B002, etc.)"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["open", "resolving", "resolved", "wont-fix"]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "impact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "solution": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resolution_progress": {
+            "type": "string"
+          },
+          "resolved_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resolution": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -57,13 +57,24 @@ No step MUST be skipped. Skipping a step is a critical error.
 4. PRE-FLIGHT INSTRUCTION PROTOCOL
 This protocol codifies the standard engineering practice of designing a solution before implementing it. Before generating any code or executing complex commands in BUILD or REPAIR mode, the agent MUST follow this protocol to ensure its reasoning is transparent and its plan is sound.
 
+**MANDATORY: For ALL deliverables, use INTENT Framework (Intent → Check → Receipt)**
+See `.ai-agents/INTENT_FRAMEWORK.md` for complete details.
+
 4.1. Workflow
 
+0. **Show Intent Doc (MANDATORY FIRST STEP):** Before any work, present Intent Doc with: Task (one sentence), Scope (included/excluded), Sources (exact files), Constraints (no fabrication/embellishment/guessing), Uncertainties (questions or "None"). Wait for user confirmation: "Proceed" / "Adjust [X]" / "Stop".
+
 1. **State Capture (Observe):** The agent MUST use its tools (`ls`, `git status`, `read_file`, etc.) to gather the current state of the environment relevant to the immediate task.
+
 2. **Context Synthesis (Orient):** The agent MUST synthesize the captured state with the overall `NEXT_TASK` and the specific governance rules applicable to the task.
+
 3. **Instruction Packet Generation (Decide):** The agent MUST generate a structured "Instruction Packet" (e.g., in YAML or JSON format) that includes, at a minimum: `task_objective`, `state_summary`, `applicable_protocols`, `success_criteria`, and `failure_modes`.
+
 4. **Present Packet for Approval (The Gate):** The agent MUST present this "Instruction Packet" to the user for approval. This is a hard gate. No work is to be performed until the user approves the plan.
+
 5. **Generate and Validate (Act):** Only after approval, the agent MUST proceed to generate the artifact and validate it using the "Validated Artifact Generation Protocol" (see Section 8), with the `success_criteria` from the packet serving as the validation test.
+
+6. **Provide Receipt (MANDATORY LAST STEP):** After delivering work, confirm what was actually done: Sources Used, Included, Excluded, Judgment Calls, Needs Verification.
 
 5. DECISION HIERARCHY
 When making decisions, the agent MUST strictly adhere to the following hierarchy of authority. Deviation from this hierarchy is a critical error.
