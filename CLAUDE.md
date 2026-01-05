@@ -1,27 +1,41 @@
 # Foundation & Mosaic Development Guide
 
-**🚨 MANDATORY FIRST ACTION ON EVERY SESSION:**
+**🚨 STOP - READ THIS FIRST OR DO NOT PROCEED 🚨**
+
+**MANDATORY ENFORCEMENT:** Before doing ANYTHING (reading other files, executing commands, making changes), you MUST read:
 
 ```bash
-# Step 1: Read canonical state (path-agnostic, works in any environment)
-cat .mosaic/current_task.json
-cat .mosaic/blockers.json
-cat .mosaic/agent_state.json
-
-# Step 2: Read cross-agent coordination docs
-cat CROSS_AGENT_STATE_ASSESSMENT_2026-01-05.md
-cat TERMINAL_AGENT_BRIEFING.md
+cat .mosaic/MANDATORY_AGENT_BRIEFING.md
 ```
 
+**This briefing contains:**
+- Current state (what was just completed, what's pending)
+- User decisions already made (DO NOT re-ask)
+- Absolute prohibitions (paths, patterns, actions)
+- Dangerous patterns that cause destructive consequences
+- Required reading order for all other documents
+
+**⚠️ Failure to read the mandatory briefing WILL cause:**
+- Breaking cross-agent coordination
+- Reverting critical security fixes
+- Creating absolute paths that break for other agents
+- Duplicating completed work
+- Ignoring user decisions
+
+**After reading the briefing, execute the "MANDATORY FIRST ACTIONS" from that document.**
+
+---
+
+## Quick Start (After Reading Mandatory Briefing)
+
 **Read these files in order (all use relative paths):**
-1. `.mosaic/current_task.json` - Current objective and user decisions
-2. `.mosaic/blockers.json` - Known blockers and their status
-3. `.mosaic/agent_state.json` - Last agent state and handoff message
-4. `CROSS_AGENT_STATE_ASSESSMENT_2026-01-05.md` - Full context and analysis
-5. `TERMINAL_AGENT_BRIEFING.md` - Implementation details
+1. `.mosaic/MANDATORY_AGENT_BRIEFING.md` - **START HERE (REQUIRED)**
+2. `.mosaic/agent_state.json` - Last agent state and handoff message
+3. `.mosaic/blockers.json` - Known blockers and their status
+4. `.mosaic/current_task.json` - Current objective and user decisions
+5. `.ai-agents/CROSS_AGENT_PROTOCOL.md` - 7 mandatory rules
 6. `.ai-agents/INTENT_FRAMEWORK.md` - Intent → Check → Receipt pattern (MANDATORY for all deliverables)
-7. `.ai-agents/CROSS_AGENT_PROTOCOL.md` - Cross-agent coordination rules
-8. `Mosaic_Governance_Core_v1.md` - Governance rules and state machine
+7. `DOCUMENTATION_MAP.md` - Canonical documentation index
 
 **Document Metadata:**
 

@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://whatismydelta.com/schemas/agent_state.json",
+  "title": "Agent State Schema",
+  "description": "Schema for .mosaic/agent_state.json - tracks session state and handoffs",
+  "type": "object",
+  "required": [
+    "version",
+    "last_agent",
+    "last_mode",
+    "last_session_start",
+    "last_commit",
+    "current_agent",
+    "current_task",
+    "handoff_message",
+    "user_decisions",
+    "implementation_progress"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version"
+    },
+    "last_agent": {
+      "type": "string",
+      "enum": ["claude_code_terminal", "gemini", "chatgpt", "cursor_claude", "unknown"],
+      "description": "Last agent that worked on this repo"
+    },
+    "last_mode": {
+      "type": "string",
+      "enum": ["INIT", "BUILD", "DIAGNOSE", "REPAIR", "VERIFY", "HANDOFF"],
+      "description": "Last governance mode"
+    },
+    "last_session_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last session start"
+    },
+    "last_session_end": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last session end, null if in progress"
+    },
+    "last_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "Git commit hash (short or full)"
+    },
+    "current_agent": {
+      "type": "string",
+      "description": "Current agent working on repo"
+    },
+    "current_task": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Current objective or task"
+    },
+    "handoff_message": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Message for next agent - what was done, what's next"
+    },
+    "briefing_acknowledgment": {
+      "type": "object",
+      "required": ["agent", "briefing_version", "acknowledged_at", "last_commit_known"],
+      "properties": {
+        "agent": {
+          "type": "string",
+          "description": "Agent that acknowledged the briefing"
+        },
+        "briefing_version": {
+          "type": "string",
+          "description": "Version of MANDATORY_AGENT_BRIEFING.md read"
+        },
+        "acknowledged_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When briefing was acknowledged"
+        },
+        "last_commit_known": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$",
+          "description": "Last commit hash known (proves they read state)"
+        }
+      },
+      "description": "Proof agent read MANDATORY_AGENT_BRIEFING.md"
+    },
+    "user_decisions": {
+      "type": "object",
+      "description": "User decisions that should not be re-asked"
+    },
+    "implementation_progress": {
+      "type": "object",
+      "description": "Progress tracking for multi-phase work"
+    },
+    "next_agent": {
+      "type": "string",
+      "description": "Suggested next agent (TBD if unknown)"
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Questions for next agent or user"
+    }
+  },
+  "additionalProperties": false
+}

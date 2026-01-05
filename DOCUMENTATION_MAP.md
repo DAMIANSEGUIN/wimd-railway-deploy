@@ -6,19 +6,23 @@
 
 ---
 
-## 🚀 SESSION START (READ FIRST)
+## 🚀 SESSION START (MANDATORY ENFORCEMENT)
 
-**Primary Entry Point:**
-1. `.mosaic/current_task.json` - Current objective and decisions
-2. `.mosaic/blockers.json` - Known blockers
-3. `.mosaic/agent_state.json` - Last agent handoff
-4. `CROSS_AGENT_STATE_ASSESSMENT_2026-01-05.md` - Full context
-5. `TERMINAL_AGENT_BRIEFING.md` - Implementation details
+**⚠️ STEP 0 - REQUIRED FIRST READ (ANY AI AGENT):**
+0. **`.mosaic/MANDATORY_AGENT_BRIEFING.md`** - ✅ ENFORCEMENT GATE
+   - Purpose: Prevents destructive actions, ensures context before any work
+   - Contains: Current state, user decisions, prohibitions, dangerous patterns
+   - Status: MUST BE READ BEFORE ANY OTHER FILE OR COMMAND
 
-**Secondary:**
-6. `.ai-agents/INTENT_FRAMEWORK.md` - Intent → Check → Receipt pattern
-7. `.ai-agents/CROSS_AGENT_PROTOCOL.md` - Coordination rules
-8. `Mosaic_Governance_Core_v1.md` - State machine & governance
+**Primary State Files (read in order after briefing):**
+1. `.mosaic/agent_state.json` - Last agent, current task, handoff message
+2. `.mosaic/blockers.json` - Known blockers and resolutions
+3. `.mosaic/current_task.json` - Current objective and user decisions
+
+**Secondary Context:**
+4. `.ai-agents/CROSS_AGENT_PROTOCOL.md` - 7 mandatory rules
+5. `.ai-agents/INTENT_FRAMEWORK.md` - Intent → Check → Receipt pattern
+6. `Mosaic_Governance_Core_v1.md` - State machine & governance
 
 ---
 
