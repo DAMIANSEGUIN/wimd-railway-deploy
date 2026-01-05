@@ -3,10 +3,25 @@
 **🚨 MANDATORY FIRST ACTION ON EVERY SESSION:**
 
 ```bash
-Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
+# Step 1: Read canonical state (path-agnostic, works in any environment)
+cat .mosaic/current_task.json
+cat .mosaic/blockers.json
+cat .mosaic/agent_state.json
+
+# Step 2: Read cross-agent coordination docs
+cat CROSS_AGENT_STATE_ASSESSMENT_2026-01-05.md
+cat TERMINAL_AGENT_BRIEFING.md
 ```
 
-**Read SESSION_RESUME_PROMPT.md BEFORE doing ANYTHING else. Contains critical session state and context.**
+**Read these files in order (all use relative paths):**
+1. `.mosaic/current_task.json` - Current objective and user decisions
+2. `.mosaic/blockers.json` - Known blockers and their status
+3. `.mosaic/agent_state.json` - Last agent state and handoff message
+4. `CROSS_AGENT_STATE_ASSESSMENT_2026-01-05.md` - Full context and analysis
+5. `TERMINAL_AGENT_BRIEFING.md` - Implementation details
+6. `.ai-agents/INTENT_FRAMEWORK.md` - Intent → Check → Receipt pattern (MANDATORY for all deliverables)
+7. `.ai-agents/CROSS_AGENT_PROTOCOL.md` - Cross-agent coordination rules
+8. `Mosaic_Governance_Core_v1.md` - Governance rules and state machine
 
 **Document Metadata:**
 
