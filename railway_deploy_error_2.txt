@@ -1,0 +1,33 @@
+RAILWAY DEPLOYMENT ERROR #2
+===========================
+Deployment: wimd-railway-deploy
+Status: Failed at runtime (after successful build)
+Time: Jan 5 2026 14:51:01
+Environment: production
+
+DEPLOY LOGS (Runtime Error):
+----------------------------
+many reasons, often due to issues with your setup or how NumPy was
+This is unlikely to be a NumPy issue but will be caused by a bad install
+installed.
+or environment on your machine.
+
+We have compiled some common reasons and troubleshooting tips at:
+Original error was: libstdc++.so.6: cannot open shared object file: No such file or directory
+
+https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+[2026-01-05 19:51:00 +0000] [4] [INFO] Worker exiting (pid: 4)
+[2026-01-05 19:51:01 +0000] [1] [ERROR] Worker (pid:4) exited with code 3
+Please note and check the following:
+[2026-01-05 19:51:01 +0000] [1] [ERROR] Shutting down: Master
+
+ROOT CAUSE:
+-----------
+The pip install succeeded (--break-system-packages worked), but the app crashes at runtime
+when trying to import NumPy. NumPy requires libstdc++.so.6 (C++ standard library) which is
+missing from the Nixpacks environment.
+
+SOLUTION:
+---------
+Add gcc and C++ standard library to nixpacks.toml setup phase.
