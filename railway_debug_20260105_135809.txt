@@ -1,0 +1,17 @@
+=== Railway Status ===
+Project: mosaic-backend
+Environment: production
+Service: wimd-railway-deploy
+
+=== Deployments ===
+error: unrecognized subcommand 'deployment'
+
+  tip: some similar subcommands exist: 'redeploy', 'deploy'
+
+Usage: railway [COMMAND]
+
+For more information, try '--help'.
+
+
+=== Logs ===
+No deployments found
