@@ -48,9 +48,16 @@ cat .mosaic/MANDATORY_AGENT_BRIEFING.md
 
 - Microservices architecture: Foundation (Safety & Evidence) + Mosaic (Career Transition Platform)
 - Production URL: <https://whatismydelta.com> (LIVE ✅)
-- Backend API: Railway deployment at what-is-my-delta-site-production.up.railway.app
+- Backend API: Render deployment at mosaic-backend-tpog.onrender.com
 - Frontend: Netlify deployment (resonant-crostata-90b706)
 - Repository: github.com/DAMIANSEGUIN/wimd-railway-deploy
+
+**Deployment Status (2026-01-06):**
+- ✅ Backend: Render (migrated 2026-01-05, deployed at 23:40 UTC)
+- ✅ Service URL: https://mosaic-backend-tpog.onrender.com
+- ✅ Database: PostgreSQL 18 (Render managed, free tier)
+- ✅ Health Check: Passing
+- ⚠️ Frontend: Still pointing to old Railway URL (needs update)
 
 ## Deployment Status (v2.0 Phase 1-4+ - PRODUCTION)
 
