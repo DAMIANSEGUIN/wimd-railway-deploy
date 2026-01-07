@@ -32,6 +32,28 @@ cat .mosaic/LATEST_HANDOFF.md  # Latest session handoff (if exists)
 
 ## Step 2: Run Session Start Verification
 
+**🚨 FIRST: Validate previous agent's handoff (ML-style enforcement)**
+
+```bash
+python3 .mosaic/enforcement/handoff_validation_tests.py --post-handoff
+```
+
+**This test validates:**
+- All state files are readable and valid JSON
+- Previous agent left a meaningful handoff_message
+- session-gate.sh passes without errors
+- No missing files referenced in docs
+- Production state is determinable from state files
+
+**If validation FAILS:**
+- ❌ Previous agent's handoff was incomplete
+- ✅ Document the failure in session notes
+- ✅ Fix the broken state before proceeding
+
+---
+
+**Then run standard verification:**
+
 ```bash
 ./.mosaic/enforcement/session-gate.sh
 ./scripts/verify_critical_features.sh
@@ -41,6 +63,7 @@ git log --oneline -3
 
 **Declare verification results:**
 ```
+✅ Handoff validation: PASSED (previous agent's work verified)
 ✅ Critical features verified:
    - Authentication UI: [count] references
    - PS101 v2 flow: [count] references
@@ -129,6 +152,31 @@ Human action required: [specific steps needed]
 
 **When you finish work (HANDOFF):**
 
+**🚨 STEP 0: RUN VALIDATION TESTS (ML-STYLE ENFORCEMENT) - DO NOT SKIP**
+
+```bash
+python3 .mosaic/enforcement/handoff_validation_tests.py --pre-handoff
+```
+
+**This test suite BLOCKS handoff until:**
+- All state files exist and are valid JSON
+- Production state claims match git reality (no unpushed work)
+- All referenced files actually exist
+- Git status is clean OR uncommitted changes are documented
+- Blockers marked "resolved" have evidence
+
+**If tests FAIL:**
+- ❌ DO NOT mark work "complete"
+- ❌ DO NOT tell user "ready for handoff"
+- ✅ Fix the failures first
+- ✅ Run tests again until passing
+
+**This is TECHNICAL enforcement (tests block you), not behavioral (docs ask you to check).**
+
+---
+
+**After validation tests PASS:**
+
 1. Update `.mosaic/agent_state.json`:
    - Set `last_commit` to current git HEAD
    - Update `handoff_message` with what was done and what's next
@@ -148,7 +196,12 @@ Human action required: [specific steps needed]
    git commit -m "type(scope): description"
    ```
 
-5. Tell human: "Work complete. State files updated. Ready for next agent."
+5. **Run validation tests again** (should still pass after commit):
+   ```bash
+   python3 .mosaic/enforcement/handoff_validation_tests.py --pre-handoff
+   ```
+
+6. Tell human: "Work complete. Validation tests passed. State files updated. Ready for next agent."
 
 **Session log:**
 
