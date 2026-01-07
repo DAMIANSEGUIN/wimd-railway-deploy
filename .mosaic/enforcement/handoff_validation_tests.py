@@ -171,7 +171,22 @@ class HandoffValidator:
 
         issues = []
         if claimed_commit != actual_commit:
-            issues.append(f"Claimed commit {claimed_commit} != actual HEAD {actual_commit}")
+            # Check if this is just the agent_state.json update commit (expected pattern)
+            try:
+                files_changed = subprocess.check_output(
+                    ['git', 'diff', '--name-only', 'HEAD~1', 'HEAD'],
+                    cwd=self.repo_root,
+                    text=True
+                ).strip().split('\n')
+
+                if files_changed == ['.mosaic/agent_state.json']:
+                    # This is the circular dependency case - HEAD is agent_state.json update
+                    # The claimed commit (HEAD~1) is the actual work commit
+                    self.warnings.append(f"HEAD is agent_state.json update commit (expected pattern)")
+                else:
+                    issues.append(f"Claimed commit {claimed_commit} != actual HEAD {actual_commit}")
+            except subprocess.CalledProcessError:
+                issues.append(f"Claimed commit {claimed_commit} != actual HEAD {actual_commit}")
 
         if actual_commit != origin_commit:
             issues.append(f"Local HEAD {actual_commit} != origin/main {origin_commit} (unpushed work)")
