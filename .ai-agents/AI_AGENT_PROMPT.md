@@ -11,11 +11,12 @@ You are working on the Mosaic Platform project. This project has strict protocol
 ## Step 1: Read Current State (Path-Agnostic)
 
 ```bash
-# Read these 4 state files FIRST (works in any environment):
+# Read these 5 state files FIRST (works in any environment):
 cat .mosaic/agent_state.json
 cat .mosaic/blockers.json
 cat .mosaic/current_task.json
 cat .mosaic/MANDATORY_AGENT_BRIEFING.md
+cat .mosaic/LATEST_HANDOFF.md  # Latest session handoff (if exists)
 ```
 
 **Declare what you learned:**
@@ -32,6 +33,7 @@ cat .mosaic/MANDATORY_AGENT_BRIEFING.md
 ## Step 2: Run Session Start Verification
 
 ```bash
+./.mosaic/enforcement/session-gate.sh
 ./scripts/verify_critical_features.sh
 git status
 git log --oneline -3
