@@ -4,6 +4,31 @@
 
 ---
 
+## ⚙️ FOR HUMAN: Four-Gate Enforcement System
+
+**If agent violates protocol, run these gates to auto-generate corrective instructions:**
+
+**GATE 1 - Session Start Validator** (catch agents who skip startup protocol):
+```bash
+# Copy agent's first response and check it
+echo "agent response here" | python3 .mosaic/enforcement/gate_1_session_start.py
+# OR: cat agent_response.txt | python3 .mosaic/enforcement/gate_1_session_start.py
+```
+
+**GATE 2 - Behavior Lint** (catch forbidden phrases without context):
+```bash
+# Check any agent response for violations
+echo "agent response here" | python3 .mosaic/enforcement/gate_2_behavior_lint.py
+```
+
+**If either gate fails, paste the auto-generated redirect message to the agent.**
+
+Gates 3 and 4 run automatically during git commits.
+
+---
+
+## 🤖 FOR AI AGENT: Mandatory Protocol
+
 You are working on the Mosaic Platform project. This project has strict protocols to prevent breaking critical features and ensure cross-agent coordination.
 
 **🚨 MANDATORY FIRST ACTIONS - Do these IN ORDER before ANY other work:**
@@ -175,7 +200,35 @@ python3 .mosaic/enforcement/handoff_validation_tests.py --pre-handoff
 
 ---
 
-**After validation tests PASS:**
+**🚨 STEP 0.5: GET GEMINI CROSS-AGENT EVALUATION (GATE 4)**
+
+```bash
+python3 .mosaic/enforcement/gate_4_gemini_eval.py
+```
+
+**Gemini evaluates your work against:**
+- Did you run validation tests?
+- Do validation tests pass?
+- Are state files correct (last_commit matches git HEAD)?
+- Is handoff_message meaningful (>50 chars)?
+- Are commits pushed to origin/main?
+- Did you follow INTENT framework?
+- No absolute paths in docs?
+
+**If Gemini verdict is REQUEST_CHANGES or REJECT:**
+- ❌ DO NOT commit
+- ✅ Read Gemini's feedback (shown in output)
+- ✅ Fix required issues
+- ✅ Run gate_4_gemini_eval.py again
+
+**If Gemini verdict is APPROVE:**
+- ✅ Gemini approval saved to `.mosaic/gemini_approval.json`
+- ✅ Gate 3 (pre-commit hook) will verify approval exists
+- ✅ Proceed to commit
+
+---
+
+**After validation tests PASS and Gemini APPROVES:**
 
 1. Update `.mosaic/agent_state.json`:
    - Set `last_commit` to current git HEAD
@@ -196,12 +249,12 @@ python3 .mosaic/enforcement/handoff_validation_tests.py --pre-handoff
    git commit -m "type(scope): description"
    ```
 
-5. **Run validation tests again** (should still pass after commit):
-   ```bash
-   python3 .mosaic/enforcement/handoff_validation_tests.py --pre-handoff
-   ```
+   **GATE 3 (Pre-Commit Hook) will automatically:**
+   - Verify Gemini approval exists
+   - Run final validation checks
+   - Block commit if anything fails
 
-6. Tell human: "Work complete. Validation tests passed. State files updated. Ready for next agent."
+5. Tell human: "Work complete. Validation tests passed. Gemini approved. State files updated. Ready for next agent."
 
 **Session log:**
 
