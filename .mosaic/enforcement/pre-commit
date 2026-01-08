@@ -175,8 +175,8 @@ SECRET_PATTERNS=(
 for pattern in "${SECRET_PATTERNS[@]}"; do
   for file in $STAGED_FILES; do
     if [ -f "$file" ]; then
-      # Skip the enforcement hook itself (it defines patterns)
-      if [[ "$file" == *"/enforcement/pre-commit" ]]; then
+      # Skip enforcement files (they define/test patterns)
+      if [[ "$file" == *"/enforcement/pre-commit" ]] || [[ "$file" == *"/enforcement/test_gates.sh" ]]; then
         continue
       fi
 
@@ -218,7 +218,7 @@ if [ -f "$COMMIT_MSG_FILE" ]; then
 fi
 
 # ============================================================================
-# GATE 8: Gemini cross-agent approval (for handoffs)
+# GATE 8: Gemini cross-agent approval (ML-STYLE ENFORCEMENT)
 # ============================================================================
 echo ""
 echo "📋 Gate 8: Checking for Gemini cross-agent approval..."
@@ -229,13 +229,13 @@ if git diff --cached --name-only | grep -q ".mosaic/agent_state.json"; then
   GEMINI_APPROVAL_FILE=".mosaic/gemini_approval.json"
 
   if [ ! -f "$GEMINI_APPROVAL_FILE" ]; then
-    echo "⚠️  WARNING: No Gemini approval found for this handoff"
+    echo "❌ VIOLATION: No Gemini approval found for this handoff"
     echo ""
-    echo "   You should run: python3 .mosaic/enforcement/gate_4_gemini_eval.py"
+    echo "   Required: Run python3 .mosaic/enforcement/gate_4_gemini_eval.py"
     echo "   to get Gemini's cross-agent evaluation before committing."
     echo ""
-    echo "   Proceeding without Gemini approval (not enforced yet)"
-    # Don't block yet - grace period to allow testing
+    echo "   Reference: .ai-agents/AI_AGENT_PROMPT.md Step 0.5 (Gate 4)"
+    VIOLATIONS=$((VIOLATIONS + 1))
   else
     # Check verdict
     if command -v jq &> /dev/null; then
@@ -244,7 +244,7 @@ if git diff --cached --name-only | grep -q ".mosaic/agent_state.json"; then
       if [ "$VERDICT" == "APPROVE" ]; then
         echo "✅ Gemini approved (verdict: APPROVE)"
       elif [ "$VERDICT" == "REQUEST_CHANGES" ]; then
-        echo "⚠️  WARNING: Gemini verdict is REQUEST_CHANGES"
+        echo "❌ VIOLATION: Gemini verdict is REQUEST_CHANGES"
         echo ""
         echo "   Gemini feedback:"
         jq -r .feedback "$GEMINI_APPROVAL_FILE" 2>/dev/null || true
@@ -253,19 +253,19 @@ if git diff --cached --name-only | grep -q ".mosaic/agent_state.json"; then
         jq -r '.required_fixes[]' "$GEMINI_APPROVAL_FILE" 2>/dev/null || true
         echo ""
         echo "   Fix these issues and run gate_4_gemini_eval.py again"
-        echo "   Proceeding anyway (enforcement not strict yet)"
-        # Don't block yet - grace period
+        VIOLATIONS=$((VIOLATIONS + 1))
       elif [ "$VERDICT" == "REJECT" ]; then
-        echo "❌ WARNING: Gemini verdict is REJECT"
+        echo "❌ VIOLATION: Gemini verdict is REJECT"
         echo ""
         echo "   Gemini feedback:"
         jq -r .feedback "$GEMINI_APPROVAL_FILE" 2>/dev/null || true
         echo ""
-        echo "   You should address Gemini's concerns before committing"
-        echo "   Proceeding anyway (enforcement not strict yet)"
-        # Don't block yet - grace period
+        echo "   Address Gemini's concerns before committing"
+        VIOLATIONS=$((VIOLATIONS + 1))
       else
-        echo "⚠️  WARNING: Unknown Gemini verdict: $VERDICT"
+        echo "❌ VIOLATION: Unknown Gemini verdict: $VERDICT"
+        echo "   Expected: APPROVE, REQUEST_CHANGES, or REJECT"
+        VIOLATIONS=$((VIOLATIONS + 1))
       fi
     else
       echo "✅ Gemini approval file exists (cannot verify without jq)"
