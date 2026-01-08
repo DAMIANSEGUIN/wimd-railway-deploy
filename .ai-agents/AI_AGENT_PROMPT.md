@@ -33,6 +33,23 @@ You are working on the Mosaic Platform project. This project has strict protocol
 
 **🚨 MANDATORY FIRST ACTIONS - Do these IN ORDER before ANY other work:**
 
+## Step 0: Read Session Initialization (FIRST!)
+
+**CRITICAL:** Read this BEFORE saying anything to the user:
+
+```bash
+cat .mosaic/SESSION_INIT.md
+```
+
+**This file prevents the "what would you like to work on?" protocol failure.**
+
+It tells you:
+- ❌ NEVER ask "what to work on?" (state files tell you)
+- ✅ What to do instead (read state, declare understanding, proceed)
+- 📋 Complete checklist to follow
+
+**After reading SESSION_INIT.md, proceed to Step 1.**
+
 ## Step 1: Read Current State (Path-Agnostic)
 
 ```bash
