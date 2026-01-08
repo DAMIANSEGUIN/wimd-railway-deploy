@@ -180,6 +180,11 @@ for pattern in "${SECRET_PATTERNS[@]}"; do
         continue
       fi
 
+      # Skip HTML files for password pattern (HTML forms legitimately have password fields)
+      if [[ "$pattern" == *"password"* ]] && [[ "$file" == *.html ]]; then
+        continue
+      fi
+
       # Check for secrets, excluding examples, documentation, and os.getenv calls
       if grep -i -n -E "$pattern" "$file" 2>/dev/null | grep -v "REDACTED" | grep -v "dummy" | grep -v "example" | grep -v "your_key_here" | grep -v "sk-xxx" | grep -v "sk-ant-xxx" | grep -v "os.getenv" | grep -v "os.environ"; then
         echo "❌ VIOLATION: Possible secret found in $file"

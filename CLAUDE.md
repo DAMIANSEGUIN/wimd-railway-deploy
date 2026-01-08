@@ -2,20 +2,42 @@
 
 **🚨 STOP - READ THIS FIRST OR DO NOT PROCEED 🚨**
 
-**STEP 0: SESSION INITIALIZATION (READ FIRST!)**
+**STEP 0: SESSION INITIALIZATION PROTOCOL**
 
+## ❌ ABSOLUTE PROHIBITION
+
+**DO NOT ask the user "What would you like to work on?"**
+
+This is a **PROTOCOL FAILURE**. The state files already tell you what to work on. Asking wastes user time and indicates you didn't read the state files.
+
+## ✅ REQUIRED FIRST ACTIONS (Execute NOW)
+
+**Before responding to the user, you MUST:**
+
+1. **Read state files:**
 ```bash
-cat .mosaic/SESSION_INIT.md
+cat .mosaic/agent_state.json
+cat .mosaic/current_task.json
+cat .mosaic/LATEST_HANDOFF.md
 ```
 
-**This prevents the "what would you like to work on?" protocol failure.**
+2. **Extract current task:**
+   - Current task: [from agent_state.json: current_task field]
+   - Handoff message: [from agent_state.json: handoff_message field]
 
-**CRITICAL:** This file tells you:
-- ❌ NEVER ask "what to work on?" (state files already tell you)
-- ✅ What to do instead (read state, declare understanding, ask "Should I proceed?")
-- 📋 Complete checklist to follow at session start
+3. **State what you learned and ask permission:**
+```
+I've read the state files. Current task: [describe specific task].
+Handoff message: [summarize what previous agent did].
 
-**After reading SESSION_INIT.md, proceed to Step 1.**
+I will continue by: [state specific next action].
+
+Should I proceed?
+```
+
+**DO NOT proceed with work until user confirms.**
+
+**Full protocol details:** `.mosaic/SESSION_INIT.md`
 
 ---
 
