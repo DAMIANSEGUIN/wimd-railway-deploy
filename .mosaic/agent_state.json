@@ -1,16 +1,16 @@
 {
   "version": 1,
   "last_agent": "claude_code_sonnet_4_5",
-  "last_mode": "BUILD",
+  "last_mode": "REPAIR",
   "last_session_start": "2026-01-08T16:10:00Z",
-  "last_session_end": "2026-01-08T16:45:00Z",
+  "last_session_end": "2026-01-08T21:15:00Z",
   "current_agent": "claude_code_sonnet_4_5",
-  "current_task": "Archive cleanup verification and completion",
-  "handoff_message": "✅ COMPLETE: Archive cleanup verified and marked complete. CONTEXT: implementation_progress showed archive_cleanup as 'incomplete' but system investigation revealed all components working correctly. VERIFICATION: (1) Archive script exists and operational at scripts/archive_stale_docs.sh, (2) Script executed successfully - archived 0 files (all SESSION files after 2025-12-01 cutoff as designed), (3) docs_archive/sessions_2025/ exists with README, (4) DOCUMENTATION_MAP.md provides canonical index, (5) .mosaic/*.json system active as source of truth, (6) Blocker B004 marked 'resolved'. OUTCOME: Updated implementation_progress.archive_cleanup from 'incomplete' to 'complete'. VALIDATION: All validation tests passed (post-handoff 5/5, session-gate all checks, critical features verified, enforcement gates 8/8). System functioning as designed with 6 active SESSION files, 132 archived files, and canonical documentation structure established.",
+  "current_task": "CRITICAL production fix - reconnect frontend to live backend",
+  "handoff_message": "🚨 CRITICAL FIX: User reported 'all deployments have failed for days' - enforcement system validated local state but MISSED production failure. ROOT CAUSE: netlify.toml proxied ALL API calls to dead Railway backend (404) since 2026-01-05 migration to Render. VALIDATION BLIND SPOT: 8/8 gates passed checking git/JSON/commits but NEVER checked production connectivity. FIXES: (1) netlify.toml: 11 Railway URLs → Render, (2) mosaic_ui/index.html CSS: Vercel URL → Render, (3) CSP header: Railway → Render. TESTED: Render backend live (200 OK), Railway backend dead (404). LESSON: Enforcement must validate PRODUCTION REALITY not just local state. NEXT: Add Gate 9 - Production Connectivity Check (test netlify.toml targets, backend health, deployed frontend). Previous work: Archive cleanup marked complete.",
   "briefing_acknowledgment": {
     "agent": "claude_code_sonnet_4_5",
     "briefing_version": "1.0",
-    "acknowledged_at": "2026-01-08T16:10:00Z"
+    "acknowledged_at": "2026-01-08T21:10:00Z"
   },
   "user_decisions": {
     "D1_relative_paths_only": "YES",
@@ -26,7 +26,9 @@
     "deployed_at": "2026-01-05T23:40:33Z",
     "deployment_status": "live",
     "health_check": "passing",
-    "frontend_updated": "2026-01-07T22:25:00Z",
+    "frontend_updated": "2026-01-08T21:15:00Z",
+    "frontend_backend_connected": true,
+    "production_validation_added": "pending",
     "handoff_integration": "complete",
     "ml_enforcement_system": "active",
     "ml_enforcement_tested": true,
