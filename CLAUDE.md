@@ -2,7 +2,24 @@
 
 **🚨 STOP - READ THIS FIRST OR DO NOT PROCEED 🚨**
 
-**MANDATORY ENFORCEMENT:** Before doing ANYTHING (reading other files, executing commands, making changes), you MUST read:
+**STEP 0: SESSION INITIALIZATION (READ FIRST!)**
+
+```bash
+cat .mosaic/SESSION_INIT.md
+```
+
+**This prevents the "what would you like to work on?" protocol failure.**
+
+**CRITICAL:** This file tells you:
+- ❌ NEVER ask "what to work on?" (state files already tell you)
+- ✅ What to do instead (read state, declare understanding, ask "Should I proceed?")
+- 📋 Complete checklist to follow at session start
+
+**After reading SESSION_INIT.md, proceed to Step 1.**
+
+---
+
+**STEP 1: MANDATORY AGENT BRIEFING**
 
 ```bash
 cat .mosaic/MANDATORY_AGENT_BRIEFING.md
@@ -26,10 +43,11 @@ cat .mosaic/MANDATORY_AGENT_BRIEFING.md
 
 ---
 
-## Quick Start (After Reading Mandatory Briefing)
+## Quick Start (After Reading SESSION_INIT & Mandatory Briefing)
 
 **Read these files in order (all use relative paths):**
-1. `.mosaic/MANDATORY_AGENT_BRIEFING.md` - **START HERE (REQUIRED)**
+0. `.mosaic/SESSION_INIT.md` - **READ FIRST (PREVENTS PROTOCOL FAILURE)**
+1. `.mosaic/MANDATORY_AGENT_BRIEFING.md` - **REQUIRED AFTER SESSION_INIT**
 2. `.mosaic/agent_state.json` - Last agent state and handoff message
 3. `.mosaic/blockers.json` - Known blockers and their status
 4. `.mosaic/current_task.json` - Current objective and user decisions
