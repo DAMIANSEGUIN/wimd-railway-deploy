@@ -1,16 +1,16 @@
 #!/bin/bash
 # Deployment Wrapper Script
 # Orchestrates deployment with pre/post verification
-# Usage: ./scripts/deploy.sh <railway|netlify|all>
+# Usage: ./scripts/deploy.sh <render|netlify|all>
 
 set -euo pipefail
 
 if [ $# -lt 1 ]; then
-  echo "Usage: ./scripts/deploy.sh <railway|netlify|all>"
+  echo "Usage: ./scripts/deploy.sh <render|netlify|all>"
   echo ""
   echo "Examples:"
   echo "  ./scripts/deploy.sh netlify   # Deploy frontend only"
-  echo "  ./scripts/deploy.sh railway   # Deploy backend only"
+  echo "  ./scripts/deploy.sh render    # Deploy backend only"
   echo "  ./scripts/deploy.sh all       # Deploy both"
   echo ""
   exit 1
@@ -112,11 +112,11 @@ case "$TARGET" in
     echo "Live URL: https://whatismydelta.com/"
     ;;
 
-  railway)
-    echo "Step 2: Deploying to Railway..."
+  render)
+    echo "Step 2: Deploying to Render..."
     echo ""
-    echo "Railway deployment uses git push to origin (GitHub integration)"
-    echo "Railway auto-deploys from GitHub (no railway-origin push needed)"
+    echo "Render deployment uses git push to origin (GitHub integration)"
+    echo "Render auto-deploys from GitHub"
     echo ""
 
     # Use push wrapper which will trigger pre-push hook
@@ -124,24 +124,24 @@ case "$TARGET" in
 
     echo ""
     echo "======================================"
-    echo "✅ RAILWAY DEPLOYMENT INITIATED"
+    echo "✅ RENDER DEPLOYMENT INITIATED"
     echo "======================================"
     echo ""
-    echo "Railway will auto-deploy from GitHub (~2-5 minutes)"
+    echo "Render will auto-deploy from GitHub (~2-5 minutes)"
     echo ""
-    echo "Monitor at: https://railway.app/dashboard"
-    echo "Check: https://what-is-my-delta-site-production.up.railway.app/health"
+    echo "Monitor at: https://dashboard.render.com"
+    echo "Check: https://mosaic-backend-tpog.onrender.com/health"
     ;;
 
   all)
-    echo "Deploying both Railway and Netlify..."
+    echo "Deploying both Render and Netlify..."
     echo ""
 
-    # Deploy Railway first (backend)
-    ./scripts/deploy.sh railway
+    # Deploy Render first (backend)
+    ./scripts/deploy.sh render
 
     echo ""
-    echo "Waiting 2 minutes for Railway backend rebuild..."
+    echo "Waiting 2 minutes for Render backend rebuild..."
     sleep 120
     echo ""
 
@@ -156,7 +156,7 @@ case "$TARGET" in
 
   *)
     echo "❌ Invalid target: $TARGET"
-    echo "Valid options: railway, netlify, all"
+    echo "Valid options: render, netlify, all"
     exit 1
     ;;
 esac
