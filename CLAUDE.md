@@ -92,23 +92,22 @@ cat .mosaic/MANDATORY_AGENT_BRIEFING.md
 - Frontend: Netlify deployment (resonant-crostata-90b706)
 - Repository: github.com/DAMIANSEGUIN/wimd-railway-deploy
 
-**Deployment Status (2026-01-06):**
-- ✅ Backend: Render (migrated 2026-01-05, deployed at 23:40 UTC)
-- ✅ Service URL: https://mosaic-backend-tpog.onrender.com
+**Deployment Status (2026-01-08):**
+- ✅ Backend: Render (live at https://mosaic-backend-tpog.onrender.com)
 - ✅ Database: PostgreSQL 18 (Render managed, free tier)
 - ✅ Health Check: Passing
-- ⚠️ Frontend: Still pointing to old Railway URL (needs update)
+- ✅ Frontend: Netlify (connected to Render backend)
 
 ## Deployment Status (v2.0 Phase 1-4+ - PRODUCTION)
 
 - ✅ Frontend: Fully deployed and functional
-- ✅ Backend API: Railway deployment operational
+- ✅ Backend API: Render deployment operational
 - ✅ Authentication: Login/register/password reset flows working
 - ✅ Chat/Coach: Career coaching chat interface operational
 - ✅ File Upload: Resume/document upload functional
 - ✅ Interactive UI: ALL navigation working (explore, find, apply, chat, guide, upload)
 - ✅ Trial Mode: 5-minute trial for unauthenticated users
-- ✅ Proxy Configuration: Netlify → Railway API routes configured
+- ✅ Proxy Configuration: Netlify → Render API routes configured
 - ✅ Phase 1: Migration framework + CSV→AI fallback + feature flags
 - ✅ Phase 2: Experiment engine backend (feature flag disabled)
 - ✅ Phase 3: Self-efficacy metrics + coach escalation + Focus Stack UI
@@ -119,9 +118,7 @@ cat .mosaic/MANDATORY_AGENT_BRIEFING.md
 
 ## Deployment Commands (MANDATORY - Use Wrapper Scripts)
 
-**📖 AUTHORITATIVE REFERENCE:** See `DEPLOYMENT_TRUTH.md` for complete details
-
-**Last Verified:** 2025-11-25
+**Last Verified:** 2026-01-08
 
 **✅ ALWAYS use wrapper scripts:**
 
@@ -129,8 +126,8 @@ cat .mosaic/MANDATORY_AGENT_BRIEFING.md
 # Deploy frontend with verification
 ./scripts/deploy.sh netlify
 
-# Deploy backend with verification
-./scripts/deploy.sh railway
+# Deploy backend to Render
+./scripts/deploy.sh render
 
 # Deploy both frontend + backend
 ./scripts/deploy.sh all
@@ -145,14 +142,13 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 **❌ DO NOT use:**
 
 - `git push origin main` (use wrapper script)
-- `git push railway-origin main` (railway-origin is LEGACY)
 - `netlify deploy --prod` (use wrapper script)
 
-**How Railway Deploys:**
+**How Render Deploys:**
 
-- Railway watches `origin` (wimd-railway-deploy) via GitHub integration
-- Push to `origin` triggers Railway auto-deploy (2-5 minutes)
-- NO push to `railway-origin` needed (legacy remote, no write access)
+- Render watches `origin` (wimd-railway-deploy) via GitHub integration
+- Push to `origin` triggers Render auto-deploy (2-5 minutes)
+- Backend URL: https://mosaic-backend-tpog.onrender.com
 
 **Why wrapper scripts are required:**
 
@@ -183,7 +179,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 
 - ✅ UI frontend: OPERATIONAL
 - ✅ Chat/Coach interface: OPERATIONAL
-- ✅ Backend API: OPERATIONAL (FastAPI on Railway)
+- ✅ Backend API: OPERATIONAL (FastAPI on Render)
 - ✅ Authentication: OPERATIONAL (with password reset)
 - ✅ File handling: OPERATIONAL
 - ✅ Self-efficacy metrics: OPERATIONAL (backend + UI toggle)
@@ -328,13 +324,13 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 
 - Project documentation: `docs/README.md`
 - Deployment scripts: `scripts/` directory
-- Backend health: <https://what-is-my-delta-site-production.up.railway.app/health/comprehensive>
+- Backend health: <https://mosaic-backend-tpog.onrender.com/health/comprehensive>
 - Frontend: <https://whatismydelta.com>
 
 ## Resolved Issues (v1.0 + v2.0 Phase 1-4)
 
 - ✅ **BLOCKER-UI-ASK**: Chat/coach interface now operational
-- ✅ **BLOCKER-API-BACKEND**: Backend deployed on Railway and connected
+- ✅ **BLOCKER-API-BACKEND**: Backend deployed on Render and connected
 - ✅ **Button functionality**: All Phase 1-3 interactive elements working
 - ✅ **Cache management**: Browser caching disabled for proper updates
 - ✅ **Trial mode**: Unauthenticated users get 5-minute trial period
@@ -343,34 +339,34 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - ✅ **Phase 3**: Self-efficacy metrics + coach escalation + Focus Stack UI deployed
 - ✅ **Password reset**: Forgot password flow implemented (email service pending)
 - ✅ **CSV lookup fix**: Fixed prompt selector to properly handle response/completion fields (api/prompt_selector.py:118)
-- ✅ **Auto-restart monitoring**: Railway health checks with automatic restart on prompt system failure
+- ✅ **Auto-restart monitoring**: Render health checks with automatic restart on prompt system failure
 - ✅ **PS101 v2 restoration** (2025-11-02): Enhanced inline forms restored without breaking auth
 - ✅ **Incident recovery** (2025-11-02): Auth system restored from commit 70b8392
 - ✅ **Contingency system** (2025-11-02): Pre-commit hooks + verification scripts now active
 
 ## Monitoring & Auto-Restart System
 
-- **Railway Health Checks**: Configured via `railway.toml` with `/health` endpoint monitoring
+- **Render Health Checks**: Configured with `/health` endpoint monitoring
 - **Automatic Recovery**: System attempts cache clearing and flag reset on failure
 - **Multi-layer Monitoring**:
-  - `/health` - Basic health with 503 status on failure (triggers Railway restart)
+  - `/health` - Basic health with 503 status on failure (triggers Render restart)
   - `/health/comprehensive` - Detailed monitoring with failure rate tracking
   - `/health/recover` - Manual recovery endpoint for system fixes
 - **Failure Detection**: Tests actual prompt responses, not just API availability
 - **Health Logging**: Stores failure history in `prompt_health_log` table
 - **Recovery Actions**: Cache clearing, feature flag reset, database connectivity checks
-- **Auto-restart Triggers**: 503 HTTP status codes automatically trigger Railway container restart
+- **Auto-restart Triggers**: 503 HTTP status codes automatically trigger Render container restart
 
 ## Technical Implementation Notes
 
 - Frontend uses vanilla JavaScript (ES6+) with IIFE pattern
 - Event listeners use null checks to prevent script crashes
 - Semantic search uses OpenAI embeddings with cosine similarity
-- **Database backend: PostgreSQL (Railway managed service)**
-  - Connection string via `DATABASE_URL` environment variable (railway.internal)
+- **Database backend: PostgreSQL (Render managed service)**
+  - Connection string via `DATABASE_URL` environment variable
   - Context manager pattern required: `with get_conn() as conn:`
   - PostgreSQL syntax: `%s` parameter placeholders, `SERIAL` auto-increment
-  - SQLite fallback only for local development (ephemeral on Railway)
+  - SQLite fallback only for local development
 - Auto-save functionality for user session data
 - localStorage for client-side session persistence
 - Trial timer persists across page refreshes via localStorage
@@ -378,7 +374,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 ## Known Limitations (v1.0)
 
 - No staging environment (direct to production deployment)
-- API keys stored in Railway environment variables (secure but not rotated)
+- API keys stored in Render environment variables (secure but not rotated)
 - CSV prompt library integration incomplete
 - No automated testing pipeline
 - Browser requirement: Chrome 55+, Firefox 52+, Safari 10.1+, Edge 15+ (2017+)
@@ -388,7 +384,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 - Safety layer: Data Ops + LLM for evidence validation (pending)
 - Evidence Bridge: Connect classical ML scoring with LLM generation (pending)
 - Governance: Eval traces for observability (pending)
-- Security: API keys managed via Railway environment variables
+- Security: API keys managed via Render environment variables
 
 ## MANDATORY: Post-Change Diagnostic Protocol
 
@@ -403,7 +399,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 2. **Test Backend Health:**
 
    ```bash
-   curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
+   curl https://mosaic-backend-tpog.onrender.com/health/comprehensive
    ```
 
 3. **Run Comprehensive Diagnostic** (for major changes):
@@ -444,7 +440,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
    - 6 web scraping sources using BeautifulSoup4 + CSS selectors
    - Added `requests` and `beautifulsoup4` to requirements.txt
 4. **Feature Flags Updated**: Enabled RAG_BASELINE + JOB_SOURCES_STUBBED_ENABLED
-5. **Deployed to Production**: Pushed to Railway, health check confirms deployment successful
+5. **Deployed to Production**: Pushed to Render, health check confirms deployment successful
 
 ## Next Steps for v2.0 Phase 4+
 
