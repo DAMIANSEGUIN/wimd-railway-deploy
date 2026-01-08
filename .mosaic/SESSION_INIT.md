@@ -54,6 +54,7 @@ cat .mosaic/LATEST_HANDOFF.md
 
 ### Step 2: Run Validation
 ```bash
+python3 .mosaic/enforcement/test_session_init.py  # Verify SESSION_INIT protocol
 python3 .mosaic/enforcement/handoff_validation_tests.py --post-handoff
 ./.mosaic/enforcement/session-gate.sh
 ./scripts/verify_critical_features.sh
@@ -97,6 +98,7 @@ Should I proceed?
 □ Read .mosaic/agent_state.json
 □ Read .mosaic/current_task.json
 □ Read .mosaic/LATEST_HANDOFF.md
+□ Run SESSION_INIT protocol test
 □ Run post-handoff validation
 □ Run session-gate.sh
 □ Understand what previous agent accomplished
@@ -203,6 +205,7 @@ After reading this file, read these (in order):
 cat .mosaic/agent_state.json
 
 # 2. Run validation (10s)
+python3 .mosaic/enforcement/test_session_init.py
 python3 .mosaic/enforcement/handoff_validation_tests.py --post-handoff
 
 # 3. Declare (15s)
