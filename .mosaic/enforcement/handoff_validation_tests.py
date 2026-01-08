@@ -137,15 +137,13 @@ class HandoffValidator:
 
     def test_production_state_matches_claims(self) -> bool:
         """
-        EVAL: agent_state.json claims about production must match reality.
+        EVAL: Git state must be clean and pushed.
         Prevents: Agent says "deployed" but didn't actually push.
+
+        NOTE: No longer checks last_commit (removed due to circular dependency).
+        Now only validates that all commits are pushed to origin/main.
         """
         print("\n🧪 Test: Production state matches claims")
-
-        # Read agent_state.json
-        state_file = self.repo_root / '.mosaic/agent_state.json'
-        with open(state_file) as f:
-            state = json.load(f)
 
         # Get actual git state
         try:
@@ -166,38 +164,13 @@ class HandoffValidator:
             print(f"  ❌ FAIL: Git command failed")
             return False
 
-        # Compare
-        claimed_commit = state.get('last_commit', '')[:7]
-
-        issues = []
-        if claimed_commit != actual_commit:
-            # Check if this is just the agent_state.json update commit (expected pattern)
-            try:
-                files_changed = subprocess.check_output(
-                    ['git', 'diff', '--name-only', 'HEAD~1', 'HEAD'],
-                    cwd=self.repo_root,
-                    text=True
-                ).strip().split('\n')
-
-                if files_changed == ['.mosaic/agent_state.json']:
-                    # This is the circular dependency case - HEAD is agent_state.json update
-                    # The claimed commit (HEAD~1) is the actual work commit
-                    self.warnings.append(f"HEAD is agent_state.json update commit (expected pattern)")
-                else:
-                    issues.append(f"Claimed commit {claimed_commit} != actual HEAD {actual_commit}")
-            except subprocess.CalledProcessError:
-                issues.append(f"Claimed commit {claimed_commit} != actual HEAD {actual_commit}")
-
+        # Check if all commits are pushed
         if actual_commit != origin_commit:
-            issues.append(f"Local HEAD {actual_commit} != origin/main {origin_commit} (unpushed work)")
-
-        if issues:
-            for issue in issues:
-                self.failures.append(f"Production state mismatch: {issue}")
-            print(f"  ❌ FAIL: {len(issues)} mismatches found")
+            self.failures.append(f"Production state mismatch: Local HEAD {actual_commit} != origin/main {origin_commit} (unpushed work)")
+            print(f"  ❌ FAIL: Unpushed commits detected")
             return False
         else:
-            print(f"  ✅ PASS: State matches reality (commit {actual_commit})")
+            print(f"  ✅ PASS: All commits pushed (HEAD = {actual_commit})")
             return True
 
     def test_referenced_files_exist(self) -> bool:

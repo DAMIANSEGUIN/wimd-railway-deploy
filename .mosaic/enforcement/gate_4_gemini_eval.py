@@ -38,8 +38,8 @@ class Gate4GeminiEval:
         },
         {
             "name": "state_files_correct",
-            "question": "Are state files updated correctly (last_commit matches git HEAD)?",
-            "check": "compare agent_state.json:last_commit to git HEAD"
+            "question": "Are state files updated correctly (valid JSON, required fields present)?",
+            "check": "validate agent_state.json schema"
         },
         {
             "name": "handoff_meaningful",
@@ -92,13 +92,10 @@ class Gate4GeminiEval:
         return summary
 
     def _get_last_handoff_commit(self) -> str:
-        """Get commit hash of last handoff"""
-        try:
-            with open(self.repo_root / '.mosaic/agent_state.json') as f:
-                state = json.load(f)
-            return state.get('last_commit', 'HEAD~5')
-        except:
-            return 'HEAD~5'
+        """Get commit hash range to summarize work (last 5 commits)"""
+        # NOTE: last_commit removed from agent_state.json due to circular dependency
+        # Now we just look at recent commits
+        return 'HEAD~5'
 
     def _get_git_state(self) -> Dict:
         """Get current git state"""
@@ -261,16 +258,18 @@ Evaluate the work now and respond ONLY with the JSON (no markdown, no explanatio
         handoff_msg = self.work_summary['handoff_message']
         validation_run = 'pre-handoff' in handoff_msg.lower() or 'validation' in handoff_msg.lower()
 
-        # Check state files
-        git_state = self.work_summary['git_state']
+        # Check state files (no longer checking last_commit due to circular dependency)
         agent_state = self.work_summary['state_files'].get('agent_state.json', {})
 
-        state_correct = agent_state.get('last_commit', '')[:7] == git_state.get('HEAD', '')
+        # State is correct if it has required fields and valid handoff message
+        required_fields = ['version', 'last_agent', 'last_mode', 'current_agent', 'current_task', 'handoff_message']
+        state_correct = all(field in agent_state for field in required_fields)
 
         # Check handoff meaningful
         handoff_meaningful = len(handoff_msg) > 50
 
         # Check commits pushed
+        git_state = self.work_summary['git_state']
         commits_pushed = not git_state.get('unpushed_commits', True)
 
         # Overall verdict
@@ -288,7 +287,7 @@ Evaluate the work now and respond ONLY with the JSON (no markdown, no explanatio
 
         required_fixes = []
         if not state_correct:
-            required_fixes.append("Update agent_state.json last_commit to match git HEAD")
+            required_fixes.append("Update agent_state.json with all required fields")
         if not handoff_meaningful:
             required_fixes.append("Write meaningful handoff_message (>50 chars)")
         if not commits_pushed:

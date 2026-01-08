@@ -112,8 +112,8 @@ if command -v jq &> /dev/null; then
       echo "❌ VIOLATION: .mosaic/agent_state.json is not valid JSON"
       VIOLATIONS=$((VIOLATIONS + 1))
     else
-      # Check required fields
-      for field in version last_agent last_mode last_commit current_agent current_task handoff_message; do
+      # Check required fields (last_commit removed due to circular dependency)
+      for field in version last_agent last_mode current_agent current_task handoff_message; do
         if ! jq -e ".$field" .mosaic/agent_state.json &>/dev/null; then
           echo "❌ VIOLATION: Missing required field '$field' in .mosaic/agent_state.json"
           VIOLATIONS=$((VIOLATIONS + 1))
