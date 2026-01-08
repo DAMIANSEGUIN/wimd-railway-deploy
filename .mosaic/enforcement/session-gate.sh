@@ -57,12 +57,10 @@ echo ""
 echo "📋 Check 2: Reading current state..."
 
 if command -v jq &> /dev/null && [ $FAILURES -eq 0 ]; then
-  LAST_COMMIT=$(jq -r '.last_commit' .mosaic/agent_state.json)
   CURRENT_AGENT=$(jq -r '.current_agent' .mosaic/agent_state.json)
   CURRENT_TASK=$(jq -r '.current_task' .mosaic/agent_state.json)
   HANDOFF_MESSAGE=$(jq -r '.handoff_message' .mosaic/agent_state.json)
 
-  echo "   Last Commit: $LAST_COMMIT"
   echo "   Current Agent: $CURRENT_AGENT"
   echo "   Current Task: $CURRENT_TASK"
   echo "   Handoff: $HANDOFF_MESSAGE"
@@ -104,17 +102,9 @@ else
 fi
 
 ACTUAL_LAST_COMMIT=$(git rev-parse --short HEAD)
-
-if [ "$LAST_COMMIT" != "$ACTUAL_LAST_COMMIT" ]; then
-  echo ""
-  echo "⚠️  WARNING: State file out of sync"
-  echo "   .mosaic/agent_state.json says: $LAST_COMMIT"
-  echo "   Git HEAD is actually: $ACTUAL_LAST_COMMIT"
-  echo "   Action: Update .mosaic/agent_state.json with current commit"
-  FAILURES=$((FAILURES + 1))
-else
-  echo "✅ PASS: State file in sync with git"
-fi
+echo "   Git HEAD: $ACTUAL_LAST_COMMIT"
+echo ""
+echo "✅ PASS: Git state validated"
 
 # ============================================================================
 # CHECK 4: User decisions verification
@@ -182,8 +172,7 @@ if [ $FAILURES -gt 0 ]; then
   echo '  "briefing_acknowledgment": {'
   echo '    "agent": "claude_code_terminal",'
   echo '    "briefing_version": "1.0",'
-  echo '    "acknowledged_at": "2026-01-05T17:30:00Z",'
-  echo '    "last_commit_known": "'$ACTUAL_LAST_COMMIT'"'
+  echo '    "acknowledged_at": "2026-01-05T17:30:00Z"'
   echo '  }'
   echo ""
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

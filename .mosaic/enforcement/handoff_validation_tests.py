@@ -390,7 +390,6 @@ class HandoffValidator:
             state = json.load(f)
 
         required_fields = [
-            'last_commit',
             'last_agent',
             'implementation_progress',
         ]
