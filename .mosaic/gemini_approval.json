@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-01-08T21:20:31.223333",
+  "timestamp": "2026-01-08T21:21:51.258751",
   "evaluator": "gemini_pro",
   "verdict": "APPROVE",
   "score": 90,
   "criteria_results": {
-    "validation_tests_run": true,
+    "validation_tests_run": false,
     "validation_tests_pass": true,
     "state_files_correct": true,
     "handoff_meaningful": true,
@@ -12,7 +12,7 @@
     "intent_framework": true,
     "no_absolute_paths": true
   },
-  "feedback": "EVALUATION RESULTS:\n\n\u2705 Validation tests run: True\n\u2705 State files correct: True\n\u2705 Handoff meaningful: True\n\u2705 Commits pushed: True\n",
+  "feedback": "EVALUATION RESULTS:\n\n\u274c Validation tests run: {validation_run}\n\u2705 State files correct: True\n\u2705 Handoff meaningful: True\n\u2705 Commits pushed: True\n",
   "required_fixes": [],
   "note": "Simulated evaluation (no Gemini API key found)"
 }

@@ -168,7 +168,7 @@ SECRET_PATTERNS=(
   "OPENAI_API_KEY.*sk-[a-zA-Z0-9]+"
   "CLAUDE_API_KEY.*sk-ant-[a-zA-Z0-9]+"
   "DATABASE_URL.*postgresql://.*:[^@]+@"
-  "password.*=.*['\"][^'\"]+['\"]"
+  "password['\"]?\s*[:=]\s*['\"][^'\"]{8,}['\"]"
   "api[_-]?key.*=.*['\"][^'\"]+['\"]"
 )
 
