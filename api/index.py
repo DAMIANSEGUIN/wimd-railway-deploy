@@ -2156,3 +2156,25 @@ def reindex_corpus_endpoint():
 def get_corpus_status_endpoint():
     """Get corpus reindex status."""
     return get_reindex_status()
+
+
+# DIAGNOSTIC ENDPOINT - Deployment Source Verification
+@app.get("/diagnostic/deployment-source")
+def deployment_source_diagnostic():
+    """
+    DIAGNOSTIC ENDPOINT - Proves which directory Render is deploying from.
+
+    This endpoint ONLY exists in root api/index.py (2158 lines).
+    It does NOT exist in backend/api/index.py (471 lines).
+
+    If this returns 404 on Render, it proves dashboard config has
+    rootDir: backend set, overriding render.yaml.
+    """
+    return {
+        "deployment_source": "root_directory",
+        "file": "api/index.py",
+        "lines": 2158,
+        "proof": "This endpoint does NOT exist in backend/api/index.py (471 lines)",
+        "message": "Successfully deploying from root directory",
+        "timestamp": datetime.utcnow().isoformat() + "Z"
+    }
