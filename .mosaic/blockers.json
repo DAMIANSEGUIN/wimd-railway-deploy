@@ -1,18 +1,19 @@
 {
   "version": 1,
-  "updated_at": "2026-01-05T16:00:00Z",
+  "updated_at": "2026-01-09T01:15:00Z",
   "blockers": [
     {
       "id": "B001",
       "title": "File Path Divergence",
       "severity": "critical",
-      "status": "resolving",
+      "status": "resolved",
       "description": "Claude Code (terminal) and other AI agents see different absolute paths",
       "impact": "Cross-agent coordination impossible, session handoffs fail",
       "solution": "Use relative paths only + .mosaic/ JSON state",
       "owner": "claude_code_terminal",
       "created_at": "2026-01-04T00:00:00Z",
-      "resolution_progress": "Phase 1/7 in progress - creating JSON state files"
+      "resolved_at": "2026-01-08T22:00:00Z",
+      "resolution": "Relative paths enforced via Gate 1. All docs use relative paths. .mosaic/ JSON system is canonical state."
     },
     {
       "id": "B002",
@@ -25,7 +26,7 @@
       "owner": "claude_code_terminal",
       "created_at": "2026-01-04T00:00:00Z",
       "resolved_at": "2026-01-05T16:00:00Z",
-      "resolution": "User selected GitHub-based deployment strategy"
+      "resolution": "Migrated to Render with GitHub integration. Railway completely removed."
     },
     {
       "id": "B003",
@@ -37,8 +38,8 @@
       "solution": "GitHub deployment makes CLI linking unnecessary",
       "owner": "user",
       "created_at": "2025-12-15T00:00:00Z",
-      "resolved_at": "2026-01-05T16:00:00Z",
-      "resolution": "GitHub-based deployment eliminates need for CLI linking"
+      "resolved_at": "2026-01-09T01:15:00Z",
+      "resolution": "Railway project deleted. Render uses GitHub integration. Railway CLI unlinked."
     },
     {
       "id": "B004",
@@ -50,8 +51,22 @@
       "solution": "Archive pre-2025-12-01 docs to docs_archive/sessions_2025/",
       "owner": "claude_code_terminal",
       "created_at": "2026-01-04T00:00:00Z",
-      "resolved_at": "2026-01-05T16:30:00Z",
+      "resolved_at": "2026-01-08T16:45:00Z",
       "resolution": "Created DOCUMENTATION_MAP.md (canonical index), archive script ready, .mosaic/ system now canonical"
+    },
+    {
+      "id": "B005",
+      "title": "Validation Blind Spot - Production Reality Not Checked",
+      "severity": "critical",
+      "status": "resolved",
+      "description": "8-gate system validated LOCAL STATE (git, JSON, code) but NOT PRODUCTION REALITY (dead backends, broken URLs, failed deployments)",
+      "impact": "Railway stayed connected for days after migration causing 30+ deployment failures. User received hundreds of failure messages.",
+      "solution": "Gate 9 - Production Connectivity Check",
+      "owner": "claude_code_sonnet_4_5",
+      "created_at": "2026-01-08T21:30:00Z",
+      "resolved_at": "2026-01-09T01:15:00Z",
+      "resolution": "Created Gate 9 to validate: backend health, frontend loads, URLs match, no dead backends, deployment configs valid. All 5 checks pass."
     }
-  ]
+  ],
+  "archived_blockers": []
 }

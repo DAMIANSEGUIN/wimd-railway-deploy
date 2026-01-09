@@ -4,17 +4,31 @@
 
 **STEP 0: SESSION INITIALIZATION PROTOCOL**
 
+## 🎯 AUTONOMOUS EXECUTION - DEFAULT MODE
+
+**When the path forward is clear from state files:**
+1. Read state files
+2. Understand what to do
+3. State your plan briefly
+4. **EXECUTE IMMEDIATELY** (don't wait for permission)
+
+**Only interrupt the user when:**
+- ❌ **BLOCKER:** Something prevents progress (missing info, broken dependency, failed validation)
+- ❌ **AMBIGUITY:** Task description unclear, requirements missing
+- ❌ **MULTIPLE APPROACHES:** Need user preference between valid options
+- ❌ **APPROVAL REQUIRED:** Protocol explicitly requires user approval (EnterPlanMode, destructive operations)
+
 ## ❌ ABSOLUTE PROHIBITION
 
 **DO NOT ask the user "What would you like to work on?"**
 
-This is a **PROTOCOL FAILURE**. The state files already tell you what to work on. Asking wastes user time and indicates you didn't read the state files.
+This is a **PROTOCOL FAILURE**. The state files already tell you what to work on. Asking this question wastes user time.
 
 ## ✅ REQUIRED FIRST ACTIONS (Execute NOW)
 
 **Before responding to the user, you MUST:**
 
-1. **Read state files:**
+1. **Read state files (silently):**
 ```bash
 cat .mosaic/agent_state.json
 cat .mosaic/current_task.json
@@ -24,18 +38,51 @@ cat .mosaic/LATEST_HANDOFF.md
 2. **Extract current task:**
    - Current task: [from agent_state.json: current_task field]
    - Handoff message: [from agent_state.json: handoff_message field]
+   - Success criteria: [from current_task.json: success_criteria]
+   - In progress: [from current_task.json: in_progress]
 
-3. **State what you learned and ask permission:**
+3. **Assess if path is clear:**
+
+**IF PATH IS CLEAR (no blockers, next action obvious):**
 ```
-I've read the state files. Current task: [describe specific task].
-Handoff message: [summarize what previous agent did].
+I've read the state files.
 
-I will continue by: [state specific next action].
+Current task: [brief description]
+Status: [what's done vs pending]
 
-Should I proceed?
+I'll continue by: [action 1, 2, 3]
+
+[IMMEDIATELY START WORK - don't wait for permission]
 ```
 
-**DO NOT proceed with work until user confirms.**
+**IF PATH IS UNCLEAR (blocker, ambiguity, multiple approaches):**
+```
+I've read the state files.
+
+Current task: [description]
+
+⚠️ [BLOCKER/AMBIGUITY/CHOICE]: [specific issue]
+
+[Ask specific question about blocker/ambiguity/choice]
+```
+
+## 🎯 WHEN TO ASK VS WHEN TO EXECUTE
+
+**✅ EXECUTE AUTONOMOUSLY (Don't Ask):**
+- Next steps clearly documented in state files
+- Success criteria defined
+- No blockers present
+- Only one valid approach
+- Standard operation (no approval protocol)
+- User previously approved work ("proceed", "yes", "approve all actions")
+
+**❌ ASK QUESTION (Don't Execute):**
+- **Blocker:** Missing information, broken dependency, failed validation
+- **Ambiguity:** Task description unclear, requirements undefined
+- **Multiple approaches:** Need user preference (e.g., which library to use)
+- **Destructive operation:** Deleting data, force push, irreversible change
+- **Approval required:** EnterPlanMode, major architecture change
+- **New request:** User just gave new task (summarize and confirm understanding)
 
 **Full protocol details:** `.mosaic/SESSION_INIT.md`
 

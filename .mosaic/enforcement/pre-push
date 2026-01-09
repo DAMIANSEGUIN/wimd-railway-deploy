@@ -1,0 +1,62 @@
+#!/bin/bash
+# .mosaic/enforcement/pre-push
+# Machine-enforceable pre-push hook - validates production before deploy
+# Install: ln -sf ../../.mosaic/enforcement/pre-push .git/hooks/pre-push
+
+set -e
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+cd "$REPO_ROOT"
+
+echo "🔒 MOSAIC ENFORCEMENT GATE - Pre-push validation"
+echo ""
+
+VIOLATIONS=0
+
+# ============================================================================
+# GATE 9: Production Connectivity Check
+# ============================================================================
+echo "📋 Gate 9: Validating production connectivity..."
+echo ""
+
+# Run Gate 9 production check
+if python3 .mosaic/enforcement/gate_9_production_check.py; then
+  echo ""
+  echo "✅ Gate 9 passed - Production is healthy"
+else
+  echo ""
+  echo "❌ VIOLATION: Gate 9 failed - Production has issues"
+  echo ""
+  echo "   Fix production issues before pushing:"
+  echo "   - Check backend health: https://mosaic-backend-tpog.onrender.com/health"
+  echo "   - Check frontend: https://whatismydelta.com"
+  echo "   - Review deployment configs: render.yaml, netlify.toml"
+  echo ""
+  VIOLATIONS=$((VIOLATIONS + 1))
+fi
+
+# ============================================================================
+# FINAL VERDICT
+# ============================================================================
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+if [ $VIOLATIONS -gt 0 ]; then
+  echo "❌ PUSH BLOCKED: $VIOLATIONS violation(s) found"
+  echo ""
+  echo "Fix the violations above and try again."
+  echo ""
+  echo "To bypass this hook (NOT RECOMMENDED):"
+  echo "  git push --no-verify"
+  echo ""
+  echo "References:"
+  echo "  - .mosaic/enforcement/gate_9_production_check.py (production validation)"
+  echo "  - CLAUDE.md (deployment status)"
+  echo "  - docs/README.md (Render deployment guide)"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  exit 1
+else
+  echo "✅ GATE 9 PASSED - Push allowed"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  exit 0
+fi
