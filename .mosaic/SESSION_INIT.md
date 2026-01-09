@@ -45,32 +45,62 @@ cat .mosaic/LATEST_HANDOFF.md
 - Success criteria: `[from current_task.json: success_criteria]`
 - In progress: `[from current_task.json: in_progress]`
 
-**3. Assess if path is clear:**
+**3. Check work queue:**
+- If `current_task.json` has `in_progress` items → Those are your tasks
+- If current task status is "complete" → Check `project_state.json` `implementation_backlog` or `next_phase` for next work
+- If implementation plan exists → Read it and start next task from plan
+- **DO NOT ask "what to work on" if there's work in the queue**
 
-**IF PATH IS CLEAR:**
+**4. Assess path forward:**
+
+**IF WORK QUEUE HAS TASKS:**
 ```
 I've read the state files.
 
-Current task: [brief task description]
-Status: [summarize what's done vs pending]
+Current status: [what's complete]
+Work queue: [list from in_progress OR implementation_backlog]
 
-I'll continue by: [specific action 1, 2, 3]
+I'll continue by: [specific tasks from queue]
 
 [IMMEDIATELY START WORK - don't wait for permission]
 ```
 
-**IF PATH IS UNCLEAR:**
+**IF IMPLEMENTATION PLAN IN BACKLOG:**
 ```
 I've read the state files.
 
-Current task: [task description]
+Current task: Complete ✅
+Implementation backlog: [plan name from project_state.json]
 
-⚠️ BLOCKER: [specific issue preventing progress]
+I'll read [plan document path] and start next phase.
+
+[READ PLAN → START WORK immediately]
+```
+
+**IF BLOCKER/AMBIGUITY/CHOICE:**
+```
+I've read the state files.
+
+Work queue: [description]
+
+⚠️ BLOCKER/AMBIGUITY/CHOICE: [specific issue]
 - Option A: [approach 1]
 - Option B: [approach 2]
 
 Which approach would you prefer?
 ```
+
+**ONLY IF WORK QUEUE TRULY EMPTY:**
+```
+I've read the state files.
+
+Status: All tasks complete ✅
+Work queue: Empty (no in_progress, no backlog)
+Blockers: All resolved
+
+System operational. What would you like to work on?
+```
+**(This should be rare - most sessions will have work in the queue)**
 
 ---
 
@@ -140,11 +170,16 @@ Current task: [brief description]
 ```
 □ Read .mosaic/agent_state.json
 □ Read .mosaic/current_task.json
+□ Read .mosaic/project_state.json
 □ Read .mosaic/LATEST_HANDOFF.md
 □ Read .mosaic/blockers.json
 □ Run validation tests (note status)
 □ Understand what previous agent accomplished
-□ Know what task to continue
+□ Check work queue:
+  □ current_task.json: in_progress items?
+  □ project_state.json: implementation_backlog?
+  □ If queue has work → Execute that work
+  □ If queue empty → RARE, ask what to work on
 □ Assess: Is path forward clear?
   ├─ YES: State plan → Execute immediately
   └─ NO: State blocker → Ask specific question
@@ -164,6 +199,12 @@ Current task: [brief description]
 - Don't waste user time asking permission for obvious work
 - Only ask when STUCK (blocker/ambiguity/choice)
 
+❌ **Asking "What to work on?" when work queue has tasks**
+- Always check current_task.json for in_progress items
+- Always check project_state.json for implementation_backlog
+- If backlog exists: Read the plan document and START WORK
+- Don't ask user for direction when implementation plan exists
+
 ❌ **Starting work without reading state**
 - Duplicates completed work
 - Ignores blockers
@@ -181,22 +222,40 @@ Current task: [brief description]
 
 ## ✅ CORRECT PATTERNS (EXAMPLES)
 
-### Example 1: Autonomous Execution (Clear Path)
+### Example 1: Autonomous Execution (Work Queue Has Tasks)
 
 ```
 I've read the state files. Validation: 5/5 post-handoff tests passed.
 
-Current task: Complete production hardening and validation system
-Completed: Gate 9 created (5/5 tests pass), state files updated
-In progress: Fix SESSION_INIT protocol, integrate Gate 9 into pre-push hook
+Current task status: active
+Work queue (from current_task.json in_progress):
+1. Fix SESSION_INIT protocol
+2. Integrate Gate 9 into pre-push hook
+3. Run deployment test
 
-I'll continue by:
+I'll continue by executing these tasks:
 1. Rewriting SESSION_INIT.md for autonomous execution
-2. Updating CLAUDE.md Step 0 with new protocol
-3. Integrating Gate 9 into .mosaic/enforcement/pre-push hook
-4. Running end-to-end deployment test
+2. Integrating Gate 9 into .mosaic/enforcement/pre-push hook
+3. Running end-to-end deployment test
+4. Committing changes
 
 [STARTS WORK IMMEDIATELY WITH TodoWrite + Edit/Write tools]
+```
+
+### Example 1b: Implementation Backlog (Current Task Complete)
+
+```
+I've read the state files. Validation: 5/5 post-handoff tests passed.
+
+Current task: Complete ✅
+Work queue (from project_state.json implementation_backlog):
+- SEMANTIC_MATCH_UPGRADE: Upgrade semantic matching (text-embedding-3-small, cross-encoder reranker)
+- Plan document: docs/mosaic_semantic_match_upgrade_implementation_plan.md
+- Status: READY, Priority: MEDIUM
+
+I'll read the implementation plan and start the semantic match upgrade.
+
+[READS docs/mosaic_semantic_match_upgrade_implementation_plan.md → STARTS WORK]
 ```
 
 ### Example 2: Ask Question (Path Unclear - Multiple Approaches)

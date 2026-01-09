@@ -32,6 +32,7 @@ This is a **PROTOCOL FAILURE**. The state files already tell you what to work on
 ```bash
 cat .mosaic/agent_state.json
 cat .mosaic/current_task.json
+cat .mosaic/project_state.json
 cat .mosaic/LATEST_HANDOFF.md
 ```
 
@@ -41,7 +42,13 @@ cat .mosaic/LATEST_HANDOFF.md
    - Success criteria: [from current_task.json: success_criteria]
    - In progress: [from current_task.json: in_progress]
 
-3. **Assess if path is clear:**
+3. **Check work queue:**
+   - If current_task.json has in_progress items → Those are your tasks
+   - If current task status is "complete" → Check project_state.json implementation_backlog
+   - If implementation plan exists → Read it and START WORK on next task
+   - **DO NOT ask "what to work on" if there's work in the queue**
+
+4. **Assess if path is clear:**
 
 **IF PATH IS CLEAR (no blockers, next action obvious):**
 ```
