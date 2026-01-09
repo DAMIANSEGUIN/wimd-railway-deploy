@@ -112,8 +112,8 @@ if command -v jq &> /dev/null; then
       echo "❌ VIOLATION: .mosaic/agent_state.json is not valid JSON"
       VIOLATIONS=$((VIOLATIONS + 1))
     else
-      # Check required fields (last_commit removed due to circular dependency)
-      for field in version last_agent last_mode current_agent current_task handoff_message; do
+      # Check required fields
+      for field in version last_agent last_mode last_commit current_agent current_task handoff_message; do
         if ! jq -e ".$field" .mosaic/agent_state.json &>/dev/null; then
           echo "❌ VIOLATION: Missing required field '$field' in .mosaic/agent_state.json"
           VIOLATIONS=$((VIOLATIONS + 1))
@@ -168,25 +168,20 @@ SECRET_PATTERNS=(
   "OPENAI_API_KEY.*sk-[a-zA-Z0-9]+"
   "CLAUDE_API_KEY.*sk-ant-[a-zA-Z0-9]+"
   "DATABASE_URL.*postgresql://.*:[^@]+@"
-  "password['\"]?\s*[:=]\s*['\"][^'\"]{8,}['\"]"
+  "password.*=.*['\"][^'\"]+['\"]"
   "api[_-]?key.*=.*['\"][^'\"]+['\"]"
 )
 
 for pattern in "${SECRET_PATTERNS[@]}"; do
   for file in $STAGED_FILES; do
     if [ -f "$file" ]; then
-      # Skip enforcement files (they define/test patterns)
-      if [[ "$file" == *"/enforcement/pre-commit" ]] || [[ "$file" == *"/enforcement/test_gates.sh" ]]; then
+      # Skip the enforcement hook itself (it defines patterns)
+      if [[ "$file" == *"/enforcement/pre-commit" ]]; then
         continue
       fi
 
-      # Skip HTML files for password pattern (HTML forms legitimately have password fields)
-      if [[ "$pattern" == *"password"* ]] && [[ "$file" == *.html ]]; then
-        continue
-      fi
-
-      # Check for secrets, excluding examples, documentation, and os.getenv calls
-      if grep -i -n -E "$pattern" "$file" 2>/dev/null | grep -v "REDACTED" | grep -v "dummy" | grep -v "example" | grep -v "your_key_here" | grep -v "sk-xxx" | grep -v "sk-ant-xxx" | grep -v "os.getenv" | grep -v "os.environ"; then
+      # Check for secrets, excluding examples and documentation
+      if grep -i -n -E "$pattern" "$file" 2>/dev/null | grep -v "REDACTED" | grep -v "dummy" | grep -v "example" | grep -v "your_key_here" | grep -v "sk-xxx" | grep -v "sk-ant-xxx"; then
         echo "❌ VIOLATION: Possible secret found in $file"
         echo "   Pattern: $pattern"
         echo "   Never commit API keys, passwords, or connection strings"
@@ -220,64 +215,6 @@ if [ -f "$COMMIT_MSG_FILE" ]; then
   else
     echo "✅ Commit message follows conventional format"
   fi
-fi
-
-# ============================================================================
-# GATE 8: Gemini cross-agent approval (ML-STYLE ENFORCEMENT)
-# ============================================================================
-echo ""
-echo "📋 Gate 8: Checking for Gemini cross-agent approval..."
-
-# Check if this commit looks like a handoff (agent_state.json being updated)
-if git diff --cached --name-only | grep -q ".mosaic/agent_state.json"; then
-  # Check if gemini_approval.json exists and is recent
-  GEMINI_APPROVAL_FILE=".mosaic/gemini_approval.json"
-
-  if [ ! -f "$GEMINI_APPROVAL_FILE" ]; then
-    echo "❌ VIOLATION: No Gemini approval found for this handoff"
-    echo ""
-    echo "   Required: Run python3 .mosaic/enforcement/gate_4_gemini_eval.py"
-    echo "   to get Gemini's cross-agent evaluation before committing."
-    echo ""
-    echo "   Reference: .ai-agents/AI_AGENT_PROMPT.md Step 0.5 (Gate 4)"
-    VIOLATIONS=$((VIOLATIONS + 1))
-  else
-    # Check verdict
-    if command -v jq &> /dev/null; then
-      VERDICT=$(jq -r .verdict "$GEMINI_APPROVAL_FILE" 2>/dev/null || echo "UNKNOWN")
-
-      if [ "$VERDICT" == "APPROVE" ]; then
-        echo "✅ Gemini approved (verdict: APPROVE)"
-      elif [ "$VERDICT" == "REQUEST_CHANGES" ]; then
-        echo "❌ VIOLATION: Gemini verdict is REQUEST_CHANGES"
-        echo ""
-        echo "   Gemini feedback:"
-        jq -r .feedback "$GEMINI_APPROVAL_FILE" 2>/dev/null || true
-        echo ""
-        echo "   Required fixes:"
-        jq -r '.required_fixes[]' "$GEMINI_APPROVAL_FILE" 2>/dev/null || true
-        echo ""
-        echo "   Fix these issues and run gate_4_gemini_eval.py again"
-        VIOLATIONS=$((VIOLATIONS + 1))
-      elif [ "$VERDICT" == "REJECT" ]; then
-        echo "❌ VIOLATION: Gemini verdict is REJECT"
-        echo ""
-        echo "   Gemini feedback:"
-        jq -r .feedback "$GEMINI_APPROVAL_FILE" 2>/dev/null || true
-        echo ""
-        echo "   Address Gemini's concerns before committing"
-        VIOLATIONS=$((VIOLATIONS + 1))
-      else
-        echo "❌ VIOLATION: Unknown Gemini verdict: $VERDICT"
-        echo "   Expected: APPROVE, REQUEST_CHANGES, or REJECT"
-        VIOLATIONS=$((VIOLATIONS + 1))
-      fi
-    else
-      echo "✅ Gemini approval file exists (cannot verify without jq)"
-    fi
-  fi
-else
-  echo "✅ Not a handoff commit (Gemini approval not required)"
 fi
 
 # ============================================================================

@@ -7,7 +7,10 @@ from typing import Any, Dict, List, Optional
 from fastapi import BackgroundTasks, FastAPI, File, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from dataclasses import dataclass
 
+from .analytics import get_analytics_dashboard, get_analytics_health, log_match_analytics
+from .reranker import RerankResult, get_reranker_health, rerank_documents
 from .settings import get_settings
 from .startup_checks import startup_or_die
 from .storage import (
@@ -124,6 +127,39 @@ class ResumeFeedbackRequest(BaseModel):
 class ResumeVersionResponse(BaseModel):
     session_id: str
     versions: List[Dict[str, Any]]
+
+
+class RerankRequest(BaseModel):
+    query: str = Field(..., min_length=1)
+    documents: List[Dict[str, Any]] = Field(..., min_items=1)
+
+
+@app.post("/semantic/rerank", response_model=RerankResult)
+def semantic_rerank(payload: RerankRequest):
+    rerank_result = rerank_documents(payload.query, payload.documents)
+    log_match_analytics(
+        rerank_result.query,
+        rerank_result.pre_rerank_scores,
+        rerank_result.post_rerank_scores,
+        rerank_result.improvement_pct,
+        rerank_result.processing_time,
+    )
+    return rerank_result
+
+
+@app.get("/semantic/rerank/health")
+def semantic_rerank_health():
+    return get_reranker_health()
+
+
+@app.get("/semantic/analytics/dashboard")
+def semantic_analytics_dashboard():
+    return get_analytics_dashboard()
+
+
+@app.get("/semantic/analytics/health")
+def semantic_analytics_health():
+    return get_analytics_health()
 
 
 def _clamp(value: float) -> int:

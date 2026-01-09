@@ -137,13 +137,15 @@ class HandoffValidator:
 
     def test_production_state_matches_claims(self) -> bool:
         """
-        EVAL: Git state must be clean and pushed.
+        EVAL: agent_state.json claims about production must match reality.
         Prevents: Agent says "deployed" but didn't actually push.
-
-        NOTE: No longer checks last_commit (removed due to circular dependency).
-        Now only validates that all commits are pushed to origin/main.
         """
         print("\n🧪 Test: Production state matches claims")
+
+        # Read agent_state.json
+        state_file = self.repo_root / '.mosaic/agent_state.json'
+        with open(state_file) as f:
+            state = json.load(f)
 
         # Get actual git state
         try:
@@ -164,13 +166,23 @@ class HandoffValidator:
             print(f"  ❌ FAIL: Git command failed")
             return False
 
-        # Check if all commits are pushed
+        # Compare
+        claimed_commit = state.get('last_commit', '')[:7]
+
+        issues = []
+        if claimed_commit != actual_commit:
+            issues.append(f"Claimed commit {claimed_commit} != actual HEAD {actual_commit}")
+
         if actual_commit != origin_commit:
-            self.failures.append(f"Production state mismatch: Local HEAD {actual_commit} != origin/main {origin_commit} (unpushed work)")
-            print(f"  ❌ FAIL: Unpushed commits detected")
+            issues.append(f"Local HEAD {actual_commit} != origin/main {origin_commit} (unpushed work)")
+
+        if issues:
+            for issue in issues:
+                self.failures.append(f"Production state mismatch: {issue}")
+            print(f"  ❌ FAIL: {len(issues)} mismatches found")
             return False
         else:
-            print(f"  ✅ PASS: All commits pushed (HEAD = {actual_commit})")
+            print(f"  ✅ PASS: State matches reality (commit {actual_commit})")
             return True
 
     def test_referenced_files_exist(self) -> bool:
@@ -390,6 +402,7 @@ class HandoffValidator:
             state = json.load(f)
 
         required_fields = [
+            'last_commit',
             'last_agent',
             'implementation_progress',
         ]

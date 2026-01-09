@@ -1,0 +1,28 @@
+GEMINI: EMERGENCY TAKEOVER REQUEST
+
+Claude Code has made multiple critical errors during semantic match deployment.
+User requests Gemini take full control until deployment is successful.
+
+PROJECT: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+
+PROBLEM: Semantic match endpoints return 404 on Render production
+- https://mosaic-backend-tpog.onrender.com/analytics/health → 404
+- https://mosaic-backend-tpog.onrender.com/reranker/health → 404
+
+ROOT CAUSE: Code in wrong directory
+- Semantic match code exists in: root api/ directory
+- Render deploys from: backend/api/ directory
+- Code never existed in deployed location
+
+SOLUTION: Copy semantic match files to backend/api/
+1. cp api/reranker.py backend/api/
+2. cp api/analytics.py backend/api/
+3. Add endpoint routes to backend/api/index.py
+4. Revert commit 39d39d1 (restore "rootDir: backend" in render.yaml)
+5. Deploy and test
+
+FULL CONTEXT: Read .mosaic/HANDOFF_TO_GEMINI.md for complete details
+
+Claude is BLOCKED. Gemini has full control.
+
+Please proceed with deployment fix.
