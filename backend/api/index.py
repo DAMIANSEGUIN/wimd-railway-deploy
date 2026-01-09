@@ -276,6 +276,12 @@ def root():
     }
 
 
+@app.get("/test")
+def test_endpoint():
+    return {"message": "Test endpoint is working!"}
+
+
+
 @app.get("/health")
 def health():
     return {"ok": True, "timestamp": datetime.utcnow().isoformat() + "Z"}
