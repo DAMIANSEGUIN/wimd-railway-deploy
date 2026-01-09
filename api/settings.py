@@ -18,13 +18,13 @@ class Settings(BaseSettings):
 _ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 
 
-@lru_cache
+@lru_cache()
 def get_settings() -> "Settings":
     env_file = _ENV_PATH if _ENV_PATH.exists() else None
     return Settings(_env_file=env_file)
 
 
-@lru_cache
+@lru_cache(maxsize=128)
 def get_feature_flag(flag_name: str) -> bool:
     """Get feature flag status from feature_flags.json"""
     try:

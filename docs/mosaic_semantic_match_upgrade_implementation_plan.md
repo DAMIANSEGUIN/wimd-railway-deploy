@@ -216,28 +216,16 @@ CREATE TABLE match_analytics (
 
 ---
 
-## 🎯 **HANDOFF PROTOCOL**
+## 🎯 **IMPLEMENTATION PROTOCOL**
 
-### **For Cursor (Implementation)**
+### **For Implementing Agent**
 
-1. **Execute**: 90-minute build sequence
-2. **Test**: All components locally
-3. **Document**: Diffs and test results
-4. **Report**: Baseline metrics captured
-
-### **For Claude Code (Deployment)**
-
-1. **Review**: Infrastructure requirements
-2. **Prepare**: Railway configuration updates
-3. **Monitor**: Cost and performance metrics
-4. **Support**: Deployment issues only
-
-### **For CODEX (Planning)**
-
-1. **Approve**: Implementation plan
-2. **Monitor**: Progress and metrics
-3. **Design**: A/B test framework
-4. **Document**: Results and learnings
+1. **Execute**: Follow 90-minute build sequence (Phases 1-4)
+2. **Test**: All components locally before deployment
+3. **Document**: Changes made and test results
+4. **Monitor**: Cost and performance metrics throughout
+5. **Deploy**: Push to production after validation
+6. **Report**: Baseline metrics and improvements
 
 ---
 
@@ -251,8 +239,7 @@ CREATE TABLE match_analytics (
 
 ---
 
-**Document Version**: 1.0
+**Document Version**: 1.1
 **Created**: 2025-10-04
-**Approved By**: Human Gatekeeper
-**Implementation Owner**: Cursor (Claude in Cursor)
-**Deployment Support**: Claude Code
+**Updated**: 2026-01-09
+**Status**: Ready for any agent to implement after pre-session brief

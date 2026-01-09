@@ -28,18 +28,18 @@ class AnalyticsEngine:
         """Log match analytics for tracking improvements."""
         try:
             with get_conn() as conn:
-                # Create analytics table if it doesn't exist
+                # Create analytics table if it doesn't exist (PostgreSQL syntax)
                 conn.execute(
                     """
                     CREATE TABLE IF NOT EXISTS match_analytics (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         query_hash TEXT,
                         query_text TEXT,
                         pre_rerank_avg REAL,
                         post_rerank_avg REAL,
                         improvement_pct REAL,
                         processing_time REAL,
-                        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     )
                 """
                 )
@@ -65,16 +65,16 @@ class AnalyticsEngine:
         """Log token usage for cost tracking."""
         try:
             with get_conn() as conn:
-                # Create token usage table if it doesn't exist
+                # Create token usage table if it doesn't exist (PostgreSQL syntax)
                 conn.execute(
                     """
                     CREATE TABLE IF NOT EXISTS token_usage (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         operation TEXT,
                         tokens INTEGER,
                         cost REAL,
                         success BOOLEAN,
-                        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     )
                 """
                 )
