@@ -28,35 +28,36 @@ class AnalyticsEngine:
         """Log match analytics for tracking improvements."""
         try:
             with get_conn() as conn:
-                # Create analytics table if it doesn't exist (PostgreSQL syntax)
-                conn.execute(
+                with conn.cursor() as cursor:
+                    # Create analytics table if it doesn't exist (PostgreSQL syntax)
+                    cursor.execute(
+                        """
+                        CREATE TABLE IF NOT EXISTS match_analytics (
+                            id SERIAL PRIMARY KEY,
+                            query_hash TEXT,
+                            query_text TEXT,
+                            pre_rerank_avg REAL,
+                            post_rerank_avg REAL,
+                            improvement_pct REAL,
+                            processing_time REAL,
+                            timestamp TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc')
+                        )
                     """
-                    CREATE TABLE IF NOT EXISTS match_analytics (
-                        id SERIAL PRIMARY KEY,
-                        query_hash TEXT,
-                        query_text TEXT,
-                        pre_rerank_avg REAL,
-                        post_rerank_avg REAL,
-                        improvement_pct REAL,
-                        processing_time REAL,
-                        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     )
-                """
-                )
 
-                # Insert analytics record
-                query_hash = self._get_query_hash(query)
-                pre_avg = sum(pre_scores) / len(pre_scores) if pre_scores else 0.0
-                post_avg = sum(post_scores) / len(post_scores) if post_scores else 0.0
+                    # Insert analytics record
+                    query_hash = self._get_query_hash(query)
+                    pre_avg = sum(pre_scores) / len(pre_scores) if pre_scores else 0.0
+                    post_avg = sum(post_scores) / len(post_scores) if post_scores else 0.0
 
-                conn.execute(
-                    """
-                    INSERT INTO match_analytics
-                    (query_hash, query_text, pre_rerank_avg, post_rerank_avg, improvement_pct, processing_time)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                """,
-                    (query_hash, query, pre_avg, post_avg, improvement_pct, processing_time),
-                )
+                    cursor.execute(
+                        """
+                        INSERT INTO match_analytics
+                        (query_hash, query_text, pre_rerank_avg, post_rerank_avg, improvement_pct, processing_time)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                    """,
+                        (query_hash, query, pre_avg, post_avg, improvement_pct, processing_time),
+                    )
 
         except Exception as e:
             print(f"Error logging analytics: {e}")
@@ -65,28 +66,29 @@ class AnalyticsEngine:
         """Log token usage for cost tracking."""
         try:
             with get_conn() as conn:
-                # Create token usage table if it doesn't exist (PostgreSQL syntax)
-                conn.execute(
+                with conn.cursor() as cursor:
+                    # Create token usage table if it doesn't exist (PostgreSQL syntax)
+                    cursor.execute(
+                        """
+                        CREATE TABLE IF NOT EXISTS token_usage (
+                            id SERIAL PRIMARY KEY,
+                            operation TEXT,
+                            tokens INTEGER,
+                            cost REAL,
+                            success BOOLEAN,
+                            timestamp TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc')
+                        )
                     """
-                    CREATE TABLE IF NOT EXISTS token_usage (
-                        id SERIAL PRIMARY KEY,
-                        operation TEXT,
-                        tokens INTEGER,
-                        cost REAL,
-                        success BOOLEAN,
-                        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     )
-                """
-                )
 
-                # Insert token usage record
-                conn.execute(
-                    """
-                    INSERT INTO token_usage (operation, tokens, cost, success)
-                    VALUES (?, ?, ?, ?)
-                """,
-                    (operation, tokens, cost, success),
-                )
+                    # Insert token usage record
+                    cursor.execute(
+                        """
+                        INSERT INTO token_usage (operation, tokens, cost, success)
+                        VALUES (%s, %s, %s, %s)
+                    """,
+                        (operation, tokens, cost, success),
+                    )
 
         except Exception as e:
             print(f"Error logging token usage: {e}")
@@ -95,19 +97,21 @@ class AnalyticsEngine:
         """Get match analytics for the specified period."""
         try:
             with get_conn() as conn:
-                # Get analytics data
-                rows = conn.execute(
-                    f"""
-                    SELECT
-                        AVG(pre_rerank_avg) as avg_pre_score,
-                        AVG(post_rerank_avg) as avg_post_score,
-                        AVG(improvement_pct) as avg_improvement,
-                        AVG(processing_time) as avg_processing_time,
-                        COUNT(*) as total_queries
-                    FROM match_analytics
-                    WHERE timestamp > datetime('now', '-{days} days')
-                """
-                ).fetchone()
+                with conn.cursor() as cursor:
+                    # Get analytics data
+                    cursor.execute(
+                        f"""
+                        SELECT
+                            AVG(pre_rerank_avg) as avg_pre_score,
+                            AVG(post_rerank_avg) as avg_post_score,
+                            AVG(improvement_pct) as avg_improvement,
+                            AVG(processing_time) as avg_processing_time,
+                            COUNT(*) as total_queries
+                        FROM match_analytics
+                        WHERE timestamp > NOW() - INTERVAL '{days} days'
+                    """
+                    )
+                    rows = cursor.fetchone()
 
                 if rows:
                     return {
@@ -137,20 +141,22 @@ class AnalyticsEngine:
         """Get token usage analytics for the specified period."""
         try:
             with get_conn() as conn:
-                # Get token usage data
-                rows = conn.execute(
-                    f"""
-                    SELECT
-                        operation,
-                        SUM(tokens) as total_tokens,
-                        SUM(cost) as total_cost,
-                        COUNT(*) as total_operations,
-                        AVG(CASE WHEN success = 1 THEN tokens ELSE 0 END) as avg_successful_tokens
-                    FROM token_usage
-                    WHERE timestamp > datetime('now', '-{days} days')
-                    GROUP BY operation
-                """
-                ).fetchall()
+                with conn.cursor() as cursor:
+                    # Get token usage data
+                    cursor.execute(
+                        f"""
+                        SELECT
+                            operation,
+                            SUM(tokens) as total_tokens,
+                            SUM(cost) as total_cost,
+                            COUNT(*) as total_operations,
+                            AVG(CASE WHEN success = true THEN tokens ELSE 0 END) as avg_successful_tokens
+                        FROM token_usage
+                        WHERE timestamp > NOW() - INTERVAL '{days} days'
+                        GROUP BY operation
+                    """
+                    )
+                    rows = cursor.fetchall()
 
                 operations = {}
                 total_cost = 0.0
@@ -185,15 +191,17 @@ class AnalyticsEngine:
                 filename = f"mosaic_analytics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
 
             with get_conn() as conn:
-                # Get match analytics
-                match_rows = conn.execute(
-                    f"""
-                    SELECT query_text, pre_rerank_avg, post_rerank_avg, improvement_pct, processing_time, timestamp
-                    FROM match_analytics
-                    WHERE timestamp > datetime('now', '-{days} days')
-                    ORDER BY timestamp DESC
-                """
-                ).fetchall()
+                with conn.cursor() as cursor:
+                    # Get match analytics
+                    cursor.execute(
+                        f"""
+                        SELECT query_text, pre_rerank_avg, post_rerank_avg, improvement_pct, processing_time, timestamp
+                        FROM match_analytics
+                        WHERE timestamp > NOW() - INTERVAL '{days} days'
+                        ORDER BY timestamp DESC
+                    """
+                    )
+                    match_rows = cursor.fetchall()
 
                 # Write to CSV
                 with open(filename, "w", newline="") as csvfile:
