@@ -1,7 +1,6 @@
 import json
 import os
 import psycopg2
-import psycopg2.extras
 import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta
@@ -24,12 +23,9 @@ def _json_dump(data: Any) -> str:
 def _json_load(raw: Optional[str]) -> Any:
     if raw is None:
         return None
-    # psycopg2 automatically decodes JSONB to dict, so this is a fallback
-    if isinstance(raw, dict):
-        return raw
     try:
         return json.loads(raw)
-    except (json.JSONDecodeError, TypeError):
+    except json.JSONDecodeError:
         return None
 
 
@@ -52,20 +48,9 @@ def get_conn():
 
 
 def init_db() -> None:
-    """Initializes the database tables for PostgreSQL, dropping them first to ensure a clean state."""
+    """Initializes the database tables for PostgreSQL."""
     with get_conn() as conn:
         with conn.cursor() as cursor:
-            # Drop tables in reverse order of creation due to foreign keys
-            cursor.execute("DROP TABLE IF EXISTS file_uploads CASCADE;")
-            cursor.execute("DROP TABLE IF EXISTS resume_versions CASCADE;")
-            cursor.execute("DROP TABLE IF EXISTS job_matches CASCADE;")
-            cursor.execute("DROP TABLE IF EXISTS wimd_outputs CASCADE;")
-            cursor.execute("DROP TABLE IF EXISTS sessions CASCADE;")
-            # Also drop analytics tables if they exist
-            cursor.execute("DROP TABLE IF EXISTS match_analytics CASCADE;")
-            cursor.execute("DROP TABLE IF EXISTS token_usage CASCADE;")
-
-            # Re-create tables
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS sessions (
@@ -218,7 +203,7 @@ def latest_metrics(session_id: str) -> Optional[Dict[str, Any]]:
             row = cursor.fetchone()
     if row and row["metrics"]:
         # metrics are already parsed as dict by psycopg2 if column is JSONB
-        return _json_load(row["metrics"])
+        return row["metrics"]
     return None
 
 
@@ -238,10 +223,7 @@ def wimd_history(session_id: str, limit: int = 25) -> List[Dict[str, Any]]:
             rows = cursor.fetchall()
     history: List[Dict[str, Any]] = []
     for row in rows:
-        row_dict = dict(row)
-        row_dict['analysis_data'] = _json_load(row_dict['analysis_data'])
-        row_dict['metrics'] = _json_load(row_dict['metrics'])
-        history.append(row_dict)
+        history.append(dict(row))
     return history
 
 
@@ -276,14 +258,7 @@ def fetch_job_matches(session_id: str) -> List[Dict[str, Any]]:
                 (session_id,),
             )
             rows = cursor.fetchall()
-    matches = []
-    for row in rows:
-        row_dict = dict(row)
-        row_dict['skills_match'] = _json_load(row_dict['skills_match'])
-        row_dict['values_match'] = _json_load(row_dict['values_match'])
-        row_dict['extras'] = _json_load(row_dict['extras'])
-        matches.append(row_dict)
-    return matches
+    return [dict(row) for row in rows]
 
 
 def update_job_match_status(
@@ -301,7 +276,7 @@ def update_job_match_status(
             row = cursor.fetchone()
             if row is None:
                 raise ValueError("job_match_not_found")
-            extras = _json_load(row['extras']) or {}
+            extras = row['extras'] or {}
             extras.update(
                 {
                     "status": status,
@@ -343,12 +318,7 @@ def list_resume_versions(session_id: str) -> List[Dict[str, Any]]:
                 (session_id,),
             )
             rows = cursor.fetchall()
-    versions = []
-    for row in rows:
-        row_dict = dict(row)
-        row_dict['feedback'] = _json_load(row_dict['feedback'])
-        versions.append(row_dict)
-    return versions
+    return [dict(row) for row in rows]
 
 
 def store_file_upload(
@@ -389,19 +359,17 @@ def cleanup_expired_sessions() -> None:
             )
             expired_ids = [row[0] for row in cursor.fetchall()]
             if expired_ids:
-                # psycopg2 can accept a tuple of IDs directly
-                id_tuple = tuple(expired_ids)
-                
+                placeholders = ",".join(["%s"] * len(expired_ids))
                 cursor.execute(
-                    "SELECT file_path FROM file_uploads WHERE session_id IN %s",
-                    (id_tuple,),
+                    f"SELECT file_path FROM file_uploads WHERE session_id IN ({placeholders})",
+                    expired_ids,
                 )
                 file_rows = cursor.fetchall()
                 
                 # Deletions
                 for table in ["file_uploads", "resume_versions", "job_matches", "wimd_outputs", "sessions"]:
                     cursor.execute(
-                        f"DELETE FROM {table} WHERE session_id IN %s", (id_tuple,)
+                        f"DELETE FROM {table} WHERE session_id IN ({placeholders})", expired_ids
                     )
                 
                 for row in file_rows:
