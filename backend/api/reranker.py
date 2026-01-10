@@ -7,15 +7,7 @@ import time
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
-# Import sentence-transformers (will be added to requirements.txt)
-try:
-    from sentence_transformers import CrossEncoder
-
-    SENTENCE_TRANSFORMERS_AVAILABLE = True
-except ImportError:
-    SENTENCE_TRANSFORMERS_AVAILABLE = False
-    print("Warning: sentence-transformers not available, using mock reranker")
-
+from sentence_transformers import CrossEncoder
 
 @dataclass
 class RerankResult:
@@ -49,41 +41,34 @@ class CrossEncoderReranker:
 
     def _initialize_model(self):
         """Initialize the cross-encoder model."""
-        if not SENTENCE_TRANSFORMERS_AVAILABLE:
-            print("sentence-transformers not available - installing...")
-            try:
-                import subprocess
-
-                subprocess.run(["pip", "install", "sentence-transformers"], check=True)
-                # Retry import after installation
-                from sentence_transformers import CrossEncoder
-
-                self.model = CrossEncoder(self.model_name, device="cpu")
-                self.initialized = True
-                print("Cross-encoder model initialized successfully after installation")
-            except Exception as e:
-                print(f"Failed to install sentence-transformers: {e}")
-                print("Using mock reranker")
-                self.initialized = True
-                return
-
         try:
             print(f"Initializing cross-encoder model: {self.model_name}")
-            # Force download and initialization
             self.model = CrossEncoder(self.model_name, device="cpu")
             self.initialized = True
             print("Cross-encoder model initialized successfully")
         except Exception as e:
-            print(f"Error initializing cross-encoder: {e}")
-            print("Falling back to mock reranker")
+            print(f"CRITICAL: Error initializing cross-encoder: {e}")
+            print("This is a fatal error. The application will not be able to serve reranking requests.")
+            # In a real scenario, this should either be handled more gracefully
+            # or prevent the application from starting if it's a critical feature.
             self.initialized = False
 
     def rerank_documents(self, query: str, documents: List[Dict[str, Any]]) -> RerankResult:
         """Rerank documents using cross-encoder."""
         start_time = time.time()
 
-        if not self.initialized:
-            return self._mock_rerank(query, documents, start_time)
+        if not self.initialized or not self.model:
+            # This will now be the main failure path if initialization fails.
+            # Returning an empty result or raising an exception might be options.
+            # For now, return a result that indicates failure.
+            return RerankResult(
+                query=query,
+                reranked_documents=documents, # Return original documents
+                pre_rerank_scores=[d.get('similarity', 0.0) for d in documents],
+                post_rerank_scores=[d.get('similarity', 0.0) for d in documents],
+                improvement_pct=0.0,
+                processing_time=time.time() - start_time,
+            )
 
         try:
             # Limit to max candidates
@@ -141,52 +126,29 @@ class CrossEncoderReranker:
 
         except Exception as e:
             print(f"Error in reranking: {e}")
-            return self._mock_rerank(query, documents, start_time)
-
-    def _mock_rerank(
-        self, query: str, documents: List[Dict[str, Any]], start_time: float
-    ) -> RerankResult:
-        """Mock reranking when sentence-transformers is not available."""
-        # Simple mock: sort by similarity and add small random boost
-        import random
-
-        mock_docs = []
-        for doc in documents[: self.final_top_k]:
-            doc_copy = doc.copy()
-            # Add small random boost to simulate reranking
-            boost = random.uniform(0.05, 0.15)
-            doc_copy["similarity"] = min(1.0, doc_copy.get("similarity", 0.0) + boost)
-            doc_copy["rerank_score"] = boost
-            doc_copy["original_score"] = doc.get("similarity", 0.0)
-            mock_docs.append(doc_copy)
-
-        # Sort by new similarity
-        mock_docs.sort(key=lambda x: x["similarity"], reverse=True)
-
-        pre_scores = [doc.get("similarity", 0.0) for doc in documents[: self.final_top_k]]
-        post_scores = [doc["similarity"] for doc in mock_docs]
-
-        return RerankResult(
-            query=query,
-            reranked_documents=mock_docs,
-            pre_rerank_scores=pre_scores,
-            post_rerank_scores=post_scores,
-            improvement_pct=15.0,  # Mock 15% improvement
-            processing_time=time.time() - start_time,
-        )
+            # Fallback to returning original documents in case of an unexpected error
+            return RerankResult(
+                query=query,
+                reranked_documents=documents,
+                pre_rerank_scores=[d.get('similarity', 0.0) for d in documents],
+                post_rerank_scores=[d.get('similarity', 0.0) for d in documents],
+                improvement_pct=0.0,
+                processing_time=time.time() - start_time,
+            )
 
     def _calculate_improvement(self, pre_scores: List[float], post_scores: List[float]) -> float:
         """Calculate percentage improvement from reranking."""
         if not pre_scores or not post_scores:
             return 0.0
 
-        pre_avg = sum(pre_scores) / len(pre_scores)
-        post_avg = sum(post_scores) / len(post_scores)
+        pre_avg = sum(pre_scores) / len(pre_scores) if pre_scores else 0.0
+        post_avg = sum(post_scores) / len(post_scores) if post_scores else 0.0
 
         if pre_avg == 0:
             return 0.0
 
-        return ((post_avg - pre_avg) / pre_avg) * 100
+        return ((post_avg - pre_avg) / abs(pre_avg)) * 100 if pre_avg != 0 else 0.0
+
 
     def _update_performance_stats(self, processing_time: float):
         """Update performance statistics."""
@@ -199,12 +161,12 @@ class CrossEncoderReranker:
         return {
             "initialized": self.initialized,
             "model_name": self.model_name,
-            "sentence_transformers_available": SENTENCE_TRANSFORMERS_AVAILABLE,
+            "sentence_transformers_available": True, # Hardcoded to True as it's a firm dependency
             "total_reranks": self.total_reranks,
             "average_latency": self.average_latency,
             "max_candidates": self.max_candidates,
             "final_top_k": self.final_top_k,
-            "status": "operational" if self.initialized else "disabled",
+            "status": "operational" if self.initialized else "error",
         }
 
 
