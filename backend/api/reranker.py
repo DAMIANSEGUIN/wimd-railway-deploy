@@ -1,13 +1,20 @@
 """
 Cross-Encoder Reranker for Mosaic 2.0
 Implements CPU-hosted cross-encoder reranking using sentence-transformers
+Falls back to mock reranker if sentence-transformers unavailable (Render free tier)
 """
 
 import time
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
-from sentence_transformers import CrossEncoder
+# Try to import sentence-transformers, use mock if unavailable (Render free tier)
+try:
+    from sentence_transformers import CrossEncoder
+    SENTENCE_TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    SENTENCE_TRANSFORMERS_AVAILABLE = False
+    CrossEncoder = None  # Will use mock implementation
 
 @dataclass
 class RerankResult:
@@ -41,6 +48,12 @@ class CrossEncoderReranker:
 
     def _initialize_model(self):
         """Initialize the cross-encoder model."""
+        if not SENTENCE_TRANSFORMERS_AVAILABLE:
+            print("WARNING: sentence-transformers not available - using mock reranker")
+            print("This is expected on Render free tier (memory constraints)")
+            self.initialized = False
+            return
+
         try:
             print(f"Initializing cross-encoder model: {self.model_name}")
             self.model = CrossEncoder(self.model_name, device="cpu")
@@ -48,9 +61,7 @@ class CrossEncoderReranker:
             print("Cross-encoder model initialized successfully")
         except Exception as e:
             print(f"CRITICAL: Error initializing cross-encoder: {e}")
-            print("This is a fatal error. The application will not be able to serve reranking requests.")
-            # In a real scenario, this should either be handled more gracefully
-            # or prevent the application from starting if it's a critical feature.
+            print("Falling back to mock reranker")
             self.initialized = False
 
     def rerank_documents(self, query: str, documents: List[Dict[str, Any]]) -> RerankResult:
@@ -160,13 +171,13 @@ class CrossEncoderReranker:
         """Get reranker health status."""
         return {
             "initialized": self.initialized,
-            "model_name": self.model_name,
-            "sentence_transformers_available": True, # Hardcoded to True as it's a firm dependency
+            "model_name": self.model_name if self.initialized else "mock-reranker",
+            "sentence_transformers_available": SENTENCE_TRANSFORMERS_AVAILABLE,
             "total_reranks": self.total_reranks,
             "average_latency": self.average_latency,
             "max_candidates": self.max_candidates,
             "final_top_k": self.final_top_k,
-            "status": "operational" if self.initialized else "error",
+            "status": "mock" if not SENTENCE_TRANSFORMERS_AVAILABLE else ("operational" if self.initialized else "error"),
         }
 
 

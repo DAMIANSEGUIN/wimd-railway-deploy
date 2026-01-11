@@ -10,7 +10,7 @@ anthropic
 numpy==1.26.4
 python-dotenv
 psycopg2-binary
-sentence-transformers
+# sentence-transformers>=2.2.2  # DISABLED: ~500MB exceeds Render free tier 512MB limit
 
 google-api-python-client
 google-auth
