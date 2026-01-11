@@ -1,0 +1,71 @@
+version: "1.0"
+description: "Mosaic Platform Governance Gates - Machine-parseable, enforceable across all contexts"
+
+gates:
+  - gate_id: REPO_REMOTE_MATCH
+    name: Repository Remote Match
+    description: Git remote must match authority_map.json repo declaration
+    trigger: always
+    inputs_required:
+      - git remote -v
+      - .mosaic/authority_map.json
+    pass_conditions: Git remote URL matches authority_map.json repo.github_owner and repo.github_repo
+    fail_conditions: Git remote URL does not match authority_map.json
+    severity: block
+    domain: repo_hook
+
+  - gate_id: BRANCH_MATCH
+    name: Branch Match
+    description: Git branch must match authority_map.json branch declaration
+    trigger: always
+    inputs_required:
+      - git branch --show-current
+      - .mosaic/authority_map.json
+    pass_conditions: Current branch matches authority_map.json repo.branch
+    fail_conditions: Branch mismatch
+    severity: block
+    domain: repo_hook
+
+  - gate_id: CLEAN_WORKTREE
+    name: Clean Worktree
+    description: Git worktree must be clean or explicitly allowed
+    trigger: always
+    inputs_required:
+      - git status --porcelain
+    pass_conditions: No uncommitted changes or explicitly allowed
+    fail_conditions: Dirty worktree
+    severity: warn
+    domain: repo_hook
+
+  - gate_id: GATE_1_SESSION_START
+    name: Session Start Validator
+    description: Agent must read state before acting
+    trigger: session_start
+    inputs_required:
+      - agent first response
+      - .mosaic/agent_state.json
+    pass_conditions: Evidence of reading state and handoff
+    fail_conditions: Missing startup evidence
+    severity: block
+    domain: human_check
+
+  - gate_id: GATE_2_BEHAVIOR_LINT
+    name: Behavior Lint
+    description: Blocks forbidden agent behaviors
+    trigger: any_agent_response
+    inputs_required:
+      - agent response text
+    pass_conditions: No forbidden phrases without context
+    fail_conditions: Forbidden phrase without context
+    severity: block
+    domain: human_check
+
+meta:
+  schema_version: "1.0"
+  total_gates: 5
+  enforcement_domains:
+    repo_hook: 3
+    human_check: 2
+  severity_distribution:
+    block: 4
+    warn: 1
