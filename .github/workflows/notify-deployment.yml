@@ -1,0 +1,79 @@
+name: Deployment Notification
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get commit info
+        id: commit
+        run: |
+          echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "message=$(git log -1 --pretty=%B | head -1)" >> $GITHUB_OUTPUT
+          echo "author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
+
+      - name: Wait for Render deployment
+        run: |
+          echo "⏳ Waiting 30 seconds for Render to start deployment..."
+          sleep 30
+
+      - name: Check Render deployment
+        id: health
+        run: |
+          HEALTH_URL="https://mosaic-backend-tpog.onrender.com/health"
+
+          echo "🔍 Checking Render health endpoint..."
+          RESPONSE=$(curl -s "$HEALTH_URL" || echo '{"ok":false}')
+
+          if echo "$RESPONSE" | grep -q '"ok":true'; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "✅ Render deployment successful"
+          else
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "❌ Render deployment failed or service unhealthy"
+          fi
+
+          echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+
+      - name: Create deployment summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << 'EOF'
+          # 🚀 Render Deployment
+
+          **Commit:** ${{ steps.commit.outputs.sha }}
+          **Message:** ${{ steps.commit.outputs.message }}
+          **Author:** ${{ steps.commit.outputs.author }}
+          **Branch:** main
+
+          ## Deployment Status
+
+          ${{ steps.health.outputs.status == 'success' && '✅ **Deployment Successful**' || '❌ **Deployment Failed**' }}
+
+          **Backend Health:** https://mosaic-backend-tpog.onrender.com/health
+          **Frontend:** https://whatismydelta.com
+
+          ### Health Response
+          ```json
+          ${{ steps.health.outputs.response }}
+          ```
+
+          ---
+
+          *Triggered by push to main*
+          EOF
+
+      - name: Deployment result
+        if: steps.health.outputs.status == 'failed'
+        run: |
+          echo "❌ Render deployment appears to have failed"
+          echo "Check Render dashboard: https://dashboard.render.com"
+          exit 1
