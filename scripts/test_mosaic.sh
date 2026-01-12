@@ -18,7 +18,7 @@ NC='\033[0m' # No Color
 # Test 1: Backend Health
 echo "Test 1: Backend Health Check"
 echo "----------------------------"
-HEALTH_RESPONSE=$(curl -s https://what-is-my-delta-site-production.up.railway.app/health)
+HEALTH_RESPONSE=$(curl -s https://mosaic-backend-tpog.onrender.com/health)
 HEALTH_OK=$(echo "$HEALTH_RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('ok', False))")
 DB_OK=$(echo "$HEALTH_RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('checks', {}).get('database', False))")
 
@@ -33,7 +33,7 @@ echo ""
 # Test 2: Context Extraction Endpoint
 echo "Test 2: Context Extraction Endpoint"
 echo "-----------------------------------"
-HTTP_STATUS=$(curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context \
+HTTP_STATUS=$(curl -X POST https://mosaic-backend-tpog.onrender.com/api/ps101/extract-context \
   -H "Content-Type: application/json" \
   -w "%{http_code}" -o /dev/null -s)
 

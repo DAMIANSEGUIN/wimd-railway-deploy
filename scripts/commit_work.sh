@@ -109,7 +109,7 @@ if [ ! -f "TEAM_STATUS.json" ]; then
   "production": {
     "status": "$PROD_STATUS",
     "frontend": "https://whatismydelta.com",
-    "backend": "https://what-is-my-delta-site-production.up.railway.app",
+    "backend": "https://mosaic-backend-tpog.onrender.com",
     "last_deploy": "$COMMIT_HASH",
     "last_check": "$TIMESTAMP"
   },

@@ -66,7 +66,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "💚 BACKEND HEALTH"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-HEALTH_RESPONSE=$(curl -s -m 5 https://what-is-my-delta-site-production.up.railway.app/health 2>/dev/null)
+HEALTH_RESPONSE=$(curl -s -m 5 https://mosaic-backend-tpog.onrender.com/health 2>/dev/null)
 
 if echo "$HEALTH_RESPONSE" | grep -q '"ok":true'; then
     echo "✅ Backend: HEALTHY"

@@ -16,7 +16,7 @@ cat <<EOF
     "api_base_configured": $(grep -c "API_BASE = ''" frontend/index.html mosaic_ui/index.html 2>/dev/null || echo 0)
   },
   "deployment_status": {
-    "railway_health": "$(curl -s -m 5 https://what-is-my-delta-site-production.up.railway.app/health 2>/dev/null | jq -r '.ok' 2>/dev/null || echo 'unknown')",
+    "railway_health": "$(curl -s -m 5 https://mosaic-backend-tpog.onrender.com/health 2>/dev/null | jq -r '.ok' 2>/dev/null || echo 'unknown')",
     "production_auth_present": $(curl -s -m 5 https://whatismydelta.com/ 2>/dev/null | grep -c "authModal\|loginForm" || echo 0)
   },
   "last_commit": {

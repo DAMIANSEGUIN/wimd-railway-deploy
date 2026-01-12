@@ -31,7 +31,7 @@ else
 fi
 
 echo -n "   Backend:  "
-if curl -s -m 5 https://what-is-my-delta-site-production.up.railway.app/health 2>/dev/null | grep -q '"ok":true'; then
+if curl -s -m 5 https://mosaic-backend-tpog.onrender.com/health 2>/dev/null | grep -q '"ok":true'; then
     echo -e "${GREEN}✅ HEALTHY${NC}"
 else
     echo -e "${YELLOW}⚠️  CHECK FAILED (may be network)${NC}"
