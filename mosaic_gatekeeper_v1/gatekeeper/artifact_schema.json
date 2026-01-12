@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mosaic.ai/schemas/artifact_v1.json",
+  "title": "Artifact",
+  "description": "Schema for validating execution artifacts",
+  "type": "object",
+  "required": [
+    "artifact_id",
+    "created_at",
+    "intent_id",
+    "outputs",
+    "gates_passed"
+  ],
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 hash of artifact content"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    },
+    "intent_id": {
+      "type": "string",
+      "description": "Reference to the intent that produced this artifact"
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Produced outputs"
+    },
+    "gates_passed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of gates that passed"
+    }
+  }
+}

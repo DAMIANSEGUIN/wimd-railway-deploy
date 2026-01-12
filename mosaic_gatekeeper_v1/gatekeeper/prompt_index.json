@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "prompts": [
+    {
+      "prompt_id": "INTENT_MATCH_V1",
+      "task_type": "mosaic_governance",
+      "tags": [
+        "intent",
+        "translation-layer",
+        "gates",
+        "receipt"
+      ],
+      "description": "Intent-to-artifact translation with deterministic gates",
+      "file_path": "prompts/PROMPT_INTENT_MATCH_V1.txt",
+      "confidence_threshold": 0.85,
+      "version": "1.0"
+    },
+    {
+      "prompt_id": "RESUME_REWRITE_V1",
+      "task_type": "resume_rewrite",
+      "tags": [
+        "resume",
+        "rewrite",
+        "optimization"
+      ],
+      "description": "Resume rewriting with ATS optimization",
+      "file_path": "prompts/PROMPT_RESUME_REWRITE_V1.txt",
+      "confidence_threshold": 0.80,
+      "version": "1.0"
+    },
+    {
+      "prompt_id": "JOB_SEARCH_V1",
+      "task_type": "job_search",
+      "tags": [
+        "job",
+        "search",
+        "matching"
+      ],
+      "description": "Job search and matching workflow",
+      "file_path": "prompts/PROMPT_JOB_SEARCH_V1.txt",
+      "confidence_threshold": 0.75,
+      "version": "1.0"
+    }
+  ]
+}

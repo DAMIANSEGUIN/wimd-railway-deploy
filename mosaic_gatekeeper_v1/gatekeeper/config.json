@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "confidence_min_to_proceed": 0.85,
+  "max_scope_items": 12,
+  "require_external_enforcement_for": [
+    "mosaic_governance",
+    "resume_rewrite",
+    "job_search"
+  ],
+  "jurisdiction_proof_prefix": "CREWAI_RUN:",
+  "mode_when_no_proof": "DESIGN_ONLY_NO_ENFORCEMENT",
+  "gates": [
+    "SchemaGate",
+    "JurisdictionGate",
+    "ScopeGate",
+    "NoAssumptionGate",
+    "PromptRetrievalGate"
+  ],
+  "environment_variables": {
+    "jurisdiction_proof": "GATEKEEPER_JURISDICTION_PROOF"
+  }
+}

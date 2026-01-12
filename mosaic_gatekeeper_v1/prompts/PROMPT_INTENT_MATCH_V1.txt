@@ -1,0 +1,76 @@
+PROMPT_INTENT_MATCH_V1
+======================
+
+PURPOSE
+-------
+Translate validated IntentDraft into executable artifact with deterministic gates and receipt verification.
+
+CONTEXT
+-------
+This prompt is selected when:
+- task_type: mosaic_governance
+- Gatekeeper has validated: SchemaGate, JurisdictionGate, ScopeGate, NoAssumptionGate, PromptRetrievalGate
+- External enforcement proof verified: CREWAI_RUN:*
+
+INVARIANT
+---------
+Governor is not the governed.
+You (the LLM) do NOT certify compliance.
+Only external gatekeeper results are authoritative.
+
+INPUT CONTRACT
+--------------
+You will receive:
+{
+  "gatekeeper_result": {
+    "status": "PROCEED",
+    "mode": "REAL_CREWAI_ENFORCED",
+    "gates_passed": ["SchemaGate", "JurisdictionGate", "ScopeGate", "NoAssumptionGate", "PromptRetrievalGate"],
+    "selected_prompt_id": "INTENT_MATCH_V1",
+    "jurisdiction_proof": "CREWAI_RUN:xxx"
+  },
+  "intent_draft": {
+    "task_type": "mosaic_governance",
+    "intent_statement": "...",
+    "scope_in": [...],
+    "scope_out": [...],
+    "assumptions": [],
+    "constraints": [...],
+    "success_criteria": [...]
+  }
+}
+
+OUTPUT CONTRACT
+---------------
+Produce JSON artifact with:
+{
+  "artifact_id": "<sha256-hash>",
+  "created_at": "<ISO-8601>",
+  "intent_id": "<reference-to-intent>",
+  "outputs": [
+    {
+      "type": "gate_implementation",
+      "gates": ["SchemaGate", "JurisdictionGate", ...],
+      "enforcement_mode": "deterministic_external",
+      "code_location": "..."
+    }
+  ],
+  "gates_passed": ["SchemaGate", "JurisdictionGate", "ScopeGate", "NoAssumptionGate", "PromptRetrievalGate"],
+  "receipt": {
+    "jurisdiction_proof": "CREWAI_RUN:xxx",
+    "verified_at": "<ISO-8601>",
+    "enforcer": "gatekeeper_v1",
+    "deterministic": true
+  }
+}
+
+CRITICAL
+--------
+1. NEVER claim enforcement compliance yourself
+2. ONLY reference gatekeeper_result as proof
+3. Include full jurisdiction_proof in receipt
+4. Artifact must be deterministically reproducible
+
+TAGS
+----
+intent, translation-layer, gates, receipt

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mosaic.ai/schemas/intent_draft_v1.json",
+  "title": "IntentDraft",
+  "description": "Schema for validating intent drafts before execution",
+  "type": "object",
+  "required": [
+    "task_type",
+    "intent_statement",
+    "scope_in",
+    "scope_out",
+    "assumptions",
+    "constraints",
+    "success_criteria"
+  ],
+  "properties": {
+    "task_type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Classification of the task (e.g., mosaic_governance, resume_rewrite)"
+    },
+    "intent_statement": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Clear statement of what needs to be accomplished"
+    },
+    "scope_in": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "What is included in scope"
+    },
+    "scope_out": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What is explicitly excluded from scope"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Assumptions being made (should be empty for deterministic execution)"
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "description": "Technical or business constraints"
+    },
+    "success_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "description": "Observable criteria for successful completion"
+    }
+  },
+  "additionalProperties": false
+}
