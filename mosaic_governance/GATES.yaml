@@ -1,0 +1,470 @@
+version: "1.0"
+description: "Mosaic Platform Governance Gates - Machine-parseable, enforceable across all contexts"
+
+gates:
+  # ========================================================================
+  # DETERMINISTIC CANON GATES (from MOSAIC_CANON_GOVERNANCE_REWRITE)
+  # ========================================================================
+
+  - id: "REPO_REMOTE_MATCH"
+    name: "Repository Remote Match"
+    description: "Git remote must match authority_map.json repo declaration"
+    trigger: "always"
+    domain: "repo_hook"
+    severity: "CRITICAL"
+    condition: "git_remote_equals_authority_map_repo()"
+    source_refs:
+      - "docs/MOSAIC_CANON_GOVERNANCE_REWRITE__DETERMINISTIC_GATES.md"
+    aliases: []
+    enforcement_mode: "MODE=local,ci,runtime"
+    pass_criteria: "Git remote URL matches authority_map.json repo.github_owner and repo.github_repo"
+    fail_action: "REJECT"
+
+  - id: "BRANCH_MATCH"
+    name: "Branch Match"
+    description: "Git branch must match authority_map.json branch declaration"
+    trigger: "always"
+    domain: "repo_hook"
+    severity: "CRITICAL"
+    condition: "git_branch_equals(authority_map.repo.branch)"
+    source_refs:
+      - "docs/MOSAIC_CANON_GOVERNANCE_REWRITE__DETERMINISTIC_GATES.md"
+    aliases: []
+    enforcement_mode: "MODE=local,ci,runtime"
+    pass_criteria: "Current git branch matches authority_map.json repo.branch"
+    fail_action: "REJECT"
+
+  - id: "CLEAN_WORKTREE"
+    name: "Clean Worktree"
+    description: "Git worktree must be clean or explicitly allowed"
+    trigger: "always"
+    domain: "repo_hook"
+    severity: "HIGH"
+    condition: "git_status_is_clean_or_explicitly_allowed()"
+    source_refs:
+      - "docs/MOSAIC_CANON_GOVERNANCE_REWRITE__DETERMINISTIC_GATES.md"
+    aliases: []
+    enforcement_mode: "MODE=local,ci,runtime"
+    pass_criteria: "No uncommitted changes or changes are explicitly allowed"
+    fail_action: "REJECT"
+
+  - id: "RUNTIME_IDENTITY_MATCH"
+    name: "Runtime Identity Match"
+    description: "Runtime deployed commit must match git HEAD SHA"
+    trigger: "mode_is(ci)"
+    domain: "runtime_watchdog"
+    severity: "CRITICAL"
+    condition: "runtime_commit_equals_git_sha(runtime_url + identity_path, git_sha(HEAD), timeout=5)"
+    source_refs:
+      - "docs/MOSAIC_CANON_GOVERNANCE_REWRITE__DETERMINISTIC_GATES.md"
+    aliases: []
+    enforcement_mode: "MODE=ci"
+    pass_criteria: "Deployed service reports same commit SHA as local HEAD"
+    fail_action: "REJECT on SHA mismatch, CLARIFY_REQUIRED on network failure"
+    on_network_failure: "CLARIFY_REQUIRED"
+
+  - id: "RUNTIME_SELF_ATTEST"
+    name: "Runtime Self Attestation"
+    description: "Runtime service must report its deployed commit via env var"
+    trigger: "mode_is(runtime)"
+    domain: "runtime_watchdog"
+    severity: "CRITICAL"
+    condition: "runtime_self_reports_commit_equals_env(GIT_SHA)"
+    source_refs:
+      - "docs/MOSAIC_CANON_GOVERNANCE_REWRITE__DETERMINISTIC_GATES.md"
+    aliases: []
+    enforcement_mode: "MODE=runtime"
+    pass_criteria: "Service has GIT_SHA environment variable set at build time"
+    fail_action: "REJECT"
+
+  # ========================================================================
+  # HUMAN VALIDATION GATES (Gates 1-2)
+  # ========================================================================
+
+  - id: "GATE_1_SESSION_START"
+    name: "Session Start Validator"
+    description: "Validates AI agent executed mandatory startup protocol"
+    trigger: "new_ai_session_start"
+    domain: "human_check"
+    severity: "CRITICAL"
+    condition: "agent_first_response_contains_evidence_of(state_files_read, handoff_read, validation_run, git_state_checked, features_verified)"
+    source_refs:
+      - ".mosaic/enforcement/FOUR_GATE_SYSTEM.md"
+      - ".mosaic/enforcement/gate_1_session_start.py"
+    aliases:
+      - "Session Start Protocol"
+      - "Startup Validator"
+    enforcement_mode: "manual"
+    pass_criteria: "Agent shows evidence of reading state files, handoff, running validation, checking git, verifying features"
+    fail_action: "Auto-generate redirect with missing evidence and required commands"
+    script: ".mosaic/enforcement/gate_1_session_start.py"
+
+  - id: "GATE_2_BEHAVIOR_LINT"
+    name: "Behavior Lint Validator"
+    description: "Blocks forbidden behavioral patterns in agent responses"
+    trigger: "any_agent_response"
+    domain: "human_check"
+    severity: "CRITICAL"
+    condition: "response_does_not_contain_forbidden_patterns_without_required_context"
+    source_refs:
+      - ".mosaic/enforcement/FOUR_GATE_SYSTEM.md"
+      - ".mosaic/enforcement/gate_2_behavior_lint.py"
+    aliases:
+      - "Behavioral Protocol Validator"
+    enforcement_mode: "manual"
+    pass_criteria: "No forbidden phrases without required context (e.g., 'what would you like me to work on' without showing state files)"
+    fail_action: "Auto-generate redirect with documents to read and evidence required"
+    script: ".mosaic/enforcement/gate_2_behavior_lint.py"
+    forbidden_patterns:
+      - trigger: "what would you like me to work on"
+        requires_context: ["Last agent:", "Last commit:", "Handoff message:"]
+        violation_type: "ASKED_FOR_DIRECTION_WITHOUT_READING_STATE"
+        severity: "CRITICAL"
+      - trigger: "work complete"
+        requires_context: ["tests passed", "Validation tests passed"]
+        violation_type: "CLAIMED_COMPLETE_WITHOUT_VALIDATION"
+        severity: "CRITICAL"
+      - trigger: "should i deploy"
+        requires_context: ["Health check:", "Production state:"]
+        violation_type: "ASKED_ABOUT_DEPLOY_WITHOUT_CHECKING_STATE"
+        severity: "HIGH"
+      - trigger: "i'll update the"
+        requires_context: ["INTENT:", "Planning to", "Going to"]
+        violation_type: "ACTION_WITHOUT_INTENT_DECLARATION"
+        severity: "MEDIUM"
+
+  # ========================================================================
+  # PRE-COMMIT HOOK GATES (Gate 3 with sub-gates)
+  # ========================================================================
+
+  - id: "GATE_3_1_NO_ABSOLUTE_PATHS"
+    name: "No Absolute Paths in Documentation"
+    description: "Markdown files must use relative paths only"
+    trigger: "git_commit"
+    domain: "repo_hook"
+    severity: "CRITICAL"
+    condition: "no_absolute_paths_in_markdown_files"
+    source_refs:
+      - ".mosaic/enforcement/pre-commit"
+      - ".ai-agents/CROSS_AGENT_PROTOCOL.md"
+    aliases:
+      - "Gate 3.1"
+      - "Absolute Path Check"
+    enforcement_mode: "automatic"
+    pass_criteria: "No /Users/, /home/, C:\\, or /private/ paths in .md files (except in example/documentation blocks)"
+    fail_action: "BLOCK commit with violation details"
+    script: ".mosaic/enforcement/pre-commit"
+
+  - id: "GATE_3_2_CONTEXT_MANAGER"
+    name: "Context Manager Pattern"
+    description: "Python database operations must use context manager pattern"
+    trigger: "git_commit"
+    domain: "repo_hook"
+    severity: "CRITICAL"
+    condition: "all_get_conn_uses_context_manager"
+    source_refs:
+      - ".mosaic/enforcement/pre-commit"
+      - "TROUBLESHOOTING_CHECKLIST.md"
+    aliases:
+      - "Gate 3.2"
+      - "Database Pattern Check"
+    enforcement_mode: "automatic"
+    pass_criteria: "All Python files use 'with get_conn() as conn:' not 'conn = get_conn()'"
+    fail_action: "BLOCK commit with pattern violation details"
+    script: ".mosaic/enforcement/pre-commit"
+
+  - id: "GATE_3_3_POSTGRESQL_SYNTAX"
+    name: "PostgreSQL Syntax"
+    description: "Python files must use PostgreSQL syntax, not SQLite"
+    trigger: "git_commit"
+    domain: "repo_hook"
+    severity: "HIGH"
+    condition: "no_sqlite_syntax_in_python"
+    source_refs:
+      - ".mosaic/enforcement/pre-commit"
+      - "TROUBLESHOOTING_CHECKLIST.md"
+    aliases:
+      - "Gate 3.3"
+      - "SQL Syntax Check"
+    enforcement_mode: "automatic"
+    pass_criteria: "Python files use %s placeholders (not ?), SERIAL (not AUTOINCREMENT)"
+    fail_action: "BLOCK commit on AUTOINCREMENT, WARN on ? placeholders"
+    script: ".mosaic/enforcement/pre-commit"
+
+  - id: "GATE_3_4_STATE_SCHEMA"
+    name: "State File Schema Validation"
+    description: "JSON state files must be valid and contain required fields"
+    trigger: "git_commit"
+    domain: "repo_hook"
+    severity: "HIGH"
+    condition: "state_files_valid_json_with_required_fields"
+    source_refs:
+      - ".mosaic/enforcement/pre-commit"
+    aliases:
+      - "Gate 3.4"
+      - "Schema Validation"
+    enforcement_mode: "automatic"
+    pass_criteria: ".mosaic/*.json files are valid JSON with required fields (version, last_agent, last_commit, etc.)"
+    fail_action: "BLOCK commit with JSON validation errors"
+    script: ".mosaic/enforcement/pre-commit"
+
+  - id: "GATE_3_5_AGENT_STATE_UPDATED"
+    name: "Agent State Updated"
+    description: "Agent state file must be updated when code changes"
+    trigger: "git_commit"
+    domain: "repo_hook"
+    severity: "MEDIUM"
+    condition: "agent_state_updated_when_code_changed"
+    source_refs:
+      - ".mosaic/enforcement/pre-commit"
+    aliases:
+      - "Gate 3.5"
+      - "State Update Check"
+    enforcement_mode: "automatic"
+    pass_criteria: "If api/, mosaic_ui/, or scripts/*.py changed, .mosaic/agent_state.json is also staged"
+    fail_action: "WARN (not block) if state not updated"
+    script: ".mosaic/enforcement/pre-commit"
+
+  - id: "GATE_3_6_NO_SECRETS"
+    name: "No Secrets in Commits"
+    description: "Commits must not contain API keys, passwords, or connection strings"
+    trigger: "git_commit"
+    domain: "repo_hook"
+    severity: "CRITICAL"
+    condition: "no_secrets_in_staged_files"
+    source_refs:
+      - ".mosaic/enforcement/pre-commit"
+    aliases:
+      - "Gate 3.6"
+      - "Secret Detection"
+    enforcement_mode: "automatic"
+    pass_criteria: "No OPENAI_API_KEY, CLAUDE_API_KEY, DATABASE_URL, passwords in committed files (except examples/REDACTED)"
+    fail_action: "BLOCK commit with secret pattern matches"
+    script: ".mosaic/enforcement/pre-commit"
+
+  - id: "GATE_3_7_COMMIT_MESSAGE"
+    name: "Commit Message Format"
+    description: "Commit messages should follow conventional commits format"
+    trigger: "git_commit"
+    domain: "repo_hook"
+    severity: "LOW"
+    condition: "commit_message_conventional_format"
+    source_refs:
+      - ".mosaic/enforcement/pre-commit"
+    aliases:
+      - "Gate 3.7"
+      - "Commit Format Check"
+    enforcement_mode: "automatic"
+    pass_criteria: "Commit message starts with type(scope): message (feat, fix, docs, etc.)"
+    fail_action: "WARN (not block) if format not followed"
+    script: ".mosaic/enforcement/pre-commit"
+
+  # ========================================================================
+  # CROSS-AGENT EVALUATION (Gate 4 / Gate 8)
+  # ========================================================================
+
+  - id: "GATE_4_GEMINI_EVAL"
+    name: "Gemini Cross-Agent Evaluation"
+    description: "Gemini evaluates Claude Code's work before marking complete"
+    trigger: "before_handoff_commit"
+    domain: "manual_ops"
+    severity: "HIGH"
+    condition: "gemini_evaluates_work_meets_criteria"
+    source_refs:
+      - ".mosaic/enforcement/FOUR_GATE_SYSTEM.md"
+      - ".mosaic/enforcement/gate_4_gemini_eval.py"
+    aliases:
+      - "Gate 4"
+      - "Gate 8"
+      - "Cross-Agent Approval"
+      - "Gemini Approval"
+    enforcement_mode: "semi-automatic"
+    pass_criteria: "Gemini verdict: APPROVE (validation tests run, state files correct, handoff meaningful, commits pushed, INTENT followed)"
+    fail_action: "REQUEST_CHANGES or REJECT with required fixes"
+    script: ".mosaic/enforcement/gate_4_gemini_eval.py"
+    evaluation_criteria:
+      - "Did agent run pre-handoff validation tests?"
+      - "Do validation tests pass (6/6 or all ✅)?"
+      - "Are state files correct (last_commit matches git HEAD)?"
+      - "Is handoff_message meaningful (>50 chars, explains what was done)?"
+      - "Are all commits pushed to origin/main?"
+      - "Did agent follow INTENT framework?"
+      - "No absolute paths in documentation?"
+
+  # ========================================================================
+  # PRE-PUSH HOOK GATE (Gate 9)
+  # ========================================================================
+
+  - id: "GATE_9_PRODUCTION_CHECK"
+    name: "Production Connectivity Check"
+    description: "Validates production services are healthy before push"
+    trigger: "git_push"
+    domain: "pre_push_hook"
+    severity: "CRITICAL"
+    condition: "production_backend_frontend_healthy"
+    source_refs:
+      - ".mosaic/enforcement/pre-push"
+      - ".mosaic/enforcement/gate_9_production_check.py"
+    aliases:
+      - "Gate 9"
+      - "Production Health Check"
+    enforcement_mode: "automatic"
+    pass_criteria: "Backend /health returns 200 ok=true, Frontend loads successfully, Git configs correct, Deployment URLs valid"
+    fail_action: "BLOCK push with production issue details"
+    script: ".mosaic/enforcement/gate_9_production_check.py"
+    tests:
+      - "Backend health endpoint responds (200 ok=true)"
+      - "Frontend loads successfully"
+      - "Git remote URLs correct (not Railway, using Render)"
+      - "Environment variables set correctly"
+      - "Deployment configs valid (render.yaml, netlify.toml)"
+
+  # ========================================================================
+  # RUNTIME SMOKE TESTS (Gate 10)
+  # ========================================================================
+
+  - id: "GATE_10_PRODUCTION_SMOKE"
+    name: "Production Smoke Tests"
+    description: "Validates deployed code actually works in production"
+    trigger: "post_deploy"
+    domain: "runtime_watchdog"
+    severity: "CRITICAL"
+    condition: "production_smoke_tests_pass"
+    source_refs:
+      - ".mosaic/enforcement/gate_10_production_smoke.sh"
+    aliases:
+      - "Gate 10"
+      - "Smoke Tests"
+      - "Post-Deploy Validation"
+    enforcement_mode: "manual"
+    pass_criteria: "Basic health check (200), Health JSON valid (ok=true), New endpoints from commit deployed and working"
+    fail_action: "FAIL with deployment verification required"
+    script: ".mosaic/enforcement/gate_10_production_smoke.sh"
+    authority:
+      - "Google SRE Handbook"
+      - "DORA Metrics"
+      - "Test Pyramid (Martin Fowler)"
+    tests:
+      - "Backend /health responds (200)"
+      - "Health JSON valid (ok=true)"
+      - "New endpoints deployed (based on commit message)"
+      - "Frontend accessible"
+
+  # ========================================================================
+  # SESSION INITIALIZATION GATE
+  # ========================================================================
+
+  - id: "SESSION_GATE"
+    name: "Session Initialization Gate"
+    description: "Validates AI agent session initialization before any work"
+    trigger: "session_start"
+    domain: "human_check"
+    severity: "CRITICAL"
+    condition: "session_validation_checks_pass"
+    source_refs:
+      - ".mosaic/enforcement/session-gate.sh"
+    aliases:
+      - "Session Validator"
+      - "Initialization Check"
+    enforcement_mode: "manual"
+    pass_criteria: "State files exist and valid, Current state extracted, Git state verified, Briefing acknowledgment present, Required docs exist"
+    fail_action: "BLOCK work until briefing acknowledged and state synchronized"
+    script: ".mosaic/enforcement/session-gate.sh"
+    checks:
+      - "State files exist and are valid JSON (.mosaic/agent_state.json, blockers.json, current_task.json, session_log.jsonl)"
+      - "Current state information extracted (last_commit, current_agent, current_task, handoff_message)"
+      - "Briefing acknowledgment field present in agent_state.json"
+      - "Git state verified (last_commit in state matches actual HEAD)"
+      - "User decisions loaded from state"
+      - "Required documentation files exist (MANDATORY_AGENT_BRIEFING.md, CROSS_AGENT_PROTOCOL.md, etc.)"
+
+  # ========================================================================
+  # SCHEMA CONTRACT GATES (Implicit)
+  # ========================================================================
+
+  - id: "DATABASE_CONTEXT_MANAGER"
+    name: "Database Context Manager Enforcement"
+    description: "All database operations must use context manager pattern to prevent AttributeError"
+    trigger: "always"
+    domain: "schema_contract"
+    severity: "CRITICAL"
+    condition: "with get_conn() as conn:"
+    source_refs:
+      - "TROUBLESHOOTING_CHECKLIST.md"
+      - "SELF_DIAGNOSTIC_FRAMEWORK.md"
+    aliases:
+      - "Context Manager Contract"
+    enforcement_mode: "runtime"
+    pass_criteria: "Database connection uses context manager (with statement)"
+    fail_action: "AttributeError at runtime"
+
+  - id: "POSTGRESQL_PARAMETER_SYNTAX"
+    name: "PostgreSQL Parameter Placeholder Enforcement"
+    description: "SQL queries must use %s placeholders (PostgreSQL) not ? (SQLite)"
+    trigger: "always"
+    domain: "schema_contract"
+    severity: "HIGH"
+    condition: "cursor.execute(..., %s, ...)"
+    source_refs:
+      - "TROUBLESHOOTING_CHECKLIST.md"
+      - "SELF_DIAGNOSTIC_FRAMEWORK.md"
+    aliases:
+      - "SQL Parameter Contract"
+    enforcement_mode: "runtime"
+    pass_criteria: "SQL uses %s for parameters"
+    fail_action: "SQL syntax error at runtime"
+
+  - id: "CURSOR_BEFORE_EXECUTE"
+    name: "Cursor Must Be Obtained Before Execute"
+    description: "Must call cursor = conn.cursor() before cursor.execute()"
+    trigger: "always"
+    domain: "schema_contract"
+    severity: "CRITICAL"
+    condition: "cursor = conn.cursor() before cursor.execute()"
+    source_refs:
+      - "TROUBLESHOOTING_CHECKLIST.md"
+    aliases:
+      - "Cursor Contract"
+    enforcement_mode: "runtime"
+    pass_criteria: "Cursor obtained from connection before use"
+    fail_action: "AttributeError at runtime"
+
+  - id: "IDEMPOTENT_OPERATIONS"
+    name: "Database Operations Must Be Idempotent"
+    description: "Write operations should use ON CONFLICT or check-before-insert to be safely retryable"
+    trigger: "always"
+    domain: "schema_contract"
+    severity: "MEDIUM"
+    condition: "INSERT ... ON CONFLICT or SELECT before INSERT"
+    source_refs:
+      - "SELF_DIAGNOSTIC_FRAMEWORK.md"
+    aliases:
+      - "Idempotency Contract"
+    enforcement_mode: "best_practice"
+    pass_criteria: "Operations can be run multiple times safely"
+    fail_action: "Duplicate key error on retry"
+
+meta:
+  schema_version: "1.0"
+  last_updated: "2026-01-10"
+  total_gates: 24
+  enforcement_domains:
+    repo_hook: 7
+    pre_push_hook: 1
+    human_check: 3
+    manual_ops: 1
+    runtime_watchdog: 3
+    schema_contract: 4
+  severity_distribution:
+    CRITICAL: 16
+    HIGH: 4
+    MEDIUM: 3
+    LOW: 1
+  normalization_notes:
+    - "Preserved all gates from original documentation"
+    - "Gate 4 and Gate 8 are aliases (same Gemini evaluation gate)"
+    - "Gate 3 expanded into sub-gates (3.1-3.7) to match pre-commit implementation"
+    - "Added implicit schema contract gates for runtime enforcement patterns"
+    - "All gates machine-parseable with standardized schema"
+    - "Source refs preserved from original documents"
+    - "Enforcement modes: automatic (git hooks), manual (human-run scripts), semi-automatic (agent-run with approval), runtime (code contracts), best_practice (recommendations)"

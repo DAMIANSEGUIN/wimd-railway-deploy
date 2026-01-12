@@ -2,36 +2,34 @@
   "schema_version": "1.0",
   "repo": {
     "owner": "DAMIANSEGUIN",
-    "name": "what-is-my-delta-site",
-    "slug": "DAMIANSEGUIN/what-is-my-delta-site",
+    "name": "wimd-railway-deploy",
+    "slug": "DAMIANSEGUIN/wimd-railway-deploy",
     "origin_ssh": "https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git",
-    "deploy_branch": "main",
-    "expected_branch": "main"
+    "deploy_branch": "main"
   },
   "services": [
     {
       "name": "mosaic-frontend",
-      "platform": "railway",
-      "railway_project": "wimd-career-coaching",
-      "railway_service": "mosaic-frontend",
+      "platform": "netlify",
+      "site_name": "resonant-crostata-90b706",
       "runtime_base_url": {
-        "mode": "template",
-        "template": "https://${RAILWAY_STATIC_URL}",
-        "required_env": ["RAILWAY_STATIC_URL"]
+        "mode": "static",
+        "url": "https://whatismydelta.com"
       },
-      "runtime_version_path": "/__version"
+      "deploy_method": "github_integration"
     },
     {
       "name": "mosaic-backend",
-      "platform": "railway",
-      "railway_project": "wimd-career-coaching",
-      "railway_service": "mosaic-backend",
+      "platform": "render",
+      "service_id": "srv-d5e4j0qli9vc73esori0",
       "runtime_base_url": {
-        "mode": "template",
-        "template": "https://${RAILWAY_STATIC_URL}",
-        "required_env": ["RAILWAY_STATIC_URL"]
+        "mode": "static",
+        "url": "https://mosaic-backend-tpog.onrender.com"
       },
-      "runtime_version_path": "/__version"
+      "runtime_version_path": "/health",
+      "deploy_method": "github_integration",
+      "deploy_branch": "main",
+      "root_dir": "backend"
     }
   ]
 }
