@@ -28,7 +28,6 @@
       },
       "runtime_version_path": "/health",
       "deploy_method": "github_integration",
-      "deploy_branch": "main",
       "root_dir": "backend"
     }
   ]
