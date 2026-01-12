@@ -32,33 +32,33 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r backend/requirements.txt
           pip install ruff black mypy bandit safety pytest pytest-cov
 
       - name: Ruff linter (PEP 8 + Security)
         run: |
-          ruff check api/ --output-format=github
+          ruff check backend/api/ --output-format=github
         continue-on-error: false
 
       - name: Ruff format check
         run: |
-          ruff format --check api/
+          ruff format --check backend/api/
         continue-on-error: false
 
       - name: Black format check
         run: |
-          black --check api/
+          black --check backend/api/
         continue-on-error: false
 
       - name: MyPy type checking
         run: |
-          mypy api/ --ignore-missing-imports
+          mypy backend/api/ --ignore-missing-imports
         continue-on-error: true  # Warnings only for now
 
       - name: Bandit security scan
         run: |
-          bandit -r api/ -c pyproject.toml -f json -o bandit-report.json
-          bandit -r api/ -c pyproject.toml
+          bandit -r backend/api/ -c pyproject.toml -f json -o bandit-report.json
+          bandit -r backend/api/ -c pyproject.toml
         continue-on-error: false
 
       - name: Safety dependency check
@@ -170,13 +170,13 @@ jobs:
 
       - name: Check cyclomatic complexity (≤10)
         run: |
-          radon cc api/ -a -s --total-average
-          radon cc api/ -n C -s  # Fail on complexity > 10
+          radon cc backend/api/ -a -s --total-average
+          radon cc backend/api/ -n C -s  # Fail on complexity > 10
         continue-on-error: false
 
       - name: Check maintainability index
         run: |
-          radon mi api/ -s
+          radon mi backend/api/ -s
         continue-on-error: true
 
   # Job 5: Mosaic-Specific Patterns
@@ -191,7 +191,7 @@ jobs:
 
       - name: Check PostgreSQL context manager pattern
         run: |
-          if grep -r "conn = get_conn()" api/*.py | grep -v "# OK:" | grep -v "with get_conn()"; then
+          if grep -r "conn = get_conn()" backend/api/*.py | grep -v "# OK:" | grep -v "with get_conn()"; then
             echo "❌ FAILED: Found incorrect get_conn() usage"
             echo "Required: with get_conn() as conn:"
             exit 1
@@ -200,7 +200,7 @@ jobs:
 
       - name: Check no SQLite syntax in PostgreSQL code
         run: |
-          if grep -r '\.execute.*".*\?.*"' api/*.py | grep -v "# OK:"; then
+          if grep -r '\.execute.*".*\?.*"' backend/api/*.py | grep -v "# OK:"; then
             echo "❌ FAILED: SQLite syntax detected"
             echo "Required: Use %s placeholders for PostgreSQL"
             exit 1
