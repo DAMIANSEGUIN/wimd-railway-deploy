@@ -23,26 +23,43 @@ jobs:
 
       - name: Wait for Render deployment
         run: |
-          echo "⏳ Waiting 30 seconds for Render to start deployment..."
-          sleep 30
+          echo "⏳ Waiting 90 seconds for Render to deploy (free tier cold start)..."
+          sleep 90
 
       - name: Check Render deployment
         id: health
         run: |
           HEALTH_URL="https://mosaic-backend-tpog.onrender.com/health"
 
-          echo "🔍 Checking Render health endpoint..."
-          RESPONSE=$(curl -s "$HEALTH_URL" || echo '{"ok":false}')
+          echo "🔍 Checking Render health endpoint (with retries)..."
 
-          if echo "$RESPONSE" | grep -q '"ok":true'; then
-            echo "status=success" >> $GITHUB_OUTPUT
-            echo "✅ Render deployment successful"
-          else
+          MAX_RETRIES=3
+          RETRY_DELAY=15
+          SUCCESS=false
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i/$MAX_RETRIES..."
+            RESPONSE=$(curl -s --max-time 10 "$HEALTH_URL" 2>/dev/null || echo '{"ok":false}')
+
+            if echo "$RESPONSE" | grep -q '"ok":true'; then
+              echo "status=success" >> $GITHUB_OUTPUT
+              echo "✅ Render deployment successful"
+              echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+              SUCCESS=true
+              break
+            else
+              if [ $i -lt $MAX_RETRIES ]; then
+                echo "⏳ Service not ready yet, waiting ${RETRY_DELAY}s..."
+                sleep $RETRY_DELAY
+              fi
+            fi
+          done
+
+          if [ "$SUCCESS" = false ]; then
             echo "status=failed" >> $GITHUB_OUTPUT
-            echo "❌ Render deployment failed or service unhealthy"
+            echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+            echo "❌ Render deployment failed or service unhealthy after $MAX_RETRIES attempts"
           fi
-
-          echo "response=$RESPONSE" >> $GITHUB_OUTPUT
 
       - name: Create deployment summary
         run: |
