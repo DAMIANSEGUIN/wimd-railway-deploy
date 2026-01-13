@@ -6,6 +6,8 @@ services:
     plan: starter
     branch: main
     rootDir: backend
+    # Phase 3 Runtime Self-Attestation: Render automatically provides RENDER_GIT_COMMIT
+    # This is used by /__version endpoint for Mosaic governance framework (deterministic authority verification)
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn api.index:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --timeout 120
     healthCheckPath: /health

@@ -688,6 +688,32 @@ def root():
     }
 
 
+@app.get("/__version")
+def version_info():
+    """
+    Runtime identity endpoint for Mosaic governance framework.
+    Returns git commit SHA to enable deterministic authority verification.
+
+    Per MOSAIC_CANON_GOVERNANCE_REWRITE__DETERMINISTIC_GATES.md Phase 3:
+    - GIT_SHA must be injected at build time (Render build command)
+    - Used by MODE=runtime enforcement checks
+    - Used by MODE=ci to verify production deployment matches git state
+    """
+    git_sha = os.getenv("GIT_SHA", "unknown")
+    render_commit = os.getenv("RENDER_GIT_COMMIT", "")
+
+    # Render automatically sets RENDER_GIT_COMMIT, use as fallback
+    effective_sha = git_sha if git_sha != "unknown" else render_commit
+
+    return {
+        "git_sha": effective_sha,
+        "service": "mosaic-backend",
+        "platform": "render",
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "service_ready": SERVICE_READY.is_set(),
+    }
+
+
 @app.get("/health")
 def health():
     """Enhanced health check with prompt system monitoring for auto-restart"""

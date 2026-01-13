@@ -26,7 +26,7 @@
         "mode": "static",
         "url": "https://mosaic-backend-tpog.onrender.com"
       },
-      "runtime_version_path": "/health",
+      "runtime_identity_path": "/__version",
       "deploy_method": "github_integration",
       "root_dir": "backend"
     }
