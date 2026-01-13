@@ -24,10 +24,10 @@ done
 # --- Mode Validation ---
 if [ -z "$MODE" ]; then
     echo "🛑 REJECT: Execution mode not provided."
-    echo "   Required fix: Pass '--mode=local', '--mode=ci', or '--mode=runtime' to this script."
+    echo "   Required fix: Pass '--mode=local', '--mode=ci', '--mode=runtime', or '--mode=integration' to this script."
     exit 1
-elif [ "$MODE" != "local" ] && [ "$MODE" != "ci" ] && [ "$MODE" != "runtime" ]; then
-    echo "🛑 REJECT: Mode '$MODE' is not supported. Supported modes: local, ci, runtime."
+elif [ "$MODE" != "local" ] && [ "$MODE" != "ci" ] && [ "$MODE" != "runtime" ] && [ "$MODE" != "integration" ]; then
+    echo "🛑 REJECT: Mode '$MODE' is not supported. Supported modes: local, ci, runtime, integration."
     exit 1
 fi
 
@@ -249,6 +249,61 @@ if [ "$MODE" == "runtime" ]; then
         echo "  - Required: Set GIT_SHA or ensure RENDER_GIT_COMMIT is available"
         echo "  - This indicates build-time injection failed"
         FAILED_GATES+=("RUNTIME_SELF_ATTEST")
+    fi
+fi
+
+# --- Gate: INTEGRATION_CONNECTIVITY (integration mode only) ---
+if [ "$MODE" == "integration" ]; then
+    GATES_TOTAL=$((GATES_TOTAL + 1))
+    echo "⏳ Checking gate: INTEGRATION_CONNECTIVITY..."
+
+    # Phase 4: Frontend/Backend Integration Verification
+    # Verify frontend domain can reach backend through Netlify proxies
+    # This catches broken proxy configurations that make the system unusable
+
+    # Get frontend and backend URLs from authority_map.json
+    FRONTEND_URL=$(grep -A 10 '"name": *"mosaic-frontend"' "$AUTHORITY_MAP_PATH" | grep -o '"url": *"[^"]*"' | head -1 | sed -e 's/"url": *//' -e 's/"//g' || true)
+    BACKEND_URL=$(grep -A 10 '"name": *"mosaic-backend"' "$AUTHORITY_MAP_PATH" | grep -o '"url": *"[^"]*"' | head -1 | sed -e 's/"url": *//' -e 's/"//g' || true)
+
+    if [ -z "$FRONTEND_URL" ] || [ -z "$BACKEND_URL" ]; then
+        echo "🛑 FAIL: INTEGRATION_CONNECTIVITY - Missing URLs in authority_map.json"
+        FAILED_GATES+=("INTEGRATION_CONNECTIVITY")
+    else
+        echo "  Frontend: $FRONTEND_URL"
+        echo "  Backend:  $BACKEND_URL"
+
+        # Test 1: Backend direct (should always work)
+        BACKEND_DIRECT=$(curl --fail --silent --max-time 10 "${BACKEND_URL}/health" 2>&1 || echo "FAILED")
+        if [ "$BACKEND_DIRECT" == "FAILED" ]; then
+            echo "🛑 FAIL: INTEGRATION_CONNECTIVITY - Backend direct health check failed"
+            echo "  URL: ${BACKEND_URL}/health"
+            FAILED_GATES+=("INTEGRATION_CONNECTIVITY")
+        else
+            echo "  ✓ Backend direct: OK"
+
+            # Test 2: Frontend proxy (critical - this is what users hit)
+            FRONTEND_PROXY=$(curl --fail --silent --max-time 10 "${FRONTEND_URL}/health" 2>&1 || echo "FAILED")
+
+            if [ "$FRONTEND_PROXY" == "FAILED" ]; then
+                echo "🛑 FAIL: INTEGRATION_CONNECTIVITY - Frontend proxy broken"
+                echo "  URL: ${FRONTEND_URL}/health"
+                echo "  Backend works directly but frontend can't reach it"
+                echo "  This means: PRODUCTION IS BROKEN FOR USERS"
+                FAILED_GATES+=("INTEGRATION_CONNECTIVITY")
+            else
+                # Test 3: Response consistency (proxied response should match direct)
+                if echo "$FRONTEND_PROXY" | grep -q '"ok":true'; then
+                    echo "  ✓ Frontend proxy: OK"
+                    echo "✅ PASS: INTEGRATION_CONNECTIVITY (frontend → backend working)"
+                    GATES_PASSED=$((GATES_PASSED + 1))
+                else
+                    echo "🛑 FAIL: INTEGRATION_CONNECTIVITY - Frontend proxy returns unexpected response"
+                    echo "  Expected: {\"ok\":true,...}"
+                    echo "  Got: $FRONTEND_PROXY"
+                    FAILED_GATES+=("INTEGRATION_CONNECTIVITY")
+                fi
+            fi
+        fi
     fi
 fi
 
