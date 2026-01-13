@@ -1,23 +1,129 @@
+import logging
 import os
 import re
+import threading
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import BackgroundTasks, FastAPI, File, Header, HTTPException, UploadFile
+import numpy as np  # Temporarily disabled for testing
+import openai  # Temporarily disabled for testing
+from fastapi import (
+    BackgroundTasks,
+    Body,
+    FastAPI,
+    File,
+    Header,
+    HTTPException,
+    Response,
+    UploadFile,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from dataclasses import dataclass
 
-from .analytics import get_analytics_dashboard, get_analytics_health, log_match_analytics
-from .reranker import RerankResult, get_reranker_health, rerank_documents
-from .settings import get_settings
+from .analytics import export_analytics_csv, get_analytics_dashboard, get_analytics_health
+from .competitive_intelligence import (
+    analyze_company_strategic_needs,
+    create_strategic_resume_targeting,
+    develop_competitive_positioning_strategy,
+    generate_job_search_ai_prompts,
+    get_competitive_intelligence_health,
+)
+from .corpus_reindex import get_reindex_status, reindex_corpus
+from .cost_controls import (
+    check_cost_limits,
+    check_resource_limits,
+    get_usage_analytics,
+    record_usage,
+)
+from .domain_adjacent_search import (
+    discover_domain_adjacent_opportunities,
+    get_domain_adjacent_health,
+)
+from .experiment_engine import (
+    CapabilityEvidence,
+    ExperimentCreate,
+    ExperimentUpdate,
+    LearningData,
+    SelfEfficacyMetric,
+    add_learning_data,
+    capture_evidence,
+    complete_experiment,
+    create_experiment,
+    get_experiment_health,
+    get_experiments,
+    get_learning_data,
+    get_self_efficacy_metrics,
+    record_self_efficacy_metric,
+    update_experiment,
+)
+from .job_sources import (  # IndeedSource,; WeWorkRemotelySource,
+    CareerBuilderSource,
+    DiceSource,
+    GlassdoorSource,
+    GreenhouseSource,
+    HackerNewsSource,
+    LinkedInSource,
+    MonsterSource,
+    RedditSource,
+    RemoteOKSource,
+    SerpApiSource,
+    ZipRecruiterSource,
+)
+from .monitoring import attempt_system_recovery, run_health_check
+from .osint_forensics import analyze_company_osint, get_osint_health
+from .prompt_selector import get_prompt_health, get_prompt_response
+from .ps101 import router as ps101_router
+from .ps101_flow import (
+    advance_ps101_step,
+    create_ps101_session_data,
+    exit_ps101_flow,
+    format_step_for_user,
+    get_completion_message,
+    get_exit_confirmation,
+    get_ps101_step,
+)
+from .ps101_flow import is_complete as ps101_is_complete
+from .ps101_flow import record_ps101_response
+from .rag_engine import (
+    batch_compute_embeddings,
+    compute_embedding,
+    discover_domain_adjacent_opportunities_rag,
+    get_rag_health,
+    get_rag_response,
+    retrieve_similar,
+)
+from .rag_source_discovery import (
+    discover_sources_for_query,
+    get_discovery_analytics,
+    get_optimal_sources_for_query,
+)
+from .reranker import get_reranker_health
+from .self_efficacy_engine import (
+    cleanup_stale_experiments,
+    compute_session_metrics,
+    get_escalation_prompt,
+    get_self_efficacy_health,
+    record_analytics_entry,
+    should_escalate,
+)
+from .settings import get_feature_flag, get_settings
 from .startup_checks import startup_or_die
 from .storage import (
     UPLOAD_ROOT,
     add_resume_version,
+    authenticate_user,
+    create_user,
+    delete_session,
+    diagnose_user_hash,
     ensure_session,
     fetch_job_matches,
+    force_reset_user_password,
+    get_conn,
+    get_session_data,
+    get_user_by_email,
+    get_user_by_id,
+    get_user_context,
     latest_metrics,
     list_resume_versions,
     record_wimd_output,
@@ -26,10 +132,18 @@ from .storage import (
     store_file_upload,
     store_job_matches,
     update_job_match_status,
+    update_session_data,
     wimd_history,
 )
 
 app = FastAPI()
+logger = logging.getLogger(__name__)
+
+# Booking routes removed - specs define frontend-only Google Calendar integration
+# Payment system (discount codes + Stripe) not yet implemented
+
+HEALTH_DEBUG_ENABLED = os.getenv("HEALTH_DEBUG", "").lower() in {"1", "true", "yes", "on"}
+SERVICE_READY = threading.Event()
 
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(8 * 1024 * 1024)))
 DEFAULT_METRICS = {"clarity": 0, "action": 0, "momentum": 0}
@@ -68,20 +182,75 @@ JOB_LIBRARY = [
     },
 ]
 
-origins = [os.getenv("PUBLIC_SITE_ORIGIN", "https://whatismydelta.com")]
+BOOKING_ROUTER_ERROR = None
+
+# CORS configuration for Railway deployment
+
+
+def _build_cors_origins() -> List[str]:
+    # Explicit list - don't rely on env var that might be misconfigured
+    return [
+        "https://whatismydelta.com",
+        "https://www.whatismydelta.com",
+        "https://resonant-crostata-90b706.netlify.app",
+        "http://localhost:8000",  # Local development testing
+        "http://127.0.0.1:8000",  # Local development testing
+    ]
+
+
+cors_origins = _build_cors_origins()
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["content-type", "authorization", "x-session-id"],
+    allow_headers=["content-type", "authorization", "x-session-id", "x-user-id"],
+    expose_headers=["*"],
 )
+
+# Include PS101 context extraction router (Day 1 MVP)
+app.include_router(ps101_router, prefix="/api/ps101")
 
 
 class WimdRequest(BaseModel):
     prompt: str = Field(..., min_length=1)
     session_id: Optional[str] = None
     context: Optional[Dict[str, Any]] = None
+
+
+class UserRegister(BaseModel):
+    email: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=6)
+    discount_code: Optional[str] = None
+
+
+class UserLogin(BaseModel):
+    email: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=1)
+
+
+class UserResponse(BaseModel):
+    user_id: str
+    email: str
+    created_at: str
+    last_login: Optional[str] = None
+    subscription_tier: Optional[str] = None
+
+
+class ForceResetRequest(BaseModel):
+    email: str = Field(..., min_length=1)
+    new_password: str = Field(..., min_length=8)
+
+
+class DiscountCodeValidate(BaseModel):
+    code: str = Field(..., min_length=1, max_length=50)
+
+
+class DiscountCodeResponse(BaseModel):
+    valid: bool
+    message: str
+    grants_tier: Optional[str] = None
 
 
 class WimdResponse(BaseModel):
@@ -129,39 +298,6 @@ class ResumeVersionResponse(BaseModel):
     versions: List[Dict[str, Any]]
 
 
-class RerankRequest(BaseModel):
-    query: str = Field(..., min_length=1)
-    documents: List[Dict[str, Any]] = Field(..., min_items=1)
-
-
-@app.post("/semantic/rerank", response_model=RerankResult)
-def semantic_rerank(payload: RerankRequest):
-    rerank_result = rerank_documents(payload.query, payload.documents)
-    log_match_analytics(
-        rerank_result.query,
-        rerank_result.pre_rerank_scores,
-        rerank_result.post_rerank_scores,
-        rerank_result.improvement_pct,
-        rerank_result.processing_time,
-    )
-    return rerank_result
-
-
-@app.get("/semantic/rerank/health")
-def semantic_rerank_health():
-    return get_reranker_health()
-
-
-@app.get("/semantic/analytics/dashboard")
-def semantic_analytics_dashboard():
-    return get_analytics_dashboard()
-
-
-@app.get("/semantic/analytics/health")
-def semantic_analytics_health():
-    return get_analytics_health()
-
-
 def _clamp(value: float) -> int:
     return max(0, min(100, round(value)))
 
@@ -177,12 +313,275 @@ def _update_metrics(prompt: str, current: Dict[str, Any]) -> Dict[str, int]:
     return {"clarity": clarity, "action": action, "momentum": momentum}
 
 
-def _coach_reply(prompt: str, metrics: Dict[str, int]) -> str:
+def _coach_reply(prompt: str, metrics: Dict[str, int], session_id: str = None) -> str:
+    """Generate coach reply using PS101 flow or CSV→AI fallback system"""
+    import json
+
+    from .prompts_loader import read_registry
+
+    # Check if PS101 is active for this session
+    session_data = get_session_data(session_id) if session_id else {}
+
+    # Auto-activate PS101 for new sessions (first message)
+    is_first_message = not session_data or (
+        not session_data.get("ps101_active") and not session_data.get("ps101_completed_at")
+    )
+    if is_first_message:
+        # This is a new session or user hasn't started PS101 yet
+        ps101_data = create_ps101_session_data()
+        session_data.update(ps101_data)
+        update_session_data(session_id, session_data)
+
+        # Return first PS101 step prompt
+        first_step = get_ps101_step(1)
+        if first_step:
+            return format_step_for_user(first_step)
+
+    ps101_active = session_data.get("ps101_active", False)
+
+    if ps101_active:
+        # PS101 guided flow handling with conversational layer
+        from api.conversational_coach import (
+            detect_intent,
+            generate_conversational_response,
+            should_exit_ps101,
+        )
+
+        current_step = session_data.get("ps101_step", 1)
+        current_prompt_idx = session_data.get("ps101_prompt_index", 0)
+
+        # Build conversation history for context
+        conversation_history = session_data.get("ps101_responses", [])
+
+        # Get current question
+        current_step_data = get_ps101_step(current_step)
+        current_question = (
+            current_step_data["prompts"][current_prompt_idx] if current_step_data else ""
+        )
+
+        # Detect user intent and tone
+        intent, tone = detect_intent(prompt, current_question, conversation_history)
+
+        # Check if user is responding to exit confirmation (must check FIRST)
+        if session_data.get("ps101_exit_pending"):
+            # User was asked to confirm exit, check response
+            if "yes" in prompt.lower():
+                # Confirmed exit
+                session_data = exit_ps101_flow(session_data)
+                session_data["ps101_exit_pending"] = False
+                update_session_data(session_id, session_data)
+                return "Understood. You can return to the guided process anytime by selecting 'Fast Track'. What would you like to explore next?"
+            else:
+                # User didn't confirm, clear flag and continue
+                session_data["ps101_exit_pending"] = False
+                update_session_data(session_id, session_data)
+                # Fall through to conversational handling
+
+        # Check for exit intent (more careful now)
+        if should_exit_ps101(prompt, intent):
+            # First exit attempt - ask for confirmation
+            session_data["ps101_exit_pending"] = True
+            update_session_data(session_id, session_data)
+            return get_exit_confirmation()
+
+        # Check if step is complete
+        if ps101_is_complete(current_step):
+            session_data = exit_ps101_flow(session_data)
+            update_session_data(session_id, session_data)
+            return get_completion_message()
+
+        # Generate conversational response
+        response, should_advance = generate_conversational_response(
+            user_message=prompt,
+            intent=intent,
+            tone=tone,
+            ps101_context=session_data,
+            current_question=current_question,
+            conversation_history=conversation_history,
+            session_data=session_data,
+        )
+
+        # Record response if it's an answer
+        from api.conversational_coach import UserIntent
+
+        from .storage import get_user_id_for_session, record_ps101_db_response  # NEW IMPORTS
+
+        if intent in [
+            UserIntent.ANSWER,
+            UserIntent.POSSIBILITY_THINKING,
+            UserIntent.CIRCULAR_THINKING,
+        ]:
+            # Persist to database
+            user_id_from_session = get_user_id_for_session(session_id)
+            if user_id_from_session:
+                record_ps101_db_response(
+                    user_id=user_id_from_session,
+                    step=current_step,
+                    prompt_index=current_prompt_idx,
+                    response=prompt,
+                )
+            else:
+                logger.warning(
+                    f"No user_id found for session {session_id}. PS101 response not persisted to DB."
+                )
+
+            # Continue updating session data (legacy behavior)
+            session_data = record_ps101_response(session_data, current_step, prompt)
+
+        # Advance if appropriate
+        if should_advance:
+            session_data = advance_ps101_step(session_data)
+
+        update_session_data(session_id, session_data)
+
+        # Return the conversational response (includes next question if advanced)
+        return response
+
+    # Normal CSV→AI fallback flow (PS101 not active)
+    try:
+        # PS101 COMPLETION GATE
+        user_id = get_user_id_for_session(session_id)
+        if user_id:
+            ps101_context_data = get_user_context(user_id)
+            if not ps101_context_data:
+                # User has finished the flow, but context isn't extracted yet.
+                # Or, they haven't finished the flow at all.
+                return "Please complete the PS101 questionnaire first to get personalized coaching."
+        else:
+            # No user_id associated with the session, so no context is possible.
+            return "It looks like you're not logged in. Please log in and complete the PS101 questionnaire for a personalized experience."
+
+        # Get CSV prompts data
+        csv_prompts = None
+        try:
+            reg = read_registry()
+            active_sha = reg.get("active")
+            if active_sha:
+                for version in reg.get("versions", []):
+                    if version["sha256"] == active_sha:
+                        try:
+                            with open(version["file"], encoding="utf-8") as f:
+                                prompts_data = json.load(f)
+                            csv_prompts = {"prompts": prompts_data}
+                            break
+                        except Exception:
+                            continue
+        except Exception:
+            pass
+
+        # Create a dynamic prompt with the context
+        if ps101_context_data:
+            system_prompt = f"""You are Mosaic, an expert career coach specializing in helping people design small, actionable experiments to test new career paths.
+
+Your user has just completed the PS101 self-reflection exercise. This is their structured summary:
+<ps101_context>
+{json.dumps(ps101_context_data, indent=2)}
+</ps101_context>
+
+Your primary goal is to help them design their NEXT EXPERIMENT. Use their context—passions, skills, secret powers, and obstacles—to ask insightful questions and propose tiny, low-risk ways for them to test their assumptions.
+
+- **DO NOT** mention "PS101" or the reflection process.
+- **DO** use their "key_quotes" to build rapport and show you've listened.
+- **FOCUS ON ACTION.** Always be guiding towards a small, concrete next step.
+- **Synthesize, don't just repeat.** Connect their passions and skills to potential experiments.
+- **Challenge their obstacles.** Gently question their "internal_obstacles" and brainstorm ways around "external_obstacles".
+
+Keep your responses concise, empathetic, and relentlessly focused on helping them build momentum through small wins.
+"""
+            context = {"metrics": metrics, "system_prompt": system_prompt}
+        else:
+            # This else block should ideally not be hit due to the completion gate above,
+            # but it's here as a fallback.
+            context = {"metrics": metrics}
+
+        # Use prompt selector with CSV→AI fallback
+        result = get_prompt_response(
+            prompt=prompt,
+            session_id=session_id or "default",
+            csv_prompts=csv_prompts,
+            context=context,
+        )
+
+        if result.get("response"):
+            return result["response"]
+        else:
+            return _fallback_reply(metrics)
+
+    except Exception:
+        return _fallback_reply(metrics)
+
+
+def _fallback_reply(metrics: Dict[str, int]) -> str:
+    """Fallback reply when prompts can't be loaded"""
     return (
         "Noted. Here's where you sit right now — "
         f"clarity {metrics['clarity']}%, action {metrics['action']}%, momentum {metrics['momentum']}%. "
         "Pick one lever to nudge next."
     )
+
+
+def cosine_similarity(a: List[float], b: List[float]) -> float:
+    """Calculate cosine similarity between two vectors"""
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+
+def get_embeddings(text: str) -> List[float]:
+    """Get OpenAI embeddings for text"""
+    try:
+        settings = get_settings()
+        if not settings.OPENAI_API_KEY:
+            raise ValueError("OpenAI API key not configured")
+
+        client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+        response = client.embeddings.create(model="text-embedding-3-small", input=text)
+        return response.data[0].embedding
+    except Exception as e:
+        print(f"Error getting embeddings: {e}")
+        return []
+
+
+def semantic_search(
+    user_prompt: str, prompts_data: List[Dict], session_history: List[str] = None
+) -> Optional[Dict]:
+    """Find most semantically similar prompt using embeddings"""
+    try:
+        # Include session history for context
+        context_text = user_prompt
+        if session_history:
+            context_text = f"{user_prompt} Context: {' '.join(session_history[-3:])}"
+
+        # Get user prompt embedding
+        user_embedding = get_embeddings(context_text)
+        if not user_embedding:
+            return None
+
+        best_match = None
+        best_score = 0.0
+
+        for prompt in prompts_data:
+            # Compare against the prompt field (user's potential input), not completion
+            prompt_text = prompt.get("prompt", "")
+            if not prompt_text:
+                continue
+
+            # Get prompt embedding
+            prompt_embedding = get_embeddings(prompt_text)
+            if not prompt_embedding:
+                continue
+
+            # Calculate similarity
+            similarity = cosine_similarity(user_embedding, prompt_embedding)
+
+            if similarity > best_score:
+                best_score = similarity
+                best_match = prompt
+
+        # Return best match if similarity is above threshold (lowered to 0.6 for better matching)
+        return best_match if best_score > 0.6 else None
+
+    except Exception as e:
+        print(f"Error in semantic search: {e}")
+        return None
 
 
 def _score_job(metrics: Dict[str, int], job: Dict[str, Any]) -> Dict[str, Any]:
@@ -246,6 +645,19 @@ def _resolve_session(
 async def _startup():
     await startup_or_die()
 
+    # Clear prompt cache on startup (cache was returning placeholder "Cached response")
+    try:
+        from .storage import get_conn
+
+        with get_conn() as conn:
+            cursor = conn.cursor()  # OK: PostgreSQL pattern
+            cursor.execute("DELETE FROM prompt_selector_cache")
+            print("✓ Cleared prompt_selector_cache on startup")
+    except Exception as e:
+        print(f"⚠️ Failed to clear cache on startup: {e}")
+
+    SERVICE_READY.set()
+
 
 @app.get("/")
 def root():
@@ -298,12 +710,177 @@ def version_info():
         "service": "mosaic-backend",
         "platform": "render",
         "timestamp": datetime.utcnow().isoformat() + "Z",
+        "service_ready": SERVICE_READY.is_set(),
     }
 
 
 @app.get("/health")
 def health():
-    return {"ok": True, "timestamp": datetime.utcnow().isoformat() + "Z"}
+    """Enhanced health check with prompt system monitoring for auto-restart"""
+    try:
+        if not SERVICE_READY.is_set():
+            status = {
+                "ok": True,
+                "status": "initializing",
+                "checks": {
+                    "startup_complete": False,
+                },
+                "timestamp": datetime.utcnow().isoformat() + "Z",
+            }
+            if HEALTH_DEBUG_ENABLED:
+                logger.info("Health check in startup grace period: %s", status)
+            return status
+
+        # Test critical prompt system functionality
+        from .prompt_selector import get_prompt_health
+
+        prompt_health = get_prompt_health()
+
+        # Check if prompt system is working
+        fallback_enabled = prompt_health.get("fallback_enabled", False)
+        ai_available = prompt_health.get("ai_health", {}).get("any_available", False)
+
+        if HEALTH_DEBUG_ENABLED:
+            logger.info(
+                "HEALTH CHECK DEBUG fallback_enabled=%s (type=%s) ai_available=%s prompt_health=%s",
+                fallback_enabled,
+                type(fallback_enabled),
+                ai_available,
+                prompt_health,
+            )
+
+        # System is healthy if either CSV works OR AI fallback is available
+        prompt_system_ok = fallback_enabled or ai_available
+
+        # Check database connectivity
+        db_ok = True
+        try:
+            with get_conn() as conn:
+                cursor = conn.cursor()  # OK: PostgreSQL pattern
+                cursor.execute("SELECT 1")
+                cursor.fetchone()
+        except Exception as e:
+            logger.error("Database connectivity check failed: %s", e, exc_info=True)
+            db_ok = False
+
+        # Overall health
+        overall_ok = prompt_system_ok and db_ok
+
+        health_status = {
+            "ok": overall_ok,
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "checks": {
+                "database": db_ok,
+                "prompt_system": prompt_system_ok,
+                "ai_fallback_enabled": fallback_enabled,
+                "ai_available": ai_available,
+            },
+        }
+
+        if HEALTH_DEBUG_ENABLED:
+            logger.info(
+                "HEALTH CHECK STATUS overall_ok=%s prompt_system_ok=%s db_ok=%s",
+                overall_ok,
+                prompt_system_ok,
+                db_ok,
+            )
+
+        # Return 503 if not healthy (triggers Railway restart)
+        if not overall_ok:
+            logger.warning(
+                "Health check failed; returning 503 with status payload %s", health_status
+            )
+            raise HTTPException(status_code=503, detail=health_status)
+
+        if HEALTH_DEBUG_ENABLED:
+            logger.info("Health check passed")
+        return health_status
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Health check raised unexpected exception")
+        # Critical failure - return 503 to trigger restart
+        raise HTTPException(
+            status_code=503,
+            detail={"ok": False, "error": str(e), "timestamp": datetime.utcnow().isoformat() + "Z"},
+        )
+
+
+@app.get("/health/prompts")
+def health_prompts():
+    """Health check for prompt selector and AI fallback system"""
+    try:
+        prompt_health = get_prompt_health()
+        return {
+            "ok": True,
+            "prompt_selector": prompt_health,
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e), "timestamp": datetime.utcnow().isoformat() + "Z"}
+
+
+@app.get("/health/booking")
+def health_booking():
+    """Health check for booking router"""
+    return {
+        "booking_router_loaded": BOOKING_ROUTER_ERROR is None,
+        "error": BOOKING_ROUTER_ERROR,
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    }
+
+
+@app.get("/health/comprehensive")
+def health_comprehensive():
+    """Comprehensive health check with automatic recovery"""
+    try:
+        health_summary = run_health_check()
+
+        # If system needs attention, log it
+        if health_summary.get("requires_attention", False):
+            print(f"⚠️ Prompt system requires attention: {health_summary}")
+
+        # Return 503 if critical failure to trigger Railway restart
+        if not health_summary.get("current_test", {}).get("success", False):
+            raise HTTPException(status_code=503, detail=health_summary)
+
+        return health_summary
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=503,
+            detail={"ok": False, "error": str(e), "timestamp": datetime.utcnow().isoformat() + "Z"},
+        )
+
+
+@app.post("/health/recover")
+def health_recover():
+    """Attempt automatic system recovery"""
+    try:
+        recovery_result = attempt_system_recovery()
+        return recovery_result
+    except Exception as e:
+        return {
+            "recovery_attempted": False,
+            "error": str(e),
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+        }
+
+
+@app.get("/health/experiments")
+def health_experiments():
+    """Health check for experiment engine"""
+    try:
+        experiment_health = get_experiment_health()
+        return {
+            "ok": True,
+            "experiment_engine": experiment_health,
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e), "timestamp": datetime.utcnow().isoformat() + "Z"}
 
 
 @app.get("/config")
@@ -320,6 +897,50 @@ def prompts_active():
     return {"active": reg.get("active")}
 
 
+@app.get("/prompts/{sha}")
+def get_prompts(sha: str):
+    """Get prompts content by SHA"""
+    import json
+
+    from .prompts_loader import read_registry
+
+    reg = read_registry()
+    if not reg.get("active"):
+        raise HTTPException(status_code=404, detail="No active prompts")
+
+    # Find the version with this SHA
+    for version in reg.get("versions", []):
+        if version["sha256"] == sha:
+            try:
+                with open(version["file"], encoding="utf-8") as f:
+                    prompts = json.load(f)
+                return {"sha": sha, "prompts": prompts}
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"Error loading prompts: {e!s}")
+
+    raise HTTPException(status_code=404, detail="Prompts not found")
+
+
+@app.get("/debug/cors")
+def debug_cors():
+    """Debug endpoint to show configured CORS origins"""
+    return {
+        "cors_origins": cors_origins,
+        "public_site_origin_env": os.getenv("PUBLIC_SITE_ORIGIN", "NOT SET"),
+        "middleware_config": {
+            "allow_credentials": True,
+            "allow_methods": ["GET", "POST", "OPTIONS"],
+            "allow_headers": ["content-type", "authorization", "x-session-id"],
+        },
+    }
+
+
+@app.options("/wimd")
+def wimd_options():
+    """Explicit OPTIONS handler for Railway edge compatibility"""
+    return Response(status_code=200)
+
+
 @app.post("/wimd", response_model=WimdResponse)
 async def wimd_chat(
     payload: WimdRequest,
@@ -328,7 +949,7 @@ async def wimd_chat(
     session_id = _resolve_session(payload.session_id, session_header, allow_create=True)
     current_metrics = latest_metrics(session_id) or DEFAULT_METRICS
     metrics = _update_metrics(payload.prompt, current_metrics)
-    message = _coach_reply(payload.prompt, metrics)
+    message = _coach_reply(payload.prompt, metrics, session_id)
     record_wimd_output(
         session_id,
         payload.prompt,
@@ -353,6 +974,24 @@ def wimd_analysis(session_header: Optional[str] = Header(None, alias="X-Session-
     session_id = _resolve_session(None, session_header, allow_create=False)
     history = wimd_history(session_id)
     return {"session_id": session_id, "history": history}
+
+
+@app.post("/wimd/start-ps101")
+def start_ps101_flow(session_header: Optional[str] = Header(None, alias="X-Session-ID")):
+    """Start PS101 guided problem-solving sequence"""
+    session_id = _resolve_session(None, session_header, allow_create=True)
+
+    # Initialize PS101 session data
+    session_data = get_session_data(session_id)
+    ps101_data = create_ps101_session_data()
+    session_data.update(ps101_data)
+    update_session_data(session_id, session_data)
+
+    # Get first step
+    first_step = get_ps101_step(1)
+    message = format_step_for_user(first_step)
+
+    return {"session_id": session_id, "message": message, "ps101_active": True, "ps101_step": 1}
 
 
 async def _save_upload(session_id: str, file: UploadFile) -> Dict[str, Any]:
@@ -382,6 +1021,12 @@ async def _save_upload(session_id: str, file: UploadFile) -> Dict[str, Any]:
         target,
     )
     return {"filename": file.filename or safe_name, "size": size, "content_type": file.content_type}
+
+
+@app.options("/wimd/upload")
+def wimd_upload_options():
+    """Explicit OPTIONS handler for Railway edge compatibility"""
+    return Response(status_code=200)
 
 
 @app.post("/wimd/upload", response_model=UploadResponse)
@@ -428,6 +1073,12 @@ def ob_status(session_header: Optional[str] = Header(None, alias="X-Session-ID")
     }
 
 
+@app.options("/ob/apply")
+def ob_apply_options():
+    """Explicit OPTIONS handler for Railway edge compatibility"""
+    return Response(status_code=200)
+
+
 @app.post("/ob/apply")
 def ob_apply(
     payload: ApplyRequest,
@@ -449,6 +1100,12 @@ def ob_apply(
     }
 
 
+@app.options("/resume/rewrite")
+def resume_rewrite_options():
+    """Explicit OPTIONS handler for Railway edge compatibility"""
+    return Response(status_code=200)
+
+
 @app.post("/resume/rewrite")
 def resume_rewrite(
     payload: ResumeRewriteRequest,
@@ -465,6 +1122,12 @@ def resume_rewrite(
         "version_name": version_name,
         "resume": draft,
     }
+
+
+@app.options("/resume/customize")
+def resume_customize_options():
+    """Explicit OPTIONS handler for Railway edge compatibility"""
+    return Response(status_code=200)
 
 
 @app.post("/resume/customize")
@@ -489,6 +1152,12 @@ def resume_customize(
         "version_name": version_name,
         "resume": draft,
     }
+
+
+@app.options("/resume/feedback")
+def resume_feedback_options():
+    """Explicit OPTIONS handler for Railway edge compatibility"""
+    return Response(status_code=200)
 
 
 @app.post("/resume/feedback")
@@ -519,6 +1188,233 @@ def resume_feedback(
     }
 
 
+# Discount Code Endpoints
+@app.post("/auth/validate-code", response_model=DiscountCodeResponse)
+async def validate_discount_code(payload: DiscountCodeValidate):
+    """Validate a discount code"""
+    code = payload.code.strip().upper()
+
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            SELECT code, grants_tier, max_uses, current_uses, active, expires_at
+            FROM discount_codes
+            WHERE UPPER(code) = %s
+        """,
+            (code,),
+        )
+        result = cursor.fetchone()
+
+    if not result:
+        return DiscountCodeResponse(valid=False, message="Invalid discount code")
+
+    code_value, grants_tier, max_uses, current_uses, active, expires_at = result
+
+    # Check if active
+    if not active:
+        return DiscountCodeResponse(valid=False, message="This code is no longer active")
+
+    # Check expiration
+    from datetime import datetime
+
+    if expires_at and datetime.now() > expires_at:
+        return DiscountCodeResponse(valid=False, message="This code has expired")
+
+    # Check usage limit
+    if max_uses is not None and current_uses >= max_uses:
+        return DiscountCodeResponse(valid=False, message="This code has reached its usage limit")
+
+    return DiscountCodeResponse(
+        valid=True, message=f"Code valid - grants {grants_tier} access", grants_tier=grants_tier
+    )
+
+
+# User Authentication Endpoints
+@app.post("/auth/register", response_model=UserResponse)
+async def register_user(payload: UserRegister):
+    """Register a new user with optional discount code"""
+    payload.email = payload.email.strip()
+    # Check if user already exists
+    existing_user = get_user_by_email(payload.email)
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User already exists")
+
+    subscription_tier = "free"
+    subscription_status = "active"
+    discount_code_used = None
+
+    # If discount code provided, validate and consume it
+    if payload.discount_code:
+        code = payload.discount_code.strip().upper()
+
+        with get_conn() as conn:
+            cursor = conn.cursor()
+
+            # Validate code
+            cursor.execute(
+                """
+                SELECT code, grants_tier, max_uses, current_uses, active, expires_at
+                FROM discount_codes
+                WHERE UPPER(code) = %s
+            """,
+                (code,),
+            )
+            code_result = cursor.fetchone()
+
+            if not code_result:
+                raise HTTPException(status_code=400, detail="Invalid discount code")
+
+            code_value, grants_tier, max_uses, current_uses, active, expires_at = code_result
+
+            if not active:
+                raise HTTPException(status_code=400, detail="Code is no longer active")
+
+            from datetime import datetime
+
+            if expires_at and datetime.now() > expires_at:
+                raise HTTPException(status_code=400, detail="Code has expired")
+
+            if max_uses is not None and current_uses >= max_uses:
+                raise HTTPException(status_code=400, detail="Code usage limit reached")
+
+            # Grant tier from code
+            subscription_tier = grants_tier
+            discount_code_used = code_value
+
+            # Increment usage
+            cursor.execute(
+                """
+                UPDATE discount_codes
+                SET current_uses = current_uses + 1
+                WHERE code = %s
+            """,
+                (code_value,),
+            )
+            conn.commit()
+
+    # Create new user with subscription info
+    user_id = create_user(
+        payload.email, payload.password, subscription_tier, subscription_status, discount_code_used
+    )
+    user = get_user_by_id(user_id)
+
+    return UserResponse(
+        user_id=user["user_id"],
+        email=user["email"],
+        created_at=user["created_at"],
+        last_login=user["last_login"],
+        subscription_tier=user.get("subscription_tier"),
+        subscription_status=user.get("subscription_status"),
+    )
+
+
+@app.post("/auth/login", response_model=UserResponse)
+async def login_user(payload: UserLogin):
+    """Login user and return user data"""
+    payload.email = payload.email.strip()
+    user_id = authenticate_user(payload.email, payload.password)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    user = get_user_by_id(user_id)
+    return UserResponse(
+        user_id=user["user_id"],
+        email=user["email"],
+        created_at=user["created_at"],
+        last_login=user["last_login"],
+    )
+
+
+@app.get("/auth/me", response_model=UserResponse)
+async def get_current_user(user_id: str = Header(..., alias="X-User-ID")):
+    """Get current user data"""
+    user = get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return UserResponse(
+        user_id=user["user_id"],
+        email=user["email"],
+        created_at=user["created_at"],
+        last_login=user["last_login"],
+    )
+
+
+@app.post("/auth/reset-password")
+async def reset_password(email: str = Body(..., embed=True)):
+    """Send password reset email (placeholder - needs email service)"""
+    normalized_email = (email or "").strip().lower()
+    try:
+        with get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT id FROM users WHERE LOWER(email) = LOWER(%s)", (normalized_email,)
+            )
+            user = cursor.fetchone()
+    except Exception as exc:
+        print(f"[AUTH] reset_password lookup failed: {exc}")
+        user = None
+
+    # Do not reveal whether the account exists; success either way
+    return {"message": "If that email exists, a reset link has been sent"}
+
+
+@app.get("/auth/diagnose/{email}")
+async def diagnose_user_password_hash(
+    email: str, admin_key: str = Header(None, alias="X-Admin-Key")
+):
+    """Diagnose password hash format for a user (admin debug only)"""
+    expected_key = os.getenv("ADMIN_DEBUG_KEY")
+
+    if not expected_key:
+        raise HTTPException(status_code=503, detail="Admin debug not configured")
+
+    if not admin_key or admin_key != expected_key:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    result = diagnose_user_hash(email)
+    if not result:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return result
+
+
+@app.post("/auth/force-reset")
+async def force_reset_password(
+    payload: ForceResetRequest, admin_key: str = Header(None, alias="X-Admin-Key")
+):
+    """Force reset user password (admin debug only)"""
+    expected_key = os.getenv("ADMIN_DEBUG_KEY")
+
+    if not expected_key:
+        raise HTTPException(status_code=503, detail="Admin debug not configured")
+
+    if not admin_key or admin_key != expected_key:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    success = force_reset_user_password(payload.email, payload.new_password)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {"success": True, "message": f"Password reset for {payload.email}"}
+
+
+@app.post("/auth/logout")
+async def logout_user(session_header: Optional[str] = Header(None, alias="X-Session-ID")):
+    """Logout user and delete session from database"""
+    if not session_header:
+        raise HTTPException(status_code=400, detail="No session to logout")
+
+    # Delete the session and all related data
+    try:
+        delete_session(session_header)
+        return {"message": "Logged out successfully"}
+    except Exception:
+        # Even if deletion fails, return success (session might not exist)
+        return {"message": "Logged out successfully"}
+
+
 @app.get("/resume/versions", response_model=ResumeVersionResponse)
 def resume_versions(session_header: Optional[str] = Header(None, alias="X-Session-ID")):
     session_id = _resolve_session(None, session_header, allow_create=False)
@@ -530,3 +1426,781 @@ def resume_versions(session_header: Optional[str] = Header(None, alias="X-Sessio
 def session_summary_endpoint(session_header: Optional[str] = Header(None, alias="X-Session-ID")):
     session_id = _resolve_session(None, session_header, allow_create=False)
     return session_summary(session_id)
+
+
+# Experiment Engine Endpoints
+@app.post("/experiments/create")
+def experiments_create(
+    experiment_data: ExperimentCreate,
+    session_header: Optional[str] = Header(None, alias="X-Session-ID"),
+):
+    """Create a new experiment"""
+    session_id = _resolve_session(None, session_header, allow_create=True)
+    return create_experiment(session_id, experiment_data)
+
+
+@app.post("/experiments/update")
+def experiments_update(
+    experiment_data: ExperimentUpdate,
+    session_header: Optional[str] = Header(None, alias="X-Session-ID"),
+):
+    """Update an existing experiment"""
+    session_id = _resolve_session(None, session_header, allow_create=False)
+    return update_experiment(session_id, experiment_data)
+
+
+@app.post("/experiments/complete")
+def experiments_complete(
+    experiment_id: str, session_header: Optional[str] = Header(None, alias="X-Session-ID")
+):
+    """Mark an experiment as completed"""
+    session_id = _resolve_session(None, session_header, allow_create=False)
+    return complete_experiment(session_id, experiment_id)
+
+
+@app.post("/learning/add")
+def learning_add(
+    learning_data: LearningData, session_header: Optional[str] = Header(None, alias="X-Session-ID")
+):
+    """Add learning data to an experiment"""
+    session_id = _resolve_session(None, session_header, allow_create=False)
+    return add_learning_data(session_id, learning_data)
+
+
+@app.post("/evidence/capture")
+def evidence_capture(
+    evidence_data: CapabilityEvidence,
+    session_header: Optional[str] = Header(None, alias="X-Session-ID"),
+):
+    """Capture capability evidence"""
+    session_id = _resolve_session(None, session_header, allow_create=True)
+    return capture_evidence(session_id, evidence_data)
+
+
+@app.post("/metrics/self-efficacy")
+def metrics_self_efficacy(
+    metric_data: SelfEfficacyMetric,
+    session_header: Optional[str] = Header(None, alias="X-Session-ID"),
+):
+    """Record a self-efficacy metric"""
+    session_id = _resolve_session(None, session_header, allow_create=True)
+    return record_self_efficacy_metric(session_id, metric_data)
+
+
+@app.get("/experiments")
+def experiments_list(session_header: Optional[str] = Header(None, alias="X-Session-ID")):
+    """Get all experiments for a session"""
+    session_id = _resolve_session(None, session_header, allow_create=False)
+    experiments = get_experiments(session_id)
+    return {"session_id": session_id, "experiments": experiments}
+
+
+@app.get("/learning")
+def learning_list(
+    experiment_id: Optional[str] = None,
+    session_header: Optional[str] = Header(None, alias="X-Session-ID"),
+):
+    """Get learning data for a session or specific experiment"""
+    session_id = _resolve_session(None, session_header, allow_create=False)
+    learning_data = get_learning_data(session_id, experiment_id)
+    return {"session_id": session_id, "learning_data": learning_data}
+
+
+@app.get("/metrics")
+def metrics_list(session_header: Optional[str] = Header(None, alias="X-Session-ID")):
+    """Get self-efficacy metrics for a session"""
+    session_id = _resolve_session(None, session_header, allow_create=False)
+    metrics = get_self_efficacy_metrics(session_id)
+    return {"session_id": session_id, "metrics": metrics}
+
+
+# Self-Efficacy Engine Endpoints
+@app.get("/self-efficacy/metrics")
+def self_efficacy_metrics(session_header: Optional[str] = Header(None, alias="X-Session-ID")):
+    """Get computed self-efficacy metrics for a session"""
+    session_id = _resolve_session(None, session_header, allow_create=False)
+    metrics = compute_session_metrics(session_id)
+
+    # Record analytics entry
+    record_analytics_entry(session_id, metrics)
+
+    return {
+        "session_id": session_id,
+        "experiment_completion_rate": metrics.experiment_completion_rate,
+        "learning_velocity": metrics.learning_velocity,
+        "confidence_score": metrics.confidence_score,
+        "escalation_risk": metrics.escalation_risk,
+        "total_experiments": metrics.total_experiments,
+        "completed_experiments": metrics.completed_experiments,
+        "learning_events": metrics.learning_events,
+        "days_active": metrics.days_active,
+        "last_activity": metrics.last_activity,
+        "metrics_timestamp": metrics.metrics_timestamp,
+    }
+
+
+@app.get("/self-efficacy/escalation")
+def self_efficacy_escalation(session_header: Optional[str] = Header(None, alias="X-Session-ID")):
+    """Check if session should be escalated to human coach"""
+    session_id = _resolve_session(None, session_header, allow_create=False)
+    should_esc, reason = should_escalate(session_id)
+    prompt = get_escalation_prompt(session_id) if should_esc else None
+
+    return {
+        "session_id": session_id,
+        "should_escalate": should_esc,
+        "reason": reason,
+        "escalation_prompt": prompt,
+    }
+
+
+@app.post("/self-efficacy/cleanup")
+def self_efficacy_cleanup(days_threshold: int = 30):
+    """Clean up stale experiments (admin endpoint)"""
+    result = cleanup_stale_experiments(days_threshold)
+    return result
+
+
+@app.get("/health/self-efficacy")
+def health_self_efficacy():
+    """Health check for self-efficacy engine"""
+    try:
+        health = get_self_efficacy_health()
+        return {
+            "ok": True,
+            "self_efficacy_engine": health,
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e), "timestamp": datetime.utcnow().isoformat() + "Z"}
+
+
+# RAG Engine Endpoints
+@app.get("/rag/embed")
+def rag_embed(text: str):
+    """Compute embedding for text"""
+    try:
+        result = compute_embedding(text)
+        if result:
+            return {
+                "text": result.text,
+                "embedding": result.embedding,
+                "model": result.model,
+                "cached": result.cached,
+                "created_at": result.created_at,
+            }
+        else:
+            return {"error": "Failed to compute embedding"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/rag/batch-embed")
+def rag_batch_embed(texts: str):  # Comma-separated texts
+    """Batch compute embeddings for multiple texts"""
+    try:
+        text_list = [t.strip() for t in texts.split(",")]
+        results = batch_compute_embeddings(text_list)
+        return {
+            "texts": text_list,
+            "embeddings": [
+                {
+                    "text": result.text,
+                    "embedding": result.embedding,
+                    "model": result.model,
+                    "cached": result.cached,
+                    "created_at": result.created_at,
+                }
+                for result in results
+            ],
+            "total_processed": len(results),
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/rag/retrieve")
+def rag_retrieve(query: str, limit: int = 5, min_similarity: float = 0.7):
+    """Retrieve similar content using RAG"""
+    try:
+        result = retrieve_similar(query, limit, min_similarity)
+        return {
+            "query": result.query,
+            "matches": result.matches,
+            "confidence": result.confidence,
+            "fallback_used": result.fallback_used,
+            "retrieval_time": result.retrieval_time,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.post("/rag/query")
+def rag_query(query: str, context: Dict[str, Any] = None):
+    """Get RAG response with retrieval and fallback"""
+    try:
+        result = get_rag_response(query, context)
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.post("/rag/domain-adjacent")
+def rag_domain_adjacent(request: dict):
+    """Discover domain adjacent opportunities using RAG semantic clustering."""
+    try:
+        user_skills = request.get("user_skills", [])
+        user_domains = request.get("user_domains", [])
+
+        # Use RAG-powered domain adjacent search
+        results = discover_domain_adjacent_opportunities_rag(user_skills, user_domains)
+
+        return results
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/health/rag")
+def health_rag():
+    """Health check for RAG engine"""
+    try:
+        health = get_rag_health()
+        return {"ok": True, "rag_engine": health, "timestamp": datetime.utcnow().isoformat() + "Z"}
+    except Exception as e:
+        return {"ok": False, "error": str(e), "timestamp": datetime.utcnow().isoformat() + "Z"}
+
+
+# Job Sources Endpoints
+@app.get("/jobs/search")
+def jobs_search(query: str, location: str = None, limit: int = 10):
+    """Search jobs across all sources"""
+    try:
+        # Check cost limits first
+        cost_check = check_cost_limits("job_search", 0.01)  # $0.01 per job search
+        if not cost_check["allowed"]:
+            return {"error": f"Cost limit exceeded: {cost_check['reason']}", "cost_limit": True}
+
+        # Check resource limits
+        resource_check = check_resource_limits("job_search")
+        if not resource_check["allowed"]:
+            return {
+                "error": f"Resource limit exceeded: {resource_check['reason']}",
+                "resource_limit": True,
+            }
+
+        # Initialize job sources
+        greenhouse = GreenhouseSource()
+        serpapi = SerpApiSource()
+        reddit = RedditSource()
+
+        all_jobs = []
+        success_count = 0
+
+        # Search each source
+        for source in [greenhouse, serpapi, reddit]:
+            try:
+                jobs = source.search_jobs(query, location, limit)
+                all_jobs.extend(jobs)
+                success_count += 1
+            except Exception as e:
+                print(f"Error searching {source.name}: {e}")
+                continue
+
+        # Remove duplicates and limit results
+        unique_jobs = []
+        seen_ids = set()
+        for job in all_jobs:
+            if job.id not in seen_ids:
+                unique_jobs.append(job)
+                seen_ids.add(job.id)
+
+        # Record usage
+        record_usage("job_search", 0.01, success_count > 0)
+
+        return {
+            "query": query,
+            "location": location,
+            "total_results": len(unique_jobs),
+            "sources_used": success_count,
+            "jobs": [
+                {
+                    "id": job.id,
+                    "title": job.title,
+                    "company": job.company,
+                    "location": job.location,
+                    "description": (
+                        job.description[:200] + "..."
+                        if len(job.description) > 200
+                        else job.description
+                    ),
+                    "url": job.url,
+                    "source": job.source,
+                    "remote": job.remote,
+                    "skills": job.skills,
+                    "experience_level": job.experience_level,
+                }
+                for job in unique_jobs[:limit]
+            ],
+        }
+    except Exception as e:
+        record_usage("job_search", 0.01, False)
+        return {"error": str(e)}
+
+
+@app.get("/jobs/search/rag")
+def jobs_search_rag(query: str, location: str = None, limit: int = 10):
+    """RAG-powered job search with dynamic source discovery"""
+    try:
+        # Use RAG to discover optimal sources
+        optimal_sources = get_optimal_sources_for_query(query, location)
+
+        # Initialize all available sources (production-ready only by default)
+        source_map = {
+            # Production-ready sources (no API key required)
+            "greenhouse": GreenhouseSource(),
+            "serpapi": SerpApiSource(),
+            "reddit": RedditSource(),
+            "remoteok": RemoteOKSource(),
+            # "weworkremotely": WeWorkRemotelySource(),
+            "hackernews": HackerNewsSource(),
+        }
+
+        # Add stubbed sources only if feature flag is enabled
+        if get_feature_flag("JOB_SOURCES_STUBBED_ENABLED"):
+            source_map.update(
+                {
+                    # "indeed": IndeedSource(),
+                    "linkedin": LinkedInSource(),
+                    "glassdoor": GlassdoorSource(),
+                    "dice": DiceSource(),
+                    "monster": MonsterSource(),
+                    "ziprecruiter": ZipRecruiterSource(),
+                    "careerbuilder": CareerBuilderSource(),
+                }
+            )
+
+        all_jobs = []
+        used_sources = []
+
+        # Search optimal sources first
+        for source_name in optimal_sources:
+            if source_name in source_map:
+                try:
+                    source = source_map[source_name]
+                    jobs = source.search_jobs(query, location, limit)
+                    all_jobs.extend(jobs)
+                    used_sources.append(source_name)
+                except Exception as e:
+                    print(f"Error searching {source_name}: {e}")
+                    continue
+
+        # Fallback to other sources if needed
+        if len(all_jobs) < limit:
+            for source_name, source in source_map.items():
+                if source_name not in used_sources:
+                    try:
+                        jobs = source.search_jobs(query, location, limit)
+                        all_jobs.extend(jobs)
+                        used_sources.append(source_name)
+                    except Exception as e:
+                        print(f"Error searching {source_name}: {e}")
+                        continue
+
+        # Remove duplicates and limit results
+        unique_jobs = []
+        seen_ids = set()
+        for job in all_jobs:
+            if job.id not in seen_ids:
+                unique_jobs.append(job)
+                seen_ids.add(job.id)
+
+        return {
+            "query": query,
+            "location": location,
+            "rag_optimized": True,
+            "optimal_sources": optimal_sources,
+            "used_sources": used_sources,
+            "total_results": len(unique_jobs),
+            "jobs": [
+                {
+                    "id": job.id,
+                    "title": job.title,
+                    "company": job.company,
+                    "location": job.location,
+                    "description": (
+                        job.description[:200] + "..."
+                        if len(job.description) > 200
+                        else job.description
+                    ),
+                    "url": job.url,
+                    "source": job.source,
+                    "remote": job.remote,
+                    "skills": job.skills,
+                    "experience_level": job.experience_level,
+                }
+                for job in unique_jobs[:limit]
+            ],
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/jobs/{job_id}")
+def get_job_details(job_id: str):
+    """Get detailed job information"""
+    try:
+        # Try each source to find the job
+        sources = [GreenhouseSource(), SerpApiSource(), RedditSource()]
+
+        for source in sources:
+            try:
+                job = source.get_job_details(job_id)
+                if job:
+                    return {
+                        "id": job.id,
+                        "title": job.title,
+                        "company": job.company,
+                        "location": job.location,
+                        "description": job.description,
+                        "url": job.url,
+                        "source": job.source,
+                        "posted_date": job.posted_date.isoformat() if job.posted_date else None,
+                        "salary_range": job.salary_range,
+                        "job_type": job.job_type,
+                        "remote": job.remote,
+                        "skills": job.skills,
+                        "experience_level": job.experience_level,
+                        "metadata": job.metadata,
+                    }
+            except Exception as e:
+                print(f"Error getting job details from {source.name}: {e}")
+                continue
+
+        return {"error": "Job not found"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# RAG Source Discovery Endpoints
+@app.get("/sources/discover")
+def discover_sources(query: str, location: str = None, job_type: str = None):
+    """Discover optimal sources for a job search query using RAG"""
+    try:
+        discoveries = discover_sources_for_query(query, location, job_type)
+        return {
+            "query": query,
+            "location": location,
+            "job_type": job_type,
+            "discoveries": [
+                {
+                    "source_name": discovery.source_name,
+                    "source_type": discovery.source_type,
+                    "api_endpoint": discovery.api_endpoint,
+                    "rate_limit": discovery.rate_limit,
+                    "confidence": discovery.confidence,
+                    "discovery_reason": discovery.discovery_reason,
+                    "integration_status": discovery.integration_status,
+                }
+                for discovery in discoveries
+            ],
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/sources/analytics")
+def get_source_analytics():
+    """Get analytics on source discovery and integration"""
+    try:
+        analytics = get_discovery_analytics()
+        return analytics
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# Cost Control Endpoints
+@app.get("/cost/analytics")
+def get_cost_analytics():
+    """Get cost and usage analytics"""
+    try:
+        analytics = get_usage_analytics()
+        return analytics
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/cost/limits")
+def get_cost_limits():
+    """Get current cost limits and usage"""
+    try:
+        analytics = get_usage_analytics()
+        return {
+            "cost_limits": analytics.get("cost_limits", {}),
+            "resource_limits": analytics.get("resource_limits", {}),
+            "current_usage": analytics.get("current_usage", {}),
+            "emergency_stop": analytics.get("emergency_stop", False),
+            "status": analytics.get("status", "unknown"),
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# Competitive Intelligence Endpoints
+@app.get("/intelligence/company/{company_name}")
+def analyze_company(company_name: str, industry: str = None):
+    """Analyze company strategic needs and pain points."""
+    try:
+        analysis = analyze_company_strategic_needs(company_name, industry)
+        return {
+            "company_name": analysis.company_name,
+            "industry": analysis.industry,
+            "size": analysis.size,
+            "pain_points": analysis.pain_points,
+            "key_priorities": analysis.key_priorities,
+            "competitive_advantages": analysis.competitive_advantages,
+            "hiring_patterns": analysis.hiring_patterns,
+            "culture_indicators": analysis.culture_indicators,
+            "strategic_challenges": analysis.strategic_challenges,
+            "growth_indicators": analysis.growth_indicators,
+            "analysis_date": analysis.analysis_date,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.post("/intelligence/positioning")
+def develop_positioning(request: dict):
+    """Develop competitive positioning strategy."""
+    try:
+        target_role = request.get("target_role")
+        company_name = request.get("company_name")
+        industry = request.get("industry")
+
+        # Analyze company first
+        company_analysis = analyze_company_strategic_needs(company_name, industry)
+
+        # Develop positioning
+        positioning = develop_competitive_positioning_strategy(target_role, company_analysis)
+
+        return {
+            "target_role": positioning.target_role,
+            "key_differentiators": positioning.key_differentiators,
+            "unique_value_props": positioning.unique_value_props,
+            "skill_gaps_to_address": positioning.skill_gaps_to_address,
+            "experience_highlights": positioning.experience_highlights,
+            "competitive_threats": positioning.competitive_threats,
+            "positioning_strategy": positioning.positioning_strategy,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.post("/intelligence/resume-targeting")
+def create_resume_targeting(request: dict):
+    """Create strategic resume targeting."""
+    try:
+        company_name = request.get("company_name")
+        target_role = request.get("target_role")
+        industry = request.get("industry")
+
+        # Analyze company
+        company_analysis = analyze_company_strategic_needs(company_name, industry)
+
+        # Develop positioning
+        positioning = develop_competitive_positioning_strategy(target_role, company_analysis)
+
+        # Create targeting
+        targeting = create_strategic_resume_targeting(company_analysis, positioning)
+
+        return {
+            "company_name": targeting.company_name,
+            "target_role": targeting.target_role,
+            "resume_focus_areas": targeting.resume_focus_areas,
+            "keyword_optimization": targeting.keyword_optimization,
+            "experience_prioritization": targeting.experience_prioritization,
+            "skill_emphasis": targeting.skill_emphasis,
+            "achievement_highlights": targeting.achievement_highlights,
+            "pain_point_alignment": targeting.pain_point_alignment,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.post("/intelligence/ai-prompts")
+def generate_ai_prompts(request: dict):
+    """Generate AI prompts for job search optimization."""
+    try:
+        company_name = request.get("company_name")
+        target_role = request.get("target_role")
+        industry = request.get("industry")
+
+        # Analyze company
+        company_analysis = analyze_company_strategic_needs(company_name, industry)
+
+        # Develop positioning
+        positioning = develop_competitive_positioning_strategy(target_role, company_analysis)
+
+        # Generate prompts
+        prompts = generate_job_search_ai_prompts(company_analysis, positioning)
+
+        return prompts
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/health/intelligence")
+def get_intelligence_health():
+    """Get competitive intelligence health status."""
+    return get_competitive_intelligence_health()
+
+
+# OSINT Forensics Endpoints
+@app.post("/osint/analyze-company")
+def analyze_company_osint_endpoint(request: dict):
+    """Analyze company using OSINT forensics for values-driven job search."""
+    try:
+        company_name = request.get("company_name")
+        job_postings = request.get("job_postings", [])
+        user_values = request.get("user_values", [])
+        user_passions = request.get("user_passions", [])
+
+        # Generate OSINT report
+        report = analyze_company_osint(company_name, job_postings, user_values, user_passions)
+
+        return {
+            "company_name": report.company_name,
+            "analysis_date": report.analysis_date,
+            "values_alignment": report.values_alignment,
+            "passion_opportunities": report.passion_opportunities,
+            "cultural_insights": report.cultural_insights,
+            "growth_signals": report.growth_signals,
+            "watch_outs": report.watch_outs,
+            "receipts_table": report.receipts_table,
+            "user_values_match": report.user_values_match,
+            "passion_skills_alignment": report.passion_skills_alignment,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/osint/health")
+def get_osint_health_endpoint():
+    """Get OSINT forensics health status."""
+    return get_osint_health()
+
+
+# Domain Adjacent Search Endpoints
+@app.post("/domain-adjacent/discover")
+def discover_domain_adjacent_endpoint(request: dict):
+    """Discover domain adjacent opportunities through semantic clustering."""
+    try:
+        user_skills = request.get("user_skills", [])
+        user_domains = request.get("user_domains", [])
+
+        # Generate domain adjacent search results
+        results = discover_domain_adjacent_opportunities(user_skills, user_domains)
+
+        return {
+            "user_skills": results.user_skills,
+            "user_domains": results.user_domains,
+            "semantic_clusters": [
+                {
+                    "cluster_id": cluster.cluster_id,
+                    "cluster_name": cluster.cluster_name,
+                    "core_skills": cluster.core_skills,
+                    "adjacent_skills": cluster.adjacent_skills,
+                    "related_domains": cluster.related_domains,
+                    "opportunity_areas": cluster.opportunity_areas,
+                    "skill_gaps": cluster.skill_gaps,
+                    "learning_paths": cluster.learning_paths,
+                    "confidence_score": cluster.confidence_score,
+                    "cluster_strength": cluster.cluster_strength,
+                }
+                for cluster in results.semantic_clusters
+            ],
+            "skill_alignment": results.skill_alignment,
+            "domain_expansion": results.domain_expansion,
+            "opportunity_mapping": results.opportunity_mapping,
+            "learning_recommendations": results.learning_recommendations,
+            "career_paths": results.career_paths,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/domain-adjacent/health")
+def get_domain_adjacent_health_endpoint():
+    """Get domain adjacent search health status."""
+    return get_domain_adjacent_health()
+
+
+# Analytics Endpoints
+@app.get("/analytics/dashboard")
+def get_analytics_dashboard_endpoint():
+    """Get comprehensive analytics dashboard data."""
+    return get_analytics_dashboard()
+
+
+@app.get("/analytics/export")
+def export_analytics_endpoint(days: int = 7):
+    """Export analytics data to CSV."""
+    try:
+        filename = export_analytics_csv(days)
+        if filename:
+            return {"filename": filename, "status": "success"}
+        else:
+            return {"error": "Failed to export analytics", "status": "error"}
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+
+@app.get("/analytics/health")
+def get_analytics_health_endpoint():
+    """Get analytics engine health status."""
+    return get_analytics_health()
+
+
+# Reranker Endpoints
+@app.get("/reranker/health")
+def get_reranker_health_endpoint():
+    """Get cross-encoder reranker health status."""
+    return get_reranker_health()
+
+
+# Corpus Reindex Endpoints
+@app.post("/corpus/reindex")
+def reindex_corpus_endpoint():
+    """Re-index corpus with new embeddings."""
+    try:
+        results = reindex_corpus()
+        return {"status": "success", "results": results}
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+
+@app.get("/corpus/status")
+def get_corpus_status_endpoint():
+    """Get corpus reindex status."""
+    return get_reindex_status()
+
+
+# DIAGNOSTIC ENDPOINT - Deployment Source Verification
+@app.get("/diagnostic/deployment-source")
+def deployment_source_diagnostic():
+    """
+    DIAGNOSTIC ENDPOINT - Proves which directory Render is deploying from.
+
+    This endpoint ONLY exists in root api/index.py (2158 lines).
+    It does NOT exist in backend/api/index.py (471 lines).
+
+    If this returns 404 on Render, it proves dashboard config has
+    rootDir: backend set, overriding render.yaml.
+    """
+    return {
+        "deployment_source": "root_directory",
+        "file": "api/index.py",
+        "lines": 2158,
+        "proof": "This endpoint does NOT exist in backend/api/index.py (471 lines)",
+        "message": "Successfully deploying from root directory",
+        "timestamp": datetime.utcnow().isoformat() + "Z"
+    }

@@ -18,6 +18,8 @@ services:
         sync: false
       - key: PUBLIC_SITE_ORIGIN
         value: https://whatismydelta.com
+      - key: PUBLIC_API_BASE
+        value: https://mosaic-backend-tpog.onrender.com
       - key: APP_SCHEMA_VERSION
         value: v2
       - key: DATABASE_URL
