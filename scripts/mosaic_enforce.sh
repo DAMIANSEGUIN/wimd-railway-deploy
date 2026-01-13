@@ -305,6 +305,54 @@ if [ "$MODE" == "integration" ]; then
             fi
         fi
     fi
+
+    # USER_PATH_SMOKE - Test actual user endpoints (not just /health)
+    echo ""
+    echo "⏳ Testing USER_PATH_SMOKE (critical user endpoints)..."
+
+    USER_PATHS_FAILED=0
+
+    # Test 1: /config must return valid apiBase
+    CONFIG_RESPONSE=$(curl --fail --silent --max-time 10 "${FRONTEND_URL}/config" 2>&1 || echo "FAILED")
+    if [ "$CONFIG_RESPONSE" != "FAILED" ]; then
+        API_BASE=$(echo "$CONFIG_RESPONSE" | grep -o '"apiBase":"[^"]*"' | sed -e 's/"apiBase":"//' -e 's/"//g' || echo "")
+        if [ -n "$API_BASE" ] && [ "$API_BASE" != "undefined" ]; then
+            echo "  ✓ /config returns valid apiBase: $API_BASE"
+        else
+            echo "  ✗ /config apiBase empty or undefined"
+            ((USER_PATHS_FAILED++))
+        fi
+    else
+        echo "  ✗ /config endpoint failed"
+        ((USER_PATHS_FAILED++))
+    fi
+
+    # Test 2: /auth/register must exist (not 404)
+    AUTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X OPTIONS "${FRONTEND_URL}/auth/register" || echo "000")
+    if [ "$AUTH_STATUS" != "404" ] && [ "$AUTH_STATUS" != "000" ]; then
+        echo "  ✓ /auth/register endpoint exists"
+    else
+        echo "  ✗ /auth/register returns $AUTH_STATUS (users cannot register)"
+        ((USER_PATHS_FAILED++))
+    fi
+
+    # Test 3: /wimd must exist and not return 500
+    WIMD_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X OPTIONS "${FRONTEND_URL}/wimd" || echo "000")
+    if [ "$WIMD_STATUS" != "404" ] && [ "$WIMD_STATUS" != "500" ] && [ "$WIMD_STATUS" != "000" ]; then
+        echo "  ✓ /wimd endpoint exists (main feature)"
+    else
+        echo "  ✗ /wimd returns $WIMD_STATUS (main feature broken)"
+        ((USER_PATHS_FAILED++))
+    fi
+
+    if [ $USER_PATHS_FAILED -eq 0 ]; then
+        echo "✅ PASS: USER_PATH_SMOKE (critical user paths functional)"
+    else
+        echo "🛑 FAIL: USER_PATH_SMOKE - $USER_PATHS_FAILED critical user paths broken"
+        echo "  This means: Users cannot actually use the system"
+        echo "  /health passing does NOT mean system is usable"
+        FAILED_GATES+=("USER_PATH_SMOKE")
+    fi
 fi
 
 # --- Final Verdict ---
