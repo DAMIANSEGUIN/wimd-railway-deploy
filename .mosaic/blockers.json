@@ -1,7 +1,21 @@
 {
   "version": 1,
-  "updated_at": "2026-01-09T01:15:00Z",
+  "updated_at": "2026-01-14T19:15:00Z",
   "blockers": [
+    {
+      "id": "B006",
+      "title": "Render Auto-Deploy Not Triggering",
+      "severity": "high",
+      "status": "open",
+      "description": "Git push to origin/main does not trigger Render auto-deploy. Production stuck at 73e3ef4, missing 8 commits with critical fixes.",
+      "impact": "Production cannot receive updates. Auth endpoints return 404, apiBase config empty.",
+      "solution": "Manual: Access Render dashboard → mosaic-backend service → Manual Deploy button OR verify GitHub integration connected",
+      "owner": "user",
+      "created_at": "2026-01-14T19:15:00Z",
+      "resolved_at": null,
+      "resolution": null,
+      "notes": "GitHub has e2af80d (correct). render.yaml has branch: main (correct). Auto-deploy may be disabled in Render dashboard or GitHub integration disconnected."
+    },
     {
       "id": "B001",
       "title": "File Path Divergence",
