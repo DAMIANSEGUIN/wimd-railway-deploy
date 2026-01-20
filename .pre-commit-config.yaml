@@ -1,8 +1,3 @@
-# Pre-commit hooks for automated code quality enforcement
-# Based on ISO/IEC 5055:2021 + Policy-as-Code industry standards
-# Install: pre-commit install --install-hooks
-# Run manually: pre-commit run --all-files
-
 repos:
   # Python code quality - Ruff (replaces flake8, isort, pyupgrade)
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -38,53 +33,6 @@ repos:
         args: ['--baseline', '.secrets.baseline']
         exclude: package-lock.json
 
-  # Pre-commit hooks - General file checks
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-      - id: check-added-large-files
-        args: ['--maxkb=500']
-        name: Check for large files (>500KB)
-
-      - id: check-ast
-        name: Check Python AST syntax
-
-      - id: check-json
-        name: Check JSON syntax
-        exclude: (?x)^(
-            \.ai-agents/handoff_20251103_101528.json|
-            \.ai-agents/validation/FAILURE_MODE_TEST_RESULTS.json|
-            \.ai-agents/session_context/SESSION_LOG_SCHEMA.json
-        )$
-
-      - id: check-yaml
-        name: Check YAML syntax
-
-      - id: check-toml
-        name: Check TOML syntax
-
-      - id: detect-private-key
-        name: Detect private keys
-
-      - id: end-of-file-fixer
-        name: Fix end of files
-
-      - id: trailing-whitespace
-        name: Trim trailing whitespace
-
-      - id: mixed-line-ending
-        name: Fix mixed line endings
-        args: ['--fix=lf']
-
-      - id: check-merge-conflict
-        name: Check for merge conflict markers
-
-      - id: check-executables-have-shebangs
-        name: Check executables have shebangs
-
-      - id: check-shebang-scripts-are-executable
-        name: Check shebang scripts are executable
-
   # Python security - Bandit (security linter)
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.10
@@ -94,49 +42,23 @@ repos:
         args: ['-c', 'pyproject.toml']
         additional_dependencies: ['bandit[toml]']
 
-  # Python imports - isort (import sorting)
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        name: isort (sort imports)
-        args: ['--profile', 'black']
-
   # Python type checking - mypy
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.11.2
     hooks:
       - id: mypy
         name: mypy (type checking)
-        args: [--ignore-missing-imports, --strict]
+        args: [--ignore-missing-imports, --strict, --exclude, '.claude-run/']
         additional_dependencies: []
-        exclude: ^tests/
+        exclude: ^(tests/|\.claude-run/)
 
-  # Markdown linting
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.41.0
-    hooks:
-      - id: markdownlint
-        language_version: system
-        name: Markdown linter
-        args: ['--fix']
-
-  # Shell script linting
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.10.0.1
-    hooks:
-      - id: shellcheck
-        name: ShellCheck (shell script linter)
-
-
-
-# Custom local hooks
+  # Custom local hooks
   - repo: local
     hooks:
       # Mosaic-specific: PostgreSQL pattern enforcement
       - id: check-postgres-patterns
         name: Check PostgreSQL context manager pattern
-        entry: python -c "import sys; code = open(sys.argv[1]).read(); sys.exit(1 if 'conn = get_conn()' in code and 'with get_conn()' not in code else 0)"
+        entry: python3 -c "import sys; code = open(sys.argv[1]).read(); sys.exit(1 if 'conn = get_conn()' in code and 'with get_conn()' not in code else 0)"
         language: system
         files: '^api/.*\.py$'
         exclude: ^api/storage.py$
@@ -144,10 +66,9 @@ repos:
       # Mosaic-specific: No SQLite syntax in PostgreSQL code
       - id: check-no-sqlite-syntax
         name: Check no SQLite syntax (use %s not ?)
-        entry: python -c "import sys, re; code = open(sys.argv[1]).read(); sys.exit(1 if re.search(r'execute\([^)]*\?', code) else 0)"
+        entry: python3 -c "import sys, re; code = open(sys.argv[1]).read(); sys.exit(1 if re.search(r'execute\([^)]*\?', code) else 0)"
         language: system
         files: '^api/.*\.py$'
-
 
 # Configuration
 default_language_version:

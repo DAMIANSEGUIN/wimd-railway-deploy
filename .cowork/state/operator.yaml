@@ -1,0 +1,45 @@
+task_id: "INIT"
+goal: "Project-scoped autonomy with minimal back-and-forth; operator card is authoritative."
+
+done_definition:
+  - "Ends each run with DONE or BLOCKED"
+  - "Provides Next Action and Patch Plan (or Required Input if BLOCKED)"
+  - "Cites artifact portion refs used; otherwise marks ASSUMPTION"
+  - "Validates testable claims (parseable, valid, enforceable) with automated tests before DONE"
+
+risk_level: "normal"        # trivial | normal | high
+autonomy: "propose_only"    # propose_only | apply_patch | run_tools
+
+budgets:
+  max_tokens_per_agent: 800
+  max_agents: 2
+  max_round_trips: 1
+
+allowlists:
+  artifacts: []
+  files:
+    - \".cowork/state/operator.yaml\"
+    - \"mosaic_governance/GATES.yaml\"
+    - \".pre-commit-config.yaml\"
+    - \".detect-secrets-baseline\"
+    - \".mosaic/enforcement/**\"
+    - \".mosaic/proposals/**\"
+    - \".mosaic/HANDOFF_*.md\"
+    - \".mosaic/LATEST_HANDOFF.md\"
+
+stop_rules:
+  - "Ask at most one clarifying question per run; otherwise BLOCKED"
+  - "If scope drift occurs: output BLOCKED: DRIFT and restart using only allowlists"
+  - "No cross-project references unless explicitly allowlisted"
+  - "No new safeguards unless a gate fails or the same failure is logged twice"
+  - "No long prose; output only DONE/BLOCKED + Next Action + Patch Plan"
+
+change_log:
+  - ts: "2026-01-15T13:01:55-05:00"
+    change: "Installed initial operator card"
+  - ts: "2026-01-16T00:00:00-05:00"
+    change: "Added mosaic_governance/GATES.yaml to allowlist for normalization task"
+  - ts: "2026-01-16T14:20:00-05:00"
+    change: "Added test validation requirement to done_definition (enforcement gap fix)"
+  - ts: "2026-01-20T00:00:00-05:00"
+    change: "Expanded allowlist to include pre-commit infrastructure (.pre-commit-config.yaml, .detect-secrets-baseline, .mosaic/enforcement/**) - required to validate gate enforceability per done_definition"
