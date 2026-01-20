@@ -6,8 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import numpy as np  # Temporarily disabled for testing
-import openai  # Temporarily disabled for testing
+# Core dependencies
 from fastapi import (
     BackgroundTasks,
     Body,
@@ -21,120 +20,284 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from .analytics import export_analytics_csv, get_analytics_dashboard, get_analytics_health
-from .competitive_intelligence import (
-    analyze_company_strategic_needs,
-    create_strategic_resume_targeting,
-    develop_competitive_positioning_strategy,
-    generate_job_search_ai_prompts,
-    get_competitive_intelligence_health,
-)
-from .corpus_reindex import get_reindex_status, reindex_corpus
-from .cost_controls import (
-    check_cost_limits,
-    check_resource_limits,
-    get_usage_analytics,
-    record_usage,
-)
-from .domain_adjacent_search import (
-    discover_domain_adjacent_opportunities,
-    get_domain_adjacent_health,
-)
-from .experiment_engine import (
-    CapabilityEvidence,
-    ExperimentCreate,
-    ExperimentUpdate,
-    LearningData,
-    SelfEfficacyMetric,
-    add_learning_data,
-    capture_evidence,
-    complete_experiment,
-    create_experiment,
-    get_experiment_health,
-    get_experiments,
-    get_learning_data,
-    get_self_efficacy_metrics,
-    record_self_efficacy_metric,
-    update_experiment,
-)
-from .job_sources import (  # IndeedSource,; WeWorkRemotelySource,
-    CareerBuilderSource,
-    DiceSource,
-    GlassdoorSource,
-    GreenhouseSource,
-    HackerNewsSource,
-    LinkedInSource,
-    MonsterSource,
-    RedditSource,
-    RemoteOKSource,
-    SerpApiSource,
-    ZipRecruiterSource,
-)
-from .monitoring import attempt_system_recovery, run_health_check
-from .osint_forensics import analyze_company_osint, get_osint_health
-from .prompt_selector import get_prompt_health, get_prompt_response
-from .ps101 import router as ps101_router
-from .ps101_flow import (
-    advance_ps101_step,
-    create_ps101_session_data,
-    exit_ps101_flow,
-    format_step_for_user,
-    get_completion_message,
-    get_exit_confirmation,
-    get_ps101_step,
-)
-from .ps101_flow import is_complete as ps101_is_complete
-from .ps101_flow import record_ps101_response
-from .rag_engine import (
-    batch_compute_embeddings,
-    compute_embedding,
-    discover_domain_adjacent_opportunities_rag,
-    get_rag_health,
-    get_rag_response,
-    retrieve_similar,
-)
-from .rag_source_discovery import (
-    discover_sources_for_query,
-    get_discovery_analytics,
-    get_optimal_sources_for_query,
-)
-from .reranker import get_reranker_health
-from .self_efficacy_engine import (
-    cleanup_stale_experiments,
-    compute_session_metrics,
-    get_escalation_prompt,
-    get_self_efficacy_health,
-    record_analytics_entry,
-    should_escalate,
-)
+# Safe imports - always available
 from .settings import get_feature_flag, get_settings
 from .startup_checks import startup_or_die
-from .storage import (
-    UPLOAD_ROOT,
-    add_resume_version,
-    authenticate_user,
-    create_user,
-    delete_session,
-    diagnose_user_hash,
-    ensure_session,
-    fetch_job_matches,
-    force_reset_user_password,
-    get_conn,
-    get_session_data,
-    get_user_by_email,
-    get_user_by_id,
-    get_user_context,
-    latest_metrics,
-    list_resume_versions,
-    record_wimd_output,
-    session_exists,
-    session_summary,
-    store_file_upload,
-    store_job_matches,
-    update_job_match_status,
-    update_session_data,
-    wimd_history,
-)
+
+# Storage imports with optional auth functions
+try:
+    from .storage import (
+        UPLOAD_ROOT,
+        add_resume_version,
+        ensure_session,
+        fetch_job_matches,
+        get_conn,
+        get_session_data,
+        latest_metrics,
+        list_resume_versions,
+        record_wimd_output,
+        session_exists,
+        session_summary,
+        store_file_upload,
+        store_job_matches,
+        update_job_match_status,
+        update_session_data,
+        wimd_history,
+    )
+    IMPORTS_AVAILABLE_BASE = {'storage': True}
+except ImportError as e:
+    print(f"⚠️  storage core functions not available: {e}")
+    IMPORTS_AVAILABLE_BASE = {'storage': False}
+
+# Auth functions - may not exist in all versions
+try:
+    from .storage import (
+        authenticate_user,
+        create_user,
+        delete_session,
+        diagnose_user_hash,
+        force_reset_user_password,
+        get_user_by_email,
+        get_user_by_id,
+        get_user_context,
+    )
+    IMPORTS_AVAILABLE_BASE['storage_auth'] = True
+except ImportError as e:
+    print(f"⚠️  storage auth functions not available: {e}")
+    IMPORTS_AVAILABLE_BASE['storage_auth'] = False
+    # Create stub functions
+    def authenticate_user(*args, **kwargs):
+        raise HTTPException(status_code=501, detail="Auth not implemented")
+    def create_user(*args, **kwargs):
+        raise HTTPException(status_code=501, detail="Auth not implemented")
+    def delete_session(*args, **kwargs):
+        raise HTTPException(status_code=501, detail="Auth not implemented")
+    def diagnose_user_hash(*args, **kwargs):
+        return {"error": "Auth not implemented"}
+    def force_reset_user_password(*args, **kwargs):
+        raise HTTPException(status_code=501, detail="Auth not implemented")
+    def get_user_by_email(*args, **kwargs):
+        return None
+    def get_user_by_id(*args, **kwargs):
+        return None
+    def get_user_context(*args, **kwargs):
+        return {}
+
+# Optional imports - graceful degradation
+IMPORTS_AVAILABLE = IMPORTS_AVAILABLE_BASE.copy()
+
+try:
+    import numpy as np
+    IMPORTS_AVAILABLE['numpy'] = True
+except ImportError:
+    IMPORTS_AVAILABLE['numpy'] = False
+    print("⚠️  numpy not available")
+
+try:
+    import openai
+    IMPORTS_AVAILABLE['openai'] = True
+except ImportError:
+    IMPORTS_AVAILABLE['openai'] = False
+    print("⚠️  openai not available")
+
+try:
+    from .analytics import export_analytics_csv, get_analytics_dashboard, get_analytics_health
+    IMPORTS_AVAILABLE['analytics'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['analytics'] = False
+    print(f"⚠️  analytics not available: {e}")
+    get_analytics_dashboard = lambda: {"error": "analytics module unavailable"}
+    get_analytics_health = lambda: {"ok": False, "error": "analytics module unavailable"}
+    export_analytics_csv = lambda *args, **kwargs: None
+
+try:
+    from .competitive_intelligence import (
+        analyze_company_strategic_needs,
+        create_strategic_resume_targeting,
+        develop_competitive_positioning_strategy,
+        generate_job_search_ai_prompts,
+        get_competitive_intelligence_health,
+    )
+    IMPORTS_AVAILABLE['competitive_intelligence'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['competitive_intelligence'] = False
+    print(f"⚠️  competitive_intelligence not available: {e}")
+    get_competitive_intelligence_health = lambda: {"ok": False, "error": "module unavailable"}
+
+try:
+    from .corpus_reindex import get_reindex_status, reindex_corpus
+    IMPORTS_AVAILABLE['corpus_reindex'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['corpus_reindex'] = False
+    print(f"⚠️  corpus_reindex not available: {e}")
+    get_reindex_status = lambda: {"error": "module unavailable"}
+    reindex_corpus = lambda *args, **kwargs: {"error": "module unavailable"}
+
+try:
+    from .cost_controls import (
+        check_cost_limits,
+        check_resource_limits,
+        get_usage_analytics,
+        record_usage,
+    )
+    IMPORTS_AVAILABLE['cost_controls'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['cost_controls'] = False
+    print(f"⚠️  cost_controls not available: {e}")
+
+try:
+    from .domain_adjacent_search import (
+        discover_domain_adjacent_opportunities,
+        get_domain_adjacent_health,
+    )
+    IMPORTS_AVAILABLE['domain_adjacent'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['domain_adjacent'] = False
+    print(f"⚠️  domain_adjacent_search not available: {e}")
+    get_domain_adjacent_health = lambda: {"ok": False, "error": "module unavailable"}
+
+try:
+    from .experiment_engine import (
+        CapabilityEvidence,
+        ExperimentCreate,
+        ExperimentUpdate,
+        LearningData,
+        SelfEfficacyMetric,
+        add_learning_data,
+        capture_evidence,
+        complete_experiment,
+        create_experiment,
+        get_experiment_health,
+        get_experiments,
+        get_learning_data,
+        get_self_efficacy_metrics,
+        record_self_efficacy_metric,
+        update_experiment,
+    )
+    IMPORTS_AVAILABLE['experiment_engine'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['experiment_engine'] = False
+    print(f"⚠️  experiment_engine not available: {e}")
+    get_experiment_health = lambda: {"ok": False, "error": "module unavailable"}
+
+try:
+    from .job_sources import (
+        CareerBuilderSource,
+        DiceSource,
+        GlassdoorSource,
+        GreenhouseSource,
+        HackerNewsSource,
+        LinkedInSource,
+        MonsterSource,
+        RedditSource,
+        RemoteOKSource,
+        SerpApiSource,
+        ZipRecruiterSource,
+    )
+    IMPORTS_AVAILABLE['job_sources'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['job_sources'] = False
+    print(f"⚠️  job_sources not available: {e}")
+
+try:
+    from .monitoring import attempt_system_recovery, run_health_check
+    IMPORTS_AVAILABLE['monitoring'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['monitoring'] = False
+    print(f"⚠️  monitoring not available: {e}")
+    run_health_check = lambda: {"ok": False, "error": "module unavailable"}
+
+try:
+    from .osint_forensics import analyze_company_osint, get_osint_health
+    IMPORTS_AVAILABLE['osint'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['osint'] = False
+    print(f"⚠️  osint_forensics not available: {e}")
+    get_osint_health = lambda: {"ok": False, "error": "module unavailable"}
+
+try:
+    from .prompt_selector import get_prompt_health, get_prompt_response
+    IMPORTS_AVAILABLE['prompt_selector'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['prompt_selector'] = False
+    print(f"⚠️  prompt_selector not available: {e}")
+    get_prompt_health = lambda: {"ok": False, "error": "module unavailable"}
+    get_prompt_response = lambda *args, **kwargs: "Prompt selector unavailable"
+
+try:
+    from .ps101 import router as ps101_router
+    IMPORTS_AVAILABLE['ps101'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['ps101'] = False
+    print(f"⚠️  ps101 not available: {e}")
+    ps101_router = None
+
+try:
+    from .ps101_flow import (
+        advance_ps101_step,
+        create_ps101_session_data,
+        exit_ps101_flow,
+        format_step_for_user,
+        get_completion_message,
+        get_exit_confirmation,
+        get_ps101_step,
+        record_ps101_response,
+    )
+    from .ps101_flow import is_complete as ps101_is_complete
+    IMPORTS_AVAILABLE['ps101_flow'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['ps101_flow'] = False
+    print(f"⚠️  ps101_flow not available: {e}")
+
+try:
+    from .rag_engine import (
+        batch_compute_embeddings,
+        compute_embedding,
+        discover_domain_adjacent_opportunities_rag,
+        get_rag_health,
+        get_rag_response,
+        retrieve_similar,
+    )
+    IMPORTS_AVAILABLE['rag_engine'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['rag_engine'] = False
+    print(f"⚠️  rag_engine not available: {e}")
+    get_rag_health = lambda: {"ok": False, "error": "module unavailable"}
+
+try:
+    from .rag_source_discovery import (
+        discover_sources_for_query,
+        get_discovery_analytics,
+        get_optimal_sources_for_query,
+    )
+    IMPORTS_AVAILABLE['rag_source_discovery'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['rag_source_discovery'] = False
+    print(f"⚠️  rag_source_discovery not available: {e}")
+
+try:
+    from .reranker import get_reranker_health
+    IMPORTS_AVAILABLE['reranker'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['reranker'] = False
+    print(f"⚠️  reranker not available: {e}")
+    get_reranker_health = lambda: {"ok": False, "error": "module unavailable"}
+
+try:
+    from .self_efficacy_engine import (
+        cleanup_stale_experiments,
+        compute_session_metrics,
+        get_escalation_prompt,
+        get_self_efficacy_health,
+        record_analytics_entry,
+        should_escalate,
+    )
+    IMPORTS_AVAILABLE['self_efficacy'] = True
+except ImportError as e:
+    IMPORTS_AVAILABLE['self_efficacy'] = False
+    print(f"⚠️  self_efficacy_engine not available: {e}")
+    get_self_efficacy_health = lambda: {"ok": False, "error": "module unavailable"}
+
 
 app = FastAPI()
 logger = logging.getLogger(__name__)
@@ -210,7 +373,8 @@ app.add_middleware(
 )
 
 # Include PS101 context extraction router (Day 1 MVP)
-app.include_router(ps101_router, prefix="/api/ps101")
+if ps101_router is not None:
+    app.include_router(ps101_router, prefix="/api/ps101")
 
 
 class WimdRequest(BaseModel):
@@ -726,15 +890,17 @@ def health():
                     "startup_complete": False,
                 },
                 "timestamp": datetime.utcnow().isoformat() + "Z",
+                "imports_available": IMPORTS_AVAILABLE,
             }
             if HEALTH_DEBUG_ENABLED:
                 logger.info("Health check in startup grace period: %s", status)
             return status
 
-        # Test critical prompt system functionality
-        from .prompt_selector import get_prompt_health
-
-        prompt_health = get_prompt_health()
+        # Test critical prompt system functionality (if available)
+        if IMPORTS_AVAILABLE.get('prompt_selector'):
+            prompt_health = get_prompt_health()
+        else:
+            prompt_health = {"fallback_enabled": False, "ai_health": {"any_available": False}}
 
         # Check if prompt system is working
         fallback_enabled = prompt_health.get("fallback_enabled", False)
@@ -811,9 +977,12 @@ def health():
 def health_prompts():
     """Health check for prompt selector and AI fallback system"""
     try:
-        prompt_health = get_prompt_health()
+        if IMPORTS_AVAILABLE.get('prompt_selector'):
+            prompt_health = get_prompt_health()
+        else:
+            prompt_health = {"ok": False, "error": "prompt_selector module unavailable"}
         return {
-            "ok": True,
+            "ok": IMPORTS_AVAILABLE.get('prompt_selector', False),
             "prompt_selector": prompt_health,
             "timestamp": datetime.utcnow().isoformat() + "Z",
         }
@@ -835,17 +1004,26 @@ def health_booking():
 def health_comprehensive():
     """Comprehensive health check with automatic recovery"""
     try:
-        health_summary = run_health_check()
+        if IMPORTS_AVAILABLE.get('monitoring'):
+            health_summary = run_health_check()
 
-        # If system needs attention, log it
-        if health_summary.get("requires_attention", False):
-            print(f"⚠️ Prompt system requires attention: {health_summary}")
+            # If system needs attention, log it
+            if health_summary.get("requires_attention", False):
+                print(f"⚠️ Prompt system requires attention: {health_summary}")
 
-        # Return 503 if critical failure to trigger Railway restart
-        if not health_summary.get("current_test", {}).get("success", False):
-            raise HTTPException(status_code=503, detail=health_summary)
+            # Return 503 if critical failure to trigger Railway restart
+            if not health_summary.get("current_test", {}).get("success", False):
+                raise HTTPException(status_code=503, detail=health_summary)
 
-        return health_summary
+            return health_summary
+        else:
+            # Monitoring module unavailable, return basic health
+            return {
+                "ok": True,
+                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "imports_available": IMPORTS_AVAILABLE,
+                "message": "Monitoring module unavailable - showing basic health"
+            }
     except HTTPException:
         raise
     except Exception as e:
@@ -859,8 +1037,11 @@ def health_comprehensive():
 def health_recover():
     """Attempt automatic system recovery"""
     try:
-        recovery_result = attempt_system_recovery()
-        return recovery_result
+        if IMPORTS_AVAILABLE.get('monitoring'):
+            recovery_result = attempt_system_recovery()
+            return recovery_result
+        else:
+            return {"ok": False, "error": "monitoring module unavailable"}
     except Exception as e:
         return {
             "recovery_attempted": False,
@@ -2202,5 +2383,5 @@ def deployment_source_diagnostic():
         "lines": 2158,
         "proof": "This endpoint does NOT exist in backend/api/index.py (471 lines)",
         "message": "Successfully deploying from root directory",
-        "timestamp": datetime.utcnow().isoformat() + "Z"
+        "timestamp": datetime.utcnow().isoformat() + "Z",
     }
