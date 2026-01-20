@@ -1,11 +1,13 @@
 import json
 import os
-import psycopg2
 import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+import psycopg2
+
 
 # DATA_ROOT and UPLOAD_ROOT are still used for file uploads, not the DB
 DATA_ROOT = Path(os.getenv("DATA_ROOT", "data"))
@@ -58,6 +60,17 @@ def init_db() -> None:
                     created_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
                     expires_at TIMESTAMP WITH TIME ZONE,
                     user_data JSONB
+                )
+                """
+            )
+
+            cursor.execute(
+                """
+                CREATE TABLE IF NOT EXISTS users (
+                    id TEXT PRIMARY KEY,
+                    email TEXT UNIQUE NOT NULL,
+                    password_hash TEXT NOT NULL,
+                    created_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc')
                 )
                 """
             )
@@ -157,7 +170,11 @@ def ensure_session(session_id: Optional[str], user_data: Optional[Dict[str, Any]
             else:
                 cursor.execute(
                     "UPDATE sessions SET expires_at = %s, user_data = COALESCE(%s, user_data) WHERE id = %s",
-                    (_expiry_ts(), _json_dump(user_data) if user_data is not None else None, session_id),
+                    (
+                        _expiry_ts(),
+                        _json_dump(user_data) if user_data is not None else None,
+                        session_id,
+                    ),
                 )
     return session_id
 
@@ -167,6 +184,26 @@ def session_exists(session_id: str) -> bool:
         with conn.cursor() as cursor:
             cursor.execute("SELECT 1 FROM sessions WHERE id = %s", (session_id,))
             return cursor.fetchone() is not None
+
+
+def get_session_data(session_id: str) -> Dict[str, Any]:
+    """Get session user_data JSON field."""
+    with get_conn() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT user_data FROM sessions WHERE id = %s", (session_id,))
+            row = cursor.fetchone()
+            if row and row[0]:
+                return _json_load(row[0]) or {}
+            return {}
+
+
+def update_session_data(session_id: str, data: Dict[str, Any]) -> None:
+    """Update session user_data JSON field."""
+    with get_conn() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "UPDATE sessions SET user_data = %s WHERE id = %s", (_json_dump(data), session_id)
+            )
 
 
 def record_wimd_output(
@@ -276,7 +313,7 @@ def update_job_match_status(
             row = cursor.fetchone()
             if row is None:
                 raise ValueError("job_match_not_found")
-            extras = row['extras'] or {}
+            extras = row["extras"] or {}
             extras.update(
                 {
                     "status": status,
@@ -354,9 +391,7 @@ def cleanup_expired_sessions() -> None:
     cutoff = datetime.utcnow()
     with get_conn() as conn:
         with conn.cursor() as cursor:
-            cursor.execute(
-                "SELECT id FROM sessions WHERE expires_at <= %s", (cutoff,)
-            )
+            cursor.execute("SELECT id FROM sessions WHERE expires_at <= %s", (cutoff,))
             expired_ids = [row[0] for row in cursor.fetchall()]
             if expired_ids:
                 placeholders = ",".join(["%s"] * len(expired_ids))
@@ -365,13 +400,19 @@ def cleanup_expired_sessions() -> None:
                     expired_ids,
                 )
                 file_rows = cursor.fetchall()
-                
+
                 # Deletions
-                for table in ["file_uploads", "resume_versions", "job_matches", "wimd_outputs", "sessions"]:
+                for table in [
+                    "file_uploads",
+                    "resume_versions",
+                    "job_matches",
+                    "wimd_outputs",
+                    "sessions",
+                ]:
                     cursor.execute(
                         f"DELETE FROM {table} WHERE session_id IN ({placeholders})", expired_ids
                     )
-                
+
                 for row in file_rows:
                     try:
                         path = Path(row[0])
@@ -399,11 +440,135 @@ def session_summary(session_id: str) -> Dict[str, Any]:
     return data
 
 
+# ============================================================================
+# Auth Functions
+# ============================================================================
+
+def create_user(email: str, password_hash: str) -> str:
+    """Create a new user account"""
+    import uuid
+    user_id = str(uuid.uuid4())
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO users (id, email, password_hash, created_at)
+            VALUES (%s, %s, %s, NOW())
+            ON CONFLICT (email) DO NOTHING
+            RETURNING id
+            """,
+            (user_id, email, password_hash)
+        )
+        result = cursor.fetchone()
+        return result[0] if result else None
+
+
+def authenticate_user(email: str, password: str) -> Optional[Dict[str, Any]]:
+    """Authenticate user and return user data if successful"""
+    import bcrypt
+    user = get_user_by_email(email)
+    if not user:
+        return None
+
+    # Verify password
+    if bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
+        return {
+            'user_id': user['id'],
+            'email': user['email'],
+            'created_at': user['created_at']
+        }
+    return None
+
+
+def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
+    """Get user by email"""
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, email, password_hash, created_at FROM users WHERE email = %s",
+            (email,)
+        )
+        row = cursor.fetchone()
+        if row:
+            return {
+                'id': row[0],
+                'email': row[1],
+                'password_hash': row[2],
+                'created_at': row[3]
+            }
+        return None
+
+
+def get_user_by_id(user_id: str) -> Optional[Dict[str, Any]]:
+    """Get user by ID"""
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, email, created_at FROM users WHERE id = %s",
+            (user_id,)
+        )
+        row = cursor.fetchone()
+        if row:
+            return {
+                'id': row[0],
+                'email': row[1],
+                'created_at': row[2]
+            }
+        return None
+
+
+def get_user_context(user_id: str) -> Dict[str, Any]:
+    """Get user context data"""
+    user = get_user_by_id(user_id)
+    if not user:
+        return {}
+    return {
+        'user_id': user['id'],
+        'email': user['email'],
+        'created_at': user['created_at']
+    }
+
+
+def delete_session(session_id: str) -> None:
+    """Delete a session"""
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM sessions WHERE id = %s", (session_id,))
+
+
+def force_reset_user_password(email: str, new_password_hash: str) -> bool:
+    """Force reset a user's password (admin function)"""
+    with get_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE users SET password_hash = %s WHERE email = %s",
+            (new_password_hash, email)
+        )
+        return cursor.rowcount > 0
+
+
+def diagnose_user_hash(email: str) -> Dict[str, Any]:
+    """Diagnostic function to check user hash"""
+    user = get_user_by_email(email)
+    if not user:
+        return {"error": "User not found", "email": email}
+
+    return {
+        "email": email,
+        "user_id": user['id'],
+        "hash_length": len(user.get('password_hash', '')),
+        "hash_prefix": user.get('password_hash', '')[:10] + "...",
+        "created_at": user.get('created_at')
+    }
+
+
 __all__ = [
     "UPLOAD_ROOT",
     "create_session",
     "ensure_session",
     "session_exists",
+    "get_session_data",
+    "update_session_data",
     "record_wimd_output",
     "latest_metrics",
     "wimd_history",
@@ -417,4 +582,14 @@ __all__ = [
     "cleanup_expired_sessions",
     "init_db",
     "session_summary",
+    "get_conn",
+    # Auth functions
+    "authenticate_user",
+    "create_user",
+    "delete_session",
+    "diagnose_user_hash",
+    "force_reset_user_password",
+    "get_user_by_email",
+    "get_user_by_id",
+    "get_user_context",
 ]

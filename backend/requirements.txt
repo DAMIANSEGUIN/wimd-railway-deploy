@@ -12,6 +12,7 @@ python-dotenv
 psycopg2-binary
 requests
 beautifulsoup4
+bcrypt
 # sentence-transformers>=2.2.2  # DISABLED: ~500MB exceeds Render free tier 512MB limit
 
 google-api-python-client
