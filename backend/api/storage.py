@@ -444,8 +444,16 @@ def session_summary(session_id: str) -> Dict[str, Any]:
 # Auth Functions
 # ============================================================================
 
-def create_user(email: str, password_hash: str) -> str:
-    """Create a new user account"""
+def create_user(email: str, password_hash: str) -> Optional[str]:
+    """Create a new user account
+
+    Args:
+        email: User email address
+        password_hash: Pre-hashed password (use bcrypt.hashpw if available)
+
+    Returns:
+        User ID if created, None if user already exists
+    """
     import uuid
     user_id = str(uuid.uuid4())
     with get_conn() as conn:
@@ -465,18 +473,35 @@ def create_user(email: str, password_hash: str) -> str:
 
 def authenticate_user(email: str, password: str) -> Optional[Dict[str, Any]]:
     """Authenticate user and return user data if successful"""
-    import bcrypt
+    try:
+        import bcrypt
+        BCRYPT_AVAILABLE = True
+    except ImportError:
+        BCRYPT_AVAILABLE = False
+        print("⚠️ bcrypt not available - password verification disabled")
+
     user = get_user_by_email(email)
     if not user:
         return None
 
     # Verify password
-    if bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
-        return {
-            'user_id': user['id'],
-            'email': user['email'],
-            'created_at': user['created_at']
-        }
+    if BCRYPT_AVAILABLE:
+        if bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
+            return {
+                'user_id': user['id'],
+                'email': user['email'],
+                'created_at': user['created_at']
+            }
+    else:
+        # Fallback: simple string comparison (NOT SECURE - for development only)
+        stored_hash = user.get('password_hash', '')
+        if password == stored_hash:
+            print("⚠️ Using insecure password comparison - bcrypt not available")
+            return {
+                'user_id': user['id'],
+                'email': user['email'],
+                'created_at': user['created_at']
+            }
     return None
 
 
