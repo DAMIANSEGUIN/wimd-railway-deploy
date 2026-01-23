@@ -1,19 +1,19 @@
 {
   "version": 1,
-  "last_agent": "claude_code_sonnet_4_5",
-  "last_mode": "HANDOFF",
+  "last_agent": "gemini",
+  "last_mode": "TASK_EXECUTION",
   "last_session_start": "2026-01-18T19:50:00Z",
-  "last_session_end": "2026-01-18T22:30:00Z",
-  "current_agent": "gemini",
-  "current_task": "DEPLOYMENT_VERIFICATION - Verify psycopg2 fix deployed successfully",
-  "last_commit": "513c253",
-  "handoff_message": "Deployment failure resolved. Root cause: Missing psycopg2-binary in root requirements.txt (not memory limits as initially hypothesized). Fix committed (513c253): added psycopg2-binary, requests, beautifulsoup4 to root requirements.txt. User manually deployed via Render dashboard. NEXT STEPS: Verify deployment successful, test endpoints (/auth/register should NOT be 404, /config should have apiBase), run Gate 10 smoke tests, update state with success.",
+  "last_session_end": "2026-01-23T10:00:00Z",
+  "current_agent": "claude_code_sonnet_4_5",
+  "current_task": "OPTION_A_DEPLOYMENT_COMPLETE - Frontend Canonical with PS101 enforcement",
+  "last_commit": "7bae969",
+  "handoff_message": "Option A deployed successfully (commit 7bae969). Configured netlify.toml to publish from frontend/ directory with deploy-failing PS101 enforcement. Enforcement checks for PS101 + 'Step 1 of 10' signals in frontend/index.html before deploy. SPA redirect configured. Cache headers set (no-store for /index.html, immutable for /assets/*). Netlify build triggered automatically via git push. NEXT STEPS: Monitor Netlify deployment status, verify frontend serves from frontend/ directory, confirm PS101 enforcement blocks deploys if authority signals removed.",
   "briefing_acknowledgment": {
     "agent": "claude_code_sonnet_4_5",
     "briefing_version": "2.0",
-    "acknowledged_at": "2026-01-18T19:50:00Z",
-    "last_commit_known": "513c253",
-    "session_notes": "Diagnosed deployment failure. Initial hypothesis (memory limits) was wrong. Actual root cause: ModuleNotFoundError psycopg2. Fixed requirements.txt. User upgraded to paid Render plan (not needed but done). Handed off to Gemini for deployment verification."
+    "acknowledged_at": "2026-01-23T10:00:00Z",
+    "last_commit_known": "7bae969",
+    "session_notes": "Executed Option A: Frontend Canonical deployment. Changed netlify.toml base from mosaic_ui/ to . (root), publish from frontend/. Added build command with PS101 enforcement (exits 1 if authority signals missing). Verified PS101 + 'Step 1 of 10' present in frontend/index.html. Cleaned commit history (only netlify.toml in last commit). Push triggered Netlify auto-deploy."
   },
   "user_decisions": {
     "D1_relative_paths_only": "YES",
