@@ -99,6 +99,43 @@ if [ $VIOLATIONS -eq 0 ]; then
 fi
 
 # ============================================================================
+# GATE 3.5: Python import validation
+# ============================================================================
+echo ""
+echo "📋 Gate 3.5: Validating Python imports..."
+
+if [ -n "$STAGED_PY_FILES" ]; then
+  # Check if backend imports are valid
+  if echo "$STAGED_PY_FILES" | grep -q "^backend/"; then
+    echo "  Testing backend imports..."
+    if ! python3 -c "import sys; sys.path.insert(0, 'backend'); from api.index import app" 2>/dev/null; then
+      echo "❌ VIOLATION: Backend imports broken"
+      echo "   Test command failed: python3 -c \"from api.index import app\""
+      echo "   Fix missing functions or incorrect imports in backend/api/"
+      VIOLATIONS=$((VIOLATIONS + 1))
+    else
+      echo "✅ Backend imports valid"
+    fi
+  fi
+fi
+
+# ============================================================================
+# GATE 3.6: Frontend duplicate function check
+# ============================================================================
+echo ""
+echo "📋 Gate 3.6: Checking for duplicate JavaScript functions..."
+
+if git diff --cached --name-only | grep -q "frontend/index.html"; then
+  if [ -f ".mosaic/enforcement/check_duplicate_functions.sh" ]; then
+    if ! .mosaic/enforcement/check_duplicate_functions.sh; then
+      VIOLATIONS=$((VIOLATIONS + 1))
+    fi
+  else
+    echo "⚠️  WARNING: check_duplicate_functions.sh not found"
+  fi
+fi
+
+# ============================================================================
 # GATE 4: State file schema validation
 # ============================================================================
 echo ""
@@ -143,9 +180,18 @@ fi
 echo ""
 echo "📋 Gate 5: Checking if agent state was updated this session..."
 
-if git diff --cached --name-only | grep -q "^api/\|^mosaic_ui/\|^scripts/.*\.py$"; then
+# Get all staged files
+STAGED_FILES=$(git diff --cached --name-only)
+
+# Check if there are any non-.mosaic files
+NON_MOSAIC_FILES=$(echo "$STAGED_FILES" | grep -v "^\.mosaic/" || true)
+
+if [ -z "$NON_MOSAIC_FILES" ]; then
+  # Only .mosaic/ files are being committed (state-only update)
+  echo "✅ State-only update (no code changes) - sync commit allowed"
+elif echo "$STAGED_FILES" | grep -q "^api/\|^mosaic_ui/\|^scripts/.*\.py$"; then
   # Code changes were made
-  if ! git diff --cached --name-only | grep -q ".mosaic/agent_state.json"; then
+  if ! echo "$STAGED_FILES" | grep -q ".mosaic/agent_state.json"; then
     echo "⚠️  WARNING: Code changes detected but .mosaic/agent_state.json not updated"
     echo "   Did you update the state file with your work?"
     echo "   Consider: update last_commit, handoff_message, implementation_progress"
