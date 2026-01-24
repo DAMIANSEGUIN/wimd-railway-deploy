@@ -1,64 +1,65 @@
 [build]
-  base = "frontend"
+  base = "."
   publish = "frontend"
+  command = "node -e \"const fs=require('fs');const p='frontend/index.html';const s=fs.readFileSync(p,'utf8');const must=[/PS101/i,/Step.*1.*of.*10/i];const ok=must.every(r=>r.test(s));if(!ok){console.error('ENFORCEMENT_FAIL: PS101 authority missing in frontend/index.html');process.exit(1);}console.log('ENFORCEMENT_OK: PS101 authority present');\""
 
 [[redirects]]
   from = "/health"
-  to = "https://what-is-my-delta-site-production.up.railway.app/health"
+  to = "https://mosaic-backend-tpog.onrender.com/health"
   status = 200
   force = true
 
 [[redirects]]
   from = "/config"
-  to = "https://what-is-my-delta-site-production.up.railway.app/config"
+  to = "https://mosaic-backend-tpog.onrender.com/config"
   status = 200
   force = true
 
 [[redirects]]
   from = "/prompts/*"
-  to = "https://what-is-my-delta-site-production.up.railway.app/prompts/:splat"
+  to = "https://mosaic-backend-tpog.onrender.com/prompts/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/wimd"
-  to = "https://what-is-my-delta-site-production.up.railway.app/wimd"
+  to = "https://mosaic-backend-tpog.onrender.com/wimd"
   status = 200
   force = true
 
 [[redirects]]
   from = "/wimd/*"
-  to = "https://what-is-my-delta-site-production.up.railway.app/wimd/:splat"
+  to = "https://mosaic-backend-tpog.onrender.com/wimd/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/ob/*"
-  to = "https://what-is-my-delta-site-production.up.railway.app/ob/:splat"
+  to = "https://mosaic-backend-tpog.onrender.com/ob/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/resume/*"
-  to = "https://what-is-my-delta-site-production.up.railway.app/resume/:splat"
+  to = "https://mosaic-backend-tpog.onrender.com/resume/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/auth/register"
-  to = "https://what-is-my-delta-site-production.up.railway.app/auth/register"
+  to = "https://mosaic-backend-tpog.onrender.com/auth/register"
   status = 200
   force = true
 
 [[redirects]]
   from = "/auth/login"
-  to = "https://what-is-my-delta-site-production.up.railway.app/auth/login"
+  to = "https://mosaic-backend-tpog.onrender.com/auth/login"
   status = 200
   force = true
 
 [[redirects]]
   from = "/auth/me"
-  to = "https://what-is-my-delta-site-production.up.railway.app/auth/me"
+  to = "https://mosaic-backend-tpog.onrender.com/auth/me"
   status = 200
   force = true
 
@@ -67,3 +68,29 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Security Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https://mosaic-backend-tpog.onrender.com https://api.whatismydelta.com https://api.openai.com https://*.openai.com https://*.anthropic.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-ancestors 'self'; base-uri 'self'"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), fullscreen=(self), payment=()"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/:filename"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-store"
