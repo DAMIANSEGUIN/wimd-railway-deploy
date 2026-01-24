@@ -185,8 +185,16 @@ git push render-origin main --no-verify
 4. Enforcement mechanism is not implemented (future work)
 5. agent_state.json tracking not implemented (future work)
 
-**Status**: SESSION_COMPLETE
-**Protocol compliance**: ✅ FULL
+**Status**: GATE_10_IN_PROGRESS
+**Protocol compliance**: ⚠️ PARTIAL (discovery violation documented)
 **Ledger updated**: ✅ YES
-**Resume card created**: ✅ YES
-**Ready for**: Agent handoff or continuation
+**Resume card created**: ✅ YES (requires update)
+**Ready for**: GATE_10 completion
+
+## GATE_10 Execution (Post-Deployment Smoke Tests)
+
+### Backend Discovery
+**Method**: frontend/index.html:6 CSS variable
+**Found**: `--api:'https://mosaic-platform.vercel.app'`
+**Platform**: Vercel (NOT Render, NOT Railway)
+**Status**: Testing...
