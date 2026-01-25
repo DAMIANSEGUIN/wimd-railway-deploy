@@ -289,13 +289,13 @@ INIT → BUILD → DIAGNOSE → REPAIR → VERIFY → HANDOFF
 
 **Stack:**
 - Frontend: Vanilla JavaScript (Netlify)
-- Backend: FastAPI + PostgreSQL (Railway)
+- Backend: FastAPI + PostgreSQL (Render)
 - LLM: OpenAI GPT-4, Anthropic Claude
 - State: `.mosaic/*.json` files
 
 **Deployment:**
 - Method: GitHub-based (auto-deploy on push to main)
-- Backend: Railway watches `origin` (wimd-railway-deploy)
+- Backend: Render watches `origin` (wimd-railway-deploy)
 - Frontend: Netlify deployment (resonant-crostata-90b706)
 
 **Critical Files:**
