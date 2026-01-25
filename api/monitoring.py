@@ -124,7 +124,7 @@ class PromptMonitor:
                 cursor.execute(
                     """
                     UPDATE feature_flags
-                    SET enabled = 1
+                    SET enabled = TRUE
                     WHERE flag_name = 'AI_FALLBACK_ENABLED'
                 """
                 )
