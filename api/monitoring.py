@@ -113,12 +113,15 @@ class PromptMonitor:
         try:
             # 1. Clear prompt cache
             with get_conn() as conn:
-                result = conn.execute("DELETE FROM prompt_selector_cache").rowcount
+                cursor = conn.cursor()
+                cursor.execute("DELETE FROM prompt_selector_cache")
+                result = cursor.rowcount
                 recovery_actions.append(f"Cleared {result} cache entries")
 
             # 2. Ensure AI fallback is enabled
             with get_conn() as conn:
-                conn.execute(
+                cursor = conn.cursor()
+                cursor.execute(
                     """
                     UPDATE feature_flags
                     SET enabled = 1
@@ -149,14 +152,16 @@ class PromptMonitor:
         """Get recent prompt system failures."""
         try:
             with get_conn() as conn:
-                rows = conn.execute(
+                cursor = conn.cursor()
+                cursor.execute(
                     f"""
                     SELECT success, response_time_ms, source, error, timestamp
                     FROM prompt_health_log
                     WHERE timestamp > datetime('now', '-{hours} hours')
                     ORDER BY timestamp DESC
                 """
-                ).fetchall()
+                )
+                rows = cursor.fetchall()
 
                 return [
                     {
