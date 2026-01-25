@@ -103,7 +103,7 @@ class ProductionHealthChecker:
 
         # Check key files for dead backend references
         files_to_check = [
-            "mosaic_ui/index.html",
+            "frontend/index.html",
             "netlify.toml",
             "CLAUDE.md",
             "docs/README.md",
@@ -132,12 +132,12 @@ class ProductionHealthChecker:
         """Test: Frontend API URLs point to correct backend"""
         print("\n🧪 Test: Frontend URLs match production backend")
 
-        frontend_html = self.repo_root / "mosaic_ui/index.html"
+        frontend_html = self.repo_root / "frontend/index.html"
 
         if not frontend_html.exists():
-            self.warnings.append("mosaic_ui/index.html not found (may be in different location)")
-            print(f"  ⚠️  WARN: Frontend file not found")
-            return True  # Don't fail, just warn
+            self.failures.append("frontend/index.html not found - critical deployment file missing")
+            print(f"  ❌ FAIL: Frontend file not found at frontend/index.html")
+            return False  # FAIL instead of passing with warning
 
         with open(frontend_html) as f:
             content = f.read()
@@ -161,6 +161,44 @@ class ProductionHealthChecker:
             self.failures.append(f"Frontend doesn't reference production backend: {expected_backend}")
             print(f"  ❌ FAIL: Backend URL mismatch")
             return False
+
+    def test_deployed_frontend_api_url(self) -> bool:
+        """Test: DEPLOYED frontend has correct API URL (not just local file)"""
+        print("\n🧪 Test: Deployed frontend API URL (production reality check)")
+
+        frontend_url = "https://whatismydelta.com"
+        expected_backend = "https://mosaic-backend-tpog.onrender.com"
+
+        try:
+            with urllib.request.urlopen(frontend_url, timeout=10) as response:
+                if response.status == 200:
+                    html = response.read().decode()
+
+                    # Check if deployed HTML has correct API URL
+                    if expected_backend in html:
+                        print(f"  ✅ PASS: Deployed frontend uses correct API ({expected_backend})")
+                        return True
+                    else:
+                        # Try to extract what API URL is actually deployed
+                        import re
+                        api_match = re.search(r"--api:'([^']*)'", html)
+                        deployed_api = api_match.group(1) if api_match else "unknown"
+
+                        self.failures.append(f"Deployed frontend has wrong API URL: {deployed_api} (expected {expected_backend})")
+                        print(f"  ❌ FAIL: Deployed frontend has wrong API URL")
+                        print(f"     Expected: {expected_backend}")
+                        print(f"     Deployed: {deployed_api}")
+                        return False
+                else:
+                    self.failures.append(f"Deployed frontend returned HTTP {response.status}")
+                    print(f"  ❌ FAIL: Deployed frontend returned HTTP {response.status}")
+                    return False
+
+        except Exception as e:
+            # Don't fail on network errors - might be running offline
+            self.warnings.append(f"Could not check deployed frontend: {str(e)}")
+            print(f"  ⚠️  WARN: Could not check deployed frontend (network error)")
+            return True  # Pass with warning for network issues
 
     def test_deployment_config_valid(self) -> bool:
         """Test: Deployment config files are valid"""
@@ -204,6 +242,7 @@ class ProductionHealthChecker:
             self.test_backend_health,
             self.test_frontend_loads,
             self.test_frontend_backend_urls_match,
+            self.test_deployed_frontend_api_url,
             self.test_no_dead_backends,
             self.test_deployment_config_valid,
         ]
