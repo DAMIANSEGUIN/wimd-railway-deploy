@@ -1926,7 +1926,7 @@ async function askCoach(prompt) {
     if(configPromise) return configPromise;
     const endpoints = [
       `${window.location.origin}/config`,
-      'https://what-is-my-delta-site-production.up.railway.app/config',
+      'https://mosaic-backend-tpog.onrender.com/config',
       'https://whatismydelta.com/config'
     ];
     configPromise = (async ()=>{
@@ -1943,7 +1943,7 @@ async function askCoach(prompt) {
           // ignore endpoint failure
         }
       }
-      apiBase = 'https://what-is-my-delta-site-production.up.railway.app';
+      apiBase = 'https://mosaic-backend-tpog.onrender.com';
       document.body.dataset.apiBase = apiBase;
       return apiBase;
     })();
