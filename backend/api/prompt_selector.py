@@ -25,10 +25,12 @@ class PromptSelector:
         """Check if a feature flag is enabled."""
         try:
             with get_conn() as conn:
-                row = conn.execute(
-                    "SELECT enabled FROM feature_flags WHERE flag_name = ?", (flag_name,)
-                ).fetchone()
-                # FORCE BOOLEAN CONVERSION - SQLite returns 0/1, not True/False
+                cursor = conn.cursor()
+                cursor.execute(
+                    "SELECT enabled FROM feature_flags WHERE flag_name = %s", (flag_name,)
+                )
+                row = cursor.fetchone()
+                # FORCE BOOLEAN CONVERSION - PostgreSQL returns True/False
                 # This is critical because Python evaluates `0 or False` as False
                 return bool(row[0]) if row else False
         except Exception:
@@ -43,10 +45,12 @@ class PromptSelector:
         """Get cached response for a prompt hash."""
         try:
             with get_conn() as conn:
-                row = conn.execute(
-                    "SELECT csv_available, ai_fallback_used, last_updated FROM prompt_selector_cache WHERE prompt_hash = ?",
+                cursor = conn.cursor()
+                cursor.execute(
+                    "SELECT csv_available, ai_fallback_used, last_updated FROM prompt_selector_cache WHERE prompt_hash = %s",
                     (prompt_hash,),
-                ).fetchone()
+                )
+                row = cursor.fetchone()
 
                 if row:
                     # Check if cache is still valid
@@ -68,10 +72,15 @@ class PromptSelector:
         """Update cache with prompt selection results."""
         try:
             with get_conn() as conn:
-                conn.execute(
-                    """INSERT OR REPLACE INTO prompt_selector_cache
+                cursor = conn.cursor()
+                cursor.execute(
+                    """INSERT INTO prompt_selector_cache
                        (prompt_hash, csv_available, ai_fallback_used, last_updated)
-                       VALUES (?, ?, ?, ?)""",
+                       VALUES (%s, %s, %s, %s)
+                       ON CONFLICT (prompt_hash) DO UPDATE SET
+                       csv_available = EXCLUDED.csv_available,
+                       ai_fallback_used = EXCLUDED.ai_fallback_used,
+                       last_updated = EXCLUDED.last_updated""",
                     (prompt_hash, csv_available, ai_fallback_used, datetime.now().isoformat()),
                 )
         except Exception as e:
@@ -89,7 +98,8 @@ class PromptSelector:
         """Log AI fallback usage for analytics."""
         try:
             with get_conn() as conn:
-                conn.execute(
+                cursor = conn.cursor()
+                cursor.execute(
                     """INSERT INTO ai_fallback_logs
                                    (session_id, prompt_hash, csv_response, ai_response, fallback_reason, response_time_ms)
                                    VALUES (%s, %s, %s, %s, %s, %s)""",
@@ -211,23 +221,26 @@ class PromptSelector:
         """Get AI fallback usage statistics."""
         try:
             with get_conn() as conn:
+                cursor = conn.cursor()
                 if session_id:
                     # Get stats for specific session
-                    row = conn.execute(
+                    cursor.execute(
                         """SELECT COUNT(*) as total_fallbacks,
                                   AVG(response_time_ms) as avg_response_time,
                                   COUNT(DISTINCT prompt_hash) as unique_prompts
-                           FROM ai_fallback_logs WHERE session_id = ?""",
+                           FROM ai_fallback_logs WHERE session_id = %s""",
                         (session_id,),
-                    ).fetchone()
+                    )
+                    row = cursor.fetchone()
                 else:
                     # Get global stats
-                    row = conn.execute(
+                    cursor.execute(
                         """SELECT COUNT(*) as total_fallbacks,
                                   AVG(response_time_ms) as avg_response_time,
                                   COUNT(DISTINCT prompt_hash) as unique_prompts
                            FROM ai_fallback_logs"""
-                    ).fetchone()
+                    )
+                    row = cursor.fetchone()
 
                 if row:
                     return {
