@@ -3,8 +3,8 @@ set -euo pipefail
 
 export ZSH_DISABLE_COMPFIX=true
 
-LOCAL_ROOT="$HOME/AI_Workspace/WIMD-Railway-Deploy-Project"
-REMOTE_ROOT="gdrive:WIMD-Railway-Deploy-Project"
+LOCAL_ROOT="$HOME/AI_Workspace/WIMD-Deploy-Project"
+REMOTE_ROOT="gdrive:WIMD-Deploy-Project"
 
 if ! command -v rclone >/dev/null 2>&1; then
   echo "ERROR: rclone is not installed or not on PATH."

@@ -3,7 +3,7 @@ GEMINI: EMERGENCY TAKEOVER REQUEST
 Claude Code has made multiple critical errors during semantic match deployment.
 User requests Gemini take full control until deployment is successful.
 
-PROJECT: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+PROJECT: /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project
 
 PROBLEM: Semantic match endpoints return 404 on Render production
 - https://mosaic-backend-tpog.onrender.com/analytics/health → 404

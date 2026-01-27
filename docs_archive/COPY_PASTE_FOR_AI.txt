@@ -4,7 +4,7 @@
 
 Run this command to see what to read first:
 
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && ./scripts/show_latest_context.sh
+cd /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project && ./scripts/show_latest_context.sh
 
 Then read files in this order:
 

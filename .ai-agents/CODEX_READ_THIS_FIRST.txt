@@ -47,6 +47,6 @@ Optional for deeper context:
 - Use `./scripts/deploy.sh netlify` and `./scripts/deploy.sh railway` — the wrappers now keep the tree clean
 - Keep the HTTPS fallback logic in `scripts/push.sh`; do **not** revert to SSH-only pushes
 
-Need to roll back? Use the `snapshot-2025-11-11-chat-auth` tag or the backup at `~/Backups/WIMD-Railway-Deploy-Project_2025-11-11/`.
+Need to roll back? Use the `snapshot-2025-11-11-chat-auth` tag or the backup at `~/Backups/WIMD-Deploy-Project_2025-11-11/`.
 
 ═══════════════════════════════════════════════════════════════

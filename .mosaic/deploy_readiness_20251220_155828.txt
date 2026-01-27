@@ -1,4 +1,4 @@
-repo_root=/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+repo_root=/Users/damianseguin/AI_Workspace/WIMD-Deploy-Project
 branch=main
 commit=26bea5b56eb620e8d502a736167fa4c01a022b13
 remote=git@github.com:DAMIANSEGUIN/wimd-railway-deploy.git

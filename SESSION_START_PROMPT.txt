@@ -1,4 +1,4 @@
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project
 
 Read SESSION_START.md now.
 

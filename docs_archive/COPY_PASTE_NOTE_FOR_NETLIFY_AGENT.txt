@@ -7,8 +7,8 @@ We have a Railway deployment issue that needs diagnosis and repair. A complete d
 Issue: Railway deployments failing with "python: command not found" error
 
 Document Location (exact paths):
-- Cover note: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/FOR_NETLIFY_AGENT_RAILWAY_FIX.md
-- Full diagnostic: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/docs/NETLIFY_AGENT_RAILWAY_DEPLOYMENT_FIX.md
+- Cover note: /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project/FOR_NETLIFY_AGENT_RAILWAY_FIX.md
+- Full diagnostic: /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project/docs/NETLIFY_AGENT_RAILWAY_DEPLOYMENT_FIX.md
 
 The cover note provides a quick summary and points to the full diagnostic document which contains:
 - Complete error analysis

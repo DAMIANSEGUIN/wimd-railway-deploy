@@ -11,7 +11,7 @@ set -euo pipefail
 # ============================================================================
 
 LOCAL_ROOT="/Users/damianseguin/WIMD-Deploy-Project"
-GDRIVE_REMOTE="gdrive:WIMD-Railway-Deploy-Project"
+GDRIVE_REMOTE="gdrive:WIMD-Deploy-Project"
 RCLONE_BIN="/Users/damianseguin/coachvox_tools/bin/rclone"
 
 # ============================================================================
@@ -171,12 +171,12 @@ done
 echo "=== SYNC SUMMARY ==="
 echo ""
 echo "✅ Local → GDrive sync complete"
-echo "✅ GDrive folder: WIMD-Railway-Deploy-Project"
+echo "✅ GDrive folder: WIMD-Deploy-Project"
 echo "✅ Total files synced: $GDRIVE_FILE_COUNT"
 echo "✅ Tier 1 files: $((8 - MISSING_COUNT))/8 verified"
 echo ""
 echo "Next steps:"
-echo "1. Share GDrive folder 'WIMD-Railway-Deploy-Project' with ChatGPT"
+echo "1. Share GDrive folder 'WIMD-Deploy-Project' with ChatGPT"
 echo "2. Tell ChatGPT to read: MOSAIC_GDRIVE_AUDIT_FOR_CHATGPT_2025-12-05.md"
 echo "3. ChatGPT can now access all project files"
 echo ""

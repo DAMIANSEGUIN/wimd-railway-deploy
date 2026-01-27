@@ -75,7 +75,7 @@ PROJECT QUICK FACTS (For Reference)
 ───────────────────────────────────────────────────────────────────
 
 Project: WIMD Railway Deploy - Mosaic Platform
-Directory: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+Directory: /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project
 Production: https://whatismydelta.com
 Backend: https://what-is-my-delta-site-production.up.railway.app
 

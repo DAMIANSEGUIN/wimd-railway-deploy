@@ -1,12 +1,12 @@
 PROJECT: WIMD Railway Deploy - Mosaic Platform
-LOCATION: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+LOCATION: /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project
 
 ═══════════════════════════════════════════════════════════════════
 
 IMMEDIATE ACTION:
 
 1. Run this command:
-   cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && ./scripts/show_latest_context.sh
+   cd /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project && ./scripts/show_latest_context.sh
 
 2. Choose option 2 (Full Context)
 

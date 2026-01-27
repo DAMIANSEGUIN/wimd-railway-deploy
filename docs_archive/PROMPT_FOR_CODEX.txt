@@ -4,7 +4,7 @@ Project: Mosaic/WIMD Railway Deploy
 Issue: Protocol breakdown, file organization drift, prompts CSV not loading
 
 Read this file for complete context and tasks:
-/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/CODEX_HANDOFF_2025-10-01.md
+/Users/damianseguin/Downloads/WIMD-Deploy-Project/CODEX_HANDOFF_2025-10-01.md
 
 Summary:
 - Chat is working (CORS fixed) but prompts return null
@@ -19,4 +19,4 @@ Your tasks (detailed in handoff doc):
 
 Present your analysis and plan for user approval before implementing anything.
 
-Working directory: /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/
+Working directory: /Users/damianseguin/Downloads/WIMD-Deploy-Project/

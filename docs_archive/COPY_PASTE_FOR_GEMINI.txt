@@ -4,12 +4,12 @@
 
 HOW YOU FOUND THIS FILE:
 Your user told you to read this file located at:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/COPY_PASTE_FOR_GEMINI.txt
+/Users/damianseguin/AI_Workspace/WIMD-Deploy-Project/COPY_PASTE_FOR_GEMINI.txt
 
 Since you can't execute bash scripts directly, here's what to read:
 
 STEP 1: Read the overview file
-Read file: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/START_HERE.md
+Read file: /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project/.ai-agents/START_HERE.md
 
 This gives you:
 • Latest critical event with date
@@ -18,7 +18,7 @@ This gives you:
 • Critical warnings about what NOT to do
 
 STEP 2: Read the protocol
-Read file: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md
+Read file: /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md
 
 This tells you:
 • Required verification steps
@@ -26,7 +26,7 @@ This tells you:
 • Emergency procedures
 
 STEP 3: Find latest status files
-List files in directory: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/
+List files in directory: /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project/.ai-agents/
 
 Look for files matching these patterns (most recent = most relevant):
 • FINAL_STATUS_YYYY-MM-DD_*.md
@@ -36,7 +36,7 @@ Look for files matching these patterns (most recent = most relevant):
 Read the MOST RECENT file from each pattern.
 
 STEP 4: Check for handoff
-List files: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/handoff_*.json
+List files: /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project/.ai-agents/handoff_*.json
 
 If any exist, read the MOST RECENT one (highest timestamp).
 
@@ -51,7 +51,7 @@ This shows what happened recently.
 QUICK REFERENCE:
 
 Project Directory:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/AI_Workspace/WIMD-Deploy-Project
 
 Key Files to Read:
 1. .ai-agents/START_HERE.md (always read FIRST)

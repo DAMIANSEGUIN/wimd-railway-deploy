@@ -3,7 +3,7 @@
 # After this, the git post-commit hook will auto-sync on every commit
 
 PROJECT_DIR="/Users/damianseguin/WIMD-Deploy-Project"
-GDRIVE_PATH="gdrive:WIMD-Railway-Deploy-Project"
+GDRIVE_PATH="gdrive:WIMD-Deploy-Project"
 RCLONE="/Users/damianseguin/coachvox_tools/bin/rclone"
 
 echo "╔════════════════════════════════════════════════════════════════╗"
@@ -38,7 +38,7 @@ if [ $? -eq 0 ]; then
   echo "║                    ✅ SYNC COMPLETE                            ║"
   echo "╚════════════════════════════════════════════════════════════════╝"
   echo ""
-  echo "Google Drive folder: WIMD-Railway-Deploy-Project"
+  echo "Google Drive folder: WIMD-Deploy-Project"
   echo "Future commits will automatically sync via git hook."
   echo ""
   echo "Next: Share the GDrive folder with ChatGPT"

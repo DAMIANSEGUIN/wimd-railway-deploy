@@ -2,7 +2,7 @@ Hi Netlify Agent,
 
 I need your help fixing a Railway deployment issue. The booking system backend has been deployed but the routes aren't loading.
 
-**Project Directory:** `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
+**Project Directory:** `/Users/damianseguin/Downloads/WIMD-Deploy-Project`
 
 **Task Brief:** Read `NETLIFY_AGENT_RAILWAY_DEBUG.md` in the project root for full details.
 
@@ -60,7 +60,7 @@ Railway Dashboard Variables:
 ## Directory Structure
 
 ```
-/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/
+/Users/damianseguin/Downloads/WIMD-Deploy-Project/
 ├── api/
 │   ├── index.py                    # Main app (router registration here)
 │   ├── booking.py                  # Booking routes (NOT LOADING)
