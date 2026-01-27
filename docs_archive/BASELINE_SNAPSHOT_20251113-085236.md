@@ -64,7 +64,7 @@ BASELINE_SNAPSHOT_20251113-085236.md
 
 ## Deployment Status
 
-- Last Railway deploy: [Check Railway dashboard]
+- Last Render deploy: [Check Render dashboard]
 - Last Netlify deploy: [Check Netlify dashboard]
 - Health check: Failed
 

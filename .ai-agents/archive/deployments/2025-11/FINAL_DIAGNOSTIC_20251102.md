@@ -167,7 +167,7 @@ async def rag_health():
 ### Priority 3: Database Schema Verification
 
 **Status:** Not yet verified
-**Reason:** No Railway credentials in current session
+**Reason:** No Render credentials in current session
 **Expected tables:**
 
 - users
@@ -184,7 +184,7 @@ async def rag_health():
 **Action Required:**
 
 ```bash
-railway run psql $DATABASE_URL -c "\dt"
+render run psql $DATABASE_URL -c "\dt"
 ```
 
 ### Priority 4: E2E Testing Suite
@@ -256,13 +256,13 @@ railway run psql $DATABASE_URL -c "\dt"
 ### Expected per CLAUDE.md
 
 - ✅ Frontend: Fully deployed and functional
-- ✅ Backend API: Railway deployment operational
+- ✅ Backend API: Render deployment operational
 - ✅ Authentication: Login/register/password reset flows working
 - ✅ Chat/Coach: Career coaching chat interface operational
 - ✅ File Upload: Resume/document upload functional
 - ✅ Interactive UI: ALL navigation working
 - ✅ Trial Mode: 5-minute trial for unauthenticated users
-- ✅ Proxy Configuration: Netlify → Railway API routes configured
+- ✅ Proxy Configuration: Netlify → Render API routes configured
 - ✅ Phase 1: Migration framework + CSV→AI fallback + feature flags
 - ⚠️ Phase 2: Experiment engine backend (feature flag disabled)
 - ✅ Phase 3: Self-efficacy metrics + coach escalation + Focus Stack UI
@@ -303,7 +303,7 @@ railway run psql $DATABASE_URL -c "\dt"
 
 1. ✅ **PS101 v2 restoration** - COMPLETE
 2. **Add `/rag/health` endpoint** - 15 min
-3. **Verify database schema** - 15 min (requires Railway login)
+3. **Verify database schema** - 15 min (requires Render login)
 
 ### DO SOON (This Week)
 

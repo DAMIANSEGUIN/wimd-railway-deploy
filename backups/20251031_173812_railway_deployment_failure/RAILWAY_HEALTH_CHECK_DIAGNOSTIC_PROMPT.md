@@ -1,8 +1,8 @@
-# Railway Deployment Health Check Failure - Diagnostic Prompt
+# Render Deployment Health Check Failure - Diagnostic Prompt
 
 ## Problem Statement
 
-Railway deployment builds successfully and starts up correctly with all components initialized, but health check returns 503 causing deployment failure and rollback to old version.
+Render deployment builds successfully and starts up correctly with all components initialized, but health check returns 503 causing deployment failure and rollback to old version.
 
 ## Current Deployment Status
 
@@ -141,7 +141,7 @@ self.fallback_enabled = self._check_feature_flag("AI_FALLBACK_ENABLED")
 4. **Could there be a database transaction/persistence issue?**
    - Migration creates backup, then updates original database
    - Could SQLite connection be reading stale data?
-   - Could Railway volume mounting cause database file confusion?
+   - Could Render volume mounting cause database file confusion?
 
 ## Recommended Diagnostic Steps
 
@@ -216,13 +216,13 @@ Then investigate why original health check logic fails despite correct initializ
 
 ## Environment Details
 
-- **Platform**: Railway (automated container deployment)
+- **Platform**: Render (automated container deployment)
 - **Database**: SQLite with file persistence (`data/mosaic.db`)
-- **API Keys**: Set in Railway environment variables
+- **API Keys**: Set in Render environment variables
   - `OPENAI_API_KEY`: ✅ Configured
   - `CLAUDE_API_KEY`: ✅ Configured
 - **Python**: FastAPI application with uvicorn server
-- **Volume**: Railway provides persistent volume for `data/` directory
+- **Volume**: Render provides persistent volume for `data/` directory
 
 ## Success Criteria
 
@@ -232,7 +232,7 @@ Deployment is successful when:
 2. Container starts ✅ (already working)
 3. Application startup completes ✅ (already working)
 4. `/health` endpoint returns 200 OK ❌ (currently failing)
-5. Railway promotes new deployment as active ❌ (blocked by #4)
+5. Render promotes new deployment as active ❌ (blocked by #4)
 
 ## Files to Review
 
@@ -246,8 +246,8 @@ Deployment is successful when:
 
 - **Repo**: github.com/DAMIANSEGUIN/what-is-my-delta-site
 - **Branch**: main
-- **Remote**: railway-origin
+- **Remote**: render-origin
 - **Production URL**: <https://whatismydelta.com>
-- **Railway Service**: what-is-my-delta-site-production
+- **Render Service**: what-is-my-delta-site-production
 - **Last Working Commit**: a583d26a (Oct 6, 2025)
 - **Current Failed Commit**: 80155006 (Oct 9, 2025)

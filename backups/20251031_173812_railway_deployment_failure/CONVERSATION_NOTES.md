@@ -1,4 +1,4 @@
-# Conversation Notes - WIMD Railway Deployment
+# Conversation Notes - WIMD Render Deployment
 
 ## 2025-10-02 Updates (Claude in Cursor - Forensic Analysis & Implementation)
 
@@ -115,22 +115,22 @@
 - ✅ **Domain DNS updated** - Apex + www now point to Netlify
 - ⚠️ **Custom domain health** - `/health` still returns Netlify 404 page; needs rewrite to backend
 - ⚠️ **WWW health regression** - `/health` returns 404 (serving frontend only)
-- ✅ **SSL certificate** - Railway automatically issued SSL
+- ✅ **SSL certificate** - Render automatically issued SSL
 - ✅ **Prompts loaded** - CSV ingested and working
 - ✅ **API endpoints** - All working (/health, /config, /prompts/active)
 - ✅ **DNS proof saved** - User provided Netlify screenshot showing CNAME record
 - ✅ **Netlify deploy linked** - Local repo linked to resonant-crostata-90b706
 - ✅ **Frontend deployed** - `scripts/deploy_frontend_netlify.sh` pushed Mosaic UI prod build
-- ✅ **UI config fallback updated** - `mosaic_ui/index.html` now targets Railway host directly
-- ✅ **Railway origin health** - `/health` returns `{"ok": true}` (verified 2025-09-29)
+- ✅ **UI config fallback updated** - `mosaic_ui/index.html` now targets Render host directly
+- ✅ **Render origin health** - `/health` returns `{"ok": true}` (verified 2025-09-29)
 
 ## Current Status (Updated 2025-10-02 19:45 UTC)
 
-- **API URL:** <https://what-is-my-delta-site-production.up.railway.app> (direct origin; healthy)
+- **API URL:** <https://what-is-my-delta-site-production.up.render.app> (direct origin; healthy)
 - **Frontend URL:** <https://whatismydelta.com> (Netlify production with full authentication)
-- **Railway URL:** <https://what-is-my-delta-site-production.up.railway.app>
+- **Render URL:** <https://what-is-my-delta-site-production.up.render.app>
 - **Domain Provider:** Netlify (DNS updated; API routes proxied)
-- **SSL:** Working (Railway automatic)
+- **SSL:** Working (Render automatic)
 - **Prompts:** Loaded and active
 - **User Authentication:** ✅ IMPLEMENTED (email/password system)
 - **User Onboarding:** ✅ IMPLEMENTED (comprehensive guide system)
@@ -142,7 +142,7 @@
 - ✅ `curl https://whatismydelta.com/health` → `{"ok":true,"timestamp":"..."}`
 - ✅ `curl https://whatismydelta.com/config` → Working
 - ✅ `curl https://whatismydelta.com/prompts/active` → Working
-- ✅ Domain routing: WORKING - Netlify proxying to Railway backend
+- ✅ Domain routing: WORKING - Netlify proxying to Render backend
 - ✅ Solution: Connected Netlify site to GitHub repository
 
 ## User Instructions
@@ -154,7 +154,7 @@
 
 ## Next Steps
 
-- ⚠️ Add Netlify rewrite/proxy so domain API routes hit Railway backend
+- ⚠️ Add Netlify rewrite/proxy so domain API routes hit Render backend
 - ⚠️ Re-run smoke tests (`scripts/verify_deploy.sh`) once domain routes resolve
 
 ## Frontend Deployment (2025-09-25)
@@ -170,17 +170,17 @@
 -2025-09-30 - CORS issue escalated to Claude Code
 
 - ✅ **Local CORS working**: HTTP 200 with `access-control-allow-origin` header
-- ❌ **Railway CORS failing**: HTTP 400, missing `access-control-allow-origin` header
+- ❌ **Render CORS failing**: HTTP 400, missing `access-control-allow-origin` header
 - ✅ **Explicit OPTIONS handlers added**: All POST endpoints have OPTIONS handlers
-- ✅ **Code deployed**: Latest commit `c8a956f` with Railway edge compatibility fix
-- ⚠️ **Railway edge interference**: Edge servers intercepting OPTIONS requests before reaching FastAPI
-- 🔄 **Escalated to Claude Code**: Railway infrastructure investigation needed
+- ✅ **Code deployed**: Latest commit `c8a956f` with Render edge compatibility fix
+- ⚠️ **Render edge interference**: Edge servers intercepting OPTIONS requests before reaching FastAPI
+- 🔄 **Escalated to Claude Code**: Render infrastructure investigation needed
 
 ## Current Blocker
 
-- **Issue**: Railway edge servers (`railway-edge`) intercepting OPTIONS preflight requests
-- **Evidence**: Local works, Railway returns HTTP 400 regardless of explicit OPTIONS handlers
-- **Next**: Claude Code to investigate Railway edge server configuration and alternatives
+- **Issue**: Render edge servers (`render-edge`) intercepting OPTIONS preflight requests
+- **Evidence**: Local works, Render returns HTTP 400 regardless of explicit OPTIONS handlers
+- **Next**: Claude Code to investigate Render edge server configuration and alternatives
 
 ## 2025-10-04 Updates (CODEX Planning Clarification)
 

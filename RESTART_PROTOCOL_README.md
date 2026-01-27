@@ -28,7 +28,7 @@
 **Option 1: Short Prompt (Try this first)**
 
 ```
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && ./scripts/show_latest_context.sh
+cd /Users/damianseguin/WIMD-Deploy-Project && ./scripts/show_latest_context.sh
 
 Then tell Claude Code to choose option 2.
 ```

@@ -74,7 +74,7 @@
 
 ## What You Need to Do Before Deployment
 
-### 1. Add Environment Variables to Railway
+### 1. Add Environment Variables to Render
 
 **Required variables** (see `BOOKING_ENV_SETUP.md` for details):
 
@@ -93,7 +93,7 @@ PAYPAL_MODE='live'  # or 'sandbox' for testing
 
 **Where to add:**
 
-- Railway Dashboard → Your Project → Variables tab → New Variable
+- Render Dashboard → Your Project → Variables tab → New Variable
 
 ### 2. Share Google Calendar with Service Account
 
@@ -113,11 +113,11 @@ PAYPAL_MODE='live'  # or 'sandbox' for testing
 
 ### 3. Run Database Migrations
 
-**Option A: Railway Console**
+**Option A: Render Console**
 
 ```bash
-# SSH into Railway container
-railway connect
+# SSH into Render container
+render connect
 
 # Run migrations
 psql $DATABASE_URL < data/migrations/001_add_booking_tables.sql
@@ -127,9 +127,9 @@ psql $DATABASE_URL < data/migrations/002_seed_booking_data.sql
 **Option B: Local then deploy**
 
 ```bash
-# Run locally against Railway database
-psql $(railway variables get DATABASE_URL) < data/migrations/001_add_booking_tables.sql
-psql $(railway variables get DATABASE_URL) < data/migrations/002_seed_booking_data.sql
+# Run locally against Render database
+psql $(render variables get DATABASE_URL) < data/migrations/001_add_booking_tables.sql
+psql $(render variables get DATABASE_URL) < data/migrations/002_seed_booking_data.sql
 ```
 
 ---
@@ -143,14 +143,14 @@ psql $(railway variables get DATABASE_URL) < data/migrations/002_seed_booking_da
 git add .
 git commit -m "Add booking system backend - PayPal + Google Calendar integration"
 
-# 2. Push to Railway
-git push railway-origin main
+# 2. Push to Render
+git push render-origin main
 
 # 3. Monitor deployment
-railway logs --follow
+render logs --follow
 
 # 4. Verify deployment
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 ### Expected Log Output
@@ -171,7 +171,7 @@ After successful deployment, you should see:
 ### 1. Health Check
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 Expected response:
@@ -189,7 +189,7 @@ Expected response:
 ### 2. Check Availability
 
 ```bash
-curl -X GET "https://what-is-my-delta-site-production.up.railway.app/booking/availability?start_date=2025-10-28&end_date=2025-10-31" \
+curl -X GET "https://what-is-my-delta-site-production.up.render.app/booking/availability?start_date=2025-10-28&end_date=2025-10-31" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -198,7 +198,7 @@ Expected: List of available 30-min time slots
 ### 3. Validate Promo Code
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/booking/promo/WIMD25 \
+curl https://what-is-my-delta-site-production.up.render.app/booking/promo/WIMD25 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -330,7 +330,7 @@ Expected:
 
 - PayPal fees: ~$93 (20 × $4.65)
 - Google Calendar: $0
-- Railway hosting: Already covered by existing plan
+- Render hosting: Already covered by existing plan
 - **Total:** ~$93/month in transaction fees only
 
 ---
@@ -343,10 +343,10 @@ If deployment fails:
 # Revert to previous commit
 git revert HEAD
 
-# Force push to Railway
-git push railway-origin main --force
+# Force push to Render
+git push render-origin main --force
 
-# Or rollback via Railway dashboard
+# Or rollback via Render dashboard
 # Deployments tab → Previous deployment → Rollback
 ```
 
@@ -354,7 +354,7 @@ git push railway-origin main --force
 
 ## Security Checklist
 
-✅ **Environment variables encrypted** in Railway
+✅ **Environment variables encrypted** in Render
 ✅ **No credentials in git** (`.env` in `.gitignore`)
 ✅ **PayPal webhook signature verification** implemented
 ✅ **SQL injection prevention** (parameterized queries with `%s`)
@@ -368,10 +368,10 @@ git push railway-origin main --force
 
 ### Immediate (Before Frontend)
 
-1. ✅ Add environment variables to Railway
+1. ✅ Add environment variables to Render
 2. ✅ Share Google Calendar with service account
 3. ✅ Run database migrations
-4. ✅ Deploy to Railway
+4. ✅ Deploy to Render
 5. ✅ Test backend endpoints (see testing section above)
 
 ### After Backend is Live
@@ -388,7 +388,7 @@ git push railway-origin main --force
 
 **If Google Calendar events aren't created:**
 
-- Check Railway logs for error messages
+- Check Render logs for error messages
 - Verify service account email has calendar access
 - Confirm `GOOGLE_SERVICE_ACCOUNT_KEY` is valid JSON
 

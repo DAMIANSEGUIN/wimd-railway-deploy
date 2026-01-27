@@ -62,9 +62,9 @@ Line 3
 
 ```
 ============================= test session starts ==============================
-platform darwin -- Python 3.12.11, pytest-9.0.2, pluggy-1.6.0 -- /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.venv/bin/python3.12
+platform darwin -- Python 3.12.11, pytest-9.0.2, pluggy-1.6.0 -- /Users/damianseguin/WIMD-Deploy-Project/.venv/bin/python3.12
 cachedir: .pytest_cache
-rootdir: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+rootdir: /Users/damianseguin/WIMD-Deploy-Project
 plugins: anyio-4.12.0
 collecting ... collected 5 items
 

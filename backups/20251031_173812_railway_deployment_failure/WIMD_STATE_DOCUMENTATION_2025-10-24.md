@@ -61,8 +61,8 @@ Local branches:
 
 Remote branches:
   - remotes/origin/main
-  - remotes/railway-origin/deploy-clean
-  - remotes/railway-origin/main
+  - remotes/render-origin/deploy-clean
+  - remotes/render-origin/main
 ```
 
 ### Recent Commit History
@@ -220,7 +220,7 @@ Safe to ignore (development artifacts):
 
 - `README.md` - Unified architecture doc
 - `docs/` directory - Separate from frontend/docs
-- `backend/` directory - Railway deployment source
+- `backend/` directory - Render deployment source
 
 ---
 
@@ -380,11 +380,11 @@ From `TEAM_ORCHESTRATION_README.md`:
 
 **This Documentation**:
 
-- Location: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/WIMD_STATE_DOCUMENTATION_2025-10-24.md`
+- Location: `/Users/damianseguin/WIMD-Deploy-Project/WIMD_STATE_DOCUMENTATION_2025-10-24.md`
 
 **Key Project Files**:
 
-- Working Directory: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/`
+- Working Directory: `/Users/damianseguin/WIMD-Deploy-Project/`
 - Implementation: `frontend/index.html`
 - Specs: `frontend/docs/specs/*.md`
 - Instructions: `frontend/NETLIFY_AGENT_*.md`

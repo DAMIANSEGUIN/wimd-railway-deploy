@@ -71,7 +71,7 @@ From a machine with real network access:
 1. Run the improved verifier against production:
 
    ```bash
-   cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+   cd /Users/damianseguin/WIMD-Deploy-Project
    DEPLOY_URL=https://whatismydelta.com ./scripts/verify_deployment_improved.sh
    ```
 
@@ -83,10 +83,10 @@ From a machine with real network access:
 1. Verify Netlify is serving the rolled‑back `mosaic_ui/index.html`:
    - No `<script type="module" src="./js/main.js">` on production.
    - Auth modal + PS101 present.
-2. Verify Railway backend health:
+2. Verify Render backend health:
 
    ```bash
-   curl https://what-is-my-delta-site-production.up.railway.app/health
+   curl https://what-is-my-delta-site-production.up.render.app/health
    ```
 
 3. Confirm no auto‑deploy or branch configuration points to `phase1-incomplete` or other experimental branches.

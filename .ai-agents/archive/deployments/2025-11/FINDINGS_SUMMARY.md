@@ -127,7 +127,7 @@
 
 ## Database Schema Status
 
-**Unable to verify without Railway credentials**
+**Unable to verify without Render credentials**
 
 **Expected tables** (per CLAUDE.md):
 
@@ -145,7 +145,7 @@
 **Action:** Recommend running:
 
 ```bash
-railway run psql $DATABASE_URL -c "\dt"
+render run psql $DATABASE_URL -c "\dt"
 ```
 
 ---
@@ -205,7 +205,7 @@ railway run psql $DATABASE_URL -c "\dt"
 **Effort:** 15 minutes
 **Impact:** Confirm no missing tables
 **Risk:** None (read-only check)
-**Action:** Connect to Railway and run `\dt`
+**Action:** Connect to Render and run `\dt`
 
 ### PRIORITY 4: E2E Testing Suite
 

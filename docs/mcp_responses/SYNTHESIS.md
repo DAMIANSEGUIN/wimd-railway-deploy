@@ -328,7 +328,7 @@ schema_version: v1.0
 
 **Scope:**
 
-- Railway deployment of MCP server (if local proves valuable)
+- Render deployment of MCP server (if local proves valuable)
 - Monitoring and alerting (MCP uptime, latency)
 - Automated fallback testing
 - Schema validation for all summaries
@@ -343,7 +343,7 @@ schema_version: v1.0
 
 **Deliverables:**
 
-- MCP server deployed to Railway
+- MCP server deployed to Render
 - Monitoring dashboard (uptime, latency, errors)
 - Automated tests for fallback scenarios
 - Schema validators for JSON/YAML
@@ -366,7 +366,7 @@ schema_version: v1.0
 
 ### 1. Budget & Infrastructure
 
-- **Q:** Can we allocate $5-10/month for MCP server on Railway (Phase 3)?
+- **Q:** Can we allocate $5-10/month for MCP server on Render (Phase 3)?
 - **Impact:** Phase 1-2 can run locally (free), Phase 3 needs hosting
 
 ### 2. Timeline & Urgency
@@ -460,7 +460,7 @@ schema_version: v1.0
 
 3. **Budget for MCP infrastructure?**
    - Phase 1-2: Free (local)
-   - Phase 3+: $5-10/month (Railway deployment)
+   - Phase 3+: $5-10/month (Render deployment)
 
 4. **Risk tolerance for unproven technology?**
    - MCP is custom architecture, not off-the-shelf

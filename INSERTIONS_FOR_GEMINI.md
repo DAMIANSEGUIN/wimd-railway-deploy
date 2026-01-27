@@ -30,7 +30,7 @@ Use: copy individual blocks into the appropriate files in the LOCAL workspace, t
 The Mosaic system operates on a three-layer repository model:
 
 1. LOCAL AUTHORITATIVE WORKSPACE
-   - Location: /Users/damianseguin/AI_Workspace/WIMD-Railway_Deploy_Project
+   - Location: /Users/damianseguin/AI_Workspace/WIMD-Render_Deploy_Project
    - Contains the real, editable files.
    - Edited by Gemini (Terminal), Claude (Terminal), Codex (Cursor), and human.
 
@@ -99,7 +99,7 @@ Agents MUST NOT directly write to GDrive. Only the sync service performs cloud w
 ## FAST GUIDE: Which Repo Do I Use?
 
 LOCAL (edit here):
-  /Users/damianseguin/AI_Workspace/WIMD-Railway_Deploy_Project
+  /Users/damianseguin/AI_Workspace/WIMD-Render_Deploy_Project
 
 GDRIVE MASTER (authoritative cloud):
   Located in Google Drive under Mosaic/Master

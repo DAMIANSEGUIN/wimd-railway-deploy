@@ -112,7 +112,7 @@ git push origin main
 
 - `8d8d83f` - fix: Move all immediate DOM access inside initApp (Stage 1 fix)
 - `bac92d5` - fix: Move DOMContentLoaded listener inside IIFE scope
-- `356fd4d` - fix: Update API_BASE to Railway backend URL
+- `356fd4d` - fix: Update API_BASE to Render backend URL
 - `4b8414f` - build: update BUILD_ID to 6d8f2ed
 
 **Status:** 4 commits ahead of origin, ready to push
@@ -293,7 +293,7 @@ All three methods will deploy commit `8d8d83f` with the complete DOM timing fix,
 ### Step 1: Run Session Start Protocol
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md
+/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md
 ```
 
 ### Step 2: Load Context

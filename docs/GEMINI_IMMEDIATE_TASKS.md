@@ -37,7 +37,7 @@ A JSON file with 20-30 test cases for trigger detection. Each case includes:
 [
   {
     "id": "test_001",
-    "user_message": "The deployment to Railway failed with a 500 error",
+    "user_message": "The deployment to Render failed with a 500 error",
     "agent_response": "Let me check the deployment logs...",
     "expected_triggers": ["error", "deployment"],
     "should_not_trigger": ["database", "test"],
@@ -61,7 +61,7 @@ A JSON file with 20-30 test cases for trigger detection. Each case includes:
   }
   // Add 17-27 more cases covering:
   // - Error scenarios (bugs, failures, crashes)
-  // - Deployment scenarios (deploy, push, railway, production)
+  // - Deployment scenarios (deploy, push, render, production)
   // - Database scenarios (PostgreSQL, SQLite, queries, migrations)
   // - Test scenarios (pytest, golden dataset, test failures)
   // - Context overflow (very long responses)
@@ -72,7 +72,7 @@ A JSON file with 20-30 test cases for trigger detection. Each case includes:
 **5 Trigger Types to Cover:**
 
 1. **error** - Keywords: error, failed, crash, bug, exception, broken, issue, problem, timeout
-2. **deployment** - Keywords: deploy, push, railway, production, staging, release, rollback
+2. **deployment** - Keywords: deploy, push, render, production, staging, release, rollback
 3. **database** - Keywords: database, postgresql, sqlite, query, migration, schema, connection, SQL
 4. **test** - Keywords: test, pytest, golden, failing test, test coverage, unit test
 5. **context_overflow** - Triggered when agent response >1000 words (not keyword-based)

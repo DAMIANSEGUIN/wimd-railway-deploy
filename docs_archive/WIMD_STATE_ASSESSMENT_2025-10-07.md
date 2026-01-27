@@ -110,7 +110,7 @@
 
 **Security Concern**:
 
-- Real API keys in .env file (should be in Railway environment variables)
+- Real API keys in .env file (should be in Render environment variables)
 - Also found OpenAI key in .zshrc (discovered in system audit)
 
 ### Free Public APIs Listed
@@ -183,7 +183,7 @@ api/job_sources/
 
 **Questions**:
 
-- Have migrations been run on Railway production?
+- Have migrations been run on Render production?
 - Are RAG tables present in production database?
 - Is local database in sync with production?
 
@@ -193,7 +193,7 @@ api/job_sources/
 
 ## PRODUCTION STATUS
 
-### Railway Deployment
+### Render Deployment
 
 - **Project**: wimd-career-coaching
 - **Environment**: production
@@ -207,9 +207,9 @@ api/job_sources/
 
 ### Backend Health
 
-- **URL**: <https://what-is-my-delta-site-production.up.railway.app/health>
+- **URL**: <https://what-is-my-delta-site-production.up.render.app/health>
 - **Status**: Unable to verify (command blocked)
-- **Assumption**: Likely operational based on Railway status
+- **Assumption**: Likely operational based on Render status
 
 ---
 
@@ -266,7 +266,7 @@ api/job_sources/
 ### ✅ Working in Production
 
 - Frontend (whatismydelta.com)
-- Backend API (Railway deployment)
+- Backend API (Render deployment)
 - Phase 1-3 features (partially enabled)
 - Self-efficacy metrics collection
 - Coach escalation signals
@@ -381,11 +381,11 @@ git branch phase-4-cursor-attempt-reference
 ### Critical
 
 1. ⚠️ **OpenAI API key in .zshrc** (found in system audit)
-2. ⚠️ **API keys in .env file** (should be Railway env vars only)
+2. ⚠️ **API keys in .env file** (should be Render env vars only)
 
 ### Recommended Actions
 
-1. Move all API keys to Railway environment variables
+1. Move all API keys to Render environment variables
 2. Clear .env file (make it template-only with placeholders)
 3. Remove API key from .zshrc
 4. Verify .env is in .gitignore (prevent future exposure)
@@ -396,9 +396,9 @@ git branch phase-4-cursor-attempt-reference
 
 ### Pre-Deployment Requirements
 
-- [ ] Database migrations verified on Railway
+- [ ] Database migrations verified on Render
 - [ ] Netlify rewrites updated for Phase 4 endpoints
-- [ ] Railway environment variables configured
+- [ ] Render environment variables configured
 - [ ] Feature flags aligned with deployment plan
 - [ ] Rollback procedure documented and tested
 - [ ] Smoke tests pass on production

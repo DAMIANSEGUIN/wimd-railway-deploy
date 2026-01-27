@@ -23,7 +23,7 @@ as authoritative for:
 ### 2.1 Local Authoritative Workspace (Primary Source of Truth)
 
 **Path (on Damian's Mac):**
-`/Users/damianseguin/AI_Workspace/WIMD-Railway_Deploy_Project`
+`/Users/damianseguin/AI_Workspace/WIMD-Render_Deploy_Project`
 
 Contains:
 

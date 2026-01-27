@@ -13,7 +13,7 @@ I need help diagnosing a JavaScript initialization error on a production website
 
 Project: Mosaic Career Transition Platform
 Production URL: https://whatismydelta.com
-Tech Stack: Vanilla JavaScript ES6+ in single HTML file, FastAPI backend on Railway
+Tech Stack: Vanilla JavaScript ES6+ in single HTML file, FastAPI backend on Render
 
 PROBLEM:
 - Browser console shows: "Uncaught ReferenceError: initApp is not defined" at line 4020
@@ -65,7 +65,7 @@ CONSTRAINTS:
 - Must keep all code in single HTML file (no separate JS files)
 - Must use IIFE for scope isolation
 - Script tag is at END of HTML body (after all DOM elements)
-- Cannot modify backend (Railway) - frontend-only fix needed
+- Cannot modify backend (Render) - frontend-only fix needed
 
 QUESTION:
 Why is initApp undefined at line 4020 when it's defined at line 2017 in the same IIFE scope? Function declarations should be hoisted to the top of the scope.
@@ -82,7 +82,7 @@ Please read the full diagnostic context below for additional details.
 
 **Name:** Mosaic Platform (What Is My Delta)
 **Purpose:** AI-powered career transition coaching
-**Repository:** /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+**Repository:** /Users/damianseguin/WIMD-Deploy-Project
 **Production:** https://whatismydelta.com
 
 **Features:**
@@ -102,10 +102,10 @@ Please read the full diagnostic context below for additional details.
 - Deployed to Netlify CDN
 
 **Backend:**
-- Python FastAPI on Railway
+- Python FastAPI on Render
 - PostgreSQL database
 - OpenAI GPT-4 + Anthropic Claude
-- URL: https://what-is-my-delta-site-production.up.railway.app
+- URL: https://what-is-my-delta-site-production.up.render.app
 
 ### File Structure
 

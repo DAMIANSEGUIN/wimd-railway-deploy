@@ -17,7 +17,7 @@ Commands with line breaks fail when user copy-pastes:
 
 ```bash
 # BROKEN - line break in middle of URL
-curl https://what-is-my-delta-site-production.up.railway.app/health/compre
+curl https://what-is-my-delta-site-production.up.render.app/health/compre
   hensive
 ```
 
@@ -139,7 +139,7 @@ SINGLE_LINE_COMMAND_HERE
 
 ````markdown
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
+curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive
 ```
 ````
 
@@ -147,7 +147,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensiv
 
 ````markdown
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive \
+curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive \
   -H "Authorization: Bearer token" \
   -H "Content-Type: application/json"
 ```
@@ -157,7 +157,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensiv
 
 ````markdown
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health/compre
+curl https://what-is-my-delta-site-production.up.render.app/health/compre
   hensive
 ```
 ````
@@ -234,13 +234,13 @@ Before providing command to user:
 ### ✅ CORRECT - Single line
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
+curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive
 ```
 
 ### ✅ CORRECT - Multi-line with backslash
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/jobs/search \
+curl https://what-is-my-delta-site-production.up.render.app/jobs/search \
   --data-urlencode "query=software engineer" \
   --data-urlencode "location=remote"
 ```
@@ -248,7 +248,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/jobs/search \
 ### ❌ INCORRECT - Line break mid-URL
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health/compre
+curl https://what-is-my-delta-site-production.up.render.app/health/compre
   hensive
 ```
 

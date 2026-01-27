@@ -23,8 +23,8 @@
 
 ### **Claude Code** - Infrastructure Debugger
 
-- **Access**: Railway logs, deployment analysis, infrastructure troubleshooting
-- **Tasks**: Railway deployment failures, health check issues, environment config
+- **Access**: Render logs, deployment analysis, infrastructure troubleshooting
+- **Tasks**: Render deployment failures, health check issues, environment config
 - **Read**: OPERATIONS_MANUAL.md, DEPLOYMENT_STATUS_*.md
 - **Do NOT**: Make code changes without CODEX planning
 
@@ -38,7 +38,7 @@
 ### **Claude in Cursor** - Local Implementation Engineer
 
 - **Access**: Full local environment, git, file system, terminal
-- **Tasks**: Code implementation, testing, git operations, Railway deployment execution
+- **Tasks**: Code implementation, testing, git operations, Render deployment execution
 - **Read**: Implementation plans from CODEX
 - **Do NOT**: Implement without CODEX plan or make architectural decisions alone
 
@@ -160,7 +160,7 @@ Follow this decision tree:
 
 → Read: OPERATIONS_MANUAL.md, latest DEPLOYMENT_STATUS_*.md
 → Role: Claude Code
-→ Check: Railway logs, health checks, environment variables
+→ Check: Render logs, health checks, environment variables
 
 ### **I'm implementing a feature**
 

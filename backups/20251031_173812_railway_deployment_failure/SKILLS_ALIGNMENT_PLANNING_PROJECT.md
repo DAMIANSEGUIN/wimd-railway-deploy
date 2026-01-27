@@ -41,7 +41,7 @@
 **How to Integrate:**
 
 - Replace elaborate planning systems with conversational approach
-- Formalize parallel agent coordination (3-8 agents in WIMD-Railway-Deploy-Project)
+- Formalize parallel agent coordination (3-8 agents in WIMD-Render-Deploy-Project)
 - Create .claude/agent-instructions.md following organic evolution principle
 - Implement screenshot-first debugging protocol
 - Establish interruption checkpoints in long-running tasks

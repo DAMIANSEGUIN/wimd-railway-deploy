@@ -40,7 +40,7 @@ kill <PID>
 python3 local_dev_server.py &
 ```
 
-**Result:** ✅ Server now running successfully on port 3000, proxying to Railway backend, responding with HTTP 200
+**Result:** ✅ Server now running successfully on port 3000, proxying to Render backend, responding with HTTP 200
 
 ### Why Gemini Couldn't See the Error
 

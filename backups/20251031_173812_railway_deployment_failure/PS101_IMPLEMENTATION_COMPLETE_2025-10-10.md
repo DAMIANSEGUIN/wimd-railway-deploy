@@ -2,7 +2,7 @@
 
 **Status**: ✅ DEPLOYED TO PRODUCTION
 **Production URL**: <https://whatismydelta.com>
-**Backend API**: <https://what-is-my-delta-site-production.up.railway.app>
+**Backend API**: <https://what-is-my-delta-site-production.up.render.app>
 
 ---
 
@@ -241,7 +241,7 @@ def is_tangent(user_response, current_step):
 ### Endpoint Test
 
 ```bash
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/wimd/start-ps101
+curl -X POST https://what-is-my-delta-site-production.up.render.app/wimd/start-ps101
 ```
 
 **Response**:
@@ -258,7 +258,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/wimd/start-
 ### Health Check
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 **Response**:
@@ -293,7 +293,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 | `11c87e6` | Fix prompt matching: Use semantic search instead of exact matching | ✅ Deployed |
 | `a749d4f` | Add START_HERE.md session initialization protocol | ✅ Deployed |
 | `9d629a5` | Implement PS101 guided problem-solving sequence | ✅ Deployed |
-| `ab78f7f` | Cache bust: force Railway to reload PS101 code | ✅ Deployed |
+| `ab78f7f` | Cache bust: force Render to reload PS101 code | ✅ Deployed |
 | `709a2b8` | Add .claude-run to .gitignore | ✅ Deployed |
 
 ---
@@ -396,7 +396,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 - ✅ Implement PS101 backend logic
 - ✅ Wire frontend Fast Track button
 - ✅ Fix semantic search for tangent support
-- ✅ Deploy to Railway production
+- ✅ Deploy to Render production
 - ✅ Verify all endpoints working
 
 ### Short-Term (Recommended)

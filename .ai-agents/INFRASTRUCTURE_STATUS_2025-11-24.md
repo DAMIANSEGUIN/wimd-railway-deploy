@@ -40,10 +40,10 @@ curl -s https://whatismydelta.com/health
 
 **Status:** ✅ HEALTHY
 
-### Backend (Railway)
+### Backend (Render)
 
 ```bash
-curl -s https://what-is-my-delta-site-production.up.railway.app/health
+curl -s https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 **Result:**
@@ -162,11 +162,11 @@ Result: 3
 **Last Deploy:** Commit `1fc4010` (rollback to stable)
 **Auto-Deploy:** Enabled (but local changes not pushed)
 
-### Railway
+### Render
 
 **Status:** ✅ ACTIVE
 **Service:** `what-is-my-delta-site-production`
-**Database:** PostgreSQL (railway.internal)
+**Database:** PostgreSQL (render.internal)
 **Health Endpoint:** `/health` - returning `ok:true`
 
 **Environment Variables Status:**
@@ -175,7 +175,7 @@ Result: 3
 - ✅ `OPENAI_API_KEY` - Set
 - ✅ `CLAUDE_API_KEY` - Set
 - ✅ `PUBLIC_SITE_ORIGIN` - Set (<https://whatismydelta.com>)
-- ✅ `PUBLIC_API_BASE` - Set (Railway URL)
+- ✅ `PUBLIC_API_BASE` - Set (Render URL)
 
 ---
 
@@ -226,7 +226,7 @@ Result: 3
 ### Current Status
 
 **Netlify Auto-Deploy:** ✅ Enabled for `main` branch
-**Railway Auto-Deploy:** ✅ Enabled for `main` branch
+**Render Auto-Deploy:** ✅ Enabled for `main` branch
 
 **Protection Mechanisms:**
 
@@ -254,7 +254,7 @@ Result: 3
 
 ✅ **Step 1:** Production health verified (all systems operational)
 ✅ **Step 2:** Rollback baseline locked in (Netlify serving commit `1fc4010`)
-✅ **Step 3:** Railway backend verified (healthy, PostgreSQL connected)
+✅ **Step 3:** Render backend verified (healthy, PostgreSQL connected)
 ✅ **Step 4:** Codex's safe hook verified by Gemini (USE_MODULES=false, no behavior change)
 
 ### Next Steps (Coordination Required)
@@ -347,7 +347,7 @@ All infrastructure prerequisites met for Phase 1 unblocking work.
 **Health Endpoints:**
 
 - Frontend: <https://whatismydelta.com/health> (checked every session)
-- Backend: <https://what-is-my-delta-site-production.up.railway.app/health> (checked every session)
+- Backend: <https://what-is-my-delta-site-production.up.render.app/health> (checked every session)
 
 **Verification Scripts:**
 
@@ -356,7 +356,7 @@ All infrastructure prerequisites met for Phase 1 unblocking work.
 
 **Manual Checks:**
 
-- Railway dashboard (deployment status, logs)
+- Render dashboard (deployment status, logs)
 - Netlify dashboard (deployment status, logs)
 - Git status (confirm what's deployed vs local)
 
@@ -366,7 +366,7 @@ All infrastructure prerequisites met for Phase 1 unblocking work.
 
 - `/health` endpoint returns `ok: false`
 - `verify_critical_features.sh` reports missing auth or PS101
-- Railway or Netlify service down
+- Render or Netlify service down
 
 **WARNING (investigate but don't stop):**
 

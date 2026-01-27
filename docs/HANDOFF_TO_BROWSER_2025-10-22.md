@@ -108,7 +108,7 @@ Implement two new features for Mosaic platform:
 
 **Current deployment**:
 
-- **Backend**: Railway (`what-is-my-delta-site-production.up.railway.app`)
+- **Backend**: Render (`what-is-my-delta-site-production.up.render.app`)
 - **Frontend**: Netlify (`www.whatismydelta.com`)
 - **Auto-deploy**: Push to `main` branch triggers deploy
 

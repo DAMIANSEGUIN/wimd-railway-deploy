@@ -1,18 +1,18 @@
 # Claude Code Accountability Protocol
 
 **Created:** 2025-10-31
-**Reason:** Railway deployment failures due to ignoring systematic diagnosis
+**Reason:** Render deployment failures due to ignoring systematic diagnosis
 **Owner:** Claude Code (SSE)
 
 ---
 
 ## What I Did Wrong Today (2025-10-31)
 
-### Incident: Railway Deployment Failures
+### Incident: Render Deployment Failures
 
 **Timeline:**
 
-- 16:00 - Railway deployment failed: "python: command not found"
+- 16:00 - Render deployment failed: "python: command not found"
 - 16:05 - User asked for help
 - 16:10 - I created `nixpacks.toml` (attempt 1) - firefighting
 - 16:15 - Failed again, modified `nixpacks.toml` (attempt 2) - more firefighting
@@ -39,7 +39,7 @@
 
 **3. IGNORED NARs Guidance**
 
-- ❌ NARs said: "Let Railway auto-detect, check Root Directory"
+- ❌ NARs said: "Let Render auto-detect, check Root Directory"
 - ❌ I did: Kept modifying nixpacks.toml
 - ❌ I wasted: 3 deployments, 30 minutes, user's trust
 - ✅ Should have → Followed NARs' recommendation exactly
@@ -220,12 +220,12 @@ REMINDER: Are you following systematic diagnosis or firefighting?
 
 ## Incident Log
 
-### Incident #1: Railway Deployment Failures (2025-10-31)
+### Incident #1: Render Deployment Failures (2025-10-31)
 
-- **Error:** `pip: command not found` in Railway build
+- **Error:** `pip: command not found` in Render build
 - **My Response:** Firefighting with nixpacks.toml (3 failed attempts)
 - **Correct Response:** Escalate to NARs immediately (error not in taxonomy)
-- **NARs Diagnosis:** Check Railway Root Directory setting, let auto-detect work
+- **NARs Diagnosis:** Check Render Root Directory setting, let auto-detect work
 - **My Mistake:** Ignored NARs, kept modifying nixpacks.toml
 - **User Callout:** "You're acting like you just figured this out - NARs told you 15 minutes ago"
 - **Outcome:** Wasted 3 deployments, 30 minutes, damaged trust
@@ -261,11 +261,11 @@ REMINDER: Are you following systematic diagnosis or firefighting?
 
 ## Update Log
 
-**2025-10-31:** Created after Railway deployment incident
+**2025-10-31:** Created after Render deployment incident
 
 - Added commitment to read diagnostic protocols
 - Added trigger for external expertise
-- Added incident #1 (Railway failures)
+- Added incident #1 (Render failures)
 
 ---
 

@@ -53,7 +53,7 @@ From the handoff document Claude Code created:
 - PS101 flow exists
 - Chat interface functional
 - Database connected (PostgreSQL)
-- Backend API deployed on Railway
+- Backend API deployed on Render
 - Frontend deployed on Netlify
 
 ### What Needs Building
@@ -78,7 +78,7 @@ From the handoff document Claude Code created:
 **In Terminal:**
 
 ```bash
-cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Railway-Deploy-Project
+cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Render-Deploy-Project
 
 claude_code
 
@@ -353,7 +353,7 @@ Guidelines:
 All files are in:
 
 ```
-~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Railway-Deploy-Project
+~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Render-Deploy-Project
 ```
 
 **Read first:**
@@ -392,7 +392,7 @@ All files are in:
 - Run local tests first
 - Check `/health` endpoint
 - Verify PostgreSQL connected (not SQLite fallback)
-- Deploy to Railway
+- Deploy to Render
 - Monitor logs for 5 minutes
 
 ---

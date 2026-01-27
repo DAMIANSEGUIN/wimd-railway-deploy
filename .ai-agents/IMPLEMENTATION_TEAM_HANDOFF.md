@@ -11,10 +11,10 @@
 
 ### 1. Repository Access
 
-- **GitHub:** github.com/DAMIANSEGUIN/wimd-railway-deploy
+- **GitHub:** github.com/DAMIANSEGUIN/wimd-render-deploy
 - **Production Frontend:** <https://whatismydelta.com>
-- **Backend API:** <https://what-is-my-delta-site-production.up.railway.app>
-- **Health Check:** <https://what-is-my-delta-site-production.up.railway.app/health/comprehensive>
+- **Backend API:** <https://what-is-my-delta-site-production.up.render.app>
+- **Health Check:** <https://what-is-my-delta-site-production.up.render.app/health/comprehensive>
 
 ### 2. Essential Documentation (Read in Order)
 
@@ -29,12 +29,12 @@
 
 ```bash
 # Clone repository
-git clone https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git
-cd wimd-railway-deploy
+git clone https://github.com/DAMIANSEGUIN/wimd-render-deploy.git
+cd wimd-render-deploy
 
-# Install Railway CLI (for backend)
-npm install -g @railway/cli
-railway login
+# Install Render CLI (for backend)
+npm install -g @render/cli
+render login
 
 # Install Netlify CLI (for frontend)
 npm install -g netlify-cli
@@ -60,8 +60,8 @@ cd frontend
 ### Stack
 
 - **Frontend:** Vanilla JavaScript (ES6+), deployed on Netlify
-- **Backend:** Python FastAPI, deployed on Railway
-- **Database:** PostgreSQL (Railway managed)
+- **Backend:** Python FastAPI, deployed on Render
+- **Database:** PostgreSQL (Render managed)
 - **AI Providers:** OpenAI (embeddings, GPT-4), Anthropic (Claude)
 
 ### Key Components
@@ -108,7 +108,7 @@ cd frontend
 **MANDATORY steps:**
 
 1. Run verification script (above)
-2. Test backend health: `curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive`
+2. Test backend health: `curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive`
 3. For major changes: Run full diagnostic (see `.ai-agents/FINAL_DIAGNOSTIC_20251102.md`)
 4. Update `CLAUDE.md` status section
 5. Document findings in `.ai-agents/` directory
@@ -129,8 +129,8 @@ netlify deploy --prod --dir=. --site=bb594f69-4d23-4817-b7de-dadb8b4db874
 ### Deploy Backend
 
 ```bash
-git push railway-origin main
-# Railway auto-deploys on push
+git push render-origin main
+# Render auto-deploys on push
 ```
 
 ### Check Deployment Status
@@ -140,8 +140,8 @@ git push railway-origin main
 netlify status
 
 # Backend
-railway status
-railway logs
+render status
+render logs
 ```
 
 ### Run Tests
@@ -157,7 +157,7 @@ pytest tests/test_prompts.py -v
 ### Access Database
 
 ```bash
-railway run psql $DATABASE_URL
+render run psql $DATABASE_URL
 
 # List tables
 \dt
@@ -226,13 +226,13 @@ async def rag_health():
 
 ### Priority 2: Verify Database Schema
 
-- **Status:** Not verified (needs Railway credentials)
+- **Status:** Not verified (needs Render credentials)
 - **Impact:** Low - system working fine
 - **Effort:** 15 minutes
 - **Action:**
 
 ```bash
-railway run psql $DATABASE_URL -c "\dt"
+render run psql $DATABASE_URL -c "\dt"
 ```
 
 ### Priority 3: E2E Testing Suite
@@ -297,18 +297,18 @@ I acknowledge these features MUST BE PRESERVED.
 # If deployment breaks production
 git log --oneline -5  # Find last good commit
 git revert HEAD
-git push railway-origin main --force
+git push render-origin main --force
 ```
 
 ---
 
 ## Feature Flags
 
-**Location:** Railway environment variables
+**Location:** Render environment variables
 
 ```bash
 # Check current flags
-railway variables | grep ENABLED
+render variables | grep ENABLED
 
 # Expected values
 RAG_BASELINE=true
@@ -324,7 +324,7 @@ EXPERIMENTS_ENABLED=false  # Intentionally disabled
 ### Backend Health Check
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive | jq
+curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive | jq
 ```
 
 **Expected response:**
@@ -334,7 +334,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensiv
 - `recent_failures: 0`
 - `failure_rate_percent: 0`
 
-### Railway Auto-Restart
+### Render Auto-Restart
 
 - **Trigger:** `/health` endpoint returns 503
 - **Action:** Container automatically restarted
@@ -362,7 +362,7 @@ curl -s https://whatismydelta.com | grep -c "authModal"
 
 1. Check `.ai-agents/` directory for recent diagnostics
 2. Run verification script and save output
-3. Gather logs: `railway logs > backend_logs.txt`
+3. Gather logs: `render logs > backend_logs.txt`
 4. Create detailed GitHub issue with:
    - Error message
    - Steps to reproduce
@@ -410,10 +410,10 @@ curl -s https://whatismydelta.com | grep -c "authModal"
 
 ```bash
 # Backend
-railway status                  # Check Railway service status
-railway logs                    # View backend logs
-railway variables               # List environment variables
-railway run psql $DATABASE_URL  # Access database
+render status                  # Check Render service status
+render logs                    # View backend logs
+render variables               # List environment variables
+render run psql $DATABASE_URL  # Access database
 
 # Frontend
 netlify status                  # Check Netlify deploy status
@@ -429,7 +429,7 @@ curl <backend-url>/health/comprehensive        # Backend health
 git log --oneline -10           # Recent commits
 git show <commit>:path/to/file  # View file at commit
 git revert HEAD                 # Undo last commit
-git push railway-origin main    # Deploy backend
+git push render-origin main    # Deploy backend
 ```
 
 ---

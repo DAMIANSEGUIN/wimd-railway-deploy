@@ -1,4 +1,4 @@
-# Railway Reset - Parallel Preparation Tasks
+# Render Reset - Parallel Preparation Tasks
 
 **Work completed while Gemini validates**
 
@@ -76,14 +76,14 @@ curl https://NEW_SERVICE_URL/__version
 ```
 File: mosaic_ui/index.html
 Line 6: --api:'https://mosaic-platform.vercel.app'  (CSS variable - LEGACY)
-Line 1954: apiBase = 'https://what-is-my-delta-site-production.up.railway.app';  (JavaScript - CURRENT)
+Line 1954: apiBase = 'https://what-is-my-delta-site-production.up.render.app';  (JavaScript - CURRENT)
 ```
 
 **Config Fallback:**
 
 ```
 Lines 1937-1938: Config endpoint fallback
-  'https://what-is-my-delta-site-production.up.railway.app/config',
+  'https://what-is-my-delta-site-production.up.render.app/config',
   'https://whatismydelta.com/config'
 ```
 
@@ -93,10 +93,10 @@ Lines 1937-1938: Config endpoint fallback
 
 ```javascript
 // BEFORE:
-apiBase = 'https://what-is-my-delta-site-production.up.railway.app';
+apiBase = 'https://what-is-my-delta-site-production.up.render.app';
 
 // AFTER (once new service deployed):
-apiBase = 'https://NEW_SERVICE_NAME-production.up.railway.app';
+apiBase = 'https://NEW_SERVICE_NAME-production.up.render.app';
 ```
 
 **Change 2: Line 6** (CSS variable - cleanup)
@@ -106,17 +106,17 @@ apiBase = 'https://NEW_SERVICE_NAME-production.up.railway.app';
 --api:'https://mosaic-platform.vercel.app'
 
 /* AFTER: */
---api:'https://NEW_SERVICE_NAME-production.up.railway.app'
+--api:'https://NEW_SERVICE_NAME-production.up.render.app'
 ```
 
 **Change 3: Lines 1937-1938** (Config fallback)
 
 ```javascript
 // BEFORE:
-'https://what-is-my-delta-site-production.up.railway.app/config',
+'https://what-is-my-delta-site-production.up.render.app/config',
 
 // AFTER:
-'https://NEW_SERVICE_NAME-production.up.railway.app/config',
+'https://NEW_SERVICE_NAME-production.up.render.app/config',
 ```
 
 **Total Changes:** 3 lines in `mosaic_ui/index.html`
@@ -129,14 +129,14 @@ apiBase = 'https://NEW_SERVICE_NAME-production.up.railway.app';
 
 ### Variables to Recreate (10 total)
 
-From `/tmp/railway_env_backup.json`:
+From `/tmp/render_env_backup.json`:
 
 ```bash
 # Critical (App won't start without these):
 APP_SCHEMA_VERSION=v2
 OPENAI_API_KEY=[from backup]
 CLAUDE_API_KEY=[from backup]
-DATABASE_URL=[Railway will auto-provide if PostgreSQL is project-level]
+DATABASE_URL=[Render will auto-provide if PostgreSQL is project-level]
 
 # Important (Features degraded without these):
 COACH_EMAIL=damian.seguin@gmail.com
@@ -158,26 +158,26 @@ PAYPAL_MODE=live
 NEW_SERVICE="mosaic-backend"  # or as specified by user
 
 # Set critical variables
-railway variables set APP_SCHEMA_VERSION=v2 --service $NEW_SERVICE
-railway variables set OPENAI_API_KEY="<value_from_backup>" --service $NEW_SERVICE
-railway variables set CLAUDE_API_KEY="<value_from_backup>" --service $NEW_SERVICE
+render variables set APP_SCHEMA_VERSION=v2 --service $NEW_SERVICE
+render variables set OPENAI_API_KEY="<value_from_backup>" --service $NEW_SERVICE
+render variables set CLAUDE_API_KEY="<value_from_backup>" --service $NEW_SERVICE
 
 # DATABASE_URL should auto-populate if PostgreSQL is project-level
 # If not, copy from backup:
-# railway variables set DATABASE_URL="<value_from_backup>" --service $NEW_SERVICE
+# render variables set DATABASE_URL="<value_from_backup>" --service $NEW_SERVICE
 
 # Set coach variables
-railway variables set COACH_EMAIL=damian.seguin@gmail.com --service $NEW_SERVICE
-railway variables set COACH_GOOGLE_CALENDAR_ID=primary --service $NEW_SERVICE
-railway variables set GOOGLE_SERVICE_ACCOUNT_KEY='<json_from_backup>' --service $NEW_SERVICE
+render variables set COACH_EMAIL=damian.seguin@gmail.com --service $NEW_SERVICE
+render variables set COACH_GOOGLE_CALENDAR_ID=primary --service $NEW_SERVICE
+render variables set GOOGLE_SERVICE_ACCOUNT_KEY='<json_from_backup>' --service $NEW_SERVICE
 
 # Set payment variables (optional)
-railway variables set PAYPAL_CLIENT_ID="<value_from_backup>" --service $NEW_SERVICE
-railway variables set PAYPAL_CLIENT_SECRET="<value_from_backup>" --service $NEW_SERVICE
-railway variables set PAYPAL_MODE=live --service $NEW_SERVICE
+render variables set PAYPAL_CLIENT_ID="<value_from_backup>" --service $NEW_SERVICE
+render variables set PAYPAL_CLIENT_SECRET="<value_from_backup>" --service $NEW_SERVICE
+render variables set PAYPAL_MODE=live --service $NEW_SERVICE
 
 # Verify all variables set
-railway variables --service $NEW_SERVICE
+render variables --service $NEW_SERVICE
 ```
 
 **Ready to execute:** ✅ YES (after Phase 2 service creation)
@@ -196,12 +196,12 @@ git log --oneline -1
 # Expected: On main branch, HEAD at 684dad3 or later
 
 # 2. Verify environment backup exists
-cat /tmp/railway_env_backup.json | python3 -m json.tool | head -20
+cat /tmp/render_env_backup.json | python3 -m json.tool | head -20
 
 # Expected: Valid JSON with 10 variables
 
-# 3. Verify Railway CLI is authenticated
-railway whoami
+# 3. Verify Render CLI is authenticated
+render whoami
 
 # Expected: Logged in as damian.seguin@gmail.com
 ```
@@ -210,12 +210,12 @@ railway whoami
 
 ```bash
 # 1. Check service status
-railway status --service $NEW_SERVICE
+render status --service $NEW_SERVICE
 
 # Expected: Shows service running
 
 # 2. Get service URL
-railway status --service $NEW_SERVICE | grep -i url
+render status --service $NEW_SERVICE | grep -i url
 
 # 3. Test health endpoint
 curl https://$NEW_SERVICE_URL/health
@@ -261,10 +261,10 @@ open https://whatismydelta.com
 
 ```bash
 # Check logs for error
-railway logs --service $NEW_SERVICE | tail -100
+render logs --service $NEW_SERVICE | tail -100
 
 # Common issues:
-# - Missing env var: Add it via railway variables set
+# - Missing env var: Add it via render variables set
 # - Database connection: Verify DATABASE_URL present
 # - Build failure: Check for syntax errors in code
 ```
@@ -284,10 +284,10 @@ netlify deploy --prod --dir mosaic_ui
 
 ```bash
 # Verify PostgreSQL service exists at project level
-railway status
+render status
 
 # If DATABASE_URL missing, add manually:
-railway variables set DATABASE_URL="postgresql://postgres:PASSWORD@postgres.railway.internal:5432/railway" --service $NEW_SERVICE
+render variables set DATABASE_URL="postgresql://postgres:PASSWORD@postgres.render.internal:5432/render" --service $NEW_SERVICE
 
 # Test connection:
 curl https://$NEW_SERVICE_URL/health | grep database
@@ -296,7 +296,7 @@ curl https://$NEW_SERVICE_URL/health | grep database
 ### Nuclear Rollback (Abort Everything)
 
 ```bash
-# Delete new service via Railway dashboard
+# Delete new service via Render dashboard
 # Keep old service running
 # No changes to frontend needed (already pointing to old service)
 
@@ -311,7 +311,7 @@ curl https://$NEW_SERVICE_URL/health | grep database
 
 - Service: what-is-my-delta-site (running but not responding)
 - PostgreSQL: Active (project-level assumed)
-- Cost: $X/month (current Railway plan)
+- Cost: $X/month (current Render plan)
 
 ### New State (After Migration)
 
@@ -335,7 +335,7 @@ curl https://$NEW_SERVICE_URL/health | grep database
 |-------|------|----------|--------------|
 | 2 | Create service (dashboard) | 5 min | User action |
 | 3 | Set environment variables | 10 min | Phase 2 complete |
-| 4 | Deploy via Railway CLI | 5-10 min | Phase 3 complete |
+| 4 | Deploy via Render CLI | 5-10 min | Phase 3 complete |
 | 5 | Verify version endpoint | 2 min | Phase 4 complete |
 | 6 | Update + deploy frontend | 10 min | Phase 5 complete |
 | 7 | Delete obsolete projects | 15 min | Phase 6 complete |
@@ -354,7 +354,7 @@ curl https://$NEW_SERVICE_URL/health | grep database
 - [ ] `curl $NEW_SERVICE_URL/health` returns 200 OK
 - [ ] `curl $NEW_SERVICE_URL/__version` returns valid JSON with git SHA
 - [ ] Health endpoint shows `"database": {"connected": true}`
-- [ ] No errors in Railway logs (past 100 lines)
+- [ ] No errors in Render logs (past 100 lines)
 
 ### Frontend Integration
 
@@ -372,8 +372,8 @@ curl https://$NEW_SERVICE_URL/health | grep database
 
 ### Deployment Automation
 
-- [ ] `git push origin main` triggers Railway auto-deploy
-- [ ] New commits deploy automatically (no manual railway up needed)
+- [ ] `git push origin main` triggers Render auto-deploy
+- [ ] New commits deploy automatically (no manual render up needed)
 
 ---
 
@@ -409,7 +409,7 @@ curl https://$NEW_SERVICE_URL/health | grep database
    ```
 
 2. **Wait for user to create service** (dashboard action)
-   - User creates service via Railway dashboard
+   - User creates service via Render dashboard
    - User confirms service name and URL
    - User confirms GitHub repo connected
 
@@ -420,8 +420,8 @@ curl https://$NEW_SERVICE_URL/health | grep database
 4. **Deploy to new service** (10 min)
 
    ```bash
-   railway up --detach --service $NEW_SERVICE
-   railway logs --service $NEW_SERVICE
+   render up --detach --service $NEW_SERVICE
+   render logs --service $NEW_SERVICE
    ```
 
 5. **Update frontend** (10 min)

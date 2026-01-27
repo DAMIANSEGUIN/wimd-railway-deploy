@@ -1,8 +1,8 @@
-# 📝 WIMD Railway Deploy – Context Note
+# 📝 WIMD Render Deploy – Context Note
 
 > Action on Restart: run ~/restart_wimd.sh (auto-logs status; URL saved in wimd_config.sh)
 
-## Required Env Vars (Railway → Variables)
+## Required Env Vars (Render → Variables)
 
 OPENAI_API_KEY=sk-xxx
 CLAUDE_API_KEY=sk-ant-xxx

@@ -246,7 +246,7 @@ The job sources are deployed but may still have mock data fallbacks active. Real
 
 **Issue**: Python `requests` module not installed in local environment, pip install blocked by permissions
 
-**Workaround**: Run stress test from Railway environment or Docker container
+**Workaround**: Run stress test from Render environment or Docker container
 
 ---
 
@@ -283,7 +283,7 @@ The job sources are deployed but may still have mock data fallbacks active. Real
 
 1. **Investigate mock data fallback** - Check why real APIs aren't being called
 2. **Test individual sources** - Verify each of 12 sources works in isolation
-3. **Check Railway logs** - Look for API errors or exceptions
+3. **Check Render logs** - Look for API errors or exceptions
 
 ### Short-term (This Week)
 
@@ -316,8 +316,8 @@ The job sources are deployed but may still have mock data fallbacks active. Real
 - Added requests + beautifulsoup4 to requirements.txt
 - Enabled JOB_SOURCES_STUBBED_ENABLED flag
 
-**Deployment**: Pushed to Railway at 2025-10-07 18:10 UTC
-**Health Check**: ✅ API responding at <https://what-is-my-delta-site-production.up.railway.app/health>
+**Deployment**: Pushed to Render at 2025-10-07 18:10 UTC
+**Health Check**: ✅ API responding at <https://what-is-my-delta-site-production.up.render.app/health>
 
 ---
 

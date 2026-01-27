@@ -41,13 +41,13 @@
 ### 🔧 **URLS TO TEST**
 
 - **Frontend**: <https://whatismydelta.com>
-- **Backend**: <https://what-is-my-delta-site-production.up.railway.app>
-- **API Docs**: <https://what-is-my-delta-site-production.up.railway.app/docs>
+- **Backend**: <https://what-is-my-delta-site-production.up.render.app>
+- **API Docs**: <https://what-is-my-delta-site-production.up.render.app/docs>
 
 ### 🚀 **PRODUCTION STATUS**
 
 - **Frontend**: ✅ Deployed to Netlify
-- **Backend**: ✅ Deployed to Railway
+- **Backend**: ✅ Deployed to Render
 - **Authentication**: ✅ Complete
 - **User Experience**: ✅ Complete
 

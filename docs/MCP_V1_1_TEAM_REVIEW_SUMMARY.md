@@ -68,7 +68,7 @@ Damian has provided **Mosaic MCP v1.1** files for integration. This represents a
 
 **Architecture:**
 
-1. **Where do MCP servers run?** (Railway? Local? Separate service?)
+1. **Where do MCP servers run?** (Render? Local? Separate service?)
 2. **How do agents connect to MCP?** (HTTP API? WebSocket? Local socket?)
 3. **What happens if MCP servers are down?** (Fallback to files? Fail?)
 4. **Does this violate "LOCAL AUTHORITATIVE" principle?** (3-layer architecture: LOCAL → GDRIVE MASTER → MIRROR)

@@ -177,7 +177,7 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
         triggers.append('TROUBLESHOOTING_CHECKLIST')
 
     # Deployment pattern
-    if any(word in user_message.lower() for word in ['deploy', 'push', 'railway', 'production']):
+    if any(word in user_message.lower() for word in ['deploy', 'push', 'render', 'production']):
         triggers.append('DEPLOYMENT_TRUTH')
 
     # Database pattern
@@ -409,7 +409,7 @@ def detect_retrieval_triggers(user_message: str, agent_response: str) -> List[st
 
 1. **Budget for MCP server hosting?**
    - Phase 1-2: Local only (free)
-   - Phase 3: Railway deployment ($5-10/month)
+   - Phase 3: Render deployment ($5-10/month)
    - Answer: Can defer to Phase 3
 
 2. **Risk tolerance for production testing?**

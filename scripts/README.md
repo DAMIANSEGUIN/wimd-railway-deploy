@@ -35,11 +35,11 @@
 
 ### Deployment Scripts
 
-- **`deploy.sh`** - Deploy to Netlify/Railway (ALWAYS use this, never raw commands)
-  - Usage: `./scripts/deploy.sh netlify|railway|all`
+- **`deploy.sh`** - Deploy to Netlify/Render (ALWAYS use this, never raw commands)
+  - Usage: `./scripts/deploy.sh netlify|render|all`
 
 - **`push.sh`** - Git push with verification (ALWAYS use this, never raw git push)
-  - Usage: `./scripts/push.sh railway-origin main`
+  - Usage: `./scripts/push.sh render-origin main`
 
 ### Verification Scripts
 
@@ -53,7 +53,7 @@
 
 - **`predeploy_sanity.sh`** - Old pre-deployment checks
 - **`verify_deploy.sh`** - Old deployment verification
-- **`one_shot_new_deploy.sh`** - Create new Railway project
+- **`one_shot_new_deploy.sh`** - Create new Render project
 - **`create_handoff_manifest.sh`** - Old handoff system (deprecated)
 
 ---
@@ -76,7 +76,7 @@
 
 ```bash
 ./scripts/verify_critical_features.sh
-./scripts/deploy.sh netlify  # or railway, or all
+./scripts/deploy.sh netlify  # or render, or all
 ```
 
 **If stuck:**
@@ -152,7 +152,7 @@ chmod +x scripts/status.sh scripts/commit_work.sh
 
 ```bash
 # Make sure you're in project root
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ./scripts/status.sh
 ```
 

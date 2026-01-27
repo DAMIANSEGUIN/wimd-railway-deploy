@@ -1,4 +1,4 @@
-# Railway Reset Validation Checklist
+# Render Reset Validation Checklist
 
 **Pre-Execution Review for Claude Code + Gemini**
 
@@ -23,17 +23,17 @@ This checklist must be verified by:
 
 | Fact | Evidence Source | Status |
 |------|----------------|--------|
-| Railway has 7 projects total | `railway list` | ✅ CONFIRMED |
-| Current service is `what-is-my-delta-site` | `railway status` | ✅ CONFIRMED |
-| Current project is `wimd-career-coaching` | `railway status` | ✅ CONFIRMED |
+| Render has 7 projects total | `render list` | ✅ CONFIRMED |
+| Current service is `what-is-my-delta-site` | `render status` | ✅ CONFIRMED |
+| Current project is `wimd-career-coaching` | `render status` | ✅ CONFIRMED |
 | Service responds with 404 | `curl health endpoint` | ✅ CONFIRMED |
-| Git remote `origin` = `wimd-railway-deploy` | `git remote -v` | ✅ CONFIRMED |
-| Git remote `railway-origin` = `what-is-my-delta-site` | `git remote -v` | ✅ CONFIRMED |
-| Railway watches `what-is-my-delta-site` repo | `git ls-remote railway-origin` | ✅ CONFIRMED |
+| Git remote `origin` = `wimd-render-deploy` | `git remote -v` | ✅ CONFIRMED |
+| Git remote `render-origin` = `what-is-my-delta-site` | `git remote -v` | ✅ CONFIRMED |
+| Render watches `what-is-my-delta-site` repo | `git ls-remote render-origin` | ✅ CONFIRMED |
 | Current deployed commit: `96e711c1` (Nov 11) | Screenshot evidence | ✅ CONFIRMED |
 | Current code HEAD: `684dad3` (Dec 14) | `git log` | ✅ CONFIRMED |
-| 9+ environment variables exist | `railway variables` | ✅ CONFIRMED |
-| PostgreSQL DATABASE_URL present | `railway variables` | ✅ CONFIRMED |
+| 9+ environment variables exist | `render variables` | ✅ CONFIRMED |
+| PostgreSQL DATABASE_URL present | `render variables` | ✅ CONFIRMED |
 
 ### ⚠️ ASSUMPTIONS TO TEST (Gemini Review Required)
 
@@ -44,7 +44,7 @@ This checklist must be verified by:
 | Frontend can be updated independently | Check Netlify deployment independence | Frontend breaks |
 | `/__version` endpoint doesn't exist yet | Check codebase for existing implementation | Spec assumes missing feature |
 | All 6 obsolete projects are safe to delete | Verify no hidden dependencies | Service disruption |
-| Railway CLI can deploy without dashboard | Test `railway up` on current service | Deployment fails |
+| Render CLI can deploy without dashboard | Test `render up` on current service | Deployment fails |
 
 ### 🔴 UNVALIDATED CLAIMS (Require Investigation)
 
@@ -68,10 +68,10 @@ This checklist must be verified by:
 
 ```bash
 # Check if DATABASE_URL is in project variables or service variables
-railway variables --help
+render variables --help
 # Look for --project or --service flags
 
-# Check Railway dashboard: Project Settings → Services
+# Check Render dashboard: Project Settings → Services
 # See if PostgreSQL appears as separate service
 ```
 
@@ -91,11 +91,11 @@ railway variables --help
 
 ```bash
 # Backup current service vars
-railway variables > /tmp/current_service_vars.txt
+render variables > /tmp/current_service_vars.txt
 
-# Check if Railway CLI supports cross-service var inspection
-railway variables --service what-is-my-delta-site
-railway variables --service <any-other-service-if-exists>
+# Check if Render CLI supports cross-service var inspection
+render variables --service what-is-my-delta-site
+render variables --service <any-other-service-if-exists>
 ```
 
 **Expected:** Variables are isolated per service
@@ -114,11 +114,11 @@ railway variables --service <any-other-service-if-exists>
 
 ```bash
 # Search codebase for existing version endpoint
-grep -r "/__version" /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/api/
-grep -r "@app.get.*version" /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/api/
+grep -r "/__version" /Users/damianseguin/WIMD-Deploy-Project/api/
+grep -r "@app.get.*version" /Users/damianseguin/WIMD-Deploy-Project/api/
 
 # Check FastAPI routes
-cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/api/index.py | grep -A5 "version"
+cat /Users/damianseguin/WIMD-Deploy-Project/api/index.py | grep -A5 "version"
 ```
 
 **Expected:** No existing `/__version` endpoint
@@ -129,16 +129,16 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/api/index.py | 
 
 ---
 
-### Test 4: Railway CLI Service Creation
+### Test 4: Render CLI Service Creation
 
 **Hypothesis:** Dashboard is required to create new service (CLI can't do it)
 
 **Commands:**
 
 ```bash
-# Check Railway CLI docs
-railway --help | grep -i service
-railway service --help
+# Check Render CLI docs
+render --help | grep -i service
+render service --help
 
 # Look for 'create' or 'new' subcommands
 ```
@@ -159,12 +159,12 @@ railway service --help
 
 ```bash
 # Check frontend for API endpoint references
-grep -r "mosaic-platform" /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/mosaic_ui/
-grep -r "vercel.app" /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/mosaic_ui/
-grep -r "apiBase" /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/mosaic_ui/
+grep -r "mosaic-platform" /Users/damianseguin/WIMD-Deploy-Project/mosaic_ui/
+grep -r "vercel.app" /Users/damianseguin/WIMD-Deploy-Project/mosaic_ui/
+grep -r "apiBase" /Users/damianseguin/WIMD-Deploy-Project/mosaic_ui/
 
 # Check Netlify config
-cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>/dev/null
+cat /Users/damianseguin/WIMD-Deploy-Project/netlify.toml 2>/dev/null
 ```
 
 **Expected:** Hardcoded legacy API URL found
@@ -187,7 +187,7 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>
 # 2. Active services
 # 3. Any traffic/logs
 
-# This requires Railway dashboard access - cannot be done via CLI
+# This requires Render dashboard access - cannot be done via CLI
 ```
 
 **Expected:** No activity in past 30+ days
@@ -211,7 +211,7 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>
 - Is this about deployment history?
 - Is this about environment variables?
 
-**Resolution Needed:** Define what "tainted" means in Railway terms
+**Resolution Needed:** Define what "tainted" means in Render terms
 
 **Gemini Action:** Interpret or ask user for clarification
 
@@ -225,11 +225,11 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>
 
 - What is being inherited?
 - Where is it hidden?
-- Is this Railway-specific behavior or general CI/CD pattern?
+- Is this Render-specific behavior or general CI/CD pattern?
 
 **Resolution Needed:** Identify concrete inheritance mechanism
 
-**Gemini Action:** Research Railway service inheritance behavior
+**Gemini Action:** Research Render service inheritance behavior
 
 ---
 
@@ -240,12 +240,12 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>
 **Questions:**
 
 - Is default `/` explicit enough?
-- Does Railway default to repo root if unspecified?
+- Does Render default to repo root if unspecified?
 - Is there a specific path we should use?
 
 **Resolution Needed:** Confirm correct root directory value
 
-**Gemini Action:** Check Railway docs or test with current service config
+**Gemini Action:** Check Render docs or test with current service config
 
 ---
 
@@ -275,7 +275,7 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>
 
 **Critical Questions:**
 
-- Is PostgreSQL a separate Railway service? (check dashboard)
+- Is PostgreSQL a separate Render service? (check dashboard)
 - Is DATABASE_URL project-level or service-level?
 - Will new service have access to same database?
 
@@ -294,7 +294,7 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>
 **Facts:**
 
 - Current service watches: `what-is-my-delta-site`
-- Current development repo: `wimd-railway-deploy`
+- Current development repo: `wimd-render-deploy`
 - Repos diverged Nov 11+ (26+ commits difference)
 
 **Validation Required:**
@@ -329,7 +329,7 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>
 
 **Mitigation Required:**
 
-1. ✅ COMPLETE - Backed up to `/tmp/railway_env_backup.json`
+1. ✅ COMPLETE - Backed up to `/tmp/render_env_backup.json`
 2. Document required vars in spec
 3. Verify backup is complete before service deletion
 
@@ -346,7 +346,7 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>
 **Mitigation Required:**
 
 1. Identify exact API URL in frontend code
-2. Update to new Railway service URL
+2. Update to new Render service URL
 3. Redeploy frontend after backend is verified
 4. Consider API proxy/redirect during migration
 
@@ -385,7 +385,7 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/netlify.toml 2>
 ### Important (High Priority)
 
 - [ ] **`/__version` endpoint** existence checked in codebase
-- [ ] **Railway CLI capabilities** confirmed (service creation = dashboard only)
+- [ ] **Render CLI capabilities** confirmed (service creation = dashboard only)
 - [ ] **Root directory requirement** clarified (default vs explicit)
 - [ ] **Obsolete projects** reviewed in dashboard (no recent activity)
 
@@ -442,7 +442,7 @@ Conclusion: [what this means for spec]
 **What I've validated so far:**
 
 - ✅ CLI scope and service mappings (PHASE 1 complete)
-- ✅ Environment variables backed up to `/tmp/railway_env_backup.json`
+- ✅ Environment variables backed up to `/tmp/render_env_backup.json`
 - ✅ Git remote configuration confirmed
 - ✅ Service 404 status confirmed
 - ✅ Repository divergence identified (26+ commits, wrong repo)
@@ -452,12 +452,12 @@ Conclusion: [what this means for spec]
 - ⚠️ PostgreSQL service scope (requires dashboard inspection)
 - ⚠️ `/__version` endpoint existence (requires codebase search)
 - ⚠️ Frontend API hardcoding location (requires code inspection)
-- ⚠️ Railway CLI service creation limits (requires doc review)
+- ⚠️ Render CLI service creation limits (requires doc review)
 - ⚠️ Obsolete project safety (requires dashboard review)
 
 **Blocking Questions for User (if Gemini can't resolve):**
 
-1. Is PostgreSQL a separate Railway service at project level?
+1. Is PostgreSQL a separate Render service at project level?
 2. Should we preserve `what-is-my-delta-site` service or delete it?
 3. What should the new canonical service be named?
 4. Do you want gradual migration or clean-slate replacement?

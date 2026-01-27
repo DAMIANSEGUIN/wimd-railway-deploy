@@ -84,7 +84,7 @@ else:
 ```
 NEED: Actual PostgreSQL error message
   ↓
-LOCATION: Railway deployment logs
+LOCATION: Render deployment logs
   ↓
 ACCESS: Requires NARs (human operator) to retrieve
   ↓
@@ -110,7 +110,7 @@ from the deployment logs"
 "ROOT CAUSE UNKNOWN: The actual PostgreSQL connection error is being
 caught but we haven't retrieved the error message from logs"
 
-"BLOCKER: Need Railway deployment logs showing `[STORAGE] ❌ PostgreSQL
+"BLOCKER: Need Render deployment logs showing `[STORAGE] ❌ PostgreSQL
 connection failed:` message to diagnose"
 ```
 
@@ -140,10 +140,10 @@ connection failed:` message to diagnose"
 ### Backend Deployment Status
 ```
 ✅ Code exists: api/ (FastAPI backend)
-✅ Config exists: Procfile, railway.toml
-❌ Backend health: 404 (Railway URL dead)
+✅ Config exists: Procfile, render.toml
+❌ Backend health: 404 (Render URL dead)
 ❓ Actual deployment: UNKNOWN
-   - Not on Railway (404 response)
+   - Not on Render (404 response)
    - Not on Render (no config found, no deployment detected)
    - Possibly decommissioned entirely
 ```
@@ -152,7 +152,7 @@ connection failed:` message to diagnose"
 ```
 ✅ Frontend deployed: Netlify (https://whatismydelta.com)
 ✅ Frontend code: Contains PS101 (27 references)
-❌ Frontend→Backend: Points to Railway URL (dead)
+❌ Frontend→Backend: Points to Render URL (dead)
 ❌ Frontend API fallback: Points to Vercel (wrong - just another frontend)
 ```
 
@@ -197,7 +197,7 @@ CORRECT CYCLE:
 4. **External dependency** - Need human operator to access logs
 
 **Process Gaps:**
-1. **No automated log retrieval** - Agent can't read Railway logs autonomously
+1. **No automated log retrieval** - Agent can't read Render logs autonomously
 2. **No deployment smoke tests** - Health check insufficient
 3. **No actual behavior verification** - Only check HTTP 200, not database type
 4. **Fix-first, diagnose-later** - Implement solutions before confirming problem
@@ -212,7 +212,7 @@ CORRECT CYCLE:
 **Should have done:**
 - Fail loudly in production if DATABASE_URL set but connection fails
 - Add health check endpoint that verifies PostgreSQL specifically
-- Log connection errors to Railway dashboard prominently
+- Log connection errors to Render dashboard prominently
 ```
 
 ### From DIAGNOSTIC_REPORT_POSTGRESQL_MIGRATION.md:41-45
@@ -243,7 +243,7 @@ pass_conditions:
 
 **Current state**:
 - Backend unreachable (404) ← Would BLOCK
-- Frontend points to dead Railway URL ← Would BLOCK
+- Frontend points to dead Render URL ← Would BLOCK
 - No Render config despite claiming Render deployment ← Would BLOCK
 
 ### GATE_10: Production Smoke Tests (NOT IMPLEMENTED)
@@ -320,7 +320,7 @@ pass_conditions:
 ### The Question: "Why is backend 404?"
 
 **Hypothesis based on pattern:**
-1. Backend was deployed to Railway (evidence: railway.toml, Procfile)
+1. Backend was deployed to Render (evidence: render.toml, Procfile)
 2. Silent failure occurred (PostgreSQL issue, health check issue, etc.)
 3. Deployment "succeeded" but wasn't actually working
 4. Eventually decommissioned/abandoned (404 now)
@@ -329,13 +329,13 @@ pass_conditions:
 7. **Current state: Backend not deployed anywhere**
 
 **Evidence:**
-- Railway URL returns 404
+- Render URL returns 404
 - No Render deployment found
-- Frontend still points to old Railway URL
-- netlify.toml redirects still configured for Railway
+- Frontend still points to old Render URL
+- netlify.toml redirects still configured for Render
 
 **Root cause (likely)**:
-Same silent failure pattern → Deploy appeared successful → Discovered failures later → Gave up on Railway → Attempted Render → Never completed migration → **Backend abandoned**
+Same silent failure pattern → Deploy appeared successful → Discovered failures later → Gave up on Render → Attempted Render → Never completed migration → **Backend abandoned**
 
 ---
 
@@ -345,9 +345,9 @@ Same silent failure pattern → Deploy appeared successful → Discovered failur
 
 1. **Determine backend location**
    ```bash
-   # Is backend still on Railway?
-   railway status
-   railway logs
+   # Is backend still on Render?
+   render status
+   render logs
 
    # Was it moved to Render?
    render services list
@@ -362,7 +362,7 @@ Same silent failure pattern → Deploy appeared successful → Discovered failur
    - Run GATE_10 smoke tests
 
 3. **If backend doesn't exist:**
-   - Deploy backend to Render (or Railway)
+   - Deploy backend to Render (or Render)
    - Configure environment variables
    - **BEFORE marking success**: Run actual smoke tests
    - Verify PostgreSQL connection with query
@@ -420,8 +420,8 @@ Same silent failure pattern → Deploy appeared successful → Discovered failur
    ```
 
 4. **Make log access autonomous**
-   - Configure Railway CLI with API token
-   - Add `railway logs` to deployment workflow
+   - Configure Render CLI with API token
+   - Add `render logs` to deployment workflow
    - Parse logs for `[STORAGE] ❌` patterns
    - Surface errors before marking deployment successful
 
@@ -461,7 +461,7 @@ Same silent failure pattern → Deploy appeared successful → Discovered failur
 **Q: "How does this correlate to current deployment?"**
 
 **A:** Backend is 404 (down/abandoned) - likely **final iteration of the loop**:
-- Railway deployment failed silently
+- Render deployment failed silently
 - Appeared successful due to SQLite fallback
 - Eventually discovered not working
 - Attempted migration to Render

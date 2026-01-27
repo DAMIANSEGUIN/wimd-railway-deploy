@@ -9,7 +9,7 @@ It contains manifests, CI/CD workflows, and helper scripts to maintain integrity
 - PS101_Continuity_Disambiguation_Plan_2025-11-03.md — rationale + diagnostic plan
 - README_NOTE_FOR_BUILD_TEAM.md — quick setup & Nudge
 - .github/workflows/ps101_gate.yml — mandatory CI gate
-- .github/workflows/ps101_netlify_deploy.yml / ps101_railway_deploy.yml — CI deploys
+- .github/workflows/ps101_netlify_deploy.yml / ps101_render_deploy.yml — CI deploys
 - netlify.toml / RAILWAY_CONFIG_NOTE.md — platform configs
 - inject_build_id.js / check_spec_hash.sh — helper scripts
 

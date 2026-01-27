@@ -14,10 +14,10 @@
 
 - **4 project-related folders** found
 - **2 are obsolete/empty** (MosaicPath duplicates)
-- **2 are active** (WIMD-Railway-Deploy-Project, Planning)
+- **2 are active** (WIMD-Render-Deploy-Project, Planning)
 - **1 is old data** (WIMD-JSM from August)
 
-**Recommendation:** Consolidate to single source of truth: `WIMD-Railway-Deploy-Project`
+**Recommendation:** Consolidate to single source of truth: `WIMD-Render-Deploy-Project`
 
 ---
 
@@ -96,7 +96,7 @@ data-prod/
 
 ---
 
-### 5. `gdrive:WIMD-Railway-Deploy-Project` ✅ PRIMARY
+### 5. `gdrive:WIMD-Render-Deploy-Project` ✅ PRIMARY
 
 **Created:** 2025-10-26 17:00:42
 **Size:** 4.371 MB (412 files)
@@ -107,7 +107,7 @@ data-prod/
 **Structure:**
 
 ```
-WIMD-Railway-Deploy-Project/
+WIMD-Render-Deploy-Project/
   ├── api/                    (Backend Python code)
   ├── mosaic_ui/              (Frontend interface)
   │   ├── index.html          (Main app)
@@ -147,7 +147,7 @@ RENAME: gdrive:WIMD-JSM → gdrive:WIMD-JSM-Archive-Aug2025
 
 ```
 KEEP: gdrive:Planning (personal planning system - separate)
-KEEP: gdrive:WIMD-Railway-Deploy-Project (primary project - ChatGPT reference)
+KEEP: gdrive:WIMD-Render-Deploy-Project (primary project - ChatGPT reference)
 ```
 
 ---
@@ -156,7 +156,7 @@ KEEP: gdrive:WIMD-Railway-Deploy-Project (primary project - ChatGPT reference)
 
 **After cleanup, Google Drive will have:**
 
-1. `WIMD-Railway-Deploy-Project` ← **ChatGPT uses this**
+1. `WIMD-Render-Deploy-Project` ← **ChatGPT uses this**
 2. `Planning` ← Your strategic planning (separate system)
 3. `WIMD-JSM-Archive-Aug2025` ← Old JSM data (archived for reference)
 
@@ -172,7 +172,7 @@ KEEP: gdrive:WIMD-Railway-Deploy-Project (primary project - ChatGPT reference)
 **After cleanup, tell ChatGPT:**
 
 ```
-Access Google Drive folder: WIMD-Railway-Deploy-Project
+Access Google Drive folder: WIMD-Render-Deploy-Project
 
 This is the single source of truth for the Mosaic UI redesign.
 
@@ -197,7 +197,7 @@ Build implementation plan for Scout to execute.
 ### No Risk Actions ✅
 
 - **Keep Planning folder** - No changes
-- **Keep WIMD-Railway-Deploy-Project** - Primary working directory
+- **Keep WIMD-Render-Deploy-Project** - Primary working directory
 
 ### Rollback Plan
 
@@ -205,7 +205,7 @@ If anything goes wrong:
 
 - Empty folders: Can't be recovered (but were empty)
 - WIMD-JSM rename: Simply rename back to original
-- Planning/WIMD-Railway-Deploy-Project: Unchanged, no rollback needed
+- Planning/WIMD-Render-Deploy-Project: Unchanged, no rollback needed
 
 ---
 
@@ -231,7 +231,7 @@ If anything goes wrong:
 
 ```
 Google Drive Root:
-├── WIMD-Railway-Deploy-Project/  ← Active project (4.4MB, 412 files) ✅
+├── WIMD-Render-Deploy-Project/  ← Active project (4.4MB, 412 files) ✅
 ├── Planning/                      ← Strategic planning (8 docs) ✅
 └── WIMD-JSM-Archive-Aug2025/      ← Archived JSM data (8 Excel files) ✅
 
@@ -240,7 +240,7 @@ Deleted:
 └── MosaicPath/ (instance 2)      - Empty duplicate, removed ✅
 ```
 
-**ChatGPT references:** `WIMD-Railway-Deploy-Project` only
+**ChatGPT references:** `WIMD-Render-Deploy-Project` only
 
 **Auto-sync enabled:** Yes (git post-commit hook)
 

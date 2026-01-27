@@ -65,13 +65,13 @@
 ## Known Issues Documented
 
 ### 1. Backend Not Accessible
-- **Railway URL**: Returns 404
+- **Render URL**: Returns 404
 - **Render deployment**: Not found
 - **Impact**: API features non-functional
 - **Documented in**: GATE_10_RESULTS.md, BACKEND_FAILURE_PATTERN_ANALYSIS.md
 
 ### 2. Git Remote Naming Confusion
-- **Issue**: Remote named "railway-origin" but backend claimed to be on Render
+- **Issue**: Remote named "render-origin" but backend claimed to be on Render
 - **Impact**: Developer confusion
 - **Documented in**: CRITICAL_RENAME_NEEDED.md
 - **Fix provided**: One-line rename script
@@ -153,7 +153,7 @@
 - **Branch**: main
 - **Latest commit**: d3f4380
 - **Pushed to**: origin (backup repo)
-- **Not pushed to**: railway-origin (production - requires rename)
+- **Not pushed to**: render-origin (production - requires rename)
 
 ### Netlify
 - **Site**: resonant-crostata-90b706

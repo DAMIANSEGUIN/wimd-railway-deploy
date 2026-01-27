@@ -28,10 +28,10 @@
     - `96dd6962d12033686df7511ac18f5e48d6dfa7b3` — remove legacy context payload so the coach API accepts requests.
     - `1065a91a079c0bbee388fb3d36e53a074d3c8bb6` — floating auth CTA for logged-out visitors.
 
-- **Backend (Railway)**
-  - Latest commit on `main`: `623cbd51dba79f99fc212e40bd897a2cb799371a` (“support forced HTTPS fallback for Railway deploy”) — adds PAT fallback so pushes succeed without SSH.
+- **Backend (Render)**
+  - Latest commit on `main`: `623cbd51dba79f99fc212e40bd897a2cb799371a` (“support forced HTTPS fallback for Render deploy”) — adds PAT fallback so pushes succeed without SSH.
   - Prior commit `f19ba5537bea6a8bb71d157d1c36da5a3f3ffa55` normalizes auth emails + hardens reset endpoint.
-  - Railway rebuild completed today using the HTTPS fallback path; login + password reset tested OK immediately afterward.
+  - Render rebuild completed today using the HTTPS fallback path; login + password reset tested OK immediately afterward.
 
 ---
 
@@ -41,9 +41,9 @@
    - Create a lightweight git tag and directory snapshot before any further edits:
 
      ```bash
-     cd ~/AI_Workspace/WIMD-Railway-Deploy-Project
+     cd ~/AI_Workspace/WIMD-Render-Deploy-Project
      git tag -a snapshot-2025-11-11-chat-auth -m "Stable chat/auth build logged 2025-11-11"
-     rsync -a --exclude '.git' ~/AI_Workspace/WIMD-Railway-Deploy-Project ~/Backups/WIMD-Railway-Deploy-Project_2025-11-11/
+     rsync -a --exclude '.git' ~/AI_Workspace/WIMD-Render-Deploy-Project ~/Backups/WIMD-Render-Deploy-Project_2025-11-11/
      ```
 
    - Push the tag to GitHub once validated: `git push origin snapshot-2025-11-11-chat-auth`.
@@ -63,7 +63,7 @@
 - [x] `./scripts/verify_critical_features.sh`
 - [x] `./scripts/verify_live_deployment.sh`
 - [x] Browser smoke test (chat ask → response, auth CTA for logged-out user)
-- [x] Railway rebuild log shows success (see `.verification_audit.log`, entries 2025-11-11 18:20–18:23 UTC)
+- [x] Render rebuild log shows success (see `.verification_audit.log`, entries 2025-11-11 18:20–18:23 UTC)
 
 ---
 

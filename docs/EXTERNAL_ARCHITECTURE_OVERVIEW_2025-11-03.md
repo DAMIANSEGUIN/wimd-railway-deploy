@@ -12,7 +12,7 @@
 - **Goal:** Deliver a 10-step guided career decision experience with experiment tracking, inline validation, and lightweight coaching tools
 - **Deployment Targets:**
   - Netlify (static frontend)
-  - Railway (Python backend/API)
+  - Render (Python backend/API)
 - **Delivery Constraint:** Maintain incumbent single-file architecture (`frontend/index.html`, mirrored to `mosaic_ui/index.html`)
 
 ---
@@ -24,7 +24,7 @@
 | **Frontend** | Single HTML file with embedded CSS/JS. Implements full PS101 journey, experiment framework, authentication modal, chat, uploads, and inline validation. | `frontend/index.html`, `mosaic_ui/index.html` |
 | **State Management** | LocalStorage-backed state object (`ps101_v2_state`) with multi-prompt answers, experiment log, auto-save indicators, and migration from v1. | `frontend/index.html:1917` onwards |
 | **Backend Integration** | REST calls via `API_BASE` (resolved through `ensureConfig()`), plus session-aware helpers (`callJson`, `authenticateUser`, `uploadToWimd`). | `frontend/index.html:1729-2140` |
-| **AI/Coaching** | Hybrid approach: local CSV prompt matching + Railway `/wimd` API for fallbacks. Voice input supported when browser APIs available. | `frontend/index.html:1004-1470` |
+| **AI/Coaching** | Hybrid approach: local CSV prompt matching + Render `/wimd` API for fallbacks. Voice input supported when browser APIs available. | `frontend/index.html:1004-1470` |
 | **Authentication** | Modal rendered beneath nav, supporting login, register, password reset, and logout with session persistence + trial gating. | `frontend/index.html:280-356`, `frontend/index.html:1729-2140` |
 | **Experiment Toolkit** | Steps 6–9 expose experiment canvas, obstacles, actions, reflection with inline validation; tied into PS101 state. | `frontend/index.html:544-914`, `frontend/index.html:3092-3350` |
 
@@ -73,7 +73,7 @@ Implemented on 2025-11-03 (Claude_Code with Cursor review), documented in `DEPLO
 
 | Layer | Implementation | Notes |
 | --- | --- | --- |
-| **Tracked Git Hook** | `.githooks/pre-push` (activated via `scripts/setup_hooks.sh`) | Blocks pushes to `railway-origin` unless verification passes. Bypass allowed only with `SKIP_VERIFICATION=true` + reason (logged to `.verification_audit.log`). |
+| **Tracked Git Hook** | `.githooks/pre-push` (activated via `scripts/setup_hooks.sh`) | Blocks pushes to `render-origin` unless verification passes. Bypass allowed only with `SKIP_VERIFICATION=true` + reason (logged to `.verification_audit.log`). |
 | **Wrapper Commands** | `scripts/push.sh`, `scripts/deploy.sh` | Enforces verification, standardises deploy flows, and integrates logging. Replaces raw `git push` / `netlify deploy`. |
 | **Automation** | `.github/workflows/deploy-verification.yml` | CI pipeline aligning with local checks; awaits credentials before activation. |
 | **Documentation Reinforcement** | Updates across `.ai-agents/SESSION_START_PROTOCOL.md`, `.ai-agents/COMMUNICATION_PROTOCOL.md`, `DEPLOYMENT_CHECKLIST.md`, `CLAUDE.md` | Redirects agents to wrappers and clarifies forbidden commands. |

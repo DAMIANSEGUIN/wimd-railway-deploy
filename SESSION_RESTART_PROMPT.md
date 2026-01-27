@@ -30,9 +30,9 @@ The enforcement check is currently failing on three points that *require your ma
 1.  **`REPO_REMOTE_MATCH` Failure:** Your local Git repository's remote URL is currently in HTTPS format, but the enforcement expects it to match either the HTTPS or SSH format derived from `.mosaic/authority_map.json`. To pass this check, ensure your local remote is set to the SSH format (as this is typically used for automated deployments) or matches the HTTPS one.
     *   **Action:** From your project root, run:
         ```bash
-        git remote set-url origin git@github.com:DAMIANSEGUIN/wimd-railway-deploy.git
+        git remote set-url origin git@github.com:DAMIANSEGUIN/wimd-render-deploy.git
         ```
-    *   *(Note: The `fatal: not a git repository` error you saw previously indicates you ran this command outside your project's Git directory. Please ensure you are in `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project` when running Git commands.)*
+    *   *(Note: The `fatal: not a git repository` error you saw previously indicates you ran this command outside your project's Git directory. Please ensure you are in `/Users/damianseguin/WIMD-Deploy-Project` when running Git commands.)*
 
 2.  **`CLEAN_WORKTREE` Failure:** There are uncommitted changes in your local Git repository. The `CLEAN_WORKTREE` gate requires a pristine working directory to ensure deterministic builds and deployments.
     *   **Action:** Commit or stash all your local changes:

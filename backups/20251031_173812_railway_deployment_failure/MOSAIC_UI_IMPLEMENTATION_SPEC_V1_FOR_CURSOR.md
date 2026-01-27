@@ -2522,7 +2522,7 @@ describe('Existing Features', () => {
 - [ ] Mobile device testing (iOS, Android)
 - [ ] Integration testing (backend API calls work)
 - [ ] User acceptance testing (beta users)
-- [ ] Deploy to production (Railway + Netlify)
+- [ ] Deploy to production (Render + Netlify)
 
 ---
 
@@ -2808,12 +2808,12 @@ describe('Existing Features', () => {
 ## File Location
 
 **Specification saved to:**
-`/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/docs/MOSAIC_UI_IMPLEMENTATION_SPEC_V1_FOR_CURSOR.md`
+`/Users/damianseguin/WIMD-Deploy-Project/docs/MOSAIC_UI_IMPLEMENTATION_SPEC_V1_FOR_CURSOR.md`
 
 **Related files to include in Cursor workspace:**
 
-- `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/frontend/index.html` (current working implementation)
-- `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/CLAUDE.md` (architecture context)
+- `/Users/damianseguin/WIMD-Deploy-Project/frontend/index.html` (current working implementation)
+- `/Users/damianseguin/WIMD-Deploy-Project/CLAUDE.md` (architecture context)
 - `/Users/damianseguin/AI_Workspace/Planning/strategy_desktop/context_library/work_playbooks.md` (PS101 coaching playbook)
 - `/Users/damianseguin/AI_Workspace/Planning/strategy_desktop/project_briefs/mosaic_brief.md` (product philosophy)
 - `/Users/damianseguin/AI_Workspace/Mosaic/README_UI_SKIN.txt` (Peripheral Calm design tokens)
@@ -2828,7 +2828,7 @@ describe('Existing Features', () => {
 
 1. User reviews spec and confirms decisions
 2. User resolves ambiguities (if any)
-3. User opens Cursor in WIMD-Railway-Deploy-Project workspace
+3. User opens Cursor in WIMD-Render-Deploy-Project workspace
 4. User provides this spec to Cursor
 5. Cursor implements Phase 1 (Core PS101 Flow)
 6. User tests and provides feedback

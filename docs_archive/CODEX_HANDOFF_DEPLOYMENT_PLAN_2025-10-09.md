@@ -10,9 +10,9 @@
 
 ## Problem Statement
 
-Railway deployments are failing despite successful builds. Need systematic analysis to identify root cause and create minimal fix plan.
+Render deployments are failing despite successful builds. Need systematic analysis to identify root cause and create minimal fix plan.
 
-**Current state**: Railway runs old deployment (a583d26a Oct 6) successfully
+**Current state**: Render runs old deployment (a583d26a Oct 6) successfully
 **Failed attempts**: Multiple deployments (Oct 8-9) fail health checks
 **Impact**: User cannot test fixes for "CSV prompts not found" error
 
@@ -23,7 +23,7 @@ Railway deployments are failing despite successful builds. Need systematic analy
 ### Working Deployment (Baseline)
 
 **Commit**: `067f33a` (Oct 7, 2025)
-**Status**: ✅ Active on Railway production
+**Status**: ✅ Active on Render production
 **Health response**: `{"ok": true, "timestamp": "..."}`
 **Characteristics**:
 
@@ -37,7 +37,7 @@ Railway deployments are failing despite successful builds. Need systematic analy
 **Commits**: `7c2807e`, `2888657` (Oct 9)
 **Build**: ✅ Succeeds
 **Deploy**: ❌ Fails health check (503)
-**Railway action**: Keeps old deployment active
+**Render action**: Keeps old deployment active
 
 **Failure pattern**:
 
@@ -45,7 +45,7 @@ Railway deployments are failing despite successful builds. Need systematic analy
 2. Container starts
 3. Health check hits `/health` endpoint
 4. Returns 503 Service Unavailable
-5. Railway marks deployment failed
+5. Render marks deployment failed
 6. Old deployment remains active
 
 ---
@@ -185,9 +185,9 @@ def health():
 from .monitoring import run_health_check, attempt_system_recovery
 ```
 
-### 7. Railway Configuration
+### 7. Render Configuration
 
-**File**: `railway.toml` (commit 027eaf2)
+**File**: `render.toml` (commit 027eaf2)
 **Change**: Added health check configuration
 
 ```toml
@@ -211,15 +211,15 @@ httpMethod = "GET"
 
 ```
 Timeline:
-1. Railway starts container                     (t=0s)
+1. Render starts container                     (t=0s)
 2. FastAPI begins accepting requests            (t=2s)
-3. Railway hits /health endpoint                (t=3s)  ← HEALTH CHECK STARTS
+3. Render hits /health endpoint                (t=3s)  ← HEALTH CHECK STARTS
 4. Startup event runs migration                 (t=3s)  ← MIGRATION BEGINS
 5. Health check reads database                  (t=3s)  ← Sees old value (0)
 6. Health check evaluates: 0 or False = False   (t=3s)
 7. Health check returns 503                     (t=3s)  ← FAILS
 8. Migration completes, updates DB to 1         (t=5s)  ← TOO LATE
-9. Railway marks deployment failed              (t=8s)
+9. Render marks deployment failed              (t=8s)
 ```
 
 **Evidence**:
@@ -243,7 +243,7 @@ Timeline:
 
 ### Hypothesis 3: AI clients fail to initialize
 
-- API keys not set in Railway environment
+- API keys not set in Render environment
 - Import errors preventing initialization
 - Health check sees `ai_available: false` always
 
@@ -255,9 +255,9 @@ Timeline:
 
 ### Hypothesis 5: Wrong code deployed
 
-- Railway cache serving old code
+- Render cache serving old code
 - New commits not actually in deployed container
-- Git push didn't reach Railway repository
+- Git push didn't reach Render repository
 
 ---
 
@@ -301,7 +301,7 @@ Timeline:
 
 **Constraints**:
 
-- Must pass Railway health check
+- Must pass Render health check
 - Must preserve original bug fixes (bool conversion, AI clients, migration)
 - Must be reversible if it doesn't work
 
@@ -364,13 +364,13 @@ Step 2: Apply minimal fix
   Change: [exact diff]
 
 Step 3: Commit and push
-  Command: git commit -m "..." && git push railway-origin test-health-grace-period
+  Command: git commit -m "..." && git push render-origin test-health-grace-period
 
-Step 4: Deploy to Railway
-  Command: railway up --detach
+Step 4: Deploy to Render
+  Command: render up --detach
 
 Step 5: Monitor deployment
-  Check: Railway dashboard for build/deploy status
+  Check: Render dashboard for build/deploy status
   Expected: Health check passes, deployment goes live
 
 Step 6: Validate fix
@@ -412,20 +412,20 @@ git diff 067f33a..2888657 --stat
 
 ## Environment Context
 
-**Railway Project**: wimd-career-coaching
+**Render Project**: wimd-career-coaching
 **Service**: what-is-my-delta-site
 **Environment**: production
 **Repository**: <https://github.com/DAMIANSEGUIN/what-is-my-delta-site>
 **Branch**: main
 
-**Working directory**: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/`
+**Working directory**: `/Users/damianseguin/WIMD-Deploy-Project/`
 
 **Git remotes**:
 
-- `origin`: wimd-railway-deploy.git (wrong repo)
-- `railway-origin`: what-is-my-delta-site.git (correct repo)
+- `origin`: wimd-render-deploy.git (wrong repo)
+- `render-origin`: what-is-my-delta-site.git (correct repo)
 
-**Deployment method**: `railway up` or `railway redeploy`
+**Deployment method**: `render up` or `render redeploy`
 
 ---
 

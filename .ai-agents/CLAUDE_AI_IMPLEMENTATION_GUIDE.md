@@ -69,7 +69,7 @@
 ### Step 1: Backup Current File
 
 ```bash
-cd ~/AI_Workspace/WIMD-Railway-Deploy-Project
+cd ~/AI_Workspace/WIMD-Render-Deploy-Project
 cp mosaic_ui/index.html mosaic_ui/index.html.backup-2025-11-09
 ```
 

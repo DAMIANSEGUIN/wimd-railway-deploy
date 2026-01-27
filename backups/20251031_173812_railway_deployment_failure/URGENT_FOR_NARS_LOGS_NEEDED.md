@@ -1,7 +1,7 @@
 # URGENT: PostgreSQL Connection Failure - Logs Required
 
 **Date:** 2025-10-14
-**Status:** BLOCKED - Need Railway deployment logs to diagnose
+**Status:** BLOCKED - Need Render deployment logs to diagnose
 **Priority:** CRITICAL
 
 ---
@@ -14,16 +14,16 @@ PostgreSQL migration code is deployed but **silently failing back to SQLite**. W
 
 - Health check shows: `"database":true` (SQLite fallback working)
 - Users getting "Invalid credentials" (database still wiping on deploys)
-- DATABASE_URL correctly set to `postgresql://...@postgres.railway.internal:5432/...`
+- DATABASE_URL correctly set to `postgresql://...@postgres.render.internal:5432/...`
 - No visibility into WHY PostgreSQL connection is failing
 
 ---
 
 ## What NARs Must Do
 
-### Get Railway Deployment Logs
+### Get Render Deployment Logs
 
-1. **Railway Dashboard** → `what-is-my-delta-site` service
+1. **Render Dashboard** → `what-is-my-delta-site` service
 2. Click **"Deployments"** tab
 3. Click on the **most recent deployment** (should be from last few minutes)
 4. Look for **startup logs** - specifically lines containing:
@@ -94,11 +94,11 @@ Running feature flag sync migration...
 
 1. **Exact error message** from `[STORAGE] ❌ PostgreSQL connection failed:` line
 2. **Full startup logs** (first 100 lines of deployment)
-3. **PostgreSQL service status** in Railway dashboard:
+3. **PostgreSQL service status** in Render dashboard:
    - Is it showing "Active" or "Running"?
    - Any errors in PostgreSQL service logs?
 4. **Network configuration:**
-   - Are both services in the same Railway project?
+   - Are both services in the same Render project?
    - Is private networking enabled between services?
 
 ---
@@ -108,7 +108,7 @@ Running feature flag sync migration...
 ### Error: "could not connect to server"
 
 - **Cause:** Network routing issue, PostgreSQL not accessible
-- **Fix:** Check Railway private networking configuration
+- **Fix:** Check Render private networking configuration
 
 ### Error: "password authentication failed"
 
@@ -123,7 +123,7 @@ Running feature flag sync migration...
 ### Error: "no pg_hba.conf entry"
 
 - **Cause:** PostgreSQL not configured to accept connections from app
-- **Fix:** Check PostgreSQL access controls in Railway
+- **Fix:** Check PostgreSQL access controls in Render
 
 ### Error: "database does not exist"
 
@@ -151,7 +151,7 @@ Running feature flag sync migration...
 
 - Fail loudly in production if DATABASE_URL set but connection fails
 - Add health check endpoint that verifies PostgreSQL specifically
-- Log connection errors to Railway dashboard prominently
+- Log connection errors to Render dashboard prominently
 
 ---
 
@@ -167,6 +167,6 @@ Running feature flag sync migration...
 
 ---
 
-**Status:** Awaiting Railway deployment logs from NARs
+**Status:** Awaiting Render deployment logs from NARs
 
 **Timeline:** Cannot proceed until actual error message obtained

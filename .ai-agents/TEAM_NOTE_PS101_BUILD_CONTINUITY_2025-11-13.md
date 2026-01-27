@@ -5,9 +5,9 @@
 
 ## Work Completed
 
-- Pulled the latest PS101 backup context (`AI_Workspace/WIMD-Railway-Deploy-Project`, commit `913f14e`) and captured baseline snapshot `BASELINE_SNAPSHOT_20251113-085236.md`.
+- Pulled the latest PS101 backup context (`AI_Workspace/WIMD-Render-Deploy-Project`, commit `913f14e`) and captured baseline snapshot `BASELINE_SNAPSHOT_20251113-085236.md`.
 - Re-ran continuity gates: `verify_critical_features.sh` (auth/PS101 checks green; prod auth fetch still warns) and `Mosaic/PS101_Continuity_Kit/check_spec_hash.sh` (hash `7795ae25`).
-- Synced `frontend/index.html` and `mosaic_ui/index.html` so Netlify and Railway now share the same PS101 UI: relative `API_BASE`, metrics lock copy, resume upload hooks, live resource links, and BUILD_ID footer (`5cf9088c…|SHA:7795ae25`).
+- Synced `frontend/index.html` and `mosaic_ui/index.html` so Netlify and Render now share the same PS101 UI: relative `API_BASE`, metrics lock copy, resume upload hooks, live resource links, and BUILD_ID footer (`5cf9088c…|SHA:7795ae25`).
 - Hardened PS101 metrics gating — metrics cards stay blank until data arrives, note hides once real values load, and backend defaults were zeroed (`api/index.py`, `backend/api/index.py`) so stale percentages no longer appear.
 - Updated `scripts/verify_mosaic_ui.sh` to use the local canonical line count (default fallback `4213` → now from `mosaic_ui/index.html`) so the verification script reflects current UI footprints.
 - Logged all verification runs in `.ai-agents/session_log.txt` and noted handoff acknowledgement in `.ai-agents/handoff_log.txt`.

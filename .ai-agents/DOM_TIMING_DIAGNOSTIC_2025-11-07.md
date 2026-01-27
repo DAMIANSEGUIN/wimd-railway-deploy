@@ -34,7 +34,7 @@ Commit: 6d8f2ed (NOT latest 8d8d83f)
 ### Features Present in Production
 
 ✅ `initApp` function defined
-✅ API_BASE = Railway URL (<https://what-is-my-delta-site-production.up.railway.app>)
+✅ API_BASE = Render URL (<https://what-is-my-delta-site-production.up.render.app>)
 ✅ Phase 2.5 exists (lines 2059-2115)
 ✅ Footer year null-guard present
 ✅ DOMContentLoaded listener properly scoped
@@ -50,7 +50,7 @@ Commit: 6d8f2ed (NOT latest 8d8d83f)
 ```
 6d8f2ed (PRODUCTION) → docs: Update Stage 3 status
 4b8414f → build: update BUILD_ID to 6d8f2ed
-356fd4d → fix: Update API_BASE to Railway backend URL
+356fd4d → fix: Update API_BASE to Render backend URL
 bac92d5 → fix: Move DOMContentLoaded listener inside IIFE scope
 8d8d83f (LOCAL HEAD) → fix: Move all immediate DOM access inside initApp (Stage 1 fix)
 ```
@@ -334,7 +334,7 @@ M .ai-agents/CURSOR_COMPLETION_SUMMARY_2025-11-05.md
 
 - `8d8d83f` - Complete DOM timing fix (LOCAL HEAD)
 - `bac92d5` - DOMContentLoaded scope fix
-- `356fd4d` - API_BASE Railway fix
+- `356fd4d` - API_BASE Render fix
 - `6d8f2ed` - Current production (BUILD_ID commit)
 
 ---
@@ -344,10 +344,10 @@ M .ai-agents/CURSOR_COMPLETION_SUMMARY_2025-11-05.md
 **At next session start, use this prompt:**
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md
+/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md
 
 Then immediately read:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/DOM_TIMING_DIAGNOSTIC_2025-11-07.md
+/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/DOM_TIMING_DIAGNOSTIC_2025-11-07.md
 
 Context: DOM timing fix completed (commit 8d8d83f) but not fully deployed.
 Production on 6d8f2ed (4 commits behind). User reports chat opens but no

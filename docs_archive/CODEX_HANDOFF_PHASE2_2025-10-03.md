@@ -89,7 +89,7 @@
 - **Test Commands**:
 
   ```bash
-  cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+  cd /Users/damianseguin/WIMD-Deploy-Project
   python3 -c "from api.experiment_engine import get_experiment_health; print(get_experiment_health())"
   ```
 

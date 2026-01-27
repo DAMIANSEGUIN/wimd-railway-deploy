@@ -1,11 +1,11 @@
 I have diagnosed the deployment failure.
 
-**Problem:** The deployment failed because the service has no start command. The `nixpacks.toml` file in your repository correctly defines the start command, but it is being overridden by an empty setting in the Railway service configuration.
+**Problem:** The deployment failed because the service has no start command. The `nixpacks.toml` file in your repository correctly defines the start command, but it is being overridden by an empty setting in the Render service configuration.
 
-**To fix this, please perform the following actions in your Railway dashboard:**
+**To fix this, please perform the following actions in your Render dashboard:**
 
 1. Navigate to the new project: **`mosaic-backend`**.
-2. Select the service: **`wimd-railway-deploy`**.
+2. Select the service: **`wimd-render-deploy`**.
 3. Go to the **"Settings"** tab for the service.
 4. Find the **"Deploy"** section.
 5. Locate the **"Start Command"** input field. It is likely empty.

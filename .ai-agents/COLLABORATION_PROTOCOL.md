@@ -120,7 +120,7 @@ AI should: Propose approach (Step 2), wait for approval.
 
 **CRITICAL: No deployments without explicit approval**
 
-Before ANY deployment (Netlify, Railway, git push):
+Before ANY deployment (Netlify, Render, git push):
 
 1. **Show exactly what will be deployed:**
    - Git diff

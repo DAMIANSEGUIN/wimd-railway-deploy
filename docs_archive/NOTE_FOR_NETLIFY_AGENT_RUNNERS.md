@@ -23,7 +23,7 @@ We have a critical deployment issue that needs immediate attention. The NEW UI (
 **Action Required:** Push commit `c336607` to origin
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 git push origin main
 ```
 

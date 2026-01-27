@@ -1,4 +1,4 @@
-# Railway Reset Instruction Packet
+# Render Reset Instruction Packet
 
 **Pre-Flight Protocol Compliance (TEAM_PLAYBOOK_v2 Section 4.1)**
 
@@ -11,11 +11,11 @@
 
 ## 1. TASK OBJECTIVE
 
-**Primary Goal:** Establish single canonical Railway service connected to correct GitHub repository
+**Primary Goal:** Establish single canonical Render service connected to correct GitHub repository
 
 **Specific Outcomes:**
 
-1. New Railway service created pointing to `wimd-railway-deploy` repo
+1. New Render service created pointing to `wimd-render-deploy` repo
 2. Environment variables migrated intentionally (not blindly)
 3. Service responds with verifiable runtime identity (`/__version` endpoint)
 4. Frontend reconnected to new backend API
@@ -25,7 +25,7 @@
 
 ## 2. STATE SUMMARY (Captured via PHASE 1 Forensic Confirmation)
 
-### Current Railway State
+### Current Render State
 
 ```yaml
 projects_total: 7
@@ -44,15 +44,15 @@ current_service:
   status: not_responding (404)
   connected_repo: DAMIANSEGUIN/what-is-my-delta-site (WRONG)
 
-desired_repo: DAMIANSEGUIN/wimd-railway-deploy
+desired_repo: DAMIANSEGUIN/wimd-render-deploy
 ```
 
 ### Git State
 
 ```yaml
 remotes:
-  origin: https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git (✅ active dev)
-  railway-origin: https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git (❌ legacy)
+  origin: https://github.com/DAMIANSEGUIN/wimd-render-deploy.git (✅ active dev)
+  render-origin: https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git (❌ legacy)
 
 divergence:
   legacy_repo_head: 623cbd5 (Nov 11)
@@ -63,13 +63,13 @@ divergence:
 ### Environment Variables (9 total)
 
 ```yaml
-captured: /tmp/railway_env_backup.json
+captured: /tmp/render_env_backup.json
 variables:
   - APP_SCHEMA_VERSION: v2
   - CLAUDE_API_KEY: [REDACTED]
   - COACH_EMAIL: damian.seguin@gmail.com
   - COACH_GOOGLE_CALENDAR_ID: primary
-  - DATABASE_URL: postgresql://...@postgres.railway.internal:5432/railway
+  - DATABASE_URL: postgresql://...@postgres.render.internal:5432/render
   - GOOGLE_SERVICE_ACCOUNT_KEY: [JSON]
   - OPENAI_API_KEY: [REDACTED]
   - PAYPAL_CLIENT_ID: [REDACTED]
@@ -142,7 +142,7 @@ needs_update: yes
 
 **Section 2 Scope:**
 
-- Railway deployment is NOT code change
+- Render deployment is NOT code change
 - Pre-commit hooks NOT applicable to infrastructure work
 - ✅ No code governance violations expected
 
@@ -162,10 +162,10 @@ needs_update: yes
 
 ### Execution Phase (Post-Approval)
 
-- [ ] New service created in Railway dashboard
-- [ ] Service connected to `wimd-railway-deploy` repo
+- [ ] New service created in Render dashboard
+- [ ] Service connected to `wimd-render-deploy` repo
 - [ ] Environment variables recreated intentionally (all 9+)
-- [ ] First deployment succeeds via `railway up`
+- [ ] First deployment succeeds via `render up`
 - [ ] `/__version` endpoint returns valid response
 - [ ] Frontend updated to point to new backend
 - [ ] Frontend deployment succeeds
@@ -179,7 +179,7 @@ needs_update: yes
 - [ ] PostgreSQL queries succeed from new service
 - [ ] Frontend makes successful API calls to new backend
 - [ ] No 404 or 500 errors in logs
-- [ ] Railway auto-deploy triggers on git push
+- [ ] Render auto-deploy triggers on git push
 
 ---
 
@@ -199,7 +199,7 @@ needs_update: yes
 
 - **Symptom:** New service missing critical env vars
 - **Root Cause:** Variables not inherited, manual recreation incomplete
-- **Prevention:** Backup completed (`/tmp/railway_env_backup.json`)
+- **Prevention:** Backup completed (`/tmp/render_env_backup.json`)
 - **Mitigation:** Restore from backup file
 - **Rollback:** Re-enter variables manually (reversible)
 
@@ -215,10 +215,10 @@ needs_update: yes
 
 **FM-4: Deployment Timeout**
 
-- **Symptom:** `railway up` hangs or times out
+- **Symptom:** `render up` hangs or times out
 - **Root Cause:** Build failure, missing dependencies, syntax error
-- **Prevention:** Test build locally first (`railway up --detach`)
-- **Mitigation:** Check Railway logs, fix build issue, redeploy
+- **Prevention:** Test build locally first (`render up --detach`)
+- **Mitigation:** Check Render logs, fix build issue, redeploy
 - **Rollback:** Delete new service, use old service temporarily
 
 **FM-5: Runtime Identity Missing**
@@ -284,7 +284,7 @@ needs_update: yes
 **Validation 1: PostgreSQL Service Scope**
 
 ```bash
-# Check Railway dashboard: Project Settings → Services
+# Check Render dashboard: Project Settings → Services
 # Expected: PostgreSQL appears as separate service (project-level)
 # Risk: If service-level, data will be inaccessible from new service
 ```
@@ -307,8 +307,8 @@ needs_update: yes
 
 ```bash
 # Search codebase for API endpoint references
-grep -r "mosaic-platform" /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/mosaic_ui/
-grep -r "apiBase\|API_BASE\|api_base" /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/mosaic_ui/
+grep -r "mosaic-platform" /Users/damianseguin/WIMD-Deploy-Project/mosaic_ui/
+grep -r "apiBase\|API_BASE\|api_base" /Users/damianseguin/WIMD-Deploy-Project/mosaic_ui/
 ```
 
 **Status:** ⚠️ NOT VALIDATED
@@ -318,8 +318,8 @@ grep -r "apiBase\|API_BASE\|api_base" /Users/damianseguin/AI_Workspace/WIMD-Rail
 
 ```bash
 # Search codebase for existing version endpoint
-grep -r "/__version\|/version" /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/api/
-cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/api/index.py | grep -i version
+grep -r "/__version\|/version" /Users/damianseguin/WIMD-Deploy-Project/api/
+cat /Users/damianseguin/WIMD-Deploy-Project/api/index.py | grep -i version
 ```
 
 **Status:** ⚠️ NOT VALIDATED
@@ -327,11 +327,11 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/api/index.py | 
 
 ### Nice-to-Have Validations (Non-Blocking)
 
-**Validation 5: Railway CLI Service Creation**
+**Validation 5: Render CLI Service Creation**
 
 ```bash
-railway --help | grep -i "service"
-railway service --help | grep -i "create\|new"
+render --help | grep -i "service"
+render service --help | grep -i "create\|new"
 ```
 
 **Expected:** No CLI command for service creation (dashboard required)
@@ -341,7 +341,7 @@ railway service --help | grep -i "create\|new"
 **Validation 6: Obsolete Projects Activity**
 
 ```bash
-# Check Railway dashboard for each obsolete project:
+# Check Render dashboard for each obsolete project:
 # - Last deployment date
 # - Active services count
 # - Recent logs/activity
@@ -392,10 +392,10 @@ railway service --help | grep -i "create\|new"
 ### Phase 2: Service Creation (Dashboard)
 
 ```markdown
-1. Open Railway dashboard: https://railway.app/project/wimd-career-coaching
+1. Open Render dashboard: https://render.app/project/wimd-career-coaching
 2. Click "New Service"
 3. Select "GitHub Repo"
-4. Choose: DAMIANSEGUIN/wimd-railway-deploy
+4. Choose: DAMIANSEGUIN/wimd-render-deploy
 5. Branch: main
 6. Root directory: / (or as specified by user)
 7. Service name: [USER TO SPECIFY]
@@ -406,9 +406,9 @@ railway service --help | grep -i "create\|new"
 
 ```bash
 # Restore environment variables from backup
-cat /tmp/railway_env_backup.json | while read line; do
-  # Manual recreation required - Railway CLI doesn't support bulk import
-  railway variables set KEY=VALUE --service [NEW_SERVICE_NAME]
+cat /tmp/render_env_backup.json | while read line; do
+  # Manual recreation required - Render CLI doesn't support bulk import
+  render variables set KEY=VALUE --service [NEW_SERVICE_NAME]
 done
 ```
 
@@ -416,17 +416,17 @@ done
 
 ```bash
 # Deploy to new service
-railway up --detach --service [NEW_SERVICE_NAME]
+render up --detach --service [NEW_SERVICE_NAME]
 
 # Monitor logs
-railway logs --service [NEW_SERVICE_NAME]
+render logs --service [NEW_SERVICE_NAME]
 ```
 
 ### Phase 5: Runtime Verification (Terminal)
 
 ```bash
-# Get service URL from Railway
-NEW_SERVICE_URL=$(railway status --service [NEW_SERVICE_NAME] | grep "URL")
+# Get service URL from Render
+NEW_SERVICE_URL=$(render status --service [NEW_SERVICE_NAME] | grep "URL")
 
 # Test version endpoint
 curl -s ${NEW_SERVICE_URL}/__version
@@ -470,13 +470,13 @@ netlify deploy --prod --dir mosaic_ui
 
 ### Phase 3 Failure (Environment Variables)
 
-- **Action:** Restore missing vars from `/tmp/railway_env_backup.json`
+- **Action:** Restore missing vars from `/tmp/render_env_backup.json`
 - **Impact:** Service won't start without vars
 - **Recovery:** Re-enter variables manually
 
 ### Phase 4 Failure (Deployment)
 
-- **Action:** Check Railway logs, fix build issue
+- **Action:** Check Render logs, fix build issue
 - **Impact:** New service not running (old service unaffected)
 - **Recovery:** Fix code, redeploy
 
@@ -495,7 +495,7 @@ netlify deploy --prod --dir mosaic_ui
 ### Phase 7 Failure (Decommission)
 
 - **Action:** Leave obsolete projects in place
-- **Impact:** Clutter in Railway account (no functional impact)
+- **Impact:** Clutter in Render account (no functional impact)
 - **Recovery:** Clean up later manually
 
 **CRITICAL:** All phases except Phase 7 are reversible without data loss
@@ -515,7 +515,7 @@ netlify deploy --prod --dir mosaic_ui
    - Clean-slate: Delete old service immediately after new is created
 
 3. **Spec Ambiguities:**
-   - What does "service identity tainted" mean in Railway terms?
+   - What does "service identity tainted" mean in Render terms?
    - What is "hidden inheritance" referring to technically?
 
 4. **Risk Tolerance:** How do you want to handle PostgreSQL validation?

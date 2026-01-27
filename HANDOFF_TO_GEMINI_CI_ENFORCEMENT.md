@@ -183,7 +183,7 @@ Recommendations (if any):
 ## Questions I Anticipate
 
 **Q: Why does RUNTIME_IDENTITY_MATCH SKIP when RAILWAY_STATIC_URL is missing?**
-A: Initial GitHub Actions setup won't have this env var. Failing would block all CI. This allows workflow to pass initially, can be tightened after Railway integration.
+A: Initial GitHub Actions setup won't have this env var. Failing would block all CI. This allows workflow to pass initially, can be tightened after Render integration.
 
 **Q: Should network failures be REJECT instead of CLARIFY_REQUIRED?**
 A: Canonical spec Section 4.1 says network failures should be CLARIFY_REQUIRED because they don't prove authority drift - they prove environment constraints.

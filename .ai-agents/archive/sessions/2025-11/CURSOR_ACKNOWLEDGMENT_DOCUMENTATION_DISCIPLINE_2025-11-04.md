@@ -11,7 +11,7 @@
 
 **Line 112:** ✅ Update all impacted documentation (notes, checklists, manifests) before declaring a task complete; summarize changes in the relevant handoff or audit log.
 
-**Location:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md` (lines 105-172)
+**Location:** `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md` (lines 105-172)
 
 ### Deployment Checklist Requirements
 
@@ -34,7 +34,7 @@
 - Append verification results to `.verification_audit.log`
 - Update deployment docs/checklists with timestamp and BUILD_ID
 
-**Location:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/DEPLOYMENT_CHECKLIST.md` (lines 84-86)
+**Location:** `/Users/damianseguin/WIMD-Deploy-Project/DEPLOYMENT_CHECKLIST.md` (lines 84-86)
 
 ### Quick Reference Card
 
@@ -42,7 +42,7 @@
 
 - ✅ Update documentation + audit log entries
 
-**Location:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md` (line 171)
+**Location:** `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md` (line 171)
 
 ---
 

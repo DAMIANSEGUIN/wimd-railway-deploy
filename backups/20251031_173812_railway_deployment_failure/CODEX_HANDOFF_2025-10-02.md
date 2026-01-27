@@ -43,7 +43,7 @@
 
 ### 🚀 **PRODUCTION STATUS**
 
-- **Backend**: ✅ Deployed to Railway
+- **Backend**: ✅ Deployed to Render
 - **Authentication**: ✅ Complete
 - **Database**: ✅ User table created
 - **APIs**: ✅ All endpoints working

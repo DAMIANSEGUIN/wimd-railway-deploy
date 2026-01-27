@@ -30,11 +30,11 @@ python3 mosaic-diag/cli.py preflight env
 # Check deployment prerequisites
 python3 mosaic-diag/cli.py preflight deploy
 
-# Log the current Railway blocker
+# Log the current Render blocker
 python3 mosaic-diag/cli.py incident add \
   --category deployment \
   --severity high \
-  --symptom "Railway auto-deploy not pulling new code" \
+  --symptom "Render auto-deploy not pulling new code" \
   --root-cause "GitHub webhook broken"
 
 # Review recent incidents
@@ -326,7 +326,7 @@ mosaic-diag/
 2. **Should this be mandatory in SESSION_START.md?** Or opt-in?
 3. **Who maintains incident log?** All agents or designated role?
 4. **How often to review incidents?** Weekly? After each blocker?
-5. **Should we add more checks now?** (Railway webhook status, etc.)
+5. **Should we add more checks now?** (Render webhook status, etc.)
 
 ---
 

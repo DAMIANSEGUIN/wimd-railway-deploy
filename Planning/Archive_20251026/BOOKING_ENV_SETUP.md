@@ -7,7 +7,7 @@
 
 ## Required Environment Variables
 
-Add these to **Railway Dashboard** → Your Project → **Variables** tab:
+Add these to **Render Dashboard** → Your Project → **Variables** tab:
 
 ### Google Calendar API (Required)
 
@@ -79,37 +79,37 @@ TWILIO_SMS_ENABLED='false'  # Set to 'true' when ready to enable
 
 ## Already Set (Verify These Exist)
 
-These should already be in your Railway environment:
+These should already be in your Render environment:
 
 ```bash
-DATABASE_URL=postgresql://...railway.internal...
+DATABASE_URL=postgresql://...render.internal...
 OPENAI_API_KEY=sk-...
 CLAUDE_API_KEY=sk-ant-...
 ```
 
 ---
 
-## How to Add Variables to Railway
+## How to Add Variables to Render
 
-### Method 1: Railway Dashboard (Recommended)
+### Method 1: Render Dashboard (Recommended)
 
-1. Go to <https://railway.app>
+1. Go to <https://render.app>
 2. Select your project: `what-is-my-delta-site`
 3. Click "Variables" tab
 4. Click "New Variable"
 5. Enter variable name and value
 6. Click "Add"
 7. Repeat for all variables
-8. Railway will automatically redeploy with new variables
+8. Render will automatically redeploy with new variables
 
-### Method 2: Railway CLI (Faster for Multiple Variables)
+### Method 2: Render CLI (Faster for Multiple Variables)
 
 ```bash
 # Set one variable
-railway variables set PAYPAL_CLIENT_ID='your_value'
+render variables set PAYPAL_CLIENT_ID='your_value'
 
 # Set from file
-railway variables set GOOGLE_SERVICE_ACCOUNT_KEY="$(cat client_secrets.json)"
+render variables set GOOGLE_SERVICE_ACCOUNT_KEY="$(cat client_secrets.json)"
 ```
 
 ---
@@ -119,8 +119,8 @@ railway variables set GOOGLE_SERVICE_ACCOUNT_KEY="$(cat client_secrets.json)"
 After adding all variables, verify:
 
 ```bash
-# Check all variables are set (from Railway dashboard or CLI)
-railway variables
+# Check all variables are set (from Render dashboard or CLI)
+render variables
 
 # Should see:
 ✅ GOOGLE_SERVICE_ACCOUNT_KEY
@@ -171,7 +171,7 @@ After adding credentials:
 After deployment, check:
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Should show:
 {
@@ -198,7 +198,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 - `client_secrets.json` (Google service account key)
 - Any file with real API keys
 
-### Railway Security
+### Render Security
 
 - Environment variables are encrypted at rest
 - Only visible to project collaborators
@@ -209,8 +209,8 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 
 ## Next Steps After Adding Variables
 
-1. **Verify variables are set** in Railway dashboard
-2. **Redeploy** (Railway auto-deploys when you add variables)
+1. **Verify variables are set** in Render dashboard
+2. **Redeploy** (Render auto-deploys when you add variables)
 3. **Check deployment logs** for initialization messages:
 
    ```
@@ -230,7 +230,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 
 **Error:** "Calendar service not initialized"
 
-- **Fix:** Add `GOOGLE_SERVICE_ACCOUNT_KEY` to Railway variables
+- **Fix:** Add `GOOGLE_SERVICE_ACCOUNT_KEY` to Render variables
 
 **Error:** "403 Forbidden" when creating events
 
@@ -240,7 +240,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 **Error:** "Invalid JSON in GOOGLE_SERVICE_ACCOUNT_KEY"
 
 - **Fix:** Ensure you copied entire JSON object, including outer `{}`
-- Wrap in single quotes in Railway UI
+- Wrap in single quotes in Render UI
 
 ### PayPal errors
 
@@ -274,4 +274,4 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 
 ---
 
-**Ready to deploy?** Add the required variables above to Railway, then proceed with deployment!
+**Ready to deploy?** Add the required variables above to Render, then proceed with deployment!

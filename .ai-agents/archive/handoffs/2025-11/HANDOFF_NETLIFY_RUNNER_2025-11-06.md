@@ -37,7 +37,7 @@
 **Step 1: Sync repository**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 git pull origin main
 ```
 

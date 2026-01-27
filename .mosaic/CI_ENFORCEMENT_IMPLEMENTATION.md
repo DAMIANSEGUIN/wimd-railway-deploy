@@ -180,7 +180,7 @@ $ bash scripts/run_local_enforcement.sh
 - ⚠️ `RAILWAY_STATIC_URL` (optional - will SKIP if missing)
 
 ### For Full RUNTIME_IDENTITY_MATCH:
-- ⏸️ Railway service deployed
+- ⏸️ Render service deployed
 - ⏸️ `/__version` endpoint returning git_commit
 - ⏸️ `RAILWAY_STATIC_URL` env var in GitHub Actions
 
@@ -190,7 +190,7 @@ $ bash scripts/run_local_enforcement.sh
 
 1. **RUNTIME_IDENTITY_MATCH currently SKIPs in CI**
    - Missing RAILWAY_STATIC_URL env var
-   - Need to add Railway service URL to GitHub secrets
+   - Need to add Render service URL to GitHub secrets
    - Can be enabled after Gemini review
 
 2. **No runtime mode implementation yet**
@@ -247,7 +247,7 @@ $ bash scripts/run_local_enforcement.sh
 **Action:** Add RAILWAY_STATIC_URL to GitHub secrets
 
 **Requirements:**
-- Railway service URL
+- Render service URL
 - /__version endpoint deployed
 - GitHub Actions secret configured
 

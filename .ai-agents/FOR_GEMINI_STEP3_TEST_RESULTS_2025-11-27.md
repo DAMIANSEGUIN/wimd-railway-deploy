@@ -140,9 +140,9 @@ The PS101 flow requires:
 
 Given the backend API limitation, how should we test?
 
-**Option A:** Point local frontend to production Railway API
+**Option A:** Point local frontend to production Render API
 
-- Modify frontend to use `https://what-is-my-delta-site-production.up.railway.app`
+- Modify frontend to use `https://what-is-my-delta-site-production.up.render.app`
 - Test PS101 flow with real backend
 - Can verify if advancement works
 

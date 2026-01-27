@@ -98,14 +98,14 @@ Agent:
 ```
 User: "Run GATE_10 smoke tests"
 Agent:
-  [Sees 404 error from netlify.toml Railway URL]
+  [Sees 404 error from netlify.toml Render URL]
   "What is your Render backend URL?"  ← WRONG
 ```
 
 ## Resolution
 - Backend URL: `https://mosaic-platform.vercel.app` (found in frontend/index.html:6)
 - Health status: Working (verified)
-- netlify.toml redirects: Point to dead Railway URLs (need update)
+- netlify.toml redirects: Point to dead Render URLs (need update)
 - Actual backend: Vercel, not Render
 
 ## Session Impact

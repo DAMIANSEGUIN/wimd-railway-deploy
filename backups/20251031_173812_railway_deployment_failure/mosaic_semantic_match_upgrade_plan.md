@@ -50,7 +50,7 @@
 
 - **CODEX (Planning):** Owns ongoing documentation updates, evaluation design, and handoff specs per `CODEX_INSTRUCTIONS`.
 - **Cursor (Claude in Cursor):** Executes embedding swap, reranker deployment, and telemetry wiring in the local environment; reports diffs/tests.
-- **Claude Code:** On-call only if deployment infra or Railway configuration work emerges.
+- **Claude Code:** On-call only if deployment infra or Render configuration work emerges.
 - **Human Gatekeeper:** Approves any spend increases, manages secrets/API keys, and greenlights production deploys.
 
 ## Risks & Mitigations

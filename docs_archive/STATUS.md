@@ -123,7 +123,7 @@ tail -f /tmp/dev_server.log
 - ✅ Zero circular dependencies
 - ✅ Local dev server running
 - ✅ CORS issue resolved
-- ✅ API proxy to Railway working
+- ✅ API proxy to Render working
 - ✅ Desktop shortcut configured
 - ✅ Documentation complete
 - ✅ Git committed
@@ -198,7 +198,7 @@ See `~/Desktop/TESTING_CHECKLIST.md` for details.
 - Extracted code exists in both modules AND IIFE
 - Resolution: Phase 2 will integrate modules with IIFE
 
-### 2. Railway CORS Deploy Pending
+### 2. Render CORS Deploy Pending
 
 - CORS update pushed but not deployed yet
 - Resolution: Local proxy eliminates this issue

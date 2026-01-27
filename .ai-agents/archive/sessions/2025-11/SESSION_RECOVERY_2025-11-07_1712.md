@@ -89,7 +89,7 @@ if (document.readyState === 'loading') {
 ### Repository Location
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ```
 
 ### Key Directories
@@ -98,7 +98,7 @@ if (document.readyState === 'loading') {
 .ai-agents/           ← Session notes, diagnostics, protocols
 mosaic_ui/            ← Frontend source (PRODUCTION - deployed to Netlify)
 frontend/             ← Frontend mirror (sync with mosaic_ui)
-api/                  ← Backend Python/FastAPI (deployed to Railway)
+api/                  ← Backend Python/FastAPI (deployed to Render)
 scripts/              ← Deployment & verification scripts
 docs/                 ← Long-form documentation
 Mosaic/               ← PS101 Continuity Kit
@@ -149,15 +149,15 @@ Career transition coaching platform with:
 ### Tech Stack
 
 - **Frontend:** Vanilla JavaScript ES6+ in single HTML file
-- **Backend:** Python FastAPI on Railway
-- **Database:** PostgreSQL on Railway
+- **Backend:** Python FastAPI on Render
+- **Database:** PostgreSQL on Render
 - **CDN:** Netlify for frontend hosting
 - **AI:** OpenAI GPT-4, Anthropic Claude
 
 ### Deployment
 
 - **Production:** <https://whatismydelta.com>
-- **Backend API:** <https://what-is-my-delta-site-production.up.railway.app>
+- **Backend API:** <https://what-is-my-delta-site-production.up.render.app>
 - **Netlify Site ID:** resonant-crostata-90b706
 
 ---
@@ -244,7 +244,7 @@ Career transition coaching platform with:
 
 ## ✅ WHAT'S WORKING
 
-- ✅ Backend API: Railway deployment healthy
+- ✅ Backend API: Render deployment healthy
 - ✅ Health checks: All passing
 - ✅ Database: PostgreSQL connected
 - ✅ Authentication system: Code present
@@ -372,9 +372,9 @@ netlify deploy --prod
 4. ✅ Follow pre-commit hooks (never --no-verify without approval)
 5. ✅ Run DEPLOYMENT_VERIFICATION_CHECKLIST.md after deploys
 6. ✅ **NEVER use raw `git push` or `netlify deploy`** - use wrapper scripts:
-   - `./scripts/push.sh railway-origin main`
+   - `./scripts/push.sh render-origin main`
    - `./scripts/deploy.sh netlify`
-   - `./scripts/deploy.sh railway`
+   - `./scripts/deploy.sh render`
    - `./scripts/deploy.sh all`
 
 ### If Wrapper Scripts Don't Exist
@@ -427,7 +427,7 @@ git log -5 --oneline
 ### Check Backend Health
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 ### Check Production Site
@@ -446,7 +446,7 @@ curl -I https://whatismydelta.com
 
 ```bash
 git revert HEAD
-./scripts/push.sh railway-origin main
+./scripts/push.sh render-origin main
 ```
 
 ---
@@ -485,7 +485,7 @@ git revert HEAD
 
 **Project:** Mosaic Career Transition Platform
 **Issue:** JavaScript initialization failure on production site
-**Location:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+**Location:** `/Users/damianseguin/WIMD-Deploy-Project`
 
 **Quick Context:**
 
@@ -497,7 +497,7 @@ git revert HEAD
 **Start Here:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 cat .ai-agents/SESSION_RECOVERY_2025-11-07_1712.md
 ```
 

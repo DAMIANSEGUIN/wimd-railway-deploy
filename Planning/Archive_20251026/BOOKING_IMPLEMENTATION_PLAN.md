@@ -64,7 +64,7 @@
 
 **3. Environment Variables**
 
-- [ ] Add to Railway (or .env for local):
+- [ ] Add to Render (or .env for local):
 
 ```bash
 # Google Calendar
@@ -397,7 +397,7 @@ Create migration files and run them on PostgreSQL.
 
 ### Step 8: Deployment (1 hour)
 
-- Add environment variables to Railway
+- Add environment variables to Render
 - Run database migrations
 - Deploy backend
 - Deploy frontend (Netlify auto-deploy)
@@ -412,7 +412,7 @@ Create migration files and run them on PostgreSQL.
 
 - **Google Calendar API:** Free (up to 1M requests/day)
 - **Stripe account:** Free setup
-- **Railway PostgreSQL:** Free tier (sufficient for bookings)
+- **Render PostgreSQL:** Free tier (sufficient for bookings)
 
 ### Paid/Transaction-Based
 
@@ -435,7 +435,7 @@ Create migration files and run them on PostgreSQL.
 
 1. **Google Cloud:** Create project, enable Calendar API, create service account, share calendar
 2. **Stripe:** Create account, get test API keys
-3. **Railway:** Add environment variables
+3. **Render:** Add environment variables
 
 ### Then I Will
 

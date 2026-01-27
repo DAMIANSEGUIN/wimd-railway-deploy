@@ -32,7 +32,7 @@ Recent hardening items are in place:
 Still outstanding:
 
 1. Confirm `git config core.hooksPath .githooks` runs successfully everywhere (local run succeeded once `.git/config` was unlocked).
-2. Perform a live `./scripts/push.sh railway-origin main` when network/credentials allow, to exercise hook + audit logging end-to-end.
+2. Perform a live `./scripts/push.sh render-origin main` when network/credentials allow, to exercise hook + audit logging end-to-end.
 3. Re-run the GitHub Action after secrets are loaded to validate the manual escalation messaging.
 
 Codex can rerun the full audit checklist once those confirmations are complete or if additional guardrails are desired.
@@ -115,7 +115,7 @@ Codex can help prep diffs or tweak verification thresholds if needed; deployment
 
 ### Next Steps
 
-1. ⏭️ Ready for push: `./scripts/push.sh railway-origin main`
+1. ⏭️ Ready for push: `./scripts/push.sh render-origin main`
 2. ⏭️ Schedule deployment dry-run
 3. ✅ ~~Update `pre_push_verification.sh` baseline to 3875~~ **COMPLETE**
 4. ⏭️ Monitor BUILD_ID in production deployments

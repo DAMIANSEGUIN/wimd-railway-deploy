@@ -148,7 +148,7 @@ test_file.txt
 
 ## Deployment Status
 
-- Last Railway deploy: [Check Railway dashboard]
+- Last Render deploy: [Check Render dashboard]
 - Last Netlify deploy: [Check Netlify dashboard]
 - Health check: Failed
 

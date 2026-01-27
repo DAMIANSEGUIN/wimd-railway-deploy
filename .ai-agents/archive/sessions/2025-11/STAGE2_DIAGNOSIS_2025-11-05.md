@@ -34,7 +34,7 @@
 - Playbook includes cache headers for `/assets/*` and `/:filename`
 - Current config has none
 
-✅ **API Redirects:** Present (not in playbook, but needed for Railway backend)
+✅ **API Redirects:** Present (not in playbook, but needed for Render backend)
 
 - `/health`, `/config`, `/prompts/*`, `/wimd`, `/wimd/*`, `/ob/*`, `/resume/*`, `/auth/*`
 
@@ -56,7 +56,7 @@
 
 ### Recommendation
 
-**Keep current API redirects** (needed for Railway backend), **add security headers and cache control** from playbook, and **create _redirects fallback file**.
+**Keep current API redirects** (needed for Render backend), **add security headers and cache control** from playbook, and **create _redirects fallback file**.
 
 **Branch:** Will prepare branch aligning with playbook (excluding runtime hotfix) once DevTools evidence is captured.
 

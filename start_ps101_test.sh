@@ -8,7 +8,7 @@ echo "======================================"
 # 1. Start local server
 echo ""
 echo "1. Starting local development server..."
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 python3 local_dev_server.py &
 SERVER_PID=$!
 echo "   ✅ Server started (PID: $SERVER_PID) on http://localhost:3000"

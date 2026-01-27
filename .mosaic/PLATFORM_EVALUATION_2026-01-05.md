@@ -1,8 +1,8 @@
-# Platform Evaluation: Railway Reliability Assessment
+# Platform Evaluation: Render Reliability Assessment
 
 **Created:** 2026-01-05 3:20 PM
 **Role:** DevOps/Infrastructure SSE
-**Objective:** Systems-level assessment of Railway platform viability
+**Objective:** Systems-level assessment of Render platform viability
 
 ---
 
@@ -11,20 +11,20 @@
 **Recommendation:** 🔴 **MIGRATE OFF RAILWAY**
 
 **Key Findings:**
-1. Railway has **known persistent issues** with health checks and startup timeouts
+1. Render has **known persistent issues** with health checks and startup timeouts
 2. Nixpacks is **deprecated** (no longer maintained)
 3. PostgreSQL connection issues are **common and documented**
 4. Better alternatives exist at similar/lower cost
-5. Time spent debugging Railway infrastructure >> time to migrate
+5. Time spent debugging Render infrastructure >> time to migrate
 
 ---
 
 ## RESEARCH FINDINGS
 
-### Railway Known Issues (2024)
+### Render Known Issues (2024)
 
 #### Issue #1: Health Check Failures (CRITICAL)
-**Source:** [Railway Help Station - Health Check Failed](https://station.railway.com/questions/health-check-failed-cd123ec3)
+**Source:** [Render Help Station - Health Check Failed](https://station.render.com/questions/health-check-failed-cd123ec3)
 
 - **Symptom:** Health checks continuously fail even with extended timeouts (300s)
 - **Affected:** FastAPI applications specifically
@@ -32,14 +32,14 @@
 - **Our Experience:** ✅ **EXACT MATCH** - Health check fails at 1:14 seconds
 
 #### Issue #2: IPv6 Binding Problems
-**Source:** [FastAPI Service Health-Check Fails in IPv6](https://station.railway.com/questions/fast-api-service-health-check-fails-in-ip-a0add1f5)
+**Source:** [FastAPI Service Health-Check Fails in IPv6](https://station.render.com/questions/fast-api-service-health-check-fails-in-ip-a0add1f5)
 
 - **Symptom:** Switching to IPv6 breaks health checks
 - **Workaround:** Use Hypercorn instead of Uvicorn
 - **Impact:** Requires application code changes
 
 #### Issue #3: Nixpacks Deprecated
-**Source:** [Nixpacks Docs](https://docs.railway.com/reference/nixpacks)
+**Source:** [Nixpacks Docs](https://docs.render.com/reference/nixpacks)
 
 - **Status:** 🚫 **Nixpacks no longer receiving updates**
 - **Replacement:** Railpack (but migration required)
@@ -48,8 +48,8 @@
 
 #### Issue #4: PostgreSQL Connection Hangs
 **Sources:**
-- [Flask App Hanging Due to PostgreSQL](https://station.railway.com/questions/flask-app-hanging-timing-out-due-to-pos-2eb7b5b9)
-- [PostgreSQL Connection Loop](https://station.railway.com/questions/postgre-sql-connection-loop-can-t-reach-df4af2d4)
+- [Flask App Hanging Due to PostgreSQL](https://station.render.com/questions/flask-app-hanging-timing-out-due-to-pos-2eb7b5b9)
+- [PostgreSQL Connection Loop](https://station.render.com/questions/postgre-sql-connection-loop-can-t-reach-df4af2d4)
 
 - **Symptom:** Apps hang during startup trying to connect to PostgreSQL
 - **Root Cause:** Race condition - app starts before DB ready
@@ -57,7 +57,7 @@
 - **Our Experience:** ✅ **LIKELY CAUSE** - startup_checks.py calls init_db()
 
 #### Issue #5: Large Build Images
-**Source:** [Nixpacks Build Fails - Large Image Size](https://station.railway.com/questions/nixpacks-build-fails-large-image-size-a1264134)
+**Source:** [Nixpacks Build Fails - Large Image Size](https://station.render.com/questions/nixpacks-build-fails-large-image-size-a1264134)
 
 - **Symptom:** Docker images reach 7.5GB, exceed limits
 - **Affected:** Python apps with NumPy/scientific libraries
@@ -67,7 +67,7 @@
 
 ## ALTERNATIVE PLATFORMS (2024 Comparison)
 
-**Source:** [Render, Fly.io & Railway: PaaS Comparison 2024](https://alexfranz.com/posts/deploying-container-apps-2024/)
+**Source:** [Render, Fly.io & Render: PaaS Comparison 2024](https://alexfranz.com/posts/deploying-container-apps-2024/)
 
 ### Render.com ⭐ **RECOMMENDED**
 
@@ -82,7 +82,7 @@
 
 **Cons:**
 - ⚠️ Free tier spins down after inactivity (15min)
-- 💰 Starter plan: $7/month (vs Railway's usage-based)
+- 💰 Starter plan: $7/month (vs Render's usage-based)
 
 **Migration Effort:** 🟢 **LOW** (1-2 hours)
 - Native Python support (no nixpacks.toml needed)
@@ -140,12 +140,12 @@
 
 | Platform | Free Tier | Starter Plan | Database | Health Checks |
 |----------|-----------|--------------|----------|---------------|
-| **Railway** | None (ended 2023) | $5-20/month (usage) | $5-10/month | ❌ Buggy |
+| **Render** | None (ended 2023) | $5-20/month (usage) | $5-10/month | ❌ Buggy |
 | **Render** | Yes (with limits) | $7/month | $7/month | ✅ Reliable |
 | **Fly.io** | $5 credit/month | $2/month | $2/month | ✅ Reliable |
 | **Heroku** | None | $7/month | $9/month | ✅ Reliable |
 
-**Current Railway Spend:** Unknown (usage-based)
+**Current Render Spend:** Unknown (usage-based)
 **Projected Render Cost:** $14/month (app + DB)
 **Projected Fly Cost:** $4/month (app + DB)
 
@@ -157,19 +157,19 @@
 
 ```bash
 # Test 1: Check if DATABASE_URL is accessible
-railway run python -c "import os; print(os.getenv('DATABASE_URL')[:20])"
+render run python -c "import os; print(os.getenv('DATABASE_URL')[:20])"
 # Result: ⏳ PENDING
 
 # Test 2: Check PostgreSQL connectivity
-railway run python -c "import psycopg2; conn=psycopg2.connect(os.getenv('DATABASE_URL')); print('OK')"
+render run python -c "import psycopg2; conn=psycopg2.connect(os.getenv('DATABASE_URL')); print('OK')"
 # Result: ⏳ PENDING
 
 # Test 3: Test startup checks in isolation
-railway run python -c "from backend.api.startup_checks import run; import asyncio; asyncio.run(run())"
+render run python -c "from backend.api.startup_checks import run; import asyncio; asyncio.run(run())"
 # Result: ⏳ PENDING
 
 # Test 4: Check PORT variable
-railway run env | grep PORT
+render run env | grep PORT
 # Result: ⏳ PENDING
 
 # Test 5: Test minimal FastAPI app
@@ -177,8 +177,8 @@ railway run env | grep PORT
 # Deploy and test
 # Result: ⏳ PENDING
 
-# Test 6: Check Railway service status
-curl https://railway.statuspage.io/api/v2/status.json
+# Test 6: Check Render service status
+curl https://render.statuspage.io/api/v2/status.json
 # Result: ⏳ PENDING
 ```
 
@@ -186,7 +186,7 @@ curl https://railway.statuspage.io/api/v2/status.json
 
 **Based on research alone (without running tests):**
 
-1. ✅ **Health Check Issue:** CONFIRMED as common Railway problem
+1. ✅ **Health Check Issue:** CONFIRMED as common Render problem
 2. ✅ **PostgreSQL Hang:** CONFIRMED as common startup issue
 3. ✅ **Nixpacks Deprecation:** CONFIRMED - platform is EOL
 4. ✅ **NumPy Issues:** CONFIRMED - large image sizes common
@@ -204,7 +204,7 @@ curl https://railway.statuspage.io/api/v2/status.json
 3. PostgreSQL race conditions documented → known bug
 4. Our symptoms match documented issues exactly
 
-**Conclusion:** This is NOT an application bug. This is Railway platform instability.
+**Conclusion:** This is NOT an application bug. This is Render platform instability.
 
 ### Secondary Cause: Application Startup Blocking
 
@@ -223,7 +223,7 @@ async def run():
         )
 ```
 
-**Issue:** If `init_db()` hangs (common on Railway), health check fails.
+**Issue:** If `init_db()` hangs (common on Render), health check fails.
 
 **Fix:** Make startup checks non-blocking or remove them.
 
@@ -233,7 +233,7 @@ async def run():
 
 ### Option A: Quick Fix (Band-Aid) ⏱️ 30 minutes
 
-**Goal:** Get Railway working temporarily
+**Goal:** Get Render working temporarily
 
 1. **Disable blocking startup checks:**
    ```python
@@ -244,15 +244,15 @@ async def run():
 
 2. **Add health check endpoint that doesn't require DB:**
    ```python
-   @app.get("/railway-health")
-   async def railway_health():
+   @app.get("/render-health")
+   async def render_health():
        return {"status": "ok"}  # No DB check
    ```
 
-3. **Update railway.toml:**
+3. **Update render.toml:**
    ```toml
    [healthcheck]
-   httpPath = "/railway-health"
+   httpPath = "/render-health"
    httpTimeout = 10
    ```
 
@@ -297,8 +297,8 @@ databases:
 
 **Step 3: Migrate PostgreSQL** (30 min)
 ```bash
-# Export from Railway
-railway run pg_dump $DATABASE_URL > backup.sql
+# Export from Render
+render run pg_dump $DATABASE_URL > backup.sql
 
 # Import to Render (after DB created)
 psql <RENDER_DATABASE_URL> < backup.sql
@@ -321,8 +321,8 @@ const API_BASE = "https://mosaic-backend.onrender.com"
 - Test key features
 
 **Total Time:** ~2 hours
-**Risk:** Low (can keep Railway running during migration)
-**Cost:** $14/month (vs Railway's unknown usage fees)
+**Risk:** Low (can keep Render running during migration)
+**Cost:** $14/month (vs Render's unknown usage fees)
 
 ---
 
@@ -346,7 +346,7 @@ const API_BASE = "https://mosaic-backend.onrender.com"
 
 ## DECISION MATRIX
 
-| Factor | Keep Railway | Migrate to Render | Migrate to Fly.io |
+| Factor | Keep Render | Migrate to Render | Migrate to Fly.io |
 |--------|--------------|-------------------|-------------------|
 | **Time to Fix** | 30 min (band-aid) | 2 hours | 4 hours |
 | **Reliability** | 🔴 Poor | 🟢 Excellent | 🟢 Excellent |
@@ -357,7 +357,7 @@ const API_BASE = "https://mosaic-backend.onrender.com"
 | **Future Proof** | 🔴 Nixpacks EOL | 🟢 AWS-backed | 🟢 Growing |
 
 **Score:**
-- Railway: 2/7 ❌
+- Render: 2/7 ❌
 - Render: 7/7 ✅ **WINNER**
 - Fly.io: 5/7 🟡
 
@@ -365,19 +365,19 @@ const API_BASE = "https://mosaic-backend.onrender.com"
 
 ## IMMEDIATE NEXT STEPS
 
-**DO NOT attempt more Railway fixes.**
+**DO NOT attempt more Render fixes.**
 
 **Recommended Path:** Option B (Migrate to Render)
 
 1. ☐ User approval to migrate
 2. ☐ Create Render account
 3. ☐ Write render.yaml
-4. ☐ Backup Railway PostgreSQL
+4. ☐ Backup Render PostgreSQL
 5. ☐ Deploy to Render
 6. ☐ Test on Render
 7. ☐ Update frontend API_BASE
-8. ☐ Archive Railway deployment docs
-9. ☐ Cancel Railway subscription
+8. ☐ Archive Render deployment docs
+9. ☐ Cancel Render subscription
 
 **Timeline:** 2 hours of work, can be done today
 
@@ -387,23 +387,23 @@ const API_BASE = "https://mosaic-backend.onrender.com"
 
 ## SOURCES
 
-### Railway Issues
-- [Health Check Failed - Railway Help](https://station.railway.com/questions/health-check-failed-cd123ec3)
-- [FastAPI Health Check IPv6 Issue](https://station.railway.com/questions/fast-api-service-health-check-fails-in-ip-a0add1f5)
-- [Flask App Hanging - PostgreSQL](https://station.railway.com/questions/flask-app-hanging-timing-out-due-to-pos-2eb7b5b9)
-- [PostgreSQL Connection Loop](https://station.railway.com/questions/postgre-sql-connection-loop-can-t-reach-df4af2d4)
-- [Nixpacks Build Fails - Large Images](https://station.railway.com/questions/nixpacks-build-fails-large-image-size-a1264134)
-- [Nixpacks Documentation](https://docs.railway.com/reference/nixpacks)
+### Render Issues
+- [Health Check Failed - Render Help](https://station.render.com/questions/health-check-failed-cd123ec3)
+- [FastAPI Health Check IPv6 Issue](https://station.render.com/questions/fast-api-service-health-check-fails-in-ip-a0add1f5)
+- [Flask App Hanging - PostgreSQL](https://station.render.com/questions/flask-app-hanging-timing-out-due-to-pos-2eb7b5b9)
+- [PostgreSQL Connection Loop](https://station.render.com/questions/postgre-sql-connection-loop-can-t-reach-df4af2d4)
+- [Nixpacks Build Fails - Large Images](https://station.render.com/questions/nixpacks-build-fails-large-image-size-a1264134)
+- [Nixpacks Documentation](https://docs.render.com/reference/nixpacks)
 
 ### Platform Comparisons
-- [Render, Fly.io & Railway: PaaS Comparison 2024](https://alexfranz.com/posts/deploying-container-apps-2024/)
-- [Railway vs Fly.io vs Render ROI Comparison](https://medium.com/ai-disruption/railway-vs-fly-io-vs-render-which-cloud-gives-you-the-best-roi-2e3305399e5b)
-- [Render vs Railway vs Fly.io Hosting Comparison](https://cybersnowden.com/render-vs-railway-vs-fly-io/)
-- [Railway vs Render vs Fly.io - codeYaan](https://codeyaan.com/blog/top-5/railway-vs-render-vs-flyio-comparison-2624/)
-- [Top Render Alternatives Comparison](https://medium.com/@zstolar/top-render-alternatives-upsun-vs-fly-io-vs-railway-for-advanced-cloud-infrastructure-a08f4a372b74)
+- [Render, Fly.io & Render: PaaS Comparison 2024](https://alexfranz.com/posts/deploying-container-apps-2024/)
+- [Render vs Fly.io vs Render ROI Comparison](https://medium.com/ai-disruption/render-vs-fly-io-vs-render-which-cloud-gives-you-the-best-roi-2e3305399e5b)
+- [Render vs Render vs Fly.io Hosting Comparison](https://cybersnowden.com/render-vs-render-vs-fly-io/)
+- [Render vs Render vs Fly.io - codeYaan](https://codeyaan.com/blog/top-5/render-vs-render-vs-flyio-comparison-2624/)
+- [Top Render Alternatives Comparison](https://medium.com/@zstolar/top-render-alternatives-upsun-vs-fly-io-vs-render-for-advanced-cloud-infrastructure-a08f4a372b74)
 
 ---
 
 **END OF PLATFORM EVALUATION**
 
-**Bottom Line:** Railway is buggy and deprecated. Migrate to Render (2 hours) for reliable deployment.
+**Bottom Line:** Render is buggy and deprecated. Migrate to Render (2 hours) for reliable deployment.

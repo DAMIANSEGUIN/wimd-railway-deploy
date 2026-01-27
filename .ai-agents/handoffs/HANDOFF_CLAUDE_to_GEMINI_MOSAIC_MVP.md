@@ -270,7 +270,7 @@
    grep -r "ps101" frontend/
 
    # Check database tables
-   # (Need Railway shell or database query)
+   # (Need Render shell or database query)
 
    # Verify chat endpoint
    grep -r "/wimd/ask" api/
@@ -291,7 +291,7 @@
 ### Verification Before Starting
 
 - [x] MCP infrastructure complete
-- [x] Database connected (PostgreSQL on Railway)
+- [x] Database connected (PostgreSQL on Render)
 - [x] Auth working (verified in CLAUDE.md)
 - [x] PS101 flow exists (verified in CLAUDE.md)
 - [x] Chat interface functional (verified in CLAUDE.md)
@@ -358,8 +358,8 @@ git describe --tags --abbrev=0
 # Rollback to last stable
 git checkout prod-2025-11-18
 
-# Or use Railway rollback
-railway rollback
+# Or use Render rollback
+render rollback
 ```
 
 ### What Gets Reverted
@@ -385,7 +385,7 @@ railway rollback
 - Authentication (login/register/password reset)
 - PS101 flow (10 questions)
 - Chat interface
-- Database (PostgreSQL on Railway)
+- Database (PostgreSQL on Render)
 - Backend API (FastAPI)
 - Frontend (Netlify)
 
@@ -397,11 +397,11 @@ railway rollback
 
 ### Technical Stack
 
-- **Backend:** Python FastAPI on Railway
+- **Backend:** Python FastAPI on Render
 - **Frontend:** Vanilla JavaScript on Netlify
-- **Database:** PostgreSQL (Railway managed)
+- **Database:** PostgreSQL (Render managed)
 - **AI:** OpenAI GPT-4, Anthropic Claude (APIs)
-- **Deployment:** Railway (auto-deploy on git push)
+- **Deployment:** Render (auto-deploy on git push)
 
 ### Critical Patterns (FROM TROUBLESHOOTING_CHECKLIST.md)
 

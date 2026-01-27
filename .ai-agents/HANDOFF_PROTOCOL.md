@@ -74,7 +74,7 @@ These features CANNOT be removed without explicit human approval:
 3. **API Integration**
    - API_BASE = '' (relative paths)
    - Netlify proxy configuration
-   - Railway backend endpoints
+   - Render backend endpoints
 
 4. **Core Functionality**
    - Chat interface

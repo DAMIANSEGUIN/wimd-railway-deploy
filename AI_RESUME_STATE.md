@@ -11,7 +11,7 @@
 **For Gemini:**
 
 ```
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 Read .ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md then read AI_RESUME_STATE.md
 ```
 
@@ -23,7 +23,7 @@ Read .ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md then read AI_RESUME_STAT
 
 **Detailed Steps (if needed):**
 
-1. (Gemini only) `cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+1. (Gemini only) `cd /Users/damianseguin/WIMD-Deploy-Project`
 2. Read .ai-agents/GEMINI_PS101_FIX_APPROVAL_2025-11-26.md (PRIMARY FOCUS)
 3. Read AI_RESUME_STATE.md for current bugs and backup location
 4. Read .ai-agents/FOR_GEMINI_PS101_TESTING_BUGS_2025-11-26.md for detailed bug list

@@ -87,21 +87,21 @@ def _check_feature_flag(self, flag_name: str) -> bool:
 
 **Git Remotes**:
 
-- `origin`: `wimd-railway-deploy.git` (development repo) ❌ Wrong
-- `railway-origin`: `what-is-my-delta-site.git` (Railway deployment repo) ✅ Correct
+- `origin`: `wimd-render-deploy.git` (development repo) ❌ Wrong
+- `render-origin`: `what-is-my-delta-site.git` (Render deployment repo) ✅ Correct
 
 **What Happened**:
 
 1. Made fixes and pushed to `origin` (commits ebb12f4, ee6712f)
-2. Railway deploys from `railway-origin` - didn't receive changes
+2. Render deploys from `render-origin` - didn't receive changes
 3. Production continued serving old code
 
 **Documentation Evidence**:
 
-- `CODEX_HANDOFF_2025-10-01.md:15` - "Pushed to wrong repositories (wimd-railway-deploy instead of what-is-my-delta-site)"
+- `CODEX_HANDOFF_2025-10-01.md:15` - "Pushed to wrong repositories (wimd-render-deploy instead of what-is-my-delta-site)"
 - This was a KNOWN ISSUE, documented but repeated
 
-**Fix Applied**: Pushed to `railway-origin` correctly
+**Fix Applied**: Pushed to `render-origin` correctly
 
 ---
 
@@ -109,7 +109,7 @@ def _check_feature_flag(self, flag_name: str) -> bool:
 
 **File**: `api/index.py:420-471`
 
-**Problem**: `/health` endpoint returns 503, causing Railway deployment to fail
+**Problem**: `/health` endpoint returns 503, causing Render deployment to fail
 
 **Health Check Logic**:
 
@@ -127,7 +127,7 @@ def health():
         raise HTTPException(status_code=503, detail=health_status)  # 503 = deployment fails
 ```
 
-**Railway Deployment Logs**:
+**Render Deployment Logs**:
 
 ```
 ✅ OpenAI client initialized
@@ -141,7 +141,7 @@ INFO: "GET /health HTTP/1.1" 503 Service Unavailable  ← Blocks deployment
 1. AI clients initialize successfully (logs confirm)
 2. But database has `AI_FALLBACK_ENABLED = 0`
 3. Health check sees fallback disabled → returns 503
-4. Railway sees 503 → marks deployment as failed
+4. Render sees 503 → marks deployment as failed
 5. Old deployment stays active
 
 ---
@@ -174,8 +174,8 @@ python3 -c "import json; data = json.load(open('data/prompts_f19c806ca62c.json')
 | 18:59 | Fixed AI client initialization | ✅ Code fix |
 | 19:01 | Enabled AI_FALLBACK in JSON | ✅ Code fix |
 | 19:10 | Pushed to `origin` (wrong remote) | ❌ Wrong repo |
-| 19:15 | Realized wrong remote, pushed to `railway-origin` | ✅ Correct repo |
-| 19:23 | Railway deployment started | 🔄 Building |
+| 19:15 | Realized wrong remote, pushed to `render-origin` | ✅ Correct repo |
+| 19:23 | Render deployment started | 🔄 Building |
 | 19:23 | Build succeeded | ✅ Build OK |
 | 19:23-19:28 | Health check failing (503) | ❌ Deploy failed |
 | 19:30 | Identified database vs JSON flag mismatch | 🔍 Root cause |
@@ -208,7 +208,7 @@ INFO: "GET /health HTTP/1.1" 503 Service Unavailable
 **Action**: Call the auto-recovery endpoint:
 
 ```
-POST https://what-is-my-delta-site-production.up.railway.app/health/recover
+POST https://what-is-my-delta-site-production.up.render.app/health/recover
 ```
 
 **What It Does** (`api/monitoring.py:108-143`):
@@ -222,7 +222,7 @@ POST https://what-is-my-delta-site-production.up.railway.app/health/recover
 
 - Database flag updated to `1`
 - Health check passes
-- Railway deployment succeeds
+- Render deployment succeeds
 - Production resumes serving traffic
 
 ---
@@ -237,7 +237,7 @@ SET enabled = 1
 WHERE flag_name = 'AI_FALLBACK_ENABLED';
 ```
 
-**Access**: Would require Railway database connection or migration
+**Access**: Would require Render database connection or migration
 
 ---
 
@@ -353,7 +353,7 @@ api/ai_clients.py                    # Fixed AI client initialization
 feature_flags.json                   # Enabled AI_FALLBACK (JSON only)
 ```
 
-**Pushed to**: `railway-origin/main` (commits: ebb12f4, ee6712f)
+**Pushed to**: `render-origin/main` (commits: ebb12f4, ee6712f)
 
 ---
 
@@ -365,7 +365,7 @@ Once recovery endpoint is called:
 - [ ] `/health/prompts` shows `"fallback_enabled": 1`
 - [ ] `/health/prompts` shows `"openai": {"available": true}`
 - [ ] `/health/prompts` shows `"anthropic": {"available": true}`
-- [ ] Railway deployment succeeds (health check passes)
+- [ ] Render deployment succeeds (health check passes)
 - [ ] User can test <https://whatismydelta.com> without CSV error
 - [ ] Prompt responses work (either CSV or AI fallback)
 
@@ -385,7 +385,7 @@ Once recovery endpoint is called:
 1. **Dual feature flag sources** causing sync issues
 2. **Health check too strict** - blocks deployments when recoverable
 3. **AI client imports commented out** - unclear why this was done
-4. **Auto-deploy webhook** may not be configured for `railway-origin` repo
+4. **Auto-deploy webhook** may not be configured for `render-origin` repo
 
 ---
 
@@ -394,7 +394,7 @@ Once recovery endpoint is called:
 ### Immediate (Human Action Required)
 
 1. **Call recovery endpoint**: `POST /health/recover`
-2. **Verify deployment succeeds** in Railway dashboard
+2. **Verify deployment succeeds** in Render dashboard
 3. **Test production site** - confirm prompt system works
 
 ### Short-term (CODEX Planning)
@@ -428,18 +428,18 @@ Once recovery endpoint is called:
 
 ```bash
 $ git remote -v
-origin          https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git
-railway-origin  https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
+origin          https://github.com/DAMIANSEGUIN/wimd-render-deploy.git
+render-origin  https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 ```
 
-### Railway Build Success
+### Render Build Success
 
 ```
 === Successfully Built! ===
 Build time: 400.90 seconds
 ```
 
-### Railway Health Check Failure
+### Render Health Check Failure
 
 ```
 Attempt #1 failed with service unavailable. Continuing to retry for 4m52s

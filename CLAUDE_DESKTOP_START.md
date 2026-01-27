@@ -1,6 +1,6 @@
 # 🚀 Quick Start for Claude Desktop
 
-**Project:** WIMD Railway Deploy - Mosaic Platform
+**Project:** WIMD Render Deploy - Mosaic Platform
 **Date:** 2025-11-28
 **Your Role:** Full-stack development with persistent context
 
@@ -11,15 +11,15 @@
 **Clone or open:**
 
 ```bash
-git clone https://github.com/DAMIANSEGUIN/wimd-railway-deploy
-cd wimd-railway-deploy
+git clone https://github.com/DAMIANSEGUIN/wimd-render-deploy
+cd wimd-render-deploy
 git checkout phase1-incomplete
 ```
 
 **Local path (if already cloned):**
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ```
 
 ---
@@ -35,7 +35,7 @@ git checkout phase1-incomplete
 
 2. **Login Diagnostic Deployment**
    - Commit `b7e042c` has diagnostic endpoints
-   - Needs deployment to Railway with `ADMIN_DEBUG_KEY` env var
+   - Needs deployment to Render with `ADMIN_DEBUG_KEY` env var
 
 ### P1 - High Priority
 
@@ -72,20 +72,20 @@ git checkout phase1-incomplete
 ### Production URLs
 
 - **Frontend:** <https://whatismydelta.com> (Netlify) - ✅ Healthy
-- **Backend:** <https://what-is-my-delta-site-production.up.railway.app> (Railway) - ✅ Healthy
+- **Backend:** <https://what-is-my-delta-site-production.up.render.app> (Render) - ✅ Healthy
 
 ### Current Branch
 
 - **Branch:** `phase1-incomplete`
 - **Status:** 30 uncommitted files
-- **Remote:** `origin` (auto-deploys to Railway on push to main)
+- **Remote:** `origin` (auto-deploys to Render on push to main)
 
 ### Deployment Commands
 
 ```bash
 # ALWAYS use wrapper scripts (never raw git push):
 ./scripts/deploy.sh netlify    # Deploy frontend
-./scripts/deploy.sh railway    # Deploy backend
+./scripts/deploy.sh render    # Deploy backend
 ./scripts/deploy.sh all        # Deploy both
 
 # Verify before deploy:
@@ -106,8 +106,8 @@ git checkout phase1-incomplete
 **Stack:**
 
 - Frontend: Vanilla JS on Netlify
-- Backend: FastAPI on Railway
-- Database: PostgreSQL (Railway managed)
+- Backend: FastAPI on Render
+- Database: PostgreSQL (Render managed)
 - Domain: whatismydelta.com
 
 **Key Files:**
@@ -153,7 +153,7 @@ With Claude Desktop's persistent context, you don't need to re-read everything e
 
 ```bash
 # Navigate to project and check status
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 git status
 cat .ai-agents/HANDOFF_FOR_CLAUDE_2025-11-28.md
 ```

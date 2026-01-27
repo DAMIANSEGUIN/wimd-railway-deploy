@@ -70,7 +70,7 @@ This document captures CODEX’s implementation sequence, guardrails, and troubl
 
 - Cursor: implementation + local tests; no production deploys.
 - CODEX: planning oversight, approvals, run sheet updates.
-- Claude Code: Railway/Netlify deploys, logs, rollback.
+- Claude Code: Render/Netlify deploys, logs, rollback.
 - Netlify Agent Runners: assist when approved; must read this plan first.
 - Human gatekeeper (Damian): final approvals, secret management, testing feedback.
 

@@ -13,7 +13,7 @@
 
 1. **Claude Code failed to follow CODEX_INSTRUCTIONS**
 2. **Worked in wrong directories** (mosaic_ui/ instead of root)
-3. **Pushed to wrong repositories** (wimd-railway-deploy instead of what-is-my-delta-site)
+3. **Pushed to wrong repositories** (wimd-render-deploy instead of what-is-my-delta-site)
 4. **Made changes without systematic analysis**
 5. **Did not hand off to CODEX when required**
 6. **Ignored established file organization from weeks-ago resource audit**
@@ -41,9 +41,9 @@
 
 - ✅ CSV files exist locally: `data/prompts_clean.csv` (138KB, 600+ prompts)
 - ✅ CSV files in git: Verified with `git ls-files data/`
-- ✅ CSV files in Railway repo: Verified with `git ls-tree railway-origin/main:data/`
+- ✅ CSV files in Render repo: Verified with `git ls-tree render-origin/main:data/`
 - ✅ Local registry exists: `data/prompts_registry.json` shows `{"active": "f19c806ca62c..."}`
-- ❌ Railway API returns null
+- ❌ Render API returns null
 
 **Files Verified Present**:
 
@@ -56,7 +56,7 @@ data/prompts_registry.json
 data/prompts_6e488b26db77.json
 data/prompts_f19c806ca62c.json
 
-# Railway Repository
+# Render Repository
 data/prompts.csv ✅
 data/prompts_clean.csv ✅
 data/prompts_fixed.csv ✅
@@ -78,7 +78,7 @@ data/prompts_registry.json ❓ (not verified)
    - ⚠️ CODEX cannot access due to sandbox limitations
    - Status: NOT deployed
 
-2. `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/`
+2. `/Users/damianseguin/WIMD-Deploy-Project/`
    - Current LIVE deployment source
    - ✅ All AIs can access
    - ✅ CODEX ruled this is source of truth (see CODEX_HANDOVER_README.md lines 35-46)
@@ -97,18 +97,18 @@ data/prompts_registry.json ❓ (not verified)
 
 **CODEX to investigate**:
 
-1. Why does Railway return `null` when local registry shows active SHA?
-2. Is `prompts_registry.json` in Railway repository?
+1. Why does Render return `null` when local registry shows active SHA?
+2. Is `prompts_registry.json` in Render repository?
 3. Is prompts_loader.py reading from correct location?
-4. Are there Railway-specific file access issues?
-5. Does Railway deployment need restart/rebuild?
+4. Are there Render-specific file access issues?
+5. Does Render deployment need restart/rebuild?
 
 **Files to Review**:
 
 - `api/prompts_loader.py` - CSV loading logic
 - `api/index.py` lines 280-285 - `/prompts/active` endpoint
 - `data/prompts_registry.json` - Local registry state
-- Railway deployment logs (if accessible)
+- Render deployment logs (if accessible)
 
 **Expected Output**: Step-by-step fix plan with specific commands
 
@@ -153,11 +153,11 @@ data/prompts_registry.json ❓ (not verified)
 
 ## DEPLOYMENT CONFIGURATION
 
-### Railway Backend
+### Render Backend
 
-- **URL**: <https://what-is-my-delta-site-production.up.railway.app>
+- **URL**: <https://what-is-my-delta-site-production.up.render.app>
 - **Repository**: <https://github.com/DAMIANSEGUIN/what-is-my-delta-site>
-- **Remote**: `railway-origin`
+- **Remote**: `render-origin`
 - **Branch**: `main`
 - **Status**: ✅ Healthy, CORS fixed, chat working
 
@@ -171,7 +171,7 @@ data/prompts_registry.json ❓ (not verified)
 
 - ✅ Chat functional
 - ✅ CORS resolved (apex and www domains)
-- ✅ Netlify proxy routing to Railway
+- ✅ Netlify proxy routing to Render
 - ❌ Prompts CSV not loading
 - ❌ File organization drifted
 
@@ -181,14 +181,14 @@ data/prompts_registry.json ❓ (not verified)
 
 **Must Read**:
 
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/CODEX_INSTRUCTIONS.md`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/ROLLING_CHECKLIST.md`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/CODEX_HANDOVER_README.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/CODEX_INSTRUCTIONS.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/ROLLING_CHECKLIST.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/CODEX_HANDOVER_README.md`
 - Original resource audit documentation (location TBD - CODEX to find)
 
 **Recent Session Failures**:
 
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/SESSION_TROUBLESHOOTING_LOG.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/SESSION_TROUBLESHOOTING_LOG.md`
 
 ---
 
@@ -213,12 +213,12 @@ data/prompts_registry.json ❓ (not verified)
 
 ## HANDOFF INSTRUCTIONS FOR CODEX
 
-**Step 1**: Read all documentation in `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/`
+**Step 1**: Read all documentation in `/Users/damianseguin/WIMD-Deploy-Project/`
 
 **Step 2**: Systematically analyze prompts loading issue
 
 - Review prompts_loader.py logic
-- Check Railway repository for registry.json
+- Check Render repository for registry.json
 - Determine root cause
 - Provide fix plan with exact commands
 
@@ -242,13 +242,13 @@ data/prompts_registry.json ❓ (not verified)
 
 ## CURRENT SESSION CONTEXT
 
-**Working Directory**: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/`
+**Working Directory**: `/Users/damianseguin/WIMD-Deploy-Project/`
 
 **Git Remotes**:
 
 ```
-origin         https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git
-railway-origin https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
+origin         https://github.com/DAMIANSEGUIN/wimd-render-deploy.git
+render-origin https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 ```
 
 **Recent Commits**:
@@ -260,7 +260,7 @@ e65e2d2 Add CORS debug endpoint
 c8a956f Fix: Add explicit OPTIONS handlers
 ```
 
-**Railway Deployment**: Most recent should be 65420b1 (CORS fix)
+**Render Deployment**: Most recent should be 65420b1 (CORS fix)
 
 ---
 

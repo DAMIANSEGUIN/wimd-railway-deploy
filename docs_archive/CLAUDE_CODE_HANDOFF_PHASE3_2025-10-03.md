@@ -41,15 +41,15 @@
 
 ### **2. Deploy to Staging, Monitor Logs for 30 mins**
 
-- **Railway Deployment**: Backend changes pushed to GitHub
-- **Monitor**: Check Railway logs for deployment success
+- **Render Deployment**: Backend changes pushed to GitHub
+- **Monitor**: Check Render logs for deployment success
 - **Test**: Verify new endpoints are accessible
 - **Health Check**: `/health/self-efficacy` endpoint
 
 ### **3. Flip Feature Flags Gradually**
 
 - **Current Status**: SELF_EFFICACY_METRICS and COACH_ESCALATION enabled locally
-- **Production**: Enable flags in Railway environment
+- **Production**: Enable flags in Render environment
 - **Order**: Self-efficacy metrics → Coach escalation
 - **Monitoring**: Watch for errors during flag activation
 
@@ -91,15 +91,15 @@
 
 ## 🔧 **DEPLOYMENT COMMANDS**
 
-### **Railway Deployment**
+### **Render Deployment**
 
 ```bash
 # Verify current deployment status
-curl -s "https://what-is-my-delta-site-production.up.railway.app/health"
+curl -s "https://what-is-my-delta-site-production.up.render.app/health"
 
 # Test new endpoints after deployment
-curl -s "https://what-is-my-delta-site-production.up.railway.app/health/self-efficacy"
-curl -s "https://what-is-my-delta-site-production.up.railway.app/health/experiments"
+curl -s "https://what-is-my-delta-site-production.up.render.app/health/self-efficacy"
+curl -s "https://what-is-my-delta-site-production.up.render.app/health/experiments"
 ```
 
 ### **Netlify Deployment**
@@ -129,7 +129,7 @@ curl -s "https://what-is-my-delta-site-production.up.railway.app/health/experime
 
 ## 📊 **SUCCESS CRITERIA**
 
-- [ ] Railway deployment successful with new endpoints
+- [ ] Render deployment successful with new endpoints
 - [ ] Netlify deployment successful with UI updates
 - [ ] Feature flags working in production
 - [ ] Self-efficacy metrics displaying

@@ -108,7 +108,7 @@ If Gemini modified these, we'll need to merge:
 
 **Status:** Running on port 3000 (PID 77043)
 **URL:** <http://localhost:3000>
-**Backend:** Proxying to Railway production
+**Backend:** Proxying to Render production
 
 Can be used for testing after Gemini's deployment.
 

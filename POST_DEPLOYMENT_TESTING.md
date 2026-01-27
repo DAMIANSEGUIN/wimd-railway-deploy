@@ -2,7 +2,7 @@
 
 **For**: Day 1 Blocker Fixes (Commit 799046f)
 **Date**: 2025-12-03
-**Status**: Ready for Railway deployment testing
+**Status**: Ready for Render deployment testing
 
 ---
 
@@ -32,7 +32,7 @@ All 4 fixes verified in source code:
 
 ## Post-Deployment Integration Tests
 
-**Run these AFTER deploying to Railway:**
+**Run these AFTER deploying to Render:**
 
 ### Test 1: Schema Version Reporting
 
@@ -99,7 +99,7 @@ curl https://whatismydelta.com/health | jq '.'
 
 **If fails**:
 
-- Check Railway deployment logs
+- Check Render deployment logs
 - Verify all environment variables set
 
 ---
@@ -134,10 +134,10 @@ curl -X OPTIONS https://whatismydelta.com/api/ps101/extract-context -v
 - Log warnings on each retry
 - Fail with 503 after exhausting retries
 
-**Monitor in Railway logs**:
+**Monitor in Render logs**:
 
 ```bash
-railway logs --follow | grep -i "retry\|rate limit"
+render logs --follow | grep -i "retry\|rate limit"
 ```
 
 ---
@@ -152,15 +152,15 @@ railway logs --follow | grep -i "retry\|rate limit"
 - Caught by retry logic
 - After 3 retries, returns 503 to client
 
-**Monitor in Railway logs**:
+**Monitor in Render logs**:
 
 ```bash
-railway logs --follow | grep -i "timeout"
+render logs --follow | grep -i "timeout"
 ```
 
 ---
 
-## Expected Railway Logs (Success Case)
+## Expected Render Logs (Success Case)
 
 ```
 [INFO] Starting uvicorn server...
@@ -171,7 +171,7 @@ railway logs --follow | grep -i "timeout"
 
 ---
 
-## Expected Railway Logs (Error Case - if broken)
+## Expected Render Logs (Error Case - if broken)
 
 **If authentication not working**:
 
@@ -207,7 +207,7 @@ ERROR: Claude API call failed: [original error]
 **Deploy:**
 
 ```bash
-git push railway-origin phase1-incomplete:main
+git push render-origin phase1-incomplete:main
 # Or: git push origin main (if using GitHub integration)
 ```
 
@@ -222,7 +222,7 @@ git push railway-origin phase1-incomplete:main
 **Monitor:**
 
 ```bash
-railway logs --follow
+render logs --follow
 ```
 
 Watch for:
@@ -240,11 +240,11 @@ Watch for:
 ```bash
 # Option 1: Revert commit
 git revert 799046f
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 
 # Option 2: Restore previous commit
 git checkout b6d2781
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 ```
 
 **No database rollback needed** - no schema changes in this deployment.
@@ -264,7 +264,7 @@ git push railway-origin HEAD:main --force
 **Deployment successful when:**
 
 - All 5 integration tests pass
-- Railway logs show clean startup
+- Render logs show clean startup
 - No errors in first 10 minutes of deployment
 
 ---
@@ -274,7 +274,7 @@ git push railway-origin HEAD:main --force
 **Why no local testing?**
 
 - Local environment has dependency conflicts (DB_PATH import, etc.)
-- Code verification + Railway testing is sufficient
+- Code verification + Render testing is sufficient
 - Gemini already approved implementation
 
 **Confidence level**: HIGH
@@ -286,4 +286,4 @@ git push railway-origin HEAD:main --force
 
 ---
 
-**Ready for Railway deployment.**
+**Ready for Render deployment.**

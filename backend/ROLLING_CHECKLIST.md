@@ -4,14 +4,14 @@
 |---|---|---|---|---|
 | 0.1 | Add `.gitignore` / `.env.example` | AI | repo | ✅ |
 | 0.2 | Add GitHub Secret Scan action | AI | `.github/workflows/secret-scan.yml` | ✅ |
-| 0.3 | Move secrets to Railway Variables | YOU | Railway UI | ☐ |
+| 0.3 | Move secrets to Render Variables | YOU | Render UI | ☐ |
 | 0.4 | Scan repo for secrets | AI | CI PR check | ☐ |
 | 0.5 | Startup tripwire wired | AI | `api/settings.py`, `api/startup_checks.py` | ✅ |
 | 0.6 | Strict CORS + `/config` | AI | `api/index.py` | ✅ |
 | 0.7 | Frontend uses `/config.apiBase` | AI | frontend | ☐ |
 | 0.8 | No client-side provider calls | AI | frontend/backend audit | ☐ |
-| 1.1 | Start cmd/health fixed | AI | `Procfile`, `railway.json` | ✅ |
-| 1.2 | Set required envs | YOU | Railway Variables | ☐ |
+| 1.1 | Start cmd/health fixed | AI | `Procfile`, `render.json` | ✅ |
+| 1.2 | Set required envs | YOU | Render Variables | ☐ |
 | 1.3 | Deploy + smoke test | AI | logs + `verify_deploy.sh` | ☐ |
 | 2.1 | Prompts registry implemented | AI | `api/prompts_loader.py` | ✅ |
 | 2.2 | Ingest latest CSV | YOU | admin/upload | ☐ |

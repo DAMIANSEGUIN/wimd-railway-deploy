@@ -114,16 +114,16 @@ app.include_router(ps101_router, prefix="/api/ps101")  # Added prefix
 
 ### Pre-Deployment Tests
 
-- ✅ Database connection (SQLite locally, PostgreSQL on Railway)
-- ✅ Environment variables verified on Railway
+- ✅ Database connection (SQLite locally, PostgreSQL on Render)
+- ✅ Environment variables verified on Render
 - ✅ `user_contexts` table schema exists in code (created on deploy)
-- ✅ CLAUDE_API_KEY set on Railway
-- ✅ OPENAI_API_KEY set on Railway
+- ✅ CLAUDE_API_KEY set on Render
+- ✅ OPENAI_API_KEY set on Render
 
 ### Post-Deployment Checks
 
 - ✅ Frontend deployed to Netlify: <https://whatismydelta.com>
-- ✅ Backend deployed to Railway: <https://what-is-my-delta-site-production.up.railway.app>
+- ✅ Backend deployed to Render: <https://what-is-my-delta-site-production.up.render.app>
 - ✅ Health endpoint: 200 OK
 - ✅ Database: PostgreSQL connected (no SQLite fallback)
 - ✅ Authentication UI present (12 references)
@@ -161,8 +161,8 @@ app.include_router(ps101_router, prefix="/api/ps101")  # Added prefix
 **Live URLs:**
 
 - Frontend: <https://whatismydelta.com>
-- Backend API: <https://what-is-my-delta-site-production.up.railway.app>
-- Health Check: <https://what-is-my-delta-site-production.up.railway.app/health>
+- Backend API: <https://what-is-my-delta-site-production.up.render.app>
+- Health Check: <https://what-is-my-delta-site-production.up.render.app/health>
 
 **Endpoints:**
 
@@ -202,13 +202,13 @@ app.include_router(ps101_router, prefix="/api/ps101")  # Added prefix
 
 ```bash
 # Backend health
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
-# Railway logs
-railway logs | grep -E "(ERROR|WARN|extract-context)"
+# Render logs
+render logs | grep -E "(ERROR|WARN|extract-context)"
 
 # Check PostgreSQL connection
-railway logs | grep -i "storage\|postgres" | tail -20
+render logs | grep -i "storage\|postgres" | tail -20
 ```
 
 ---
@@ -225,10 +225,10 @@ git revert a968e9a 493e62c
 git checkout prod-2025-11-18
 
 # Deploy rollback
-./scripts/deploy.sh railway
+./scripts/deploy.sh render
 
-# Or use Railway rollback
-railway rollback
+# Or use Render rollback
+render rollback
 ```
 
 **What Gets Reverted:**

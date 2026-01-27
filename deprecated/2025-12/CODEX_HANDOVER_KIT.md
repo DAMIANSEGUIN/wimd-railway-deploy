@@ -20,8 +20,8 @@
 
 ## Run Sheet (Quick)
 
-- Env: ensure `OPENAI_API_KEY`, `CLAUDE_API_KEY`, `PUBLIC_API_BASE`, `PUBLIC_SITE_ORIGIN`, `APP_SCHEMA_VERSION` are set in Railway.
+- Env: ensure `OPENAI_API_KEY`, `CLAUDE_API_KEY`, `PUBLIC_API_BASE`, `PUBLIC_SITE_ORIGIN`, `APP_SCHEMA_VERSION` are set in Render.
 - Sanity: `./scripts/predeploy_sanity.sh` (checks deps, keys, optional prompts CSV).
-- Deploy: Railway uses `gunicorn api.index:app` with `/health` healthcheck.
+- Deploy: Render uses `gunicorn api.index:app` with `/health` healthcheck.
 - Smoke: `./scripts/verify_deploy.sh "$PUBLIC_API_BASE"` checks `/health`, `/config`, `/prompts/active`.
 - Prompts: validate `./scripts/check_prompts.sh data/prompts.csv`; ingest via `api/prompts_loader.ingest_prompts` (manual/admin).

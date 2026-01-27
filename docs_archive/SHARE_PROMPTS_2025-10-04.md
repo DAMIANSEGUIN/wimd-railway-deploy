@@ -33,7 +33,7 @@ Cursor will execute the semantic matching upgrade defined in `docs/mosaic_semant
 Key context:
 - The immediate changes stay within a +$60 spending envelope and run on lightweight infra.
 - Build execution target is ~90 minutes once Cursor starts; the 30-day horizon is for beta testing before the Stage 2 general-market push.
-- We expect a new CPU microservice for the cross-encoder; ensure Railway/hosting capacity can absorb it without surprises.
+- We expect a new CPU microservice for the cross-encoder; ensure Render/hosting capacity can absorb it without surprises.
 - Cost telemetry and monitoring must track the extra embedding + rerank usage so we can escalate if the ceiling gets close.
 
 References:

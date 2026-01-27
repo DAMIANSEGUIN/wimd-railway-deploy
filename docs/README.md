@@ -76,7 +76,7 @@ curl http://localhost:8000/prompts/active
 ## Render Deployment
 
 **Automatic via GitHub Integration:**
-- Render watches the `wimd-railway-deploy` repository
+- Render watches the `wimd-render-deploy` repository
 - Push to `origin/main` triggers auto-deploy (2-5 minutes)
 - Monitor deployment: https://dashboard.render.com
 

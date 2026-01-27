@@ -11,7 +11,7 @@ Before providing ANY command to the user, it MUST pass ALL checks:
 ### ✅ Check 1: Directory Paths Are Absolute
 
 - ❌ BAD: `./scripts/test.sh`
-- ✅ GOOD: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/test.sh`
+- ✅ GOOD: `/Users/damianseguin/WIMD-Deploy-Project/scripts/test.sh`
 
 ### ✅ Check 2: Files Exist
 
@@ -80,16 +80,16 @@ Deliver to User
 
 ```bash
 # Check 1: File exists
-[ -f "/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/test_mosaic.sh" ] && echo "EXISTS" || echo "MISSING"
+[ -f "/Users/damianseguin/WIMD-Deploy-Project/scripts/test_mosaic.sh" ] && echo "EXISTS" || echo "MISSING"
 
 # Check 2: Executable
-[ -x "/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/test_mosaic.sh" ] && echo "EXECUTABLE" || echo "NOT EXECUTABLE"
+[ -x "/Users/damianseguin/WIMD-Deploy-Project/scripts/test_mosaic.sh" ] && echo "EXECUTABLE" || echo "NOT EXECUTABLE"
 
 # Check 3: Bash syntax
-bash -n /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/test_mosaic.sh
+bash -n /Users/damianseguin/WIMD-Deploy-Project/scripts/test_mosaic.sh
 
 # Check 4: Test run (dry run if possible)
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/test_mosaic.sh --help 2>&1 | head -5
+/Users/damianseguin/WIMD-Deploy-Project/scripts/test_mosaic.sh --help 2>&1 | head -5
 
 # Check 5: Current directory
 pwd
@@ -109,7 +109,7 @@ pwd
 /Users/damianseguin/nonexistent.sh
 
 # Not executable
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/some_script.sh
+/Users/damianseguin/WIMD-Deploy-Project/some_script.sh
 
 # No error handling
 curl https://example.com/api
@@ -122,15 +122,15 @@ cd scripts && ./test.sh
 
 ```bash
 # Absolute path, exists, executable, error handling
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/test_mosaic.sh || echo "ERROR: Test script failed. Check: railway logs | tail -50"
+/Users/damianseguin/WIMD-Deploy-Project/scripts/test_mosaic.sh || echo "ERROR: Test script failed. Check: render logs | tail -50"
 
 # With explicit directory change
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && \
+cd /Users/damianseguin/WIMD-Deploy-Project && \
   ./scripts/test_mosaic.sh || echo "ERROR: Test failed"
 
 # Making executable first
-chmod +x /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/test_mosaic.sh && \
-  /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/test_mosaic.sh
+chmod +x /Users/damianseguin/WIMD-Deploy-Project/scripts/test_mosaic.sh && \
+  /Users/damianseguin/WIMD-Deploy-Project/scripts/test_mosaic.sh
 ```
 
 ---
@@ -141,7 +141,7 @@ chmod +x /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/te
 ## [Task Name]
 
 **Prerequisites:**
-- Current directory: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+- Current directory: /Users/damianseguin/WIMD-Deploy-Project
 - File exists: [verified ✅]
 - Executable: [verified ✅]
 - Syntax: [validated ✅]
@@ -194,7 +194,7 @@ Before sending ANY response with commands, verify:
 This gate is **MANDATORY** and **PERMANENT**.
 
 **Every command provided to user must:**
-1. Use absolute paths: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/...`
+1. Use absolute paths: `/Users/damianseguin/WIMD-Deploy-Project/...`
 2. Be tested before delivery
 3. Include error handling
 4. Have expected output documented

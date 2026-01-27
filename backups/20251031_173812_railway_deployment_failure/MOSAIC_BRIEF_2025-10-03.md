@@ -42,12 +42,12 @@ Mosaic is an AI-powered career coaching platform that helps professionals naviga
 - **Features**: Real-time job search, career coaching interface, progress tracking
 - **URL**: <https://whatismydelta.com>
 
-### **Backend (Railway)**
+### **Backend (Render)**
 
 - **Technology**: FastAPI (Python)
 - **Database**: SQLite with migration framework
 - **Features**: AI coaching, job search, user management, analytics
-- **URL**: <https://what-is-my-delta-site-production.up.railway.app>
+- **URL**: <https://what-is-my-delta-site-production.up.render.app>
 
 ### **AI Integration**
 
@@ -139,7 +139,7 @@ Mosaic is an AI-powered career coaching platform that helps professionals naviga
 ### **Current State**
 
 - ✅ **Frontend**: Deployed on Netlify (<https://whatismydelta.com>)
-- ✅ **Backend**: Deployed on Railway (<https://what-is-my-delta-site-production.up.railway.app>)
+- ✅ **Backend**: Deployed on Render (<https://what-is-my-delta-site-production.up.render.app>)
 - ✅ **Database**: SQLite with migration framework
 - ✅ **AI Integration**: RAG engine with cost controls
 - ✅ **Job Sources**: 13 sources integrated (6 production-ready)

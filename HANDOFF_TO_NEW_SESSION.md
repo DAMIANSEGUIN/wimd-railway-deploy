@@ -15,15 +15,15 @@
    - Updated TEAM_PLAYBOOK.md Section 2 to point to code version headers
 
 2. **Fixed directory confusion**
-   - All files now in correct location: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+   - All files now in correct location: `/Users/damianseguin/WIMD-Deploy-Project`
    - Updated AI_START_HERE.txt to point to new system
-   - Removed references to wrong directory (`wimd-railway-local`)
+   - Removed references to wrong directory (`wimd-render-local`)
 
 ---
 
 ## Current State
 
-**Working Directory**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+**Working Directory**: `/Users/damianseguin/WIMD-Deploy-Project`
 
 **Git State**:
 
@@ -78,7 +78,7 @@
 
 - Ask "what should I work on" - it's in TEAM_PLAYBOOK.md Section 2
 - Skip SESSION_START.md protocol
-- Work in `/Users/damianseguin/wimd-railway-local` directory (that's wrong)
+- Work in `/Users/damianseguin/wimd-render-local` directory (that's wrong)
 - Make code changes before passing the 3 gates
 
 ---
@@ -86,7 +86,7 @@
 ## Questions You Might Have
 
 **Q: Which directory?**
-A: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project` (you should already be here)
+A: `/Users/damianseguin/WIMD-Deploy-Project` (you should already be here)
 
 **Q: What's the current work?**
 A: TEAM_PLAYBOOK.md Section 2 - 4 blocking issues to fix

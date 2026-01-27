@@ -15,7 +15,7 @@ After thorough review of all documentation, I've identified the path to reconcil
 **Key Findings:**
 
 1. ✅ **Original UX vision documented** (MOSAIC_USER_EXPERIENCE_SOURCE_DOC.md from Oct 2, 2025)
-2. ✅ **Technical foundation is solid** (Railway/Netlify, FastAPI, PostgreSQL, vanilla JS)
+2. ✅ **Technical foundation is solid** (Render/Netlify, FastAPI, PostgreSQL, vanilla JS)
 3. ⚠️ **UI redesign docs misaligned** (assume React/TypeScript stack you don't have)
 4. ⚠️ **PS101 simplified in implementation** (3 questions vs. 10-step flow from source docs)
 5. ✅ **Small experiments framework missing** (identified as critical gap)
@@ -42,15 +42,15 @@ After thorough review of all documentation, I've identified the path to reconcil
 
 **Current Implementation:**
 
-- `WIMD-Railway-Deploy-Project/frontend/index.html` (1461 lines) - **WORKING APP**
-- `WIMD-Railway-Deploy-Project/CLAUDE.md` - Architecture context
-- `WIMD-Railway-Deploy-Project/CHATGPT_ARCHITECTURE_FEEDBACK_20251026.md` - Vanilla JS constraints
+- `WIMD-Render-Deploy-Project/frontend/index.html` (1461 lines) - **WORKING APP**
+- `WIMD-Render-Deploy-Project/CLAUDE.md` - Architecture context
+- `WIMD-Render-Deploy-Project/CHATGPT_ARCHITECTURE_FEEDBACK_20251026.md` - Vanilla JS constraints
 
 **Architecture:**
 
 - `Planning/systems_cli/INFRASTRUCTURE_CONFIG.md` - Deployment setup
-- `WIMD-Railway-Deploy-Project/TROUBLESHOOTING_CHECKLIST.md` - Error patterns
-- `WIMD-Railway-Deploy-Project/SELF_DIAGNOSTIC_FRAMEWORK.md` - Quality gates
+- `WIMD-Render-Deploy-Project/TROUBLESHOOTING_CHECKLIST.md` - Error patterns
+- `WIMD-Render-Deploy-Project/SELF_DIAGNOSTIC_FRAMEWORK.md` - Quality gates
 
 ---
 
@@ -112,12 +112,12 @@ Frontend: Vanilla JavaScript (ES6+, IIFE pattern)
          Inline CSS + embedded JS
          localStorage for state
 
-Backend:  FastAPI (Railway)
+Backend:  FastAPI (Render)
          PostgreSQL database
          OpenAI API (GPT-4, embeddings)
          Anthropic API (Claude)
 
-Deployment: Railway (backend) + Netlify (frontend)
+Deployment: Render (backend) + Netlify (frontend)
            https://whatismydelta.com
 ```
 
@@ -244,7 +244,7 @@ Methodology explanation: 3-step approach
 - Proactive coaching intelligence
 - Delta visualization and tracking
 
-**Current Implementation** (WIMD-Railway-Deploy-Project):
+**Current Implementation** (WIMD-Render-Deploy-Project):
 
 - Simplified 3-question PS101
 - Single-page reactive interface
@@ -547,7 +547,7 @@ Methodology explanation: 3-step approach
 **Structure:**
 
 ```
-~/AI_Workspace/WIMD-Railway-Deploy-Project/  # Open this in Cursor
+~/AI_Workspace/WIMD-Render-Deploy-Project/  # Open this in Cursor
 ├── frontend/                                # Working code
 ├── backend/                                 # API
 ├── docs/                                    # Documentation

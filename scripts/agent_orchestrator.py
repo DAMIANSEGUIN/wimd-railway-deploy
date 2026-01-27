@@ -15,7 +15,7 @@ class AgentOrchestrator:
     """Manages multiple AI agents and routes work between them"""
 
     def __init__(self):
-        self.project_root = Path("/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project")
+        self.project_root = Path("/Users/damianseguin/WIMD-Deploy-Project")
         self.broker_url = "http://localhost:8765"
         self.agents = {
             "Claude-Code": {

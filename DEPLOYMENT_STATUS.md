@@ -18,27 +18,27 @@
 
 ### ⚠️ Deployment Not Triggered
 
-**Issue**: Railway's GitHub integration is NOT configured to auto-deploy from the `wimd-railway-deploy` repository.
+**Issue**: Render's GitHub integration is NOT configured to auto-deploy from the `wimd-render-deploy` repository.
 
 **Evidence**:
 
 - Pushed to origin/main at ~3:45 PM (commit 799046f)
 - Waited 10+ minutes
 - Schema version still shows "v1" (should be "v2")
-- Railway logs show no new deployment activity
+- Render logs show no new deployment activity
 - Only health check requests in logs
 
-**Root Cause**: Railway watches a different repository OR GitHub integration is not set up.
+**Root Cause**: Render watches a different repository OR GitHub integration is not set up.
 
 ---
 
 ## Manual Deployment Required
 
-### Option 1: Railway Dashboard (RECOMMENDED)
+### Option 1: Render Dashboard (RECOMMENDED)
 
 **Steps**:
 
-1. Go to Railway dashboard: <https://railway.app/project/[project-id>]
+1. Go to Render dashboard: <https://render.app/project/[project-id>]
 2. Select service: "what-is-my-delta-site"
 3. Go to "Deployments" tab
 4. Click "Deploy" or "Redeploy"
@@ -48,20 +48,20 @@
 
 **Steps**:
 
-1. Railway dashboard → Service settings
-2. Connect GitHub repository: `DAMIANSEGUIN/wimd-railway-deploy`
+1. Render dashboard → Service settings
+2. Connect GitHub repository: `DAMIANSEGUIN/wimd-render-deploy`
 3. Set branch: `main`
 4. Enable auto-deployments
 5. Trigger initial deployment
 
-### Option 3: Railway CLI (If Permission Issues Resolved)
+### Option 3: Render CLI (If Permission Issues Resolved)
 
 ```bash
 # From project directory
-railway up
+render up
 
 # Or force rebuild
-railway deploy --force
+render deploy --force
 ```
 
 ---
@@ -83,7 +83,7 @@ api/index.py (3 lines changed - router integration)
 ✓ Building Python application
 ✓ Starting uvicorn server
 ✓ PostgreSQL connection established
-✓ Server listening on port [assigned by Railway]
+✓ Server listening on port [assigned by Render]
 ```
 
 ### Expected Runtime Behavior
@@ -149,15 +149,15 @@ curl -X OPTIONS https://whatismydelta.com/api/ps101/extract-context -v
 
 **Issue**: App crashes on startup
 
-- **Solution**: Check Railway logs for Python exceptions
+- **Solution**: Check Render logs for Python exceptions
 - **Likely cause**: Import error in api/ps101.py
 - **Action**: Verify api/storage.py exports `get_conn`, `get_user_by_id`
 
 **Issue**: Schema version still shows "v1"
 
-- **Solution**: Check if Railway is using correct branch
-- **Verify**: Railway settings → Source → Branch is "main"
-- **Check**: Latest commit on Railway matches 799046f
+- **Solution**: Check if Render is using correct branch
+- **Verify**: Render settings → Source → Branch is "main"
+- **Check**: Latest commit on Render matches 799046f
 
 **Issue**: Endpoint returns 404
 
@@ -174,13 +174,13 @@ curl -X OPTIONS https://whatismydelta.com/api/ps101/extract-context -v
 ### Immediate Rollback
 
 ```bash
-# Option 1: Via Railway dashboard
+# Option 1: Via Render dashboard
 # Go to Deployments → Previous deployment → "Redeploy"
 
 # Option 2: Via git revert
 git revert 799046f
 git push origin main
-# Then trigger Railway deployment via dashboard
+# Then trigger Render deployment via dashboard
 ```
 
 ### Verify Rollback
@@ -204,14 +204,14 @@ curl https://whatismydelta.com/health
 - ✅ Missing X-User-ID header returns 422
 - ✅ Invalid user returns 404
 - ✅ Health check returns 200
-- ✅ No errors in Railway logs for 10 minutes
+- ✅ No errors in Render logs for 10 minutes
 
 ---
 
 ## Next Steps After Successful Deployment
 
 1. ✅ Run all 5 integration tests
-2. ✅ Monitor Railway logs for 10 minutes
+2. ✅ Monitor Render logs for 10 minutes
 3. ✅ Mark Day 1 blockers as resolved in TEAM_PLAYBOOK.md
 4. ✅ Proceed to Day 2 MVP work (context injection)
 
@@ -225,7 +225,7 @@ curl https://whatismydelta.com/health
 **Integration Tests**: ⏳ PENDING DEPLOYMENT
 
 **Action Required**:
-**User must manually trigger Railway deployment via Railway dashboard.**
+**User must manually trigger Render deployment via Render dashboard.**
 
 ---
 

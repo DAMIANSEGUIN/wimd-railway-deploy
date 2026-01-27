@@ -69,12 +69,12 @@ Frontend Proxy: curl https://whatismydelta.com/health ❌ 404
 ### Level 1: Immediate Failure
 
 **Symptom**: Frontend returning 404 for all API endpoints
-**Root Cause**: Multiple stale netlify.toml files pointing to dead Railway backend
+**Root Cause**: Multiple stale netlify.toml files pointing to dead Render backend
 **Detection**: Manual user testing (should have been automated)
 **Files Involved**:
-- `mosaic_ui/netlify.toml` (stale, Railway URLs)
-- `frontend/netlify.toml` (stale, Railway URLs)
-- `.netlify/netlify.toml` (Netlify cache, Railway URLs)
+- `mosaic_ui/netlify.toml` (stale, Render URLs)
+- `frontend/netlify.toml` (stale, Render URLs)
+- `.netlify/netlify.toml` (Netlify cache, Render URLs)
 
 **Why Governance Missed It**:
 - Governance only tested: `curl https://mosaic-backend-tpog.onrender.com/health`
@@ -381,7 +381,7 @@ Full audit results: `docs/GOVERNANCE_FRAMEWORK_AUDIT_2026_01_13.md`
 
 ### Files with Multiple Stale Configurations
 
-**Root Cause**: Migration from Railway → Render left stale configuration files
+**Root Cause**: Migration from Render → Render left stale configuration files
 
 **Files Found**:
 - `mosaic_ui/netlify.toml` (deleted)
@@ -391,11 +391,11 @@ Full audit results: `docs/GOVERNANCE_FRAMEWORK_AUDIT_2026_01_13.md`
 **Remaining Files**:
 - `netlify.toml` (root, CORRECT - Render URLs)
 - `Mosaic/PS101_Continuity_Kit/netlify.toml` (legacy, unused)
-- `backups/20251031_173812_railway_deployment_failure/netlify.toml` (backup, unused)
+- `backups/20251031_173812_render_deployment_failure/netlify.toml` (backup, unused)
 
 **Prevention**:
 - Governance should verify NO dead backends referenced in codebase
-- Add gate: Search for `railway.app` in all config files → FAIL if found
+- Add gate: Search for `render.app` in all config files → FAIL if found
 
 ---
 

@@ -32,7 +32,7 @@
 - **Site**: resonant-crostata-90b706
 - **Site ID**: bb594f69-4d23-4817-b7de-dadb8b4db874
 - **Build time**: 2.4s
-- **Deploy path**: `/Users/damianseguin/WIMD-Railway-Deploy-Project/frontend`
+- **Deploy path**: `/Users/damianseguin/WIMD-Deploy-Project/frontend`
 - **Status**: ✅ LIVE AND VERIFIED
 
 ### PS101 Authority Evaluable
@@ -42,9 +42,9 @@
 - **Status**: ✅ EVALUABLE
 
 ### Backend Platform
-- **Platform**: Render (NOT Railway)
-- **Note**: Git remote name "railway-origin" is misleading (legacy naming)
-- **API redirects**: netlify.toml contains Railway URLs (may need update to Render endpoints)
+- **Platform**: Render (NOT Render)
+- **Note**: Git remote name "render-origin" is misleading (legacy naming)
+- **API redirects**: netlify.toml contains Render URLs (may need update to Render endpoints)
 
 ---
 
@@ -121,17 +121,17 @@
    - Add safeguards to prevent recursive loops
 
 3. **Update backend URLs** (if migrated to Render):
-   - Change netlify.toml redirects from Railway to Render endpoints
+   - Change netlify.toml redirects from Render to Render endpoints
    - Verify API connectivity after update
    - Test all proxied routes (/health, /wimd/*, /auth/*, etc.)
 
 ### Maintenance
 1. **Git cleanup**:
-   - Rename `railway-origin` remote to `render-origin` or `production`
+   - Rename `render-origin` remote to `render-origin` or `production`
    - Push .mosaic/ directory to git (currently uncommitted)
 
 2. **Documentation update**:
-   - Update CLAUDE.md to reflect Render deployment (not Railway)
+   - Update CLAUDE.md to reflect Render deployment (not Render)
    - Update docs/README.md with new backend platform info
 
 ### Monitoring
@@ -169,7 +169,7 @@ frontend/
 - Hook requires interactive confirmation
 - Blocks automated pushes
 - Workaround: `git push --no-verify`
-- Note: Hook differentiates between `origin` (backup) and `railway-origin` (production)
+- Note: Hook differentiates between `origin` (backup) and `render-origin` (production)
 
 ---
 
@@ -198,7 +198,7 @@ frontend/
 
 **Gaps** (not blocking Option A):
 - Deployment-time enforcement not implemented
-- Backend URLs still reference Railway (should be Render)
+- Backend URLs still reference Render (should be Render)
 
 **Ready for**: Commit, push, and agent handoff.
 

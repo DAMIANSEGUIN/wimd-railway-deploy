@@ -49,7 +49,7 @@ The NEW UI (with authentication) has been merged and committed locally, but **Ne
 The fix commit `c336607` exists locally and needs to be pushed:
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 git push origin main
 ```
 
@@ -133,7 +133,7 @@ curl -s https://whatismydelta.com/ | grep -c "Step 1 of 10"
 ### File Structure
 
 ```
-WIMD-Railway-Deploy-Project/
+WIMD-Render-Deploy-Project/
 ├── netlify.toml          # Configuration (needs push)
 ├── frontend/
 │   └── index.html        # NEW UI (3,873 lines)
@@ -146,7 +146,7 @@ WIMD-Railway-Deploy-Project/
 - **Site ID:** `resonant-crostata-90b706`
 - **Site URL:** <https://whatismydelta.com/>
 - **Dashboard:** <https://app.netlify.com/sites/resonant-crostata-90b706/deploys>
-- **Repo:** `origin` → `https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git`
+- **Repo:** `origin` → `https://github.com/DAMIANSEGUIN/wimd-render-deploy.git`
 
 ---
 

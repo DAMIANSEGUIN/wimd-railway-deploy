@@ -6,7 +6,7 @@ echo "=========================="
 echo ""
 
 # Navigate to project directory
-cd "/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project"
+cd "/Users/damianseguin/WIMD-Deploy-Project"
 
 # Prompt for new OpenAI API key
 echo "Enter your NEW OpenAI API key (starts with sk-proj- or sk-):"

@@ -280,13 +280,13 @@ Which approach would you prefer, or should I implement all three?
 I've read the state files. Validation: 5/5 post-handoff tests passed.
 
 Current task: Deploy backend to production
-Blocker identified: Railway credentials missing
+Blocker identified: Render credentials missing
 
-⚠️ BLOCKER: Cannot deploy to Railway
+⚠️ BLOCKER: Cannot deploy to Render
 - DATABASE_URL not set in environment
 - RAILWAY_TOKEN missing
 
-Could you provide the Railway project credentials, or should I set up a new deployment target?
+Could you provide the Render project credentials, or should I set up a new deployment target?
 ```
 
 ---

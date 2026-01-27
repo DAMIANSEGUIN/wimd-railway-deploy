@@ -98,8 +98,8 @@ mosaic_mcp_v1_1/
 
 **Architecture:**
 
-- How does MCP server architecture fit with current Railway/Netlify deployment?
-- Where do MCP servers run? (local? Railway? separate service?)
+- How does MCP server architecture fit with current Render/Netlify deployment?
+- Where do MCP servers run? (local? Render? separate service?)
 - How do supervisor agents coordinate with Claude Code CLI?
 - What happens to current session start scripts?
 
@@ -203,7 +203,7 @@ mosaic_mcp_v1_1/
 
 **Infrastructure Needs:**
 
-- [ ] Where do MCP servers run? (Railway service? Local? Separate?)
+- [ ] Where do MCP servers run? (Render service? Local? Separate?)
 - [ ] How do agents connect to MCP servers? (HTTP? WebSocket? Local socket?)
 - [ ] What's the authentication model for MCP access?
 - [ ] How do we handle MCP server downtime/unavailability?

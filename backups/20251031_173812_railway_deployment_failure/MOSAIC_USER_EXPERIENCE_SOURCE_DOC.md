@@ -29,7 +29,7 @@ Based on comprehensive documentation analysis, the Mosaic platform is designed a
 
 ### ✅ **WHAT EXISTS**
 
-#### **Backend Infrastructure (Railway)**
+#### **Backend Infrastructure (Render)**
 
 - **Authentication System**: Complete email/password system with user management
 - **API Endpoints**: 15 endpoints including `/wimd`, `/ob/*`, `/resume/*`, `/auth/*`
@@ -47,7 +47,7 @@ Based on comprehensive documentation analysis, the Mosaic platform is designed a
 #### **Architecture**
 
 - **Domain**: <https://whatismydelta.com> (Netlify frontend)
-- **Backend**: <https://what-is-my-delta-site-production.up.railway.app> (Railway API)
+- **Backend**: <https://what-is-my-delta-site-production.up.render.app> (Render API)
 - **Integration**: Netlify proxy configuration for API routing
 
 ### ❌ **WHAT'S MISSING**

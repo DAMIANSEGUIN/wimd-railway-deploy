@@ -40,16 +40,16 @@ sudo apt-get install postgresql-client
 
 ### Run Backup Script
 ```bash
-cd ~/AI_Workspace/WIMD-Railway-Deploy-Project
-./scripts/backup_railway_db.sh
+cd ~/AI_Workspace/WIMD-Render-Deploy-Project
+./scripts/backup_render_db.sh
 ```
 
 **Expected Output:**
 ```
-✅ Backup successful: backups/railway_db_backup_TIMESTAMP.sql
+✅ Backup successful: backups/render_db_backup_TIMESTAMP.sql
 ```
 
-**Backup Location:** `backups/railway_db_backup_*.sql`
+**Backup Location:** `backups/render_db_backup_*.sql`
 
 ---
 
@@ -59,7 +59,7 @@ cd ~/AI_Workspace/WIMD-Railway-Deploy-Project
 2. Click **"Get Started"**
 3. Sign up with GitHub account
 4. Authorize Render to access your repositories
-5. Select repository: `DAMIANSEGUIN/wimd-railway-deploy`
+5. Select repository: `DAMIANSEGUIN/wimd-render-deploy`
 
 ---
 
@@ -69,22 +69,22 @@ cd ~/AI_Workspace/WIMD-Railway-Deploy-Project
 
 1. **Commit render.yaml to repo:**
    ```bash
-   git add render.yaml scripts/backup_railway_db.sh
+   git add render.yaml scripts/backup_render_db.sh
    git commit -m "feat(deploy): Add Render configuration for migration"
    git push origin main
    ```
 
 2. **In Render Dashboard:**
    - Click **"New +"** → **"Blueprint"**
-   - Select repository: `wimd-railway-deploy`
+   - Select repository: `wimd-render-deploy`
    - Render will auto-detect `render.yaml`
    - Click **"Apply"**
 
 3. **Set Environment Variables:**
    - Go to service → **Environment** tab
    - Add missing variables:
-     - `OPENAI_API_KEY` (from Railway)
-     - `CLAUDE_API_KEY` (from Railway)
+     - `OPENAI_API_KEY` (from Render)
+     - `CLAUDE_API_KEY` (from Render)
    - `DATABASE_URL` will be auto-set by Render
 
 4. **Deploy:**
@@ -97,7 +97,7 @@ If Blueprint doesn't work:
 
 1. **Create Web Service:**
    - Dashboard → **"New +"** → **"Web Service"**
-   - Connect repository: `wimd-railway-deploy`
+   - Connect repository: `wimd-render-deploy`
    - Name: `mosaic-backend`
    - Runtime: **Python 3**
    - Build Command: `cd backend && pip install -r requirements.txt`
@@ -117,8 +117,8 @@ If Blueprint doesn't work:
      - Value: Select **"mosaic-db"** from dropdown → **"Internal Connection String"**
 
 4. **Add Other Environment Variables:**
-   - `OPENAI_API_KEY`: (from Railway)
-   - `CLAUDE_API_KEY`: (from Railway)
+   - `OPENAI_API_KEY`: (from Render)
+   - `CLAUDE_API_KEY`: (from Render)
    - `PUBLIC_SITE_ORIGIN`: `https://whatismydelta.com`
    - `APP_SCHEMA_VERSION`: `v2`
 
@@ -138,14 +138,14 @@ If Blueprint doesn't work:
 export RENDER_DB_URL="postgresql://..."  # Paste from Render
 
 # Import backup
-psql "$RENDER_DB_URL" < backups/railway_db_backup_*.sql
+psql "$RENDER_DB_URL" < backups/render_db_backup_*.sql
 
 # Verify import
 psql "$RENDER_DB_URL" -c "SELECT COUNT(*) FROM users;"
 psql "$RENDER_DB_URL" -c "SELECT COUNT(*) FROM sessions;"
 ```
 
-**Expected:** Row counts should match Railway database
+**Expected:** Row counts should match Render database
 
 ### Troubleshooting Import
 
@@ -155,7 +155,7 @@ If import fails with "database does not exist":
 psql "$RENDER_DB_URL" -c "CREATE DATABASE mosaic;"
 
 # Then import
-psql "$RENDER_DB_URL" < backups/railway_db_backup_*.sql
+psql "$RENDER_DB_URL" < backups/render_db_backup_*.sql
 ```
 
 ---
@@ -200,7 +200,7 @@ In Render Dashboard → **mosaic-backend** → **Logs** tab:
 
 ```bash
 # Search for API_BASE or API URL in frontend
-grep -r "railway.app" . --include="*.js" --include="*.html"
+grep -r "render.app" . --include="*.js" --include="*.html"
 grep -r "API_BASE" . --include="*.js" --include="*.html"
 ```
 
@@ -214,7 +214,7 @@ grep -r "API_BASE" . --include="*.js" --include="*.html"
 **Change:**
 ```javascript
 // OLD
-const API_BASE = "https://what-is-my-delta-site-production.up.railway.app"
+const API_BASE = "https://what-is-my-delta-site-production.up.render.app"
 
 // NEW
 const API_BASE = "https://mosaic-backend.onrender.com"
@@ -273,16 +273,16 @@ curl -X POST https://mosaic-backend.onrender.com/auth/login \
 
 ## STEP 8: CLEANUP ⏱️ 10 minutes
 
-### Archive Railway Configuration
+### Archive Render Configuration
 
 ```bash
-mkdir -p archive/railway_2026-01-05
-mv nixpacks.toml archive/railway_2026-01-05/
-mv railway.toml archive/railway_2026-01-05/
-mv railway_*.txt archive/railway_2026-01-05/
+mkdir -p archive/render_2026-01-05
+mv nixpacks.toml archive/render_2026-01-05/
+mv render.toml archive/render_2026-01-05/
+mv render_*.txt archive/render_2026-01-05/
 
 git add archive/
-git commit -m "chore: Archive Railway configuration files"
+git commit -m "chore: Archive Render configuration files"
 git push origin main
 ```
 
@@ -297,16 +297,16 @@ Update `CLAUDE.md`:
 **Frontend URL:** https://whatismydelta.com (Netlify)
 **Database:** PostgreSQL (Render managed)
 
-**Previous:** Railway (deprecated due to platform issues)
+**Previous:** Render (deprecated due to platform issues)
 ```
 
-### Cancel Railway Subscription
+### Cancel Render Subscription
 
-1. Go to Railway Dashboard
+1. Go to Render Dashboard
 2. Project settings → **Danger Zone**
 3. **Delete Project** (after confirming everything works on Render)
 
-**WAIT:** Keep Railway running for 24-48 hours as backup
+**WAIT:** Keep Render running for 24-48 hours as backup
 
 ---
 
@@ -321,12 +321,12 @@ git revert HEAD
 git push origin main
 ```
 
-Railway will still be running and frontend will reconnect.
+Render will still be running and frontend will reconnect.
 
 ### Full Rollback
-1. Keep Railway project active
-2. Don't delete Railway database
-3. Frontend can switch back to Railway URL instantly
+1. Keep Render project active
+2. Don't delete Render database
+3. Frontend can switch back to Render URL instantly
 
 ---
 
@@ -343,13 +343,13 @@ Migration is complete when:
 - [ ] Frontend API URL updated
 - [ ] All features tested and working
 - [ ] No errors in Render logs for 15+ minutes
-- [ ] Railway can be safely deleted
+- [ ] Render can be safely deleted
 
 ---
 
 ## COST COMPARISON
 
-**Railway (before migration):**
+**Render (before migration):**
 - Usage-based: ~$10-20/month (estimated)
 - Unreliable deployment
 
@@ -391,12 +391,12 @@ Migration is complete when:
 ### Issue: Database import fails
 
 **Check:**
-- Is backup file valid? `head backups/railway_db_backup_*.sql`
+- Is backup file valid? `head backups/render_db_backup_*.sql`
 - Does Render DB exist?
 - Are credentials correct?
 
 **Fix:**
-- Re-export from Railway
+- Re-export from Render
 - Verify RENDER_DB_URL format
 - Check Render DB status in dashboard
 
@@ -431,7 +431,7 @@ Migration is complete when:
    - Add uptime monitoring (UptimeRobot, etc.)
    - Set up log aggregation if needed
 
-4. **Delete Railway**
+4. **Delete Render**
    - After 48 hours of stable Render operation
    - Download final backup before deletion
    - Cancel subscription

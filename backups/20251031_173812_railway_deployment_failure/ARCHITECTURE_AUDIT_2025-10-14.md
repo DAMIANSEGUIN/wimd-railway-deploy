@@ -74,7 +74,7 @@ Based on:
 
 1. **localStorage for session tokens** - Vulnerable to XSS attacks (should use httpOnly cookies)
 2. **No session TTL** - Sessions live forever in database
-3. **Railway database persistence** - SQLite resets on deployment, losing sessions
+3. **Render database persistence** - SQLite resets on deployment, losing sessions
 4. **No backend logout endpoint** - `/auth/logout` doesn't exist
 5. **PS101 state persists across logins** - Session reuse causes old state to appear
 
@@ -210,8 +210,8 @@ Run this to check: `curl -I https://whatismydelta.com`
 
 ### 🔧 Issues Found
 
-1. **Railway ephemeral storage** - SQLite resets on deployment (CRITICAL)
-2. **No Railway volumes** - Uploaded files lost on restart
+1. **Render ephemeral storage** - SQLite resets on deployment (CRITICAL)
+2. **No Render volumes** - Uploaded files lost on restart
 3. **No database indexes** - Slow queries as data grows
 4. **No foreign key constraints** - Data integrity not enforced properly
 
@@ -242,7 +242,7 @@ Run this to check: `curl -I https://whatismydelta.com`
 
 ### ✅ Implemented
 
-- [x] Railway backend deployment
+- [x] Render backend deployment
 - [x] Netlify frontend deployment
 - [x] Environment variables for secrets
 - [x] Git-based deployment (auto-deploy on push)
@@ -282,7 +282,7 @@ Run this to check: `curl -I https://whatismydelta.com`
 
 ## PRIORITY ISSUES (P0 - CRITICAL)
 
-1. **Railway SQLite persistence** - Sessions/users lost on deploy → Migrate to PostgreSQL
+1. **Render SQLite persistence** - Sessions/users lost on deploy → Migrate to PostgreSQL
 2. **Session management vulnerability** - localStorage XSS risk → Move to httpOnly cookies
 3. **No session expiration** - Sessions live forever → Add TTL + timeout
 4. **Weak password hashing** - SHA-256 vulnerable → Switch to bcrypt/Argon2
@@ -294,7 +294,7 @@ Run this to check: `curl -I https://whatismydelta.com`
 ## PRIORITY ISSUES (P1 - HIGH)
 
 7. **Security headers missing** - Vulnerable to XSS/clickjacking → Add CSP, X-Frame-Options, etc.
-8. **No staging environment** - Risky deployments → Create staging on Railway
+8. **No staging environment** - Risky deployments → Create staging on Render
 9. **Email delivery broken** - Password reset doesn't work → Integrate SendGrid/AWS SES
 10. **No monitoring** - Can't detect outages → Add Uptime Robot or similar
 11. **Form field persistence** - FIXED but needs testing
@@ -314,7 +314,7 @@ Run this to check: `curl -I https://whatismydelta.com`
 
 **Short-term (Next 1-2 days):**
 
-1. Migrate to Railway PostgreSQL (critical)
+1. Migrate to Render PostgreSQL (critical)
 2. Add backend `/auth/logout` endpoint
 3. Implement session TTL (30-day expiration)
 4. Add security headers
@@ -352,6 +352,6 @@ Run this to check: `curl -I https://whatismydelta.com`
 
 **Biggest Risks:**
 
-- ⚠️ Railway SQLite data loss (users/sessions wiped on deploy)
+- ⚠️ Render SQLite data loss (users/sessions wiped on deploy)
 - ⚠️ No session security (XSS via localStorage)
 - ⚠️ No rate limiting (brute force attacks possible)

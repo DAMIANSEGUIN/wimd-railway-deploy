@@ -22,21 +22,21 @@ Test the Mosaic MVP user flow:
 **Backend endpoint `/api/ps101/extract-context` returns 404 - should return 422**
 
 **What this means:**
-Railway is running old code from Dec 3, 2025 (commit `96e711c1`). The ps101 context extraction endpoint exists in the GitHub repo but hasn't been deployed.
+Render is running old code from Dec 3, 2025 (commit `96e711c1`). The ps101 context extraction endpoint exists in the GitHub repo but hasn't been deployed.
 
 **User needs to:**
 
-1. Go to Railway dashboard (<https://railway.app>)
+1. Go to Render dashboard (<https://render.app>)
 2. Project: `wimd-career-coaching` → Service: `what-is-my-delta-site`
 3. Settings → Source → Disconnect/Reconnect GitHub integration
-4. Point to: `DAMIANSEGUIN/wimd-railway-deploy`, branch `main`
+4. Point to: `DAMIANSEGUIN/wimd-render-deploy`, branch `main`
 5. Trigger deployment
 6. Verify new commit deployed (should be `a968e9a` or later, NOT `96e711c1`)
 
-**Once user confirms Railway deployed new code, verify:**
+**Once user confirms Render deployed new code, verify:**
 
 ```bash
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context -w "\nHTTP Status: %{http_code}\n"
+curl -X POST https://what-is-my-delta-site-production.up.render.app/api/ps101/extract-context -w "\nHTTP Status: %{http_code}\n"
 ```
 
 Should return: `HTTP Status: 422` (NOT 404)
@@ -96,8 +96,8 @@ Should return: `HTTP Status: 422` (NOT 404)
 
 **If context extraction fails:**
 
-- **404 error:** Railway still on old code - alert user
-- **503 error:** Backend issue - check Railway logs for Claude API errors
+- **404 error:** Render still on old code - alert user
+- **503 error:** Backend issue - check Render logs for Claude API errors
 - **No request sent:** Frontend issue - check console for JavaScript errors
 
 ### Test 3: Personalized Coaching Verification
@@ -120,7 +120,7 @@ Should return: `HTTP Status: 422` (NOT 404)
 **If not personalized:**
 
 - Context extraction likely failed (check Test 2 results)
-- Check Railway logs for context retrieval errors
+- Check Render logs for context retrieval errors
 - Verify database: User should have entry in `user_contexts` table
 
 ---
@@ -137,7 +137,7 @@ Should return: `HTTP Status: 422` (NOT 404)
 ## Test Results
 
 ### Blocker Status
-- Railway deployment: ✅ Fixed / ❌ Still blocked
+- Render deployment: ✅ Fixed / ❌ Still blocked
 - Active commit: [commit hash]
 - Endpoint status: [HTTP status code]
 
@@ -174,7 +174,7 @@ Should return: `HTTP Status: 422` (NOT 404)
 
 ## REFERENCE MATERIALS
 
-**In GitHub repo (`DAMIANSEGUIN/wimd-railway-deploy`):**
+**In GitHub repo (`DAMIANSEGUIN/wimd-render-deploy`):**
 
 - `docs/NARS_TESTING_INSTRUCTIONS.md` - Detailed testing procedures
 - `docs/TESTING_HANDOFF_2025-12-12.md` - Full context and background
@@ -183,17 +183,17 @@ Should return: `HTTP Status: 422` (NOT 404)
 **Production URLs:**
 
 - Frontend: <https://whatismydelta.com>
-- Backend API: <https://what-is-my-delta-site-production.up.railway.app>
-- Health check: <https://what-is-my-delta-site-production.up.railway.app/health>
+- Backend API: <https://what-is-my-delta-site-production.up.render.app>
+- Health check: <https://what-is-my-delta-site-production.up.render.app/health>
 
-**Railway Dashboard:**
-<https://railway.app/project/wimd-career-coaching>
+**Render Dashboard:**
+<https://render.app/project/wimd-career-coaching>
 
 ---
 
 ## TIMELINE
 
-- Railway fix: User action required (5-10 min)
+- Render fix: User action required (5-10 min)
 - Test 1: 5 minutes
 - Test 2: 15 minutes
 - Test 3: 5 minutes
@@ -207,16 +207,16 @@ Should return: `HTTP Status: 422` (NOT 404)
 
 Before testing:
 
-1. Has Railway been reconnected and redeployed?
+1. Has Render been reconnected and redeployed?
 2. What commit hash is currently deployed?
 3. Does `/api/ps101/extract-context` return 422?
 
 If blocked:
 
-1. Can you share Railway dashboard screenshot?
+1. Can you share Render dashboard screenshot?
 2. Which commit is shown as "Active" in Deployments?
 
 ---
 
-**Status:** BLOCKED - Waiting for user to fix Railway deployment
-**Next step:** User fixes Railway → NARs run tests → NARs deliver report
+**Status:** BLOCKED - Waiting for user to fix Render deployment
+**Next step:** User fixes Render → NARs run tests → NARs deliver report

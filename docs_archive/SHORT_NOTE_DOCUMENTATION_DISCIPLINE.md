@@ -15,24 +15,24 @@ All agents must now update documentation before declaring tasks complete and log
 
 **Protocol Requirements:**
 
-- `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md` (line 112)
+- `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md` (line 112)
   - Operating Rules: Update all impacted documentation before declaring task complete
 
 **Deployment Checklist:**
 
-- `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/DEPLOYMENT_CHECKLIST.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/DEPLOYMENT_CHECKLIST.md`
   - Pre-deploy: Update docs/audit logs (lines 32-34)
   - Pre-deploy: UI/code changes require documentation (lines 44-47)
   - Post-deploy: Log deployment outcome (lines 84-86)
 
 **Acknowledgment:**
 
-- `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/CURSOR_ACKNOWLEDGMENT_DOCUMENTATION_DISCIPLINE_2025-11-04.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/CURSOR_ACKNOWLEDGMENT_DOCUMENTATION_DISCIPLINE_2025-11-04.md`
   - Full requirements and commitment
 
 **Audit Log:**
 
-- `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.verification_audit.log`
+- `/Users/damianseguin/WIMD-Deploy-Project/.verification_audit.log`
   - Acknowledgment logged (lines 176-196)
 
 ---

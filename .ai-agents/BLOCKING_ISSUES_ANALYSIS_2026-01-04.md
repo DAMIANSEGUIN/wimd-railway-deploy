@@ -5,35 +5,35 @@
 
 ---
 
-## WORK ITEM 1: Railway Reset
+## WORK ITEM 1: Render Reset
 
-**Goal:** Connect Railway to correct GitHub repo (wimd-railway-deploy)
+**Goal:** Connect Render to correct GitHub repo (wimd-render-deploy)
 
 **Current State:** BLOCKED - Cannot proceed
 
 **Blocking Issues:**
 
-### BLOCKER 1A: Railway CLI Linking Ambiguity (CRITICAL)
-- **Description:** `railway list` shows `wimd-career-coaching` but `railway link -p "wimd-career-coaching"` fails with "Project not found"
-- **Impact:** Cannot run ANY Railway CLI commands in correct project context
+### BLOCKER 1A: Render CLI Linking Ambiguity (CRITICAL)
+- **Description:** `render list` shows `wimd-career-coaching` but `render link -p "wimd-career-coaching"` fails with "Project not found"
+- **Impact:** Cannot run ANY Render CLI commands in correct project context
 - **Blocks:** All validation tasks, all deployment phases (Phase 2-7)
 - **Resolution Required:** USER INTERVENTION
 - **Actions Needed:**
   ```bash
   # Option 1: Interactive link
-  railway link  # User must select wimd-career-coaching manually
+  render link  # User must select wimd-career-coaching manually
 
   # Option 2: Investigate duplicate
-  railway list  # Check for duplicate entries
+  render list  # Check for duplicate entries
 
-  # Option 3: Railway dashboard
-  # Manually link project via Railway web dashboard
+  # Option 3: Render dashboard
+  # Manually link project via Render web dashboard
   ```
 - **Cannot Proceed Without:** User resolving CLI ambiguity
 - **Source:** `.ai-agents/RAILWAY_CLI_AMBIGUITY_REPORT.md`
 
 ### BLOCKER 1B: User Approval Missing
-- **Description:** Railway reset plan requires explicit user approval
+- **Description:** Render reset plan requires explicit user approval
 - **Impact:** Cannot execute Phase 2-7 even if CLI fixed
 - **Blocks:** Service creation, environment migration, deployment
 - **Resolution Required:** USER DECISION
@@ -47,7 +47,7 @@
 ### BLOCKER 1C: Gemini Validation Report Missing
 - **Description:** 6 validation tasks blocked by CLI ambiguity
 - **Impact:** Cannot verify PostgreSQL scope (data loss risk)
-- **Blocks:** Safe execution of Railway reset
+- **Blocks:** Safe execution of Render reset
 - **Resolution Required:** Gemini validation AFTER CLI fixed
 - **Actions Needed:**
   - Fix Blocker 1A (CLI ambiguity)
@@ -101,11 +101,11 @@ Fix CLI (1A) → Gemini validates (1C) → User approves (1B) → Execute reset
 
 **Blocking Issues:**
 
-### BLOCKER 3A: Railway Deployment Required (MEDIUM)
+### BLOCKER 3A: Render Deployment Required (MEDIUM)
 - **Description:** Security fixes need production deployment to be effective
 - **Impact:** Can write code, can test locally, but cannot deploy to production
 - **Blocks:** Production deployment of fixes
-- **Resolution Required:** Fix Railway Reset (Work Item 1)
+- **Resolution Required:** Fix Render Reset (Work Item 1)
 - **Workaround Available:** YES - implement and test locally, deploy later
 - **Source:** Logic (fixes not effective until deployed)
 
@@ -141,7 +141,7 @@ Fix CLI (1A) → Gemini validates (1C) → User approves (1B) → Execute reset
 
 **Dependency Chain:**
 ```
-Code fixes (can do now) → Test locally (can do now) → Deploy (blocked by Railway)
+Code fixes (can do now) → Test locally (can do now) → Deploy (blocked by Render)
 ```
 
 **Status:** CAN START NOW, DEPLOYMENT BLOCKED
@@ -150,7 +150,7 @@ Code fixes (can do now) → Test locally (can do now) → Deploy (blocked by Rai
 1. Implement all 4 fixes locally
 2. Test thoroughly on local server
 3. Commit to git (tracks completion)
-4. Deploy when Railway reset complete
+4. Deploy when Render reset complete
 
 ---
 
@@ -163,18 +163,18 @@ Code fixes (can do now) → Test locally (can do now) → Deploy (blocked by Rai
 **Blocking Issues:** NONE
 
 **Prerequisites:**
-- ✅ Post-commit hook exists at `/Users/damianseguin/wimd-railway-local/.git/hooks/post-commit`
+- ✅ Post-commit hook exists at `/Users/damianseguin/wimd-render-local/.git/hooks/post-commit`
 - ✅ Implementation plan defined in `BACKUP_SYSTEM_RECOVERY_LOG.md`
-- ✅ wimd-railway-local location accessible
+- ✅ wimd-render-local location accessible
 - ✅ GDrive sync working
 
 **Actions Available Immediately:**
 
 **Action 4.1: Version-Controlled Hooks**
-- **Location:** `/Users/damianseguin/wimd-railway-local`
+- **Location:** `/Users/damianseguin/wimd-render-local`
 - **Steps:**
   ```bash
-  cd /Users/damianseguin/wimd-railway-local
+  cd /Users/damianseguin/wimd-render-local
   mkdir -p hooks
   cp .git/hooks/post-commit hooks/post-commit
   ln -sf ../../hooks/post-commit .git/hooks/post-commit
@@ -186,13 +186,13 @@ Code fixes (can do now) → Test locally (can do now) → Deploy (blocked by Rai
 - **Blocks:** Nothing
 
 **Action 4.2: Update session_end.sh**
-- **Location:** `/Users/damianseguin/wimd-railway-local/scripts/session_end.sh`
+- **Location:** `/Users/damianseguin/wimd-render-local/scripts/session_end.sh`
 - **Steps:** Add git commit/push for session backups
 - **Can Execute:** YES - immediately
 - **Blocks:** Nothing
 
 **Action 4.3: Update SESSION_RESUME_PROMPT.md**
-- **Location:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md`
+- **Location:** `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md`
 - **Steps:** Add backup system verification to session start checklist
 - **Can Execute:** YES - immediately
 - **Blocks:** Nothing
@@ -205,14 +205,14 @@ Code fixes (can do now) → Test locally (can do now) → Deploy (blocked by Rai
 
 ### Critical Blockers (Must Resolve First)
 
-**BLOCKER A: Railway CLI Linking Ambiguity**
-- **Blocks:** Railway Reset (Work Item 1)
+**BLOCKER A: Render CLI Linking Ambiguity**
+- **Blocks:** Render Reset (Work Item 1)
 - **Indirectly Blocks:** Mosaic MVP deployment (Work Item 3)
 - **Resolution:** USER INTERVENTION required
 - **Type:** TECHNICAL - requires manual CLI action
 
-**BLOCKER B: User Approval for Railway Reset**
-- **Blocks:** Railway Reset execution (Work Item 1)
+**BLOCKER B: User Approval for Render Reset**
+- **Blocks:** Render Reset execution (Work Item 1)
 - **Indirectly Blocks:** Mosaic MVP deployment (Work Item 3)
 - **Resolution:** USER DECISION required
 - **Type:** GOVERNANCE - requires explicit approval
@@ -232,7 +232,7 @@ Given the blockers, here's the optimal sequence:
 
 ### Phase 1: Immediate Actions (No User Intervention Required)
 
-**Can start RIGHT NOW while Railway blocked:**
+**Can start RIGHT NOW while Render blocked:**
 
 1. **INTENT_FRAMEWORK Integration** (15-30 minutes)
    - Copy INTENT_FRAMEWORK.md to .ai-agents/
@@ -261,10 +261,10 @@ Given the blockers, here's the optimal sequence:
 
 **User must do FIRST:**
 
-4. **Resolve Railway CLI Linking**
-   - Try interactive: `railway link`
+4. **Resolve Render CLI Linking**
+   - Try interactive: `render link`
    - Or investigate duplicates
-   - Or use Railway dashboard
+   - Or use Render dashboard
    - Hand back control when CLI working
 
 **Then AI agents can do:**
@@ -275,18 +275,18 @@ Given the blockers, here's the optimal sequence:
 
 **Then user must do:**
 
-6. **Review and Approve Railway Reset**
+6. **Review and Approve Render Reset**
    - Review Gemini validation report
    - Answer open questions (service name, migration strategy)
    - Provide explicit approval: "APPROVED TO PROCEED"
 
 **Then AI agents can do:**
 
-7. **Execute Railway Reset** (Claude Code + Gemini)
+7. **Execute Render Reset** (Claude Code + Gemini)
    - Phase 2-7 of reset plan
    - Service creation, migration, deployment, verification
 
-8. **Deploy Mosaic MVP Fixes** (After Railway working)
+8. **Deploy Mosaic MVP Fixes** (After Render working)
    - Deploy already-tested local fixes
    - Verify in production
 
@@ -302,11 +302,11 @@ Given the blockers, here's the optimal sequence:
 
 **Option A: Maximum Productivity (RECOMMENDED)**
 - Start Phase 1 immediately (3 items, 2-3 hours work)
-- Work on Railway CLI in parallel (user task)
-- Maximizes progress while Railway blocked
+- Work on Render CLI in parallel (user task)
+- Maximizes progress while Render blocked
 
-**Option B: Wait for Railway**
-- Halt all work until Railway CLI fixed
+**Option B: Wait for Render**
+- Halt all work until Render CLI fixed
 - Then proceed sequentially
 - WASTEFUL - loses 2-3 hours of productive work
 
@@ -321,7 +321,7 @@ Given the blockers, here's the optimal sequence:
 1. Start INTENT_FRAMEWORK integration immediately
 2. Complete Backup System finalization
 3. Implement Mosaic MVP fixes locally (test thoroughly)
-4. Pause before deployment (wait for Railway)
+4. Pause before deployment (wait for Render)
 5. Provide status report when Phase 1 complete
 
 **IF user chooses Option B or C:**
@@ -333,13 +333,13 @@ Given the blockers, here's the optimal sequence:
 ## CRITICAL DEPENDENCIES MAP
 
 ```
-Railway CLI Fixed (USER)
+Render CLI Fixed (USER)
     ↓
 Gemini Validation (GEMINI)
     ↓
 User Approval (USER)
     ↓
-Railway Reset (CLAUDE + GEMINI)
+Render Reset (CLAUDE + GEMINI)
     ↓
 Deploy Mosaic Fixes (CLAUDE)
 
@@ -357,23 +357,23 @@ PARALLEL TRACK (NO DEPENDENCIES):
 
 **YES - TWO CRITICAL BLOCKERS:**
 
-1. **Railway CLI Linking Ambiguity** (requires USER action)
-2. **User Approval for Railway Reset** (requires USER decision)
+1. **Render CLI Linking Ambiguity** (requires USER action)
+2. **User Approval for Render Reset** (requires USER decision)
 
 **HOWEVER:**
 
 - 3 out of 4 work items CAN PROCEED IMMEDIATELY
 - Only final deployment is blocked
 - 2-3 hours of productive work available RIGHT NOW
-- Railway blockers only affect deployment, not implementation
+- Render blockers only affect deployment, not implementation
 
 **RECOMMENDATION:**
 - Proceed with Phase 1 (INTENT, Backup, Mosaic local fixes)
-- Work on Railway CLI in parallel (user resolves ambiguity)
+- Work on Render CLI in parallel (user resolves ambiguity)
 - Maximize productivity while waiting for blockers to clear
 
 ---
 
 **END OF BLOCKING ISSUES ANALYSIS**
 **Status:** Complete - All blockers identified with resolution paths
-**Next Step:** User decides: Start Phase 1 OR wait for Railway
+**Next Step:** User decides: Start Phase 1 OR wait for Render

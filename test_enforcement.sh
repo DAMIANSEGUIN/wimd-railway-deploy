@@ -9,4 +9,4 @@
 /tmp/nonexistent.sh
 
 # GOOD: Absolute path with error handling
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/deploy.sh || echo "ERROR: Deploy failed"
+/Users/damianseguin/WIMD-Deploy-Project/scripts/deploy.sh || echo "ERROR: Deploy failed"

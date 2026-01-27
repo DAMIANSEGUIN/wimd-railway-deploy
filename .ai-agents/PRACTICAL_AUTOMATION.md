@@ -40,7 +40,7 @@ Claude Code: *uses results*
 **Just do:**
 
 ```
-Gemini with Railway CLI + database access:
+Gemini with Render CLI + database access:
 - Reads diagnostic files
 - Runs SQL query directly
 - Writes fix
@@ -51,16 +51,16 @@ Gemini with Railway CLI + database access:
 **How to set this up:**
 
 ```bash
-# Give Gemini access to Railway database
-railway login
-railway run bash
+# Give Gemini access to Render database
+render login
+render run bash
 # Now Gemini can run: psql $DATABASE_URL -c "SELECT ..."
 
 # Give Gemini your project files
 # (it already has them)
 
 # Give Gemini deployment access
-railway link
+render link
 # Now Gemini can deploy too
 ```
 
@@ -191,13 +191,13 @@ def run_multi_agent_session(goal):
     ])
     print(f"✅ Claude identified query")
 
-    # Phase 2: Execute SQL (via Railway)
+    # Phase 2: Execute SQL (via Render)
     print("🤖 Phase 2: Running SQL query...")
     with open('/tmp/sql_query.txt') as f:
         query = f.read()
 
     sql_result = subprocess.run(
-        f'railway run bash -c "psql $DATABASE_URL -c \\"{query}\\""',
+        f'render run bash -c "psql $DATABASE_URL -c \\"{query}\\""',
         shell=True,
         capture_output=True,
         text=True
@@ -272,7 +272,7 @@ User involvement: 3 words, then nothing
 
 ```bash
 # In Gemini's environment:
-export DATABASE_URL="your-railway-postgres-url"
+export DATABASE_URL="your-render-postgres-url"
 
 # Gemini can now:
 # 1. Read diagnostic files (already has project files)

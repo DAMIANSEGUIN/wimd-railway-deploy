@@ -36,7 +36,7 @@ User wants to implement a Google Calendar booking system for coaching sessions w
    - No public calendar URL needed
 
 4. **Security:** User correctly concerned about credential exposure
-   - All credentials stored in Railway environment variables (encrypted)
+   - All credentials stored in Render environment variables (encrypted)
    - Service account has minimal permissions (calendar only)
    - No phone number shared publicly
 
@@ -88,7 +88,7 @@ User wants to implement a Google Calendar booking system for coaching sessions w
    - Recommendation: Use PayPal (user already has it set up)
 
 7. **`BOOKING_ENV_SETUP.md`**
-   - Step-by-step guide for adding environment variables to Railway
+   - Step-by-step guide for adding environment variables to Render
    - Security notes
    - Troubleshooting guide
 
@@ -115,9 +115,9 @@ User wants to implement a Google Calendar booking system for coaching sessions w
 
 ---
 
-## Environment Variables Added to Railway
+## Environment Variables Added to Render
 
-User successfully added these to Railway Dashboard → Variables:
+User successfully added these to Render Dashboard → Variables:
 
 ### Google Calendar
 
@@ -140,7 +140,7 @@ PAYPAL_MODE='live'
 ### Already Existing
 
 ```bash
-DATABASE_URL=postgresql://...railway.internal...
+DATABASE_URL=postgresql://...render.internal...
 OPENAI_API_KEY=sk-...
 CLAUDE_API_KEY=sk-ant-...
 ```
@@ -165,7 +165,7 @@ CLAUDE_API_KEY=sk-ant-...
 2. ✅ Selected "Live" mode (for production)
 3. ✅ Found "Apps & Credentials"
 4. ✅ Copied Client ID and Secret
-5. ✅ Added to Railway variables
+5. ✅ Added to Render variables
 
 ---
 
@@ -243,7 +243,7 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 
 **User's Security Questions Addressed:**
 
-- Credentials encrypted in Railway
+- Credentials encrypted in Render
 - Service account has minimal permissions (calendar only)
 - No public calendar access
 - No coach phone number exposed
@@ -255,7 +255,7 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 
 - All appointments logged in database
 - Notification log tracks what was sent to users
-- Railway deployment logs for debugging
+- Render deployment logs for debugging
 
 ---
 
@@ -303,18 +303,18 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 1. **Commit and push booking system code:**
 
    ```bash
-   cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+   cd /Users/damianseguin/WIMD-Deploy-Project
    git add .
    git commit -m "Add booking system backend - PayPal + Google Calendar integration"
-   git push railway-origin main
+   git push render-origin main
    ```
 
 2. **Run database migrations:**
 
    ```bash
-   # Option 1: Via Railway CLI
-   railway run psql $DATABASE_URL < data/migrations/001_add_booking_tables.sql
-   railway run psql $DATABASE_URL < data/migrations/002_seed_booking_data.sql
+   # Option 1: Via Render CLI
+   render run psql $DATABASE_URL < data/migrations/001_add_booking_tables.sql
+   render run psql $DATABASE_URL < data/migrations/002_seed_booking_data.sql
 
    # Option 2: Create auto-migration script (runs on startup)
    ```
@@ -323,7 +323,7 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 
    ```bash
    # Check health endpoint
-   curl https://what-is-my-delta-site-production.up.railway.app/health
+   curl https://what-is-my-delta-site-production.up.render.app/health
 
    # Should show:
    # - "ok": true
@@ -335,11 +335,11 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 
    ```bash
    # Test promo code validation
-   curl https://what-is-my-delta-site-production.up.railway.app/booking/promo/WIMD25 \
+   curl https://what-is-my-delta-site-production.up.render.app/booking/promo/WIMD25 \
      -H "Authorization: Bearer <JWT_TOKEN>"
 
    # Test availability
-   curl "https://what-is-my-delta-site-production.up.railway.app/booking/availability?start_date=2025-10-28&end_date=2025-10-31" \
+   curl "https://what-is-my-delta-site-production.up.render.app/booking/availability?start_date=2025-10-28&end_date=2025-10-31" \
      -H "Authorization: Bearer <JWT_TOKEN>"
    ```
 
@@ -373,10 +373,10 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 ### Current State
 
 - ✅ All backend code written and committed locally
-- ✅ All environment variables added to Railway
+- ✅ All environment variables added to Render
 - ✅ Google Calendar shared with service account
 - ✅ PayPal credentials configured
-- ⏳ Code NOT yet pushed to Railway (waiting for user to execute git push)
+- ⏳ Code NOT yet pushed to Render (waiting for user to execute git push)
 - ⏳ Database migrations NOT yet run
 - ❌ Frontend NOT yet built
 
@@ -425,61 +425,61 @@ Both services (`google_calendar_service.py` and `paypal_service.py`) have mock m
 
 ### Backend Code
 
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/google_calendar_service.py`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/paypal_service.py`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/booking.py`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/index.py` (updated)
+- `/Users/damianseguin/WIMD-Deploy-Project/api/google_calendar_service.py`
+- `/Users/damianseguin/WIMD-Deploy-Project/api/paypal_service.py`
+- `/Users/damianseguin/WIMD-Deploy-Project/api/booking.py`
+- `/Users/damianseguin/WIMD-Deploy-Project/api/index.py` (updated)
 
 ### Database
 
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/data/migrations/001_add_booking_tables.sql`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/data/migrations/002_seed_booking_data.sql`
+- `/Users/damianseguin/WIMD-Deploy-Project/data/migrations/001_add_booking_tables.sql`
+- `/Users/damianseguin/WIMD-Deploy-Project/data/migrations/002_seed_booking_data.sql`
 
 ### Documentation
 
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/PAYPAL_VS_STRIPE_ANALYSIS.md`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/BOOKING_ENV_SETUP.md`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/BOOKING_SYSTEM_READY.md`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/BOOKING_REQUIREMENTS_FINALIZED.md`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/BOOKING_IMPLEMENTATION_PLAN.md`
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/Planning/BOOKING_SESSION_BACKUP_2025-10-25.md` (THIS FILE)
+- `/Users/damianseguin/WIMD-Deploy-Project/PAYPAL_VS_STRIPE_ANALYSIS.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/BOOKING_ENV_SETUP.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/BOOKING_SYSTEM_READY.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/BOOKING_REQUIREMENTS_FINALIZED.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/BOOKING_IMPLEMENTATION_PLAN.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/Planning/BOOKING_SESSION_BACKUP_2025-10-25.md` (THIS FILE)
 
 ### Dependencies
 
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/requirements.txt` (updated)
+- `/Users/damianseguin/WIMD-Deploy-Project/requirements.txt` (updated)
 
 ---
 
 ## Quick Reference Commands
 
-### Deploy to Railway
+### Deploy to Render
 
 ```bash
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 git add .
 git commit -m "Add booking system backend"
-git push railway-origin main
+git push render-origin main
 ```
 
 ### Run Migrations
 
 ```bash
-railway run psql $DATABASE_URL < data/migrations/001_add_booking_tables.sql
-railway run psql $DATABASE_URL < data/migrations/002_seed_booking_data.sql
+render run psql $DATABASE_URL < data/migrations/001_add_booking_tables.sql
+render run psql $DATABASE_URL < data/migrations/002_seed_booking_data.sql
 ```
 
 ### Check Deployment
 
 ```bash
-railway logs --follow
-curl https://what-is-my-delta-site-production.up.railway.app/health
+render logs --follow
+curl https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 ### Test Endpoints
 
 ```bash
 # Get JWT token first (login)
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/login \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"damian.seguin@gmail.com","password":"..."}'
 
@@ -528,17 +528,17 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/login 
 
 ## Resume Point for Next Session
 
-**Current Status:** Backend complete, environment variables added to Railway, ready to deploy
+**Current Status:** Backend complete, environment variables added to Render, ready to deploy
 
-**Next Action:** Deploy code to Railway and run database migrations
+**Next Action:** Deploy code to Render and run database migrations
 
 **Command to Run:**
 
 ```bash
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 git add .
 git commit -m "Add booking system backend - PayPal + Google Calendar"
-git push railway-origin main
+git push render-origin main
 ```
 
 **Then:** Run migrations and verify deployment

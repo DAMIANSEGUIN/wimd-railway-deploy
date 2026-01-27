@@ -32,7 +32,7 @@
      `git log --stat netlify.toml Procfile scripts/deploy_frontend_netlify.sh`
 2. **Remote Sync Verification**
    - Ensure `origin` URL is reachable. If SSH fails, switch to HTTPS:
-     `git remote set-url origin https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git`
+     `git remote set-url origin https://github.com/DAMIANSEGUIN/wimd-render-deploy.git`
    - Push with credentials: `git push origin main`
 3. **Netlify Config Validation**
    - Repo root `netlify.toml` **must** contain:

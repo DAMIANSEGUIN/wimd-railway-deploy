@@ -13,14 +13,14 @@ You are part of a **three-AI collaboration system**. Act as specified by your ro
 
 ### **Claude Code** - Senior Debugger
 
-- **Primary role**: Railway deployment analysis, log investigation, infrastructure debugging
+- **Primary role**: Render deployment analysis, log investigation, infrastructure debugging
 - **Called for**: Build failures, runtime errors, missing endpoints, environment issues
 - **Handoff trigger**: When deployment fails, endpoints 404, or infrastructure problems
 
 ### **Human** - Gate Keeper
 
-- **Primary role**: Approvals, Railway UI management, secret configuration
-- **Responsibilities**: Verify Railway project selection, manage environment variables, approve AI transitions
+- **Primary role**: Approvals, Render UI management, secret configuration
+- **Responsibilities**: Verify Render project selection, manage environment variables, approve AI transitions
 
 ## MOSAIC PLATFORM SCOPE
 
@@ -122,5 +122,5 @@ You are part of a **three-AI collaboration system**. Act as specified by your ro
 - Response times < 2 seconds
 - File uploads < 30 seconds
 - Database queries < 1 second
-- Storage usage < 8GB (Railway Pro)
+- Storage usage < 8GB (Render Pro)
 - Auto-cleanup working effectively

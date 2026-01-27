@@ -11,8 +11,8 @@
 
 **Both agents are working on the same repo but see DIFFERENT file paths:**
 
-- **You (Claude Code Desktop):** `/home/user/wimd-railway-deploy`
-- **Claude (Cursor):** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+- **You (Claude Code Desktop):** `/home/user/wimd-render-deploy`
+- **Claude (Cursor):** `/Users/damianseguin/WIMD-Deploy-Project`
 
 **This breaks:**
 - Session handoffs
@@ -36,7 +36,7 @@ I (Claude Code in Desktop) have created **2 comprehensive documents** that are n
    - Concrete implementation steps
    - Three-tier state management system
    - Validation tests
-   - Railway deployment options
+   - Render deployment options
 
 ---
 
@@ -67,10 +67,10 @@ Test that you can read the same files I created:
 cat .mosaic/session_start.json
 
 # Should NOT work (my absolute path)
-cat /home/user/wimd-railway-deploy/.mosaic/session_start.json
+cat /home/user/wimd-render-deploy/.mosaic/session_start.json
 
 # Should work (your absolute path)
-cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.mosaic/session_start.json
+cat /Users/damianseguin/WIMD-Deploy-Project/.mosaic/session_start.json
 ```
 
 **The point:** We must use ONLY relative paths (e.g., `.mosaic/session_start.json`) going forward.
@@ -90,7 +90,7 @@ cat /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.mosaic/session
 
 ```bash
 pwd
-# I expect: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+# I expect: /Users/damianseguin/WIMD-Deploy-Project
 ```
 
 ### 3. Confirm Git Sync
@@ -140,7 +140,7 @@ After reading both docs, tell the user:
 1. **D1: Path Handling** - Use relative paths only? ✅ RECOMMENDED
 2. **D2: Doc Consolidation** - Archive 100+ old session docs? ✅ RECOMMENDED
 3. **D3: State System** - Use `.mosaic/*.json` as canonical state? ✅ RECOMMENDED
-4. **D4: Railway Deployment** - GitHub-based or CLI-based? ⚠️ NEEDS USER INPUT
+4. **D4: Render Deployment** - GitHub-based or CLI-based? ⚠️ NEEDS USER INPUT
 
 ---
 
@@ -175,9 +175,9 @@ After reading both docs, tell the user:
 - Test relative paths
 - Test state update round-trip
 
-**Phase 7: Deploy to Railway (30 min)**
+**Phase 7: Deploy to Render (30 min)**
 - User chooses GitHub or CLI strategy
-- Configure Railway
+- Configure Render
 - Deploy backend + frontend
 
 **Total time: ~2 hours**
@@ -189,8 +189,8 @@ After reading both docs, tell the user:
 ### Critical (Must Fix First)
 
 1. **File Path Divergence** - This doc addresses it
-2. **Railway Deployment Timeout** - `railway up` times out (45MB limit)
-3. **Railway CLI Linking Ambiguity** - `railway link` fails
+2. **Render Deployment Timeout** - `render up` times out (45MB limit)
+3. **Render CLI Linking Ambiguity** - `render link` fails
 
 ### High Priority
 
@@ -199,7 +199,7 @@ After reading both docs, tell the user:
 ### Medium Priority
 
 5. **PostgreSQL Scope Unknown** - Data loss risk unclear
-6. **Service Name Undecided** - What to call new Railway service?
+6. **Service Name Undecided** - What to call new Render service?
 
 ---
 
@@ -227,8 +227,8 @@ After reading both docs, tell the user:
 1. ✅ Both agents can read the same `.mosaic/*.json` files
 2. ✅ No documentation contains absolute paths
 3. ✅ Session handoffs work seamlessly
-4. ✅ Railway backend is deployed and responding
-5. ✅ Railway frontend is deployed and responding
+4. ✅ Render backend is deployed and responding
+5. ✅ Render frontend is deployed and responding
 6. ✅ Both agents can update state and see each other's changes
 
 ---
@@ -288,7 +288,7 @@ cat .mosaic/authority_map.json
 - Create new session docs with absolute paths
 - Assume your file paths work for other agents
 - Skip reading the two comprehensive docs I created
-- Deploy to Railway without user approval
+- Deploy to Render without user approval
 
 **DO:**
 - Use relative paths only (`.ai-agents/FILE.md`)

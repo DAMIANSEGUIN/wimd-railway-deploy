@@ -295,7 +295,7 @@ Create: `.ai-agents/quick_start/CODEXCAPTURE_LAUNCH_COMMAND.md`
 ## Using Wrapper Script
 
 ```bash
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/start_browser_for_codex.sh https://whatismydelta.com
+/Users/damianseguin/WIMD-Deploy-Project/scripts/start_browser_for_codex.sh https://whatismydelta.com
 ```
 
 ## CodexCapture Usage
@@ -346,7 +346,7 @@ Create: `.ai-agents/quick_start/CODEXCAPTURE_LAUNCH_COMMAND.md`
 
 ### Production Status
 - ✅ Frontend: https://whatismydelta.com (deployed, functional)
-- ✅ Backend: Railway deployment operational
+- ✅ Backend: Render deployment operational
 - ✅ Database: PostgreSQL connected
 - ✅ AI: OpenAI + Anthropic available
 - ✅ Failure rate: 0%
@@ -359,18 +359,18 @@ Create: `.ai-agents/quick_start/CODEXCAPTURE_LAUNCH_COMMAND.md`
 ### Test Results (from this session)
 ```bash
 # These commands were validated and work:
-curl https://what-is-my-delta-site-production.up.railway.app/health
-curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
-curl https://what-is-my-delta-site-production.up.railway.app/prompts/active
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/wimd -H "Content-Type: application/json" -d '{"prompt": "I want to transition from software engineering to product management"}'
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/register -H "Content-Type: application/json" -d '{"email": "yourtest@example.com", "password": "testpass123"}'
-curl "https://what-is-my-delta-site-production.up.railway.app/jobs/search?query=software+engineer&location=remote&limit=5"
+curl https://what-is-my-delta-site-production.up.render.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive
+curl https://what-is-my-delta-site-production.up.render.app/prompts/active
+curl -X POST https://what-is-my-delta-site-production.up.render.app/wimd -H "Content-Type: application/json" -d '{"prompt": "I want to transition from software engineering to product management"}'
+curl -X POST https://what-is-my-delta-site-production.up.render.app/auth/register -H "Content-Type: application/json" -d '{"email": "yourtest@example.com", "password": "testpass123"}'
+curl "https://what-is-my-delta-site-production.up.render.app/jobs/search?query=software+engineer&location=remote&limit=5"
 ```
 
 ### Working Directory
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ```
 
 ### Git Status

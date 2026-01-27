@@ -1,13 +1,13 @@
 # Handoff to ChatGPT: Resolving Pre-Commit Hook Failures for Deployment Readiness
 
 **Created:** 2025-12-16
-**Objective:** Document the current state, blocking issues, and resolution plan for the `wimd-railway-deploy` project to achieve a clean commit state, enabling a GitHub-based deployment to Railway.
+**Objective:** Document the current state, blocking issues, and resolution plan for the `wimd-render-deploy` project to achieve a clean commit state, enabling a GitHub-based deployment to Render.
 
 ---
 
 ## 1. Current Goal & Context
 
-The primary objective is to deploy the `wimd-railway-deploy` project to Railway. The agreed-upon strategy is to use a GitHub-connected deployment, as the previous method of deploying from the local CLI (`railway up`) was consistently failing.
+The primary objective is to deploy the `wimd-render-deploy` project to Render. The agreed-upon strategy is to use a GitHub-connected deployment, as the previous method of deploying from the local CLI (`render up`) was consistently failing.
 
 Before this can be done, the project's repository on GitHub must be brought to a clean, verifiable state that reflects all the latest changes.
 
@@ -59,4 +59,4 @@ Here is a breakdown of each failing hook and the precise plan I am executing to 
 
 ## 4. Path to Completion
 
-My execution is paused pending user confirmation. My next action is to continue with step **3.b** (resolving `ruff` issues). Once all hooks pass, I will create a single, clean commit and push it to GitHub, which will complete the "Repo completeness audit" and unblock the primary goal of setting up the Railway deployment.
+My execution is paused pending user confirmation. My next action is to continue with step **3.b** (resolving `ruff` issues). Once all hooks pass, I will create a single, clean commit and push it to GitHub, which will complete the "Repo completeness audit" and unblock the primary goal of setting up the Render deployment.

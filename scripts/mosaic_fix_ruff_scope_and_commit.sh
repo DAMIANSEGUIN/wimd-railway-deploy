@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-ROOT="/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+ROOT="/Users/damianseguin/WIMD-Deploy-Project"
 PY="/usr/bin/python3"
 CACHE="/Users/damianseguin/.cache/pre-commit"
 F="$ROOT/pyproject.toml"

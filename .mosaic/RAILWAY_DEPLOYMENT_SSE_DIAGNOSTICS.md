@@ -1,4 +1,4 @@
-# Railway Deployment - SSE Deep Dive Diagnostics
+# Render Deployment - SSE Deep Dive Diagnostics
 
 **Created:** 2026-01-05 15:10 PM
 **Status:** ACTIVE - Deployment failing, root cause investigation
@@ -9,15 +9,15 @@
 
 ## PROBLEM SUMMARY
 
-**Symptom:** Railway deployment fails repeatedly with different errors at different stages
+**Symptom:** Render deployment fails repeatedly with different errors at different stages
 **Impact:** Backend API completely unavailable (404 errors on all endpoints)
 **Duration:** ~2 hours (since 1:47 PM)
 **Attempts:** 4 deployment attempts, all failed
 
 **URLs:**
 - Frontend: https://whatismydelta.com ✅ (working)
-- Backend: https://what-is-my-delta-site-production.up.railway.app ❌ (404)
-- Railway Dashboard: https://railway.com/project/9124bf3d-bb9e-4040-ac13-f59ddc56415a
+- Backend: https://what-is-my-delta-site-production.up.render.app ❌ (404)
+- Render Dashboard: https://render.com/project/9124bf3d-bb9e-4040-ac13-f59ddc56415a
 
 ---
 
@@ -82,11 +82,11 @@ nix-env -qaP | grep -E "glibc|gcc|libstdc"
 # Verify Python can import numpy in Nix shell
 nix-shell -p python311 python311Packages.numpy --run "python -c 'import numpy; print(numpy.__version__)'"
 
-# Check LD_LIBRARY_PATH in Railway environment
-railway run env | grep LD_LIBRARY_PATH
+# Check LD_LIBRARY_PATH in Render environment
+render run env | grep LD_LIBRARY_PATH
 
 # List available .so files in Nix store
-railway run find /nix/store -name "libstdc++.so*" 2>/dev/null | head -20
+render run find /nix/store -name "libstdc++.so*" 2>/dev/null | head -20
 ```
 
 **Expected:** libstdc++.so.6 should be findable in Nix store
@@ -100,14 +100,14 @@ railway run find /nix/store -name "libstdc++.so*" 2>/dev/null | head -20
 **Tests:**
 ```bash
 # Check what libraries gunicorn process needs
-railway run ldd /nix/store/*/bin/python | grep libstdc
+render run ldd /nix/store/*/bin/python | grep libstdc
 
 # Check if numpy extension can find dependencies
-railway run python -c "import sys; import numpy; print(numpy.__file__)"
-railway run ldd /path/to/numpy/_multiarray_umath.so
+render run python -c "import sys; import numpy; print(numpy.__file__)"
+render run ldd /path/to/numpy/_multiarray_umath.so
 
 # Test with explicit LD_LIBRARY_PATH
-railway run bash -c "LD_LIBRARY_PATH=/nix/store/*gcc*/lib python -c 'import numpy'"
+render run bash -c "LD_LIBRARY_PATH=/nix/store/*gcc*/lib python -c 'import numpy'"
 ```
 
 **Expected:** numpy C extensions should load without errors
@@ -121,11 +121,11 @@ railway run bash -c "LD_LIBRARY_PATH=/nix/store/*gcc*/lib python -c 'import nump
 **Tests:**
 ```bash
 # Check NumPy build configuration
-railway run python -c "import numpy; numpy.show_config()"
+render run python -c "import numpy; numpy.show_config()"
 
 # Check Python version and ABI
-railway run python --version
-railway run python -c "import sysconfig; print(sysconfig.get_config_var('SOABI'))"
+render run python --version
+render run python -c "import sysconfig; print(sysconfig.get_config_var('SOABI'))"
 
 # Test with NumPy 1.26.4 (pinned version)
 # Already applied in latest deployment
@@ -140,54 +140,54 @@ railway run python -c "import sysconfig; print(sysconfig.get_config_var('SOABI')
 ---
 
 ### Path 4: Nixpacks Configuration Issues
-**Hypothesis:** nixpacks.toml misconfigured or Railway not reading it
+**Hypothesis:** nixpacks.toml misconfigured or Render not reading it
 
 **Tests:**
 ```bash
 # Verify nixpacks.toml is in repo root
 ls -la nixpacks.toml
 
-# Check Railway is using Nixpacks (not Dockerfile)
-# In Railway dashboard: Settings → Builder → should show "Nixpacks"
+# Check Render is using Nixpacks (not Dockerfile)
+# In Render dashboard: Settings → Builder → should show "Nixpacks"
 
 # Test nixpacks build locally (if installed)
 nixpacks build . --name test-build
 
-# Check if Railway respects root = "backend" directive
-# Expected: Railway builds from backend/ subdirectory
+# Check if Render respects root = "backend" directive
+# Expected: Render builds from backend/ subdirectory
 
 # Verify requirements.txt in backend/ is being used
-railway run pip list | grep numpy
+render run pip list | grep numpy
 ```
 
-**Expected:** Railway should use backend/requirements.txt with NumPy 1.26.4
-**If Wrong:** Check Railway build logs for which requirements.txt is used
+**Expected:** Render should use backend/requirements.txt with NumPy 1.26.4
+**If Wrong:** Check Render build logs for which requirements.txt is used
 
 ---
 
-### Path 5: Railway Platform Issues
-**Hypothesis:** Railway infrastructure or network issues
+### Path 5: Render Platform Issues
+**Hypothesis:** Render infrastructure or network issues
 
 **Tests:**
 ```bash
-# Check Railway status page
-curl -s https://railway.statuspage.io/api/v2/status.json | jq
+# Check Render status page
+curl -s https://render.statuspage.io/api/v2/status.json | jq
 
 # Verify GitHub webhook triggers
-# In GitHub: Settings → Webhooks → check Railway webhook recent deliveries
+# In GitHub: Settings → Webhooks → check Render webhook recent deliveries
 
-# Check Railway deployment logs for infrastructure errors
-railway logs --deployment <latest-deployment-id>
+# Check Render deployment logs for infrastructure errors
+render logs --deployment <latest-deployment-id>
 
-# Verify Railway service health
-railway status
+# Verify Render service health
+render status
 
-# Check if other Railway services deploying successfully
-# Visit Railway status page or community forum
+# Check if other Render services deploying successfully
+# Visit Render status page or community forum
 ```
 
-**Expected:** Railway platform operational, no known issues
-**If Platform Issue:** Wait for Railway to resolve, or contact support
+**Expected:** Render platform operational, no known issues
+**If Platform Issue:** Wait for Render to resolve, or contact support
 
 ---
 
@@ -197,24 +197,24 @@ railway status
 **Tests:**
 ```bash
 # Test backend URL directly
-curl -v https://what-is-my-delta-site-production.up.railway.app/health
+curl -v https://what-is-my-delta-site-production.up.render.app/health
 
 # Check DNS resolution
-dig what-is-my-delta-site-production.up.railway.app
-nslookup what-is-my-delta-site-production.up.railway.app
+dig what-is-my-delta-site-production.up.render.app
+nslookup what-is-my-delta-site-production.up.render.app
 
 # Check SSL certificate
-openssl s_client -connect what-is-my-delta-site-production.up.railway.app:443 -servername what-is-my-delta-site-production.up.railway.app
+openssl s_client -connect what-is-my-delta-site-production.up.render.app:443 -servername what-is-my-delta-site-production.up.render.app
 
 # Test from different network
 # Run curl from different machine/network to rule out local network issue
 
-# Check Railway service domain configuration
-# Railway dashboard → Settings → Domains
+# Check Render service domain configuration
+# Render dashboard → Settings → Domains
 ```
 
 **Expected:** DNS resolves, SSL valid, 404 indicates app not deployed
-**If DNS/SSL Issue:** Railway domain configuration problem
+**If DNS/SSL Issue:** Render domain configuration problem
 
 ---
 
@@ -224,41 +224,41 @@ openssl s_client -connect what-is-my-delta-site-production.up.railway.app:443 -s
 |------|---------|----------|--------|
 | **Local Build Test** | `cd backend && pip install -r requirements.txt` | ✅ Success | ⬜ TODO |
 | **Local NumPy Import** | `python -c "import numpy; print(numpy.__version__)"` | `1.26.4` | ⬜ TODO |
-| **Railway CLI Access** | `railway whoami` | Shows email | ✅ PASS |
-| **Railway Logs Available** | `railway logs` | Shows logs | ❌ FAIL (No deployments) |
+| **Render CLI Access** | `render whoami` | Shows email | ✅ PASS |
+| **Render Logs Available** | `render logs` | Shows logs | ❌ FAIL (No deployments) |
 | **Backend Health Check** | `curl /health` | `{"ok":true}` | ❌ FAIL (404) |
 | **Frontend Accessible** | `curl whatismydelta.com` | HTML content | ✅ PASS |
 | **GitHub Webhook Active** | Check GitHub webhook deliveries | Recent delivery | ⬜ TODO |
-| **Railway Auto-Deploy** | Push to main triggers deploy | Auto-deploy starts | ✅ PASS (now working) |
-| **Build Phase Success** | Check Railway build logs | Build complete | ⏳ TESTING |
-| **Deploy Phase Success** | Check Railway deploy logs | Deploy complete | ❌ FAIL |
+| **Render Auto-Deploy** | Push to main triggers deploy | Auto-deploy starts | ✅ PASS (now working) |
+| **Build Phase Success** | Check Render build logs | Build complete | ⏳ TESTING |
+| **Deploy Phase Success** | Check Render deploy logs | Deploy complete | ❌ FAIL |
 | **Runtime Phase Success** | App starts, health check passes | Worker running | ❌ FAIL |
-| **Nix Packages Installed** | `railway run which gcc` | Shows path | ⬜ TODO |
-| **Library Available** | `railway run find /nix/store -name libstdc++.so.6` | Found | ⬜ TODO |
-| **Python Version** | `railway run python --version` | `3.11.x` | ⬜ TODO |
-| **NumPy Version** | `railway run pip show numpy` | `1.26.4` | ⬜ TODO |
+| **Nix Packages Installed** | `render run which gcc` | Shows path | ⬜ TODO |
+| **Library Available** | `render run find /nix/store -name libstdc++.so.6` | Found | ⬜ TODO |
+| **Python Version** | `render run python --version` | `3.11.x` | ⬜ TODO |
+| **NumPy Version** | `render run pip show numpy` | `1.26.4` | ⬜ TODO |
 
 ---
 
 ## REFERENCES & LINKS
 
 ### Error Logs
-- Error #1: `railway_build_error.txt`
-- Error #2: `railway_deploy_error_2.txt`
-- Error #3: `railway_deploy_error_3.txt`
+- Error #1: `render_build_error.txt`
+- Error #2: `render_deploy_error_2.txt`
+- Error #3: `render_deploy_error_3.txt`
 - Error #4: [PENDING SCREENSHOT]
 
 ### Configuration Files
 - Nixpacks config: `nixpacks.toml`
-- Railway config: `railway.toml`
+- Render config: `render.toml`
 - Backend requirements: `backend/requirements.txt`
 - FastAPI app: `backend/api/index.py`
 
-### Railway Resources
-- Dashboard: https://railway.app/dashboard
-- Deployment logs: https://railway.com/project/{PROJECT_ID}/deployments
+### Render Resources
+- Dashboard: https://render.app/dashboard
+- Deployment logs: https://render.com/project/{PROJECT_ID}/deployments
 - Service settings: Click service → Settings tab
-- Status page: https://railway.statuspage.io
+- Status page: https://render.statuspage.io
 
 ### NumPy Resources
 - Troubleshooting guide: https://numpy.org/devdocs/user/troubleshooting-importerror.html
@@ -277,24 +277,24 @@ openssl s_client -connect what-is-my-delta-site-production.up.railway.app:443 -s
 ### Immediate Actions (Priority Order)
 
 1. **Get Error #4 Details**
-   - Screenshot Railway logs showing "network process failure"
+   - Screenshot Render logs showing "network process failure"
    - Identify exact stage: build/deploy/runtime
-   - Check Railway status page for platform issues
+   - Check Render status page for platform issues
 
 2. **Verify Current Deployment State**
    ```bash
-   railway status
-   railway logs | tail -100
-   curl https://what-is-my-delta-site-production.up.railway.app/health
+   render status
+   render logs | tail -100
+   curl https://what-is-my-delta-site-production.up.render.app/health
    ```
 
 3. **Test Library Availability**
    ```bash
-   railway run find /nix/store -name "libstdc++.so.6" 2>/dev/null
-   railway run python -c "import numpy; print(numpy.__version__)"
+   render run find /nix/store -name "libstdc++.so.6" 2>/dev/null
+   render run python -c "import numpy; print(numpy.__version__)"
    ```
 
-4. **Check Railway Dashboard**
+4. **Check Render Dashboard**
    - Settings → Source: Verify GitHub connection
    - Settings → Builder: Confirm Nixpacks selected
    - Settings → Environment: Check all vars present
@@ -319,11 +319,11 @@ RUN pip install -r requirements.txt
 # ... rest of Dockerfile
 ```
 
-**Option C: Use Railway Python Template**
+**Option C: Use Render Python Template**
 ```bash
-# Railway has Python templates with working configs
-# Compare our nixpacks.toml with Railway's template
-# Link: https://github.com/railwayapp-templates/fastapi
+# Render has Python templates with working configs
+# Compare our nixpacks.toml with Render's template
+# Link: https://github.com/renderapp-templates/fastapi
 ```
 
 **Option D: Use Nix Python Packages Directly**
@@ -342,17 +342,17 @@ nixPkgs = [
 ```bash
 # Full diagnostic dump
 {
-  echo "=== Railway Status ==="
-  railway status
+  echo "=== Render Status ==="
+  render status
 
   echo "=== Environment Variables ==="
-  railway variables | head -30
+  render variables | head -30
 
   echo "=== Latest Deployment ==="
-  railway logs | tail -100
+  render logs | tail -100
 
   echo "=== Backend Health ==="
-  curl -v https://what-is-my-delta-site-production.up.railway.app/health
+  curl -v https://what-is-my-delta-site-production.up.render.app/health
 
   echo "=== Git Status ==="
   git log --oneline -5
@@ -360,9 +360,9 @@ nixPkgs = [
 
   echo "=== Config Files ==="
   cat nixpacks.toml
-  cat railway.toml
+  cat render.toml
   cat backend/requirements.txt
-} > railway_full_diagnostic_$(date +%Y%m%d_%H%M%S).txt
+} > render_full_diagnostic_$(date +%Y%m%d_%H%M%S).txt
 ```
 
 ---
@@ -371,9 +371,9 @@ nixPkgs = [
 
 **Project:** Mosaic Platform (Career Coaching)
 **Stack:** FastAPI (backend) + Vanilla JS (frontend)
-**Database:** PostgreSQL (Railway managed)
+**Database:** PostgreSQL (Render managed)
 **LLM:** OpenAI GPT-4, Anthropic Claude
-**Deployment:** Railway (backend), Netlify (frontend)
+**Deployment:** Render (backend), Netlify (frontend)
 
 **Critical Dependencies:**
 - `numpy` - Used for embeddings/RAG engine
@@ -384,7 +384,7 @@ nixPkgs = [
 
 **Frontend-Backend Communication:**
 - Frontend proxies API requests via Netlify
-- Backend expects to run on Railway's PORT env var
+- Backend expects to run on Render's PORT env var
 - Health check endpoint: `/health`
 
 ---
@@ -393,13 +393,13 @@ nixPkgs = [
 
 Deployment will be considered successful when:
 
-1. ✅ Railway build completes without errors
-2. ✅ Railway deploy completes without errors
+1. ✅ Render build completes without errors
+2. ✅ Render deploy completes without errors
 3. ✅ Backend app starts (gunicorn workers running)
 4. ✅ Health endpoint returns 200: `curl /health` → `{"ok":true}`
 5. ✅ Config endpoint works: `curl /config` → `{"apiBase":"..."}`
 6. ✅ Frontend can reach backend (test from whatismydelta.com)
-7. ✅ No errors in Railway logs for 5+ minutes
+7. ✅ No errors in Render logs for 5+ minutes
 
 ---
 
@@ -409,7 +409,7 @@ Deployment will be considered successful when:
 - **Update error timeline** with new findings
 - **Add test results** to lightning round matrix
 - **Document any new errors** with timestamps
-- **Check Railway status page** before assuming app issue
+- **Check Render status page** before assuming app issue
 - **Test changes locally** when possible before deploying
 - **Commit error logs** to repo for cross-agent visibility
 

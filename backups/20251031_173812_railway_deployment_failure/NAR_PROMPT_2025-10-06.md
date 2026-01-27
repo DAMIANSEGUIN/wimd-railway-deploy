@@ -86,7 +86,7 @@ Understood - waiting for CODEX review of Cursor's work before proceeding.
 
 Current State:
 - Files exist locally: api/reranker.py, api/analytics.py, api/corpus_reindex.py
-- Imports present in api/index.py (both local and Railway main branch)
+- Imports present in api/index.py (both local and Render main branch)
 - Endpoints defined in api/index.py lines 421-465
 - Production endpoints returning 404 (evidence of import failure or build issue)
 
@@ -94,7 +94,7 @@ Evidence:
 $ curl https://..../reranker/health
 {"detail": "Not Found"}
 
-$ git show railway-origin/main:api/index.py | grep analytics
+$ git show render-origin/main:api/index.py | grep analytics
 from .analytics import get_analytics_dashboard, export_analytics_csv, get_analytics_health
 
 Standing by for CODEX's assessment before taking action.
@@ -112,19 +112,19 @@ Cannot proceed - missing API key for OpenAI embeddings.
 
 Current State:
 - Code ready to call OpenAI text-embedding-3-small
-- Railway environment variable OPENAI_API_KEY not set
+- Render environment variable OPENAI_API_KEY not set
 - Fallback to mock embeddings currently active
 
 Evidence:
-$ railway variables
+$ render variables
 [list showing OPENAI_API_KEY missing]
 
 No action taken - embeddings will fail without API key.
 
 Next Steps (Conditional):
-Once API key is added to Railway:
+Once API key is added to Render:
 1. Verify key works locally: python -c "import openai; ..."
-2. Deploy to Railway
+2. Deploy to Render
 3. Test /rag/embed endpoint
 ```
 
@@ -139,22 +139,22 @@ Evidence: New endpoints return 404 in production
 Investigation Results:
 ✅ Files exist locally (api/reranker.py, api/analytics.py, api/corpus_reindex.py)
 ✅ Imports present in api/index.py
-✅ Pushed to Railway (commits show success)
+✅ Pushed to Render (commits show success)
 ❌ Production endpoints not responding
 ❌ Production / endpoint doesn't list new routes
 
 Root Cause Options:
 1. Import error preventing FastAPI from loading endpoints
-2. Railway build failed but reported success
-3. Railway cached old build, new code not deployed
+2. Render build failed but reported success
+3. Render cached old build, new code not deployed
 4. Dependencies (sentence-transformers) failed to install
 
 No deployment action taken - investigation needed first.
 
 Next Steps:
-- Check Railway build logs for import errors
+- Check Render build logs for import errors
 - Verify sentence-transformers installation in production
-- Confirm which commit Railway actually deployed
+- Confirm which commit Render actually deployed
 ```
 
 ---

@@ -26,7 +26,7 @@ Defines the minimum rules for Mosaic MVP governance and agent behavior.
 The Mosaic system operates on a three-layer repository model:
 
 1. LOCAL AUTHORITATIVE WORKSPACE
-   - Location: /Users/damianseguin/AI_Workspace/WIMD-Railway_Deploy_Project
+   - Location: /Users/damianseguin/AI_Workspace/WIMD-Render_Deploy_Project
    - Contains the real, editable files.
    - Edited by Gemini (Terminal), Claude (Terminal), Codex (Cursor), and human.
 

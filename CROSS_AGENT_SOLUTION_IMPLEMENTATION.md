@@ -35,24 +35,24 @@ Tier 3: Git Sync Layer                     ← Synchronization between agents
 ```json
 {
   "version": 1,
-  "task_id": "mosaic-railway-deploy-2026-01-05",
-  "objective": "Fix cross-agent coordination and deploy Railway services",
+  "task_id": "mosaic-render-deploy-2026-01-05",
+  "objective": "Fix cross-agent coordination and deploy Render services",
   "status": "blocked",
   "priority": "critical",
   "assigned_agent": "pending_user_decision",
   "created_at": "2026-01-05T00:00:00Z",
   "updated_at": "2026-01-05T00:00:00Z",
   "details": {
-    "description": "Enable both Claude Code (Desktop) and Claude (Cursor) to work on the same repository without path conflicts. Deploy Mosaic platform to Railway.",
+    "description": "Enable both Claude Code (Desktop) and Claude (Cursor) to work on the same repository without path conflicts. Deploy Mosaic platform to Render.",
     "success_criteria": [
       "Both agents can read the same state files",
       "All documentation uses relative paths",
-      "Railway backend deployed and responding",
-      "Railway frontend deployed and responding"
+      "Render backend deployed and responding",
+      "Render frontend deployed and responding"
     ],
     "dependencies": [
       "User decision on deployment strategy",
-      "Railway CLI linking resolution",
+      "Render CLI linking resolution",
       "Documentation consolidation approval"
     ]
   }
@@ -71,7 +71,7 @@ Tier 3: Git Sync Layer                     ← Synchronization between agents
       "title": "File Path Divergence",
       "severity": "critical",
       "status": "active",
-      "description": "Claude Code sees /home/user/wimd-railway-deploy, Claude (Cursor) sees /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project",
+      "description": "Claude Code sees /home/user/wimd-render-deploy, Claude (Cursor) sees /Users/damianseguin/WIMD-Deploy-Project",
       "impact": "Cross-agent coordination impossible",
       "solution": "Use relative paths only + .mosaic/ JSON state",
       "owner": "both_agents",
@@ -79,22 +79,22 @@ Tier 3: Git Sync Layer                     ← Synchronization between agents
     },
     {
       "id": "B002",
-      "title": "Railway Deployment Timeout",
+      "title": "Render Deployment Timeout",
       "severity": "high",
       "status": "active",
-      "description": "railway up times out due to 45MB upload size limit",
+      "description": "render up times out due to 45MB upload size limit",
       "impact": "Cannot deploy via CLI",
-      "solution": "Switch to GitHub-based deployment OR implement .railwayignore",
+      "solution": "Switch to GitHub-based deployment OR implement .renderignore",
       "owner": "user_decision_required",
       "created_at": "2025-12-15T00:00:00Z"
     },
     {
       "id": "B003",
-      "title": "Railway CLI Linking Ambiguity",
+      "title": "Render CLI Linking Ambiguity",
       "severity": "high",
       "status": "active",
-      "description": "railway list shows project, but railway link fails with 'Project not found'",
-      "impact": "Cannot use Railway CLI commands",
+      "description": "render list shows project, but render link fails with 'Project not found'",
+      "impact": "Cannot use Render CLI commands",
       "solution": "User manual link via interactive CLI OR switch to GitHub deployment",
       "owner": "user_intervention_required",
       "created_at": "2025-12-15T00:00:00Z"
@@ -151,7 +151,7 @@ Tier 3: Git Sync Layer                     ← Synchronization between agents
 **🚨 MANDATORY FIRST ACTION ON EVERY SESSION:**
 
 ```bash
-Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
+Read: /Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
 ```
 ```
 
@@ -460,23 +460,23 @@ find docs_archive/sessions_2025/ -name "*.md" | wc -l
 
 ---
 
-## 🚀 DEPLOYMENT: Choosing Railway Strategy
+## 🚀 DEPLOYMENT: Choosing Render Strategy
 
 ### Option A: GitHub-Based Deployment (RECOMMENDED)
 
 **Advantages:**
 - No 45MB upload limit
-- Standard Railway practice
+- Standard Render practice
 - Easier to debug (deployment logs in dashboard)
 - Works from any machine (no CLI needed)
 
 **Implementation:**
 
-1. **In Railway Dashboard:**
+1. **In Render Dashboard:**
    - Go to project: `wimd-career-coaching`
    - Click service: `mosaic-backend` (or create new)
    - Settings → Connect to GitHub repo
-   - Select: `DAMIANSEGUIN/wimd-railway-deploy`
+   - Select: `DAMIANSEGUIN/wimd-render-deploy`
    - Branch: `main`
    - Root directory: `/` (or `/api` if backend is in subdirectory)
 
@@ -484,22 +484,22 @@ find docs_archive/sessions_2025/ -name "*.md" | wc -l
    ```bash
    # From local machine (any agent)
    git add .
-   git commit -m "feat: Deploy backend to Railway"
+   git commit -m "feat: Deploy backend to Render"
    git push origin main
 
-   # Railway automatically deploys
-   # Check deployment in Railway dashboard
+   # Render automatically deploys
+   # Check deployment in Render dashboard
    ```
 
 3. **Verify:**
    ```bash
    # Wait 2-5 minutes for deploy
-   curl https://mosaic-backend.up.railway.app/health
+   curl https://mosaic-backend.up.render.app/health
    # Should return: {"ok": true, ...}
    ```
 
 **User Action Required:**
-- Connect GitHub repo in Railway dashboard
+- Connect GitHub repo in Render dashboard
 - Configure environment variables (DATABASE_URL, API keys, etc.)
 
 ---
@@ -512,12 +512,12 @@ find docs_archive/sessions_2025/ -name "*.md" | wc -l
 
 **Disadvantages:**
 - 45MB upload limit
-- Requires Railway CLI linking fix
+- Requires Render CLI linking fix
 - Only works from one machine
 
 **Implementation:**
 
-1. **Create comprehensive `.railwayignore`:**
+1. **Create comprehensive `.renderignore`:**
    ```
    .git/
    .venv/
@@ -534,23 +534,23 @@ find docs_archive/sessions_2025/ -name "*.md" | wc -l
    temp_governance_docs/
    ```
 
-2. **Fix Railway CLI linking:**
+2. **Fix Render CLI linking:**
    ```bash
    # Manual link via interactive prompt
-   railway link
+   render link
    # Select: wimd-career-coaching
    # Select service: mosaic-backend
    ```
 
 3. **Deploy:**
    ```bash
-   railway up
+   render up
    # Should upload < 45MB now
    ```
 
 **User Action Required:**
-- Run `railway link` interactively
-- Test upload size: `railway up --dry-run`
+- Run `render link` interactively
+- Test upload size: `render up --dry-run`
 
 ---
 
@@ -589,9 +589,9 @@ find docs_archive/sessions_2025/ -name "*.md" | wc -l
 - [ ] Test 3: State update round-trip works ✅
 - [ ] Test 4: Archival script works ✅
 
-### Phase 7: Railway Deployment ⏳
+### Phase 7: Render Deployment ⏳
 - [ ] User chooses Option A or B
-- [ ] Railway configured (GitHub or CLI)
+- [ ] Render configured (GitHub or CLI)
 - [ ] Backend deployed
 - [ ] Frontend deployed
 - [ ] Health checks pass
@@ -607,7 +607,7 @@ find docs_archive/sessions_2025/ -name "*.md" | wc -l
 3. ✅ No references to `/Users/...` or `/home/user/...` exist
 4. ✅ Session docs are archived (< 20 active docs in root)
 5. ✅ `DOCUMENTATION_MAP.md` lists all active docs
-6. ✅ Railway deployment succeeds (backend + frontend)
+6. ✅ Render deployment succeeds (backend + frontend)
 7. ✅ Cross-agent state update round-trip works
 8. ✅ User approves all 4 decisions (D1-D4)
 
@@ -649,7 +649,7 @@ find docs_archive/sessions_2025/ -name "*.md" | wc -l
   "last_session_end": "2026-01-05T12:00:00Z",
   "last_commit": "abc1234",
   "next_agent": "claude_cursor",
-  "handoff_message": "Created .mosaic/ state system and cross-agent protocol. Ready for doc archival and Railway deployment.",
+  "handoff_message": "Created .mosaic/ state system and cross-agent protocol. Ready for doc archival and Render deployment.",
   "open_questions": [
     "User: Choose deployment strategy (GitHub vs CLI)?",
     "User: Approve doc archival script?"
@@ -666,6 +666,6 @@ find docs_archive/sessions_2025/ -name "*.md" | wc -l
 2. User makes 4 decisions (path handling, doc consolidation, state system, deployment)
 3. Execute Phase 1-5 (create state files, update docs, archive)
 4. Execute Phase 6 (validation tests)
-5. Execute Phase 7 (Railway deployment with chosen strategy)
+5. Execute Phase 7 (Render deployment with chosen strategy)
 
 **Status:** Ready for user approval and execution

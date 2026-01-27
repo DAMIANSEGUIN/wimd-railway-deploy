@@ -13,25 +13,25 @@
 
 **What Happened:**
 
-- Claude Code deployed semantic upgrade to Railway without verifying dependencies
+- Claude Code deployed semantic upgrade to Render without verifying dependencies
 - Pushed code at 16:18 UTC with `sentence-transformers` and `scikit-learn` in requirements.txt
-- Railway deployment succeeded but new endpoints returned 404 Not Found
-- Root cause: Dependencies likely failed to install on Railway
+- Render deployment succeeded but new endpoints returned 404 Not Found
+- Root cause: Dependencies likely failed to install on Render
 
 **Evidence:**
 
 ```bash
 # Testing after deployment:
-curl https://what-is-my-delta-site-production.up.railway.app/reranker/health
+curl https://what-is-my-delta-site-production.up.render.app/reranker/health
 # Result: {"detail": "Not Found"}
 
-curl https://what-is-my-delta-site-production.up.railway.app/analytics/health
+curl https://what-is-my-delta-site-production.up.render.app/analytics/health
 # Result: {"detail": "Not Found"}
 ```
 
 **Root Cause:**
 
-1. Railway Python runtime version not verified before deployment
+1. Render Python runtime version not verified before deployment
 2. No pre-deployment dependency validation
 3. Claude Code did not wait for Cursor to confirm local testing complete
 
@@ -46,7 +46,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/analytics/health
 
 - `sentence-transformers` requires Python 3.8+
 - Local environment runs Python 3.7 (incompatible)
-- Railway environment Python version unknown
+- Render environment Python version unknown
 - No version check performed before deployment
 
 **Evidence from Cursor:**
@@ -91,7 +91,7 @@ GET  /corpus/status
 **Possible Causes:**
 
 1. Import error in `api/index.py` preventing module load
-2. Railway build cached old code
+2. Render build cached old code
 3. FastAPI route registration failed silently
 4. Middleware or CORS blocking new routes
 
@@ -140,7 +140,7 @@ GET  /corpus/status
 - [ ] Python version requirements documented and verified
 - [ ] Local testing results provided by Cursor
 - [ ] No uncommitted changes in critical files
-- [ ] Railway/Netlify build capacity verified
+- [ ] Render/Netlify build capacity verified
 - [ ] Cost impact assessed and within budget
 - [ ] Rollback plan documented
 ```
@@ -149,14 +149,14 @@ GET  /corpus/status
 
 ### **Gap #2: No Environment Verification**
 
-**Current State:** Assume Railway environment matches local
-**Issue:** Railway Python version, memory, CPU unknown
-**Recommendation:** Query Railway environment before deployment
+**Current State:** Assume Render environment matches local
+**Issue:** Render Python version, memory, CPU unknown
+**Recommendation:** Query Render environment before deployment
 
 **Required Checks:**
 
-1. Python version: `railway run python --version`
-2. Available memory: Check Railway plan limits
+1. Python version: `render run python --version`
+2. Available memory: Check Render plan limits
 3. Dependency compatibility: Pre-test requirements.txt
 4. Build time estimate: Large deps like `sentence-transformers` take time
 
@@ -164,7 +164,7 @@ GET  /corpus/status
 
 ### **Gap #3: No Deployment Validation**
 
-**Current State:** Deploy and assume success if Railway responds
+**Current State:** Deploy and assume success if Render responds
 **Issue:** Endpoints can fail silently (404s), no health validation
 **Recommendation:** Post-deployment smoke tests
 
@@ -198,9 +198,9 @@ curl / | jq '.endpoints'  # Should list new endpoints
 ## Deployment Log - [Date/Time]
 
 16:18 UTC - Claude Code: Received code from Cursor
-16:19 UTC - Claude Code: Pushed to Railway
-16:20 UTC - Railway: Build started
-16:21 UTC - Railway: Build succeeded
+16:19 UTC - Claude Code: Pushed to Render
+16:20 UTC - Render: Build started
+16:21 UTC - Render: Build succeeded
 16:22 UTC - Claude Code: Tested /health → OK
 16:23 UTC - Claude Code: Tested /reranker/health → 404 ERROR
 16:24 UTC - ROLLBACK TRIGGERED
@@ -210,7 +210,7 @@ curl / | jq '.endpoints'  # Should list new endpoints
 
 ## 🔧 IMMEDIATE REMEDIATION ACTIONS
 
-### **Action #1: Verify Railway Environment**
+### **Action #1: Verify Render Environment**
 
 **Owner:** Claude Code
 **Priority:** CRITICAL
@@ -218,9 +218,9 @@ curl / | jq '.endpoints'  # Should list new endpoints
 
 **Steps:**
 
-1. Check Railway Python version
+1. Check Render Python version
 2. Verify `sentence-transformers` installation
-3. Check Railway build logs for errors
+3. Check Render build logs for errors
 4. Confirm endpoint registration in FastAPI
 
 ---
@@ -235,7 +235,7 @@ curl / | jq '.endpoints'  # Should list new endpoints
 
 1. Verify imports successful in production
 2. Check FastAPI route registration
-3. Clear Railway build cache if needed
+3. Clear Render build cache if needed
 4. Re-deploy if import errors detected
 
 ---
@@ -338,7 +338,7 @@ curl / | jq '.endpoints'  # Should list new endpoints
 
 ### **Recommendation #1: Staging Environment**
 
-**Proposal:** Add Railway staging service
+**Proposal:** Add Render staging service
 **Benefit:** Test deployments before production
 **Cost:** ~$5/month additional
 
@@ -362,7 +362,7 @@ curl / | jq '.endpoints'  # Should list new endpoints
 
 ### **Recommendation #4: Rollback Automation**
 
-**Proposal:** One-command rollback to previous Railway deployment
+**Proposal:** One-command rollback to previous Render deployment
 **Benefit:** Fast recovery from issues
 **Cost:** Engineering time only
 
@@ -373,7 +373,7 @@ curl / | jq '.endpoints'  # Should list new endpoints
 **Immediate (Within 1 hour):**
 
 1. ✅ Document audit findings (this file)
-2. ⏳ Verify Railway Python version
+2. ⏳ Verify Render Python version
 3. ⏳ Fix endpoint registration issues
 4. ⏳ Test all new endpoints
 

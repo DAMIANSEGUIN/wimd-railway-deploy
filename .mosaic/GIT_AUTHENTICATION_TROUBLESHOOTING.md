@@ -35,7 +35,7 @@ Password for 'https://DAMIANSEGUIN@github.com': <GitHub Personal Access Token>
 **Steps:**
 1. Go to GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
 2. Click "Generate new token" → "Generate new token (classic)"
-3. Note: "Git operations for wimd-railway-deploy"
+3. Note: "Git operations for wimd-render-deploy"
 4. Expiration: 90 days (or your preference)
 5. Check scopes: `repo` + `workflow`
 6. Click "Generate token"
@@ -53,7 +53,7 @@ Password for 'https://DAMIANSEGUIN@github.com': <GitHub Personal Access Token>
 
 **Fix:**
 ```bash
-git remote set-url origin https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git
+git remote set-url origin https://github.com/DAMIANSEGUIN/wimd-render-deploy.git
 git remote -v  # Verify URL is clean
 ```
 
@@ -115,8 +115,8 @@ git push origin main
 git remote -v
 
 # Should show:
-# origin  https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git (fetch)
-# origin  https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git (push)
+# origin  https://github.com/DAMIANSEGUIN/wimd-render-deploy.git (fetch)
+# origin  https://github.com/DAMIANSEGUIN/wimd-render-deploy.git (push)
 
 # Check credential helpers
 git config --list | grep credential
@@ -175,12 +175,12 @@ Claude Code's bash tool:
 ## Repository Remote URLs
 
 **Current setup:**
-- `origin`: https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git (main repo, triggers Railway)
-- `railway-origin`: https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git (legacy)
+- `origin`: https://github.com/DAMIANSEGUIN/wimd-render-deploy.git (main repo, triggers Render)
+- `render-origin`: https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git (legacy)
 
 **Which to use:**
-- Push to `origin` (wimd-railway-deploy) - Railway watches this repo
-- `railway-origin` is no longer actively used
+- Push to `origin` (wimd-render-deploy) - Render watches this repo
+- `render-origin` is no longer actively used
 
 ---
 
@@ -191,7 +191,7 @@ Claude Code's bash tool:
 ```bash
 # Option 1: Use SSH instead of HTTPS
 # (Requires SSH key setup on GitHub)
-git remote set-url origin git@github.com:DAMIANSEGUIN/wimd-railway-deploy.git
+git remote set-url origin git@github.com:DAMIANSEGUIN/wimd-render-deploy.git
 git push origin main
 
 # Option 2: Push from GitHub Desktop

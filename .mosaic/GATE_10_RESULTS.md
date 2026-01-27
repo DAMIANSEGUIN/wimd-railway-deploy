@@ -32,12 +32,12 @@ curl -s https://whatismydelta.com | grep -o "ps101\|PS101"
 ```bash
 curl https://whatismydelta.com/health
 ```
-**Result**: 404 - Application not found (proxies to Railway URL which is down)
+**Result**: 404 - Application not found (proxies to Render URL which is down)
 **Status**: ❌ FAIL
 
 **Root Cause**:
-- netlify.toml redirects point to: `https://what-is-my-delta-site-production.up.railway.app`
-- Railway backend returns: 404
+- netlify.toml redirects point to: `https://what-is-my-delta-site-production.up.render.app`
+- Render backend returns: 404
 - Backend appears to not be deployed anywhere accessible
 - Frontend hardcoded API URL points to: `https://mosaic-platform.vercel.app` (Vite+React app, not API)
 
@@ -80,7 +80,7 @@ pass_conditions:
 **Current State**: No accessible backend found
 
 **Evidence searched**:
-1. Railway URL (from netlify.toml): Returns 404
+1. Render URL (from netlify.toml): Returns 404
 2. Render deployment: No render.yaml found, no deployment detected
 3. Vercel URL (from frontend code): Returns React app (not API backend)
 
@@ -91,7 +91,7 @@ pass_conditions:
 
 **Recommended Action**:
 - Locate actual backend deployment
-- OR deploy backend to Render/Railway/Vercel
+- OR deploy backend to Render/Render/Vercel
 - Update netlify.toml redirects
 - Update frontend API_BASE variable
 - Re-run GATE_10

@@ -9,21 +9,21 @@
 ### 1. **Main Project README**
 
 **File:** `README.md`
-**Path:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/README.md`
+**Path:** `/Users/damianseguin/WIMD-Deploy-Project/README.md`
 **Purpose:** Project overview, quick start, safety protocols, and essential documentation links
 **Start here for:** General project context and architecture understanding
 
 ### 2. **Complete File Reference** (NEW)
 
 **File:** `.ai-agents/NETLIFY_RUNNER_FILE_REFERENCE_2025-11-06.md`
-**Path:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/NETLIFY_RUNNER_FILE_REFERENCE_2025-11-06.md`
+**Path:** `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/NETLIFY_RUNNER_FILE_REFERENCE_2025-11-06.md`
 **Purpose:** **Complete list of all files with exact paths** - deployment scripts, verification scripts, source files, config files, documentation
 **Start here for:** Finding specific files and their exact locations
 
 ### 3. **Deployment Handoff Instructions**
 
 **File:** `.ai-agents/HANDOFF_NETLIFY_RUNNER_2025-11-06.md`
-**Path:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/HANDOFF_NETLIFY_RUNNER_2025-11-06.md`
+**Path:** `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/HANDOFF_NETLIFY_RUNNER_2025-11-06.md`
 **Purpose:** Step-by-step execution instructions for the current deployment task
 **Start here for:** What to do right now
 
@@ -85,7 +85,7 @@
 **Quick access:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ls -la scripts/                    # Deployment scripts
 ls -la mosaic_ui/                 # Frontend source
 ls -la .ai-agents/                # Documentation

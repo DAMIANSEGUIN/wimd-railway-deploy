@@ -137,7 +137,7 @@ Transform career transitions through AI-powered personalized coaching and struct
 ### **3.1 Current Platform Status**
 
 - **Frontend**: Netlify deployment (<https://whatismydelta.com>)
-- **Backend**: FastAPI on Railway with SQLite database
+- **Backend**: FastAPI on Render with SQLite database
 - **AI Integration**: OpenAI GPT-4, Anthropic Claude, RAG engine
 - **Authentication**: Complete user management system
 - **Cost Controls**: Usage tracking and rate limiting

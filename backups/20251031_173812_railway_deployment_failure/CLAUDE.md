@@ -4,20 +4,20 @@
 
 - Microservices architecture: Foundation (Safety & Evidence) + Mosaic (Career Transition Platform)
 - Production URL: <https://whatismydelta.com> (LIVE ✅)
-- Backend API: Railway deployment at what-is-my-delta-site-production.up.railway.app
+- Backend API: Render deployment at what-is-my-delta-site-production.up.render.app
 - Frontend: Netlify deployment (resonant-crostata-90b706)
-- Repository: github.com/DAMIANSEGUIN/wimd-railway-deploy
+- Repository: github.com/DAMIANSEGUIN/wimd-render-deploy
 
 ## Deployment Status (v2.0 Phase 1-4+ - PRODUCTION)
 
 - ✅ Frontend: Fully deployed and functional
-- ✅ Backend API: Railway deployment operational
+- ✅ Backend API: Render deployment operational
 - ✅ Authentication: Login/register/password reset flows working
 - ✅ Chat/Coach: Career coaching chat interface operational
 - ✅ File Upload: Resume/document upload functional
 - ✅ Interactive UI: ALL navigation working (explore, find, apply, chat, guide, upload)
 - ✅ Trial Mode: 5-minute trial for unauthenticated users
-- ✅ Proxy Configuration: Netlify → Railway API routes configured
+- ✅ Proxy Configuration: Netlify → Render API routes configured
 - ✅ Phase 1: Migration framework + CSV→AI fallback + feature flags
 - ✅ Phase 2: Experiment engine backend (feature flag disabled)
 - ✅ Phase 3: Self-efficacy metrics + coach escalation + Focus Stack UI
@@ -45,7 +45,7 @@
 
 - ✅ UI frontend: OPERATIONAL
 - ✅ Chat/Coach interface: OPERATIONAL
-- ✅ Backend API: OPERATIONAL (FastAPI on Railway)
+- ✅ Backend API: OPERATIONAL (FastAPI on Render)
 - ✅ Authentication: OPERATIONAL (with password reset)
 - ✅ File handling: OPERATIONAL
 - ✅ Self-efficacy metrics: OPERATIONAL (backend + UI toggle)
@@ -153,7 +153,7 @@
 ## Resolved Issues (v1.0 + v2.0 Phase 1-3)
 
 - ✅ **BLOCKER-UI-ASK**: Chat/coach interface now operational
-- ✅ **BLOCKER-API-BACKEND**: Backend deployed on Railway and connected
+- ✅ **BLOCKER-API-BACKEND**: Backend deployed on Render and connected
 - ✅ **Button functionality**: All Phase 1-3 interactive elements working
 - ✅ **Cache management**: Browser caching disabled for proper updates
 - ✅ **Trial mode**: Unauthenticated users get 5-minute trial period
@@ -162,31 +162,31 @@
 - ✅ **Phase 3**: Self-efficacy metrics + coach escalation + Focus Stack UI deployed
 - ✅ **Password reset**: Forgot password flow implemented (email service pending)
 - ✅ **CSV lookup fix**: Fixed prompt selector to properly handle response/completion fields (api/prompt_selector.py:118)
-- ✅ **Auto-restart monitoring**: Railway health checks with automatic restart on prompt system failure
+- ✅ **Auto-restart monitoring**: Render health checks with automatic restart on prompt system failure
 
 ## Monitoring & Auto-Restart System
 
-- **Railway Health Checks**: Configured via `railway.toml` with `/health` endpoint monitoring
+- **Render Health Checks**: Configured via `render.toml` with `/health` endpoint monitoring
 - **Automatic Recovery**: System attempts cache clearing and flag reset on failure
 - **Multi-layer Monitoring**:
-  - `/health` - Basic health with 503 status on failure (triggers Railway restart)
+  - `/health` - Basic health with 503 status on failure (triggers Render restart)
   - `/health/comprehensive` - Detailed monitoring with failure rate tracking
   - `/health/recover` - Manual recovery endpoint for system fixes
 - **Failure Detection**: Tests actual prompt responses, not just API availability
 - **Health Logging**: Stores failure history in `prompt_health_log` table
 - **Recovery Actions**: Cache clearing, feature flag reset, database connectivity checks
-- **Auto-restart Triggers**: 503 HTTP status codes automatically trigger Railway container restart
+- **Auto-restart Triggers**: 503 HTTP status codes automatically trigger Render container restart
 
 ## Technical Implementation Notes
 
 - Frontend uses vanilla JavaScript (ES6+) with IIFE pattern
 - Event listeners use null checks to prevent script crashes
 - Semantic search uses OpenAI embeddings with cosine similarity
-- **Database backend: PostgreSQL (Railway managed service)**
-  - Connection string via `DATABASE_URL` environment variable (railway.internal)
+- **Database backend: PostgreSQL (Render managed service)**
+  - Connection string via `DATABASE_URL` environment variable (render.internal)
   - Context manager pattern required: `with get_conn() as conn:`
   - PostgreSQL syntax: `%s` parameter placeholders, `SERIAL` auto-increment
-  - SQLite fallback only for local development (ephemeral on Railway)
+  - SQLite fallback only for local development (ephemeral on Render)
 - Auto-save functionality for user session data
 - localStorage for client-side session persistence
 - Trial timer persists across page refreshes via localStorage
@@ -194,7 +194,7 @@
 ## Known Limitations (v1.0)
 
 - No staging environment (direct to production deployment)
-- API keys stored in Railway environment variables (secure but not rotated)
+- API keys stored in Render environment variables (secure but not rotated)
 - CSV prompt library integration incomplete
 - No automated testing pipeline
 - Browser requirement: Chrome 55+, Firefox 52+, Safari 10.1+, Edge 15+ (2017+)
@@ -204,7 +204,7 @@
 - Safety layer: Data Ops + LLM for evidence validation (pending)
 - Evidence Bridge: Connect classical ML scoring with LLM generation (pending)
 - Governance: Eval traces for observability (pending)
-- Security: API keys managed via Railway environment variables
+- Security: API keys managed via Render environment variables
 
 ## Recent Changes (2025-10-07)
 
@@ -217,7 +217,7 @@
    - 6 web scraping sources using BeautifulSoup4 + CSS selectors
    - Added `requests` and `beautifulsoup4` to requirements.txt
 4. **Feature Flags Updated**: Enabled RAG_BASELINE + JOB_SOURCES_STUBBED_ENABLED
-5. **Deployed to Production**: Pushed to Railway, health check confirms deployment successful
+5. **Deployed to Production**: Pushed to Render, health check confirms deployment successful
 
 ## Next Steps for v2.0 Phase 4+
 

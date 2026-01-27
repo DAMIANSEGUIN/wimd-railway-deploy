@@ -3,7 +3,7 @@
 **Copy-paste this to Claude Code to resume exactly where we left off**
 
 **Last Updated:** 2025-12-15
-**Status:** Railway Reset - Critical CLI Blocker - Awaiting User Intervention
+**Status:** Render Reset - Critical CLI Blocker - Awaiting User Intervention
 
 ---
 
@@ -11,17 +11,17 @@
 
 **Where We Are:**
 
-- User received Railway reset spec from ChatGPT (MOSAIC_RAILWAY_RESET_SPEC v1.0)
+- User received Render reset spec from ChatGPT (MOSAIC_RAILWAY_RESET_SPEC v1.0)
 - Claude Code completed PHASE 1 (forensic confirmation)
 - Claude Code created validation handoff for Gemini
-- **Critical Railway CLI linking ambiguity detected (see RAILWAY_CLI_AMBIGUITY_REPORT.md for details), blocking further CLI-based operations.**
+- **Critical Render CLI linking ambiguity detected (see RAILWAY_CLI_AMBIGUITY_REPORT.md for details), blocking further CLI-based operations.**
 - **HALTED at governance approval gate (TEAM_PLAYBOOK_v2 Section 4.1) and CLI functionality.**
 
 **Critical State:**
 
-- Railway deployment is BROKEN (wrong GitHub repo connected)
+- Render deployment is BROKEN (wrong GitHub repo connected)
 - Current service watches: `what-is-my-delta-site` (legacy repo)
-- Development happens in: `wimd-railway-deploy` (26+ commits not deployed)
+- Development happens in: `wimd-render-deploy` (26+ commits not deployed)
 - PostgreSQL status: UNKNOWN (needs Gemini validation) - **Validation blocked by CLI ambiguity.**
 
 ---
@@ -29,14 +29,14 @@
 ## PROMPT FOR NEXT SESSION
 
 ```
-Read this file: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
+Read this file: /Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
 
-Current task: Railway Reset (ChatGPT spec execution)
+Current task: Render Reset (ChatGPT spec execution)
 
-Your role: Resolve Railway CLI linking ambiguity, then proceed with Railway Reset validation.
+Your role: Resolve Render CLI linking ambiguity, then proceed with Render Reset validation.
 
 CRITICAL: DO NOT proceed with validations or Phase 2 without:
-1. Railway CLI linking ambiguity resolved.
+1. Render CLI linking ambiguity resolved.
 2. User explicit approval.
 
 Reference CLI ambiguity report: .ai-agents/RAILWAY_CLI_AMBIGUITY_REPORT.md
@@ -51,11 +51,11 @@ Reference version endpoint clarification: .ai-agents/VERSION_ENDPOINT_CLARIFICAT
 
 **Phase 1: Forensic Confirmation**
 
-- Railway CLI scope verified: `wimd-career-coaching` project, `what-is-my-delta-site` service
-- 7 Railway projects detected (6 obsolete)
-- Git remotes confirmed: origin (active) vs railway-origin (legacy)
+- Render CLI scope verified: `wimd-career-coaching` project, `what-is-my-delta-site` service
+- 7 Render projects detected (6 obsolete)
+- Git remotes confirmed: origin (active) vs render-origin (legacy)
 - Service status: 404 (not responding)
-- Environment variables backed up: `/tmp/railway_env_backup.json`
+- Environment variables backed up: `/tmp/render_env_backup.json`
 - Repository divergence confirmed: 26+ commits not deployed
 
 **Documentation Created:**
@@ -69,10 +69,10 @@ Reference version endpoint clarification: .ai-agents/VERSION_ENDPOINT_CLARIFICAT
 
 ### ⏳ IN PROGRESS (BLOCKING)
 
-**Primary Blocker:** Railway CLI linking ambiguity
+**Primary Blocker:** Render CLI linking ambiguity
 
-- `railway list` sees `wimd-career-coaching`.
-- `railway link -p "wimd-career-coaching"` reports "Project not found".
+- `render list` sees `wimd-career-coaching`.
+- `render link -p "wimd-career-coaching"` reports "Project not found".
 - This blocks all CLI-based operations within the correct project context.
 
 **Gemini Validation Tasks (BLOCKED):**
@@ -83,7 +83,7 @@ Reference version endpoint clarification: .ai-agents/VERSION_ENDPOINT_CLARIFICAT
 
 **Phase 2-7 Execution:**
 
-- Phase 2: Create new Railway service (dashboard action)
+- Phase 2: Create new Render service (dashboard action)
 - Phase 3: Migrate environment variables
 - Phase 4: Deploy via terminal
 - Phase 5: Verify runtime identity
@@ -96,8 +96,8 @@ Reference version endpoint clarification: .ai-agents/VERSION_ENDPOINT_CLARIFICAT
 
 ### 🛑 CRITICAL BLOCKERS (Must Resolve Before Proceeding)
 
-1. **Railway CLI Linking Ambiguity**
-    - **Description:** `railway list` detects `wimd-career-coaching`, but `railway link -p "wimd-career-coaching"` fails ("Project not found").
+1. **Render CLI Linking Ambiguity**
+    - **Description:** `render list` detects `wimd-career-coaching`, but `render link -p "wimd-career-coaching"` fails ("Project not found").
     - **Impact:** Prevents CLI-based operations within the project, blocking Gemini's validation tasks and subsequent deployment phases.
     - **Resolution:** Requires user intervention to resolve the CLI linking issue (e.g., manual link via interactive CLI, investigation of duplicate projects, or user linking the project and handing back control).
 
@@ -174,7 +174,7 @@ Reference version endpoint clarification: .ai-agents/VERSION_ENDPOINT_CLARIFICAT
 **Working Directory:**
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ```
 
 **Current Git State:**
@@ -182,24 +182,24 @@ Reference version endpoint clarification: .ai-agents/VERSION_ENDPOINT_CLARIFICAT
 ```
 HEAD: 684dad3 (Dec 14)
 Branch: main
-Remote origin: wimd-railway-deploy (correct repo)
-Remote railway-origin: what-is-my-delta-site (legacy, wrong repo)
+Remote origin: wimd-render-deploy (correct repo)
+Remote render-origin: what-is-my-delta-site (legacy, wrong repo)
 ```
 
-**Railway State:**
+**Render State:**
 
 ```
 Project: wimd-career-coaching
 Service: what-is-my-delta-site (404, not responding)
 PostgreSQL: Unknown scope (awaiting validation - BLOCKED by CLI ambiguity)
-Env vars backup: /tmp/railway_env_backup.json (10 variables)
+Env vars backup: /tmp/render_env_backup.json (10 variables)
 ```
 
 **Deployment Issue:**
 
 ```
-Railway watches: what-is-my-delta-site repo (wrong)
-Should watch: wimd-railway-deploy repo (correct)
+Render watches: what-is-my-delta-site repo (wrong)
+Should watch: wimd-render-deploy repo (correct)
 Commits not deployed: 26+ (since Nov 11)
 ```
 
@@ -212,7 +212,7 @@ Commits not deployed: 26+ (since Nov 11)
 **If restarting fresh session:**
 
 1. Read this file completely.
-2. Address the Railway CLI linking ambiguity first (see `CRITICAL BLOCKERS` above).
+2. Address the Render CLI linking ambiguity first (see `CRITICAL BLOCKERS` above).
 3. **DO NOT proceed with validations or Phase 2 until the CLI ambiguity is resolved and user approval is received.**
 
 **After CLI ambiguity resolved AND user approval received:**
@@ -224,15 +224,15 @@ Commits not deployed: 26+ (since Nov 11)
 
 ### For Gemini
 
-**Task:** Currently blocked by Railway CLI linking ambiguity. Awaiting user intervention to resolve CLI.
+**Task:** Currently blocked by Render CLI linking ambiguity. Awaiting user intervention to resolve CLI.
 
 ### For User
 
 **Waiting on you for:**
 
-1. **CRITICAL:** Resolve the Railway CLI linking ambiguity. This might involve:
-    - Manually linking the project using the interactive `railway link` command (`railway link`).
-    - Investigating if a duplicate project entry in `railway list` is causing the issue.
+1. **CRITICAL:** Resolve the Render CLI linking ambiguity. This might involve:
+    - Manually linking the project using the interactive `render link` command (`render link`).
+    - Investigating if a duplicate project entry in `render list` is causing the issue.
     - Linking the project and then handing control back to me (Gemini).
 2. Review Gemini's validation report when ready (after CLI fixed).
 3. Answer questions (service name, migration strategy, PostgreSQL risk).
@@ -242,10 +242,10 @@ Commits not deployed: 26+ (since Nov 11)
 
 ## OPEN QUESTIONS (USER MUST ANSWER)
 
-1. **CRITICAL:** How should the Railway CLI linking ambiguity be resolved?
+1. **CRITICAL:** How should the Render CLI linking ambiguity be resolved?
     - Confirm if you can manually link the `wimd-career-coaching` project.
-    - Confirm if there are any duplicate entries in `railway list` that might interfere.
-2. **Service Name:** What should the new canonical Railway service be named?
+    - Confirm if there are any duplicate entries in `render list` that might interfere.
+2. **Service Name:** What should the new canonical Render service be named?
     - Suggestion: `mosaic-backend`
     - Alternative: Keep `what-is-my-delta-site` (delete old one first)
 3. **Migration Strategy:** Gradual or clean-slate?
@@ -253,7 +253,7 @@ Commits not deployed: 26+ (since Nov 11)
     - Clean-slate: Delete old immediately after new is created
 4. **PostgreSQL Risk:** How to handle if validation shows service-level scope?
     - Conservative: Export database before creating service
-    - Moderate: Verify with Railway support first
+    - Moderate: Verify with Render support first
     - Aggressive: Create service and test DATABASE_URL access live
 5. **Spec Ambiguities:** What do these mean?
     - "Service identity tainted" - what technical property?
@@ -267,7 +267,7 @@ Commits not deployed: 26+ (since Nov 11)
 2. ✅ Created clear handoff for Gemini (explicitly highlighting new blocker)
 3. ✅ Backed up critical data (env vars)
 4. ✅ Identified deployment root cause (wrong repo connection)
-5. ✅ Discovered and reported critical Railway CLI linking ambiguity, preventing wasted effort.
+5. ✅ Discovered and reported critical Render CLI linking ambiguity, preventing wasted effort.
 
 ## WHAT WENT WRONG THIS SESSION
 
@@ -287,7 +287,7 @@ Commits not deployed: 26+ (since Nov 11)
 
 ### For Claude Code
 
-- 🛑 **DO NOT** create new Railway services without approval
+- 🛑 **DO NOT** create new Render services without approval
 - 🛑 **DO NOT** deploy anything without approval
 - 🛑 **DO NOT** modify code without approval
 - 🛑 **DO NOT** proceed to Phase 2 until **CLI linking ambiguity resolved** and both gates clear:
@@ -314,6 +314,6 @@ Commits not deployed: 26+ (since Nov 11)
 
 **END OF SESSION RESUME PROMPT**
 
-**Status:** Railway Reset - Critical CLI Blocker - Awaiting User Intervention
-**Next Session:** Read this file, resolve CLI ambiguity, then proceed with Railway Reset.
+**Status:** Render Reset - Critical CLI Blocker - Awaiting User Intervention
+**Next Session:** Read this file, resolve CLI ambiguity, then proceed with Render Reset.
 **Governance:** Halted at TEAM_PLAYBOOK_v2 Section 4.1 approval gate due to CLI ambiguity.

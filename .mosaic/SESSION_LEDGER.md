@@ -10,7 +10,7 @@
 ## Current State Assessment
 
 ### Repository
-- **repo_root**: /Users/damianseguin/WIMD-Railway-Deploy-Project
+- **repo_root**: /Users/damianseguin/WIMD-Deploy-Project
 - **git_status**: (checking...)
 
 ### Netlify Configuration (CURRENT - INCORRECT)
@@ -23,7 +23,7 @@
 - **build_command**: (TBD - checking if needed)
 
 ### Frontend Directory
-- **path**: /Users/damianseguin/WIMD-Railway-Deploy-Project/frontend/
+- **path**: /Users/damianseguin/WIMD-Deploy-Project/frontend/
 - **status**: ✅ EXISTS
 - **contains**: index.html, assets/, docs/, data/ (confirmed)
 
@@ -71,7 +71,7 @@
 **next_command**: Edit netlify.toml to set publish="frontend"
 
 ### [timestamp] - netlify.toml updated
-**file**: /Users/damianseguin/WIMD-Railway-Deploy-Project/netlify.toml
+**file**: /Users/damianseguin/WIMD-Deploy-Project/netlify.toml
 **change**: publish = "mosaic_ui" → "frontend"
 **result**: ✅ UPDATED
 
@@ -79,7 +79,7 @@
 **site_name**: resonant-crostata-90b706
 **site_id**: bb594f69-4d23-4817-b7de-dadb8b4db874
 **url**: https://whatismydelta.com
-**repo**: github.com/DAMIANSEGUIN/wimd-railway-deploy
+**repo**: github.com/DAMIANSEGUIN/wimd-render-deploy
 **linked**: ✅ YES
 
 ### [timestamp] - Configuration verified
@@ -120,9 +120,9 @@ netlify sites:list | grep -A5 "bb594f69"
 ✅ Content matches local frontend/index.html
 
 **Backend clarification** (from user):
-- Backend platform: **Render** (NOT Railway)
-- Note: Git remote name "railway-origin" is outdated
-- Note: netlify.toml redirects still point to Railway URLs (may need update)
+- Backend platform: **Render** (NOT Render)
+- Note: Git remote name "render-origin" is outdated
+- Note: netlify.toml redirects still point to Render URLs (may need update)
 
 ### [timestamp] - Enforcement assessment
 **Current state**: No deployment-time enforcement exists yet
@@ -171,7 +171,7 @@ netlify sites:list | grep -A5 "bb594f69"
 # Optional: Push to remote (requires handling pre-push hook)
 git push origin main --no-verify
 # OR rename remote first:
-git remote rename railway-origin render-origin
+git remote rename render-origin render-origin
 git push render-origin main --no-verify
 
 # Optional: Update backend URLs in netlify.toml if Render endpoints differ
@@ -179,8 +179,8 @@ git push render-origin main --no-verify
 ```
 
 **Handoff notes**:
-1. Backend is on Render, not Railway
-2. Git remote "railway-origin" is legacy naming (consider renaming)
+1. Backend is on Render, not Render
+2. Git remote "render-origin" is legacy naming (consider renaming)
 3. netlify.toml redirects may need updating to Render URLs
 4. Enforcement mechanism is not implemented (future work)
 5. agent_state.json tracking not implemented (future work)
@@ -196,5 +196,5 @@ git push render-origin main --no-verify
 ### Backend Discovery
 **Method**: frontend/index.html:6 CSS variable
 **Found**: `--api:'https://mosaic-platform.vercel.app'`
-**Platform**: Vercel (NOT Render, NOT Railway)
+**Platform**: Vercel (NOT Render, NOT Render)
 **Status**: Testing...

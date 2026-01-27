@@ -292,7 +292,7 @@ git push origin prod-$(date +%Y-%m-%d)
 **Start session:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 cat AI_RESUME_STATE.md
 ```
 

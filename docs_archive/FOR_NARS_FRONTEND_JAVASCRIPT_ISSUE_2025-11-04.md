@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 - **Production:** <https://whatismydelta.com/>
 - **Netlify Deploy:** <https://690b7fb2d3d6614c26abbb66--resonant-crostata-90b706.netlify.app/>
-- **Repository:** github.com/DAMIANSEGUIN/wimd-railway-deploy
+- **Repository:** github.com/DAMIANSEGUIN/wimd-render-deploy
 - **Commit:** 180bbfd
 
 ## Files to Review

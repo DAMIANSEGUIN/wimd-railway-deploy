@@ -7,7 +7,7 @@
 - Exit confirmation: User says "I'm done" → confirmation → "yes" → exits
 - Cache disabled: No more "Cached response" placeholders
 - Compliant users advance through steps correctly
-- Deployed to production on railway-origin main
+- Deployed to production on render-origin main
 
 ### What's Broken ❌
 
@@ -28,7 +28,7 @@ Want: TEST 2 shows `✓ Tangent detected: True`
 
 ### Deploy
 
-`git add -A && git commit -m "msg" && git push railway-origin main`
+`git add -A && git commit -m "msg" && git push render-origin main`
 Wait 90 seconds, re-test
 
 ### Files Changed This Session

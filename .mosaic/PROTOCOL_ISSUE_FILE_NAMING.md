@@ -45,7 +45,7 @@ When someone says "pre-push", which file do they mean?
 
 ```
 MANDATORY_AGENT_BRIEFING.md:
-❌ WRONG: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/api/index.py
+❌ WRONG: /Users/damianseguin/WIMD-Deploy-Project/api/index.py
 ✅ CORRECT: api/index.py
 ```
 

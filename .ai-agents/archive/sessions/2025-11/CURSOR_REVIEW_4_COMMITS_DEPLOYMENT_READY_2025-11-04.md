@@ -147,7 +147,7 @@
 
 **Ready for:**
 
-- ✅ `./scripts/push.sh railway-origin main`
+- ✅ `./scripts/push.sh render-origin main`
 - ✅ Dry-run testing of full pipeline
 - ✅ Production deployment
 
@@ -166,7 +166,7 @@ All 4 commits are:
 - Documented
 - Ready for deployment
 
-**Recommendation:** Proceed with deployment via `./scripts/push.sh railway-origin main`
+**Recommendation:** Proceed with deployment via `./scripts/push.sh render-origin main`
 
 ---
 

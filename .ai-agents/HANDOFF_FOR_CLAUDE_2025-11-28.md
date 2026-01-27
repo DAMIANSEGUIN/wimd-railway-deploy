@@ -10,19 +10,19 @@ The immediate priority is to resolve the JavaScript hoisting issue that is block
 
 ## Current Priority Issues (P0)
 
-1. **Login diagnostic deployment:** Commit `b7e042c` is awaiting Railway deploy.
+1. **Login diagnostic deployment:** Commit `b7e042c` is awaiting Render deploy.
 2. **PS101 hoisting bug:** Baseline is `pre-ps101-fix_20251126_220704Z`.
 
 ## Git Repository
 
-* **Primary:** `https://github.com/DAMIANSEGUIN/wimd-railway-deploy`
+* **Primary:** `https://github.com/DAMIANSEGUIN/wimd-render-deploy`
 * **Branch:** `phase1-incomplete` (currently has 30 uncommitted files)
-* **Remote:** `origin` (triggers Railway auto-deploy on push)
+* **Remote:** `origin` (triggers Render auto-deploy on push)
 
 ## Production State
 
 * **Frontend:** `https://whatismydelta.com` (Netlify) - Status: Healthy ✅
-* **Backend:** `https://what-is-my-delta-site-production.up.railway.app` (Railway) - Status: Healthy ✅
+* **Backend:** `https://what-is-my-delta-site-production.up.render.app` (Render) - Status: Healthy ✅
 
 ## Key Context
 

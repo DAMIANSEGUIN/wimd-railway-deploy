@@ -27,7 +27,7 @@ schema_version: v1.0
 ### PG_CONNECTION_FAILED
 
 **Symptom:** App using SQLite fallback
-**Fix:** Verify DATABASE_URL contains `railway.internal`
+**Fix:** Verify DATABASE_URL contains `render.internal`
 
 ### CONTEXT_MANAGER_BUG
 
@@ -43,7 +43,7 @@ schema_version: v1.0
 
 ### Production Down
 
-1. Check Railway dashboard - service running?
+1. Check Render dashboard - service running?
 2. Check deploy logs for error
 3. Rollback: `git revert HEAD && git push origin main`
 
@@ -51,12 +51,12 @@ schema_version: v1.0
 
 1. Check if PostgreSQL connected (logs for STORAGE messages)
 2. If SQLite: no recovery (ephemeral)
-3. Ensure DATABASE_URL uses railway.internal
+3. Ensure DATABASE_URL uses render.internal
 
 ## Quick Commands
 
 ```bash
-railway logs                    # View logs
+render logs                    # View logs
 curl /health                    # Check health
 git checkout prod-2025-11-18   # Rollback
 ```

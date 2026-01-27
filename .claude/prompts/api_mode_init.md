@@ -13,12 +13,12 @@ MANDATORY ACTIONS - Execute in this exact order:
 
 1. DETECT AND DECLARE MODE
    - Confirm you have tool access (Bash, Read, Write, etc.)
-   - Confirm you can access local filesystem at /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+   - Confirm you can access local filesystem at /Users/damianseguin/WIMD-Deploy-Project
    - State explicitly: "API MODE DETECTED - Initializing governance protocols"
 
 2. LOAD PROJECT IDENTITY
-   - Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/AI_START_HERE.txt
-   - Confirm project name: Mosaic Platform (WIMD Railway Deploy)
+   - Read: /Users/damianseguin/WIMD-Deploy-Project/AI_START_HERE.txt
+   - Confirm project name: Mosaic Platform (WIMD Render Deploy)
    - Confirm your role: Infrastructure & Deployment Engineer (Claude Code)
 
 3. LOAD GOVERNANCE FILES (Read each file completely, do not skip)

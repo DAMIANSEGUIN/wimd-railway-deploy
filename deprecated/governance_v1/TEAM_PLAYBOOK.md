@@ -71,17 +71,17 @@
 1. **[RESOLVED]** Schema version mismatch – `/config` in production still returns `\"v1\"`. (Resolved by successful deployment and local code update to v2.)
 2. **[RESOLVED]** Critical Security Vulnerability (`/api/ps101/extract-context` lacks authentication). (Resolved in `api/ps101.py`).
 3. **[RESOLVED]** Critical Resilience Flaw (Claude API call lacks timeout/retry). (Resolved in `api/ps101.py`).
-4. **[AUTOMATION][OPEN]** GitHub → Railway auto-deploy trigger is not working. Pushes to `origin/main` do not trigger a new deployment. (Investigation and fix is part of current tasks.)
-5. **[RESOLVED]** Railway configuration consolidated (railway.toml canonical).
+4. **[AUTOMATION][OPEN]** GitHub → Render auto-deploy trigger is not working. Pushes to `origin/main` do not trigger a new deployment. (Investigation and fix is part of current tasks.)
+5. **[RESOLVED]** Render configuration consolidated (render.toml canonical).
 5. **[NEW]** No new blockers beyond the two existing deployment issues. (Discovered: 2025-12-04_21-12-41)
 
 **LAST SESSION ACCOMPLISHED**:
 
-- Completed SESSION_START gate work, documented mosaic-diag v2 completion and Gemini handoff, and guided Gemini on next investigative steps for the GitHub→Railway auto-deploy blocker.
+- Completed SESSION_START gate work, documented mosaic-diag v2 completion and Gemini handoff, and guided Gemini on next investigative steps for the GitHub→Render auto-deploy blocker.
 
 **NEXT TASK (After Blockers Resolved)**:
 
-- Next session should inspect Railway dashboard + GitHub webhook logs to restore auto-deploy, then resolve the production schema mismatch once deploy path is stable.
+- Next session should inspect Render dashboard + GitHub webhook logs to restore auto-deploy, then resolve the production schema mismatch once deploy path is stable.
 
 ### What's NOT Changing (Do Not Touch)
 
@@ -89,7 +89,7 @@
 - ✅ Job search functionality
 - ✅ Resume optimization features
 - ✅ Frontend UI structure (Netlify deployment)
-- ✅ Railway infrastructure configuration
+- ✅ Render infrastructure configuration
 
 ### Sprint Documentation Pointers
 
@@ -136,7 +136,7 @@
 **Access**:
 
 - Full codebase read/write
-- Railway deployment execution
+- Render deployment execution
 - PostgreSQL database operations
 - Git operations
 
@@ -145,7 +145,7 @@
 - Write code for MVP features
 - Create database migrations
 - Build API endpoints
-- Execute Railway deployments
+- Execute Render deployments
 - Write inline documentation with version tracking
 - Create backups before major changes
 - Run tests locally and in production
@@ -187,11 +187,11 @@
 **Communication Protocol with User**:
 
 - **ALWAYS provide FULL paths in ALL commands** - NEVER use relative paths like `./scripts/` or assume current directory
-  - ✅ CORRECT: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/deploy.sh`
+  - ✅ CORRECT: `/Users/damianseguin/WIMD-Deploy-Project/scripts/deploy.sh`
   - ❌ WRONG: `./scripts/deploy.sh` (requires user to cd first)
   - This is a RECURRING issue - full paths are MANDATORY in all terminal commands
 - **NEVER add line breaks in file paths or commands** - user copies from markdown, line breaks cause command failures
-  - ✅ CORRECT: Single line, no wrapping: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/diagnose_railway_autodeploy.sh`
+  - ✅ CORRECT: Single line, no wrapping: `/Users/damianseguin/WIMD-Deploy-Project/scripts/diagnose_render_autodeploy.sh`
   - ❌ WRONG: Line break in path causes terminal to split it into multiple commands
   - Keep all paths and commands on ONE LINE even if long
 - **If user uses incorrect terminology**: Interpret intent, respond to what they meant, then gently correct
@@ -464,7 +464,7 @@
 - ✅ **Database Patterns** (Section 6)
 - ✅ **Version Tracking Protocol** (Section 7)
 
-### Before Deploying to Railway (Claude Code)
+### Before Deploying to Render (Claude Code)
 
 - ✅ **Deployment Checklist** (Section 8)
 - ✅ **Rollback Procedures** (Section 9)
@@ -495,7 +495,7 @@ All other scripts have been moved to `scripts/archive` for historical purposes a
 ### Deployment
 
 - **`scripts/deploy.sh`**: The main deployment wrapper. This is the entry point for all deployments.
-  - **Usage**: `./scripts/deploy.sh <railway|netlify|all>`
+  - **Usage**: `./scripts/deploy.sh <render|netlify|all>`
 
 ### Verification
 
@@ -515,7 +515,7 @@ All other scripts have been moved to `scripts/archive` for historical purposes a
 
 ### Python Environment Requirements
 
-**CRITICAL**: Local development requires Python 3.9+ with SSL support. Railway uses Python 3.11 (nixpacks.toml).
+**CRITICAL**: Local development requires Python 3.9+ with SSL support. Render uses Python 3.11 (nixpacks.toml).
 
 ### Setup Protocol (Run BEFORE any local development)
 
@@ -530,7 +530,7 @@ brew reinstall python@3.12 openssl@3  # macOS Homebrew
 apt-get install python3.12 python3.12-dev libssl-dev  # Ubuntu/Debian
 
 # 2. Create virtual environment
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 python3 -m venv .venv
 
 # 3. Activate
@@ -736,8 +736,8 @@ except Exception:
 **Why This Exists**:
 
 - Silent failures are impossible to debug in production
-- Railway logs are the only way to diagnose production issues
-- Print statements don't appear in Railway logs (use logger)
+- Render logs are the only way to diagnose production issues
+- Print statements don't appear in Render logs (use logger)
 
 **Logging Best Practices**:
 
@@ -1111,7 +1111,7 @@ WHERE tablename IN ('ps101_responses', 'user_contexts');
 -- VERSION: Reverts from v2.0.0 back to v1.0.0
 
 -- WARNING: This will delete all PS101 responses and user contexts
--- BACKUP: Ensure Railway PostgreSQL backup exists before running
+-- BACKUP: Ensure Render PostgreSQL backup exists before running
 
 DROP TABLE IF EXISTS user_contexts CASCADE;
 DROP TABLE IF EXISTS ps101_responses CASCADE;
@@ -1431,7 +1431,7 @@ echo "💾 Update START_HERE.md and api/index.py"
 
 ### Pre-Deployment Checklist (MANDATORY)
 
-**Complete ALL items before `git push railway-origin main`:**
+**Complete ALL items before `git push render-origin main`:**
 
 ```
 TESTS:
@@ -1488,11 +1488,11 @@ git commit -m "[MVP Day 1] Context extraction endpoint + schema v2"
 # 3. Create backup tag
 git tag -a backup-$(date +%Y%m%d-%H%M%S) -m "Pre-deploy backup: Day 1 context extraction"
 
-# 4. Push to Railway
-git push railway-origin main
+# 4. Push to Render
+git push render-origin main
 
 # 5. Monitor deployment
-railway logs --follow
+render logs --follow
 ```
 
 **Emergency Rollback Deployment**:
@@ -1500,7 +1500,7 @@ railway logs --follow
 ```bash
 # If production broken, rollback immediately
 git checkout backup-20251202-103000  # Last working tag
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 
 # Run database rollback if schema changed
 psql $DATABASE_URL < migrations/20251202_rollback.sql
@@ -1532,7 +1532,7 @@ curl -X POST https://whatismydelta.com/api/ps101/extract-context \
 # Should return: 404 (user not found) or 200 (context extracted)
 
 # 5. Monitor logs for 5 minutes
-railway logs --follow
+render logs --follow
 # Watch for: Errors, warnings, unexpected behavior
 ```
 
@@ -1546,20 +1546,20 @@ railway logs --follow
 
 ```bash
 # 1. Check build logs
-railway logs | grep ERROR
+render logs | grep ERROR
 
 # 2. Common failures and fixes
 #    - "psycopg2" error → DATABASE_URL not set or wrong format
 #    - "Module not found" → Missing dependency in requirements.txt
 #    - "Syntax error" → Python syntax error in code
-#    - "Port already in use" → Railway port config issue (shouldn't happen)
+#    - "Port already in use" → Render port config issue (shouldn't happen)
 
 # 3. Check environment variables
-railway variables | grep -E "DATABASE_URL|CLAUDE_API_KEY|OPENAI_API_KEY"
+render variables | grep -E "DATABASE_URL|CLAUDE_API_KEY|OPENAI_API_KEY"
 
 # 4. If unclear, rollback and investigate locally
 git checkout backup-20251202-103000
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 ```
 
 ---
@@ -1574,7 +1574,7 @@ git push railway-origin HEAD:main --force
 - ❌ Database operations failing (context manager violations)
 - ❌ New endpoint returns errors for valid requests
 - ❌ Existing functionality broken (auth, job search, resume)
-- ❌ Railway logs show repeated errors
+- ❌ Render logs show repeated errors
 - ❌ Context extraction <100% success rate (Day 1 blocker)
 
 **DO NOT wait to investigate - rollback first, investigate second**
@@ -1594,8 +1594,8 @@ cat START_HERE.md | grep "Last Backup"
 git tag -l | grep backup | tail -5
 # Output: Shows last 5 backup tags
 
-# Option C: Check Railway deployment history
-railway deployments
+# Option C: Check Render deployment history
+render deployments
 # Shows last successful deployment
 ```
 
@@ -1613,16 +1613,16 @@ if [ -d "$BACKUP_DIR" ]; then
     cp -r "$BACKUP_DIR"/* api/
     git add api/
     git commit -m "[ROLLBACK] Restored from $BACKUP_DIR"
-    git push railway-origin main
+    git push render-origin main
 fi
 
 # Option B: Revert to git tag
 TAG="backup-20251202-103000"
 git checkout $TAG
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 ```
 
-**Result**: Code restored to last working state, Railway re-deploys
+**Result**: Code restored to last working state, Render re-deploys
 
 ---
 
@@ -1666,7 +1666,7 @@ psql $DATABASE_URL -c "SELECT COUNT(*) FROM users;"
 # Should return: Count without error
 
 # 4. Monitor logs for 5 minutes
-railway logs --follow
+render logs --follow
 # Should show: No errors, normal operation
 ```
 
@@ -1705,11 +1705,11 @@ curl https://whatismydelta.com/health
 # Look for: "ok": false, error messages, version mismatch
 
 # 2. Recent logs
-railway logs --tail 100 | grep -E "ERROR|WARNING|CRITICAL"
+render logs --tail 100 | grep -E "ERROR|WARNING|CRITICAL"
 # Look for: Python exceptions, database errors, API failures
 
 # 3. Database connection
-railway logs | grep -i "storage\|postgres"
+render logs | grep -i "storage\|postgres"
 # Look for: "PostgreSQL connection pool created" (good) or "SQLite" (bad - fallback active)
 
 # 4. Recent deployments
@@ -1735,8 +1735,8 @@ git log --oneline -5
 | "syntax error at or near" | SQLite Syntax in PostgreSQL | Rollback, fix to PostgreSQL syntax |
 | 404 on new endpoint | Endpoint Not Registered | Verify FastAPI route decorator, restart |
 | Slow responses | Performance | Check database queries for N+1, missing indexes |
-| "Invalid API key" | Config Error | Verify Railway environment variables |
-| All endpoints broken | Infrastructure | Check Railway status, database connection |
+| "Invalid API key" | Config Error | Verify Render environment variables |
+| All endpoints broken | Infrastructure | Check Render status, database connection |
 
 ---
 
@@ -1758,7 +1758,7 @@ AttributeError: 'ConnectionPool' object has no attribute 'cursor'
 ```bash
 # 1. Rollback immediately (production broken)
 git checkout backup-20251202-103000
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 
 # 2. Find violations locally
 grep -rn "conn = get_conn()" api/
@@ -1993,7 +1993,7 @@ Option A (Wizard of Oz) - Recommended by Gemini, de-risks timeline
 **Changes**:
 
 - ✅ Updated Blocking Issues to reflect resolution of schema version mismatch and critical security/resilience flaws.
-- ✅ Clarified status of GitHub → Railway auto-deploy trigger investigation as ongoing part of current tasks.
+- ✅ Clarified status of GitHub → Render auto-deploy trigger investigation as ongoing part of current tasks.
 - ✅ Explicitly defined NEXT TASK: Test Day 1 MVP features and continue deployment work (Option A).
 - ✅ Removed "Decision Required" section as decision has been made.
 

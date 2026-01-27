@@ -214,7 +214,7 @@
 ## Session Start Command (For Next Session)
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ./scripts/start_session.sh
 ```
 

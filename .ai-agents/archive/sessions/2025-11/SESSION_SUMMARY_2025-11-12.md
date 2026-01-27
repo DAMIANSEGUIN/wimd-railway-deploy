@@ -7,7 +7,7 @@
   - Relaxed PS101 prompt progression with confirmation dialogs (commits `a2fffa3`, `4186578`, deploys `6914a9eeb1531804b7605f91`, `6914b1ce0ae52f0ac2302dc7`).
 - Updated snapshot docs and created tags/backups for each deploy (`snapshot-2025-11-12-chat-session`, `snapshot-2025-11-12-ps101-nav`, `snapshot-2025-11-12-ps101-intro`).
 - Captured production console logs after each deploy to verify chat initialization and prompt loading.
-- Established deployment readiness checklist (Git, Netlify CLI, Railway CLI, verification scripts).
+- Established deployment readiness checklist (Git, Netlify CLI, Render CLI, verification scripts).
 
 ## Unresolved Items / Follow-up
 
@@ -18,11 +18,11 @@
 ## Where to Resume
 
 1. Follow `SESSION_START_PROTOCOL.md` as usual.
-2. Run the deployment readiness script (after ensuring PATH includes Netlify/Railway CLI).
+2. Run the deployment readiness script (after ensuring PATH includes Netlify/Render CLI).
 3. Address unresolved items above in order; document outcomes in a new dated summary.
 
 ## Team-Sharable Note
 
 - Working build is live with chat session persistence and flexible PS101 navigation.
 - Login/reset and metrics tuning still need verification.
-- Latest backups located under `~/Backups/` with timestamp `WIMD-Railway-Deploy-Project_<DATE_TIME>`.
+- Latest backups located under `~/Backups/` with timestamp `WIMD-Render-Deploy-Project_<DATE_TIME>`.

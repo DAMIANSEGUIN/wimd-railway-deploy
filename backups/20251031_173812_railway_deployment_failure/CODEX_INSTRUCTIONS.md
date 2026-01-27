@@ -21,7 +21,7 @@ You are part of a **three-AI collaboration system**. Act as specified by your ro
 - File system operations (file creation, directory management)
 - Terminal command execution
 - Environment variable setup and testing
-- Railway deployment (with human approval)
+- Render deployment (with human approval)
 
 **Assigned to**: Claude in Cursor (has full local environment access)
 
@@ -41,7 +41,7 @@ You are part of a **three-AI collaboration system**. Act as specified by your ro
 
 **Tasks requiring infrastructure access:**
 
-- Railway deployment analysis
+- Render deployment analysis
 - Log investigation and debugging
 - Environment variable configuration
 - Infrastructure troubleshooting
@@ -53,7 +53,7 @@ You are part of a **three-AI collaboration system**. Act as specified by your ro
 
 ### **Claude in Cursor** - Local Implementation Engineer
 
-- **Primary role**: Local testing, git operations, Railway deployment
+- **Primary role**: Local testing, git operations, Render deployment
 - **Access**: Full local environment, terminal, file system, git
 - **Output format**: Terminal commands, file diffs, test results
 - **Working style**: zsh-safe commands, `set -euo pipefail`, no heredocs
@@ -69,15 +69,15 @@ You are part of a **three-AI collaboration system**. Act as specified by your ro
 
 ### **Claude Code** - Infrastructure Debugger
 
-- **Primary role**: Railway deployment analysis, log investigation, infrastructure debugging
-- **Access**: Railway logs, deployment analysis, infrastructure troubleshooting
+- **Primary role**: Render deployment analysis, log investigation, infrastructure debugging
+- **Access**: Render logs, deployment analysis, infrastructure troubleshooting
 - **Called for**: Build failures, runtime errors, missing endpoints, environment issues
 - **Handoff trigger**: When deployment fails, endpoints 404, or infrastructure problems
 
 ### **Human** - Gate Keeper
 
-- **Primary role**: Approvals, Railway UI management, secret configuration
-- **Responsibilities**: Verify Railway project selection, manage environment variables, approve AI transitions
+- **Primary role**: Approvals, Render UI management, secret configuration
+- **Responsibilities**: Verify Render project selection, manage environment variables, approve AI transitions
 
 ## HANDOFF PROTOCOLS
 
@@ -202,7 +202,7 @@ You are part of a **three-AI collaboration system**. Act as specified by your ro
 - Response times < 2 seconds
 - File uploads < 30 seconds
 - Database queries < 1 second
-- Storage usage < 8GB (Railway Pro)
+- Storage usage < 8GB (Render Pro)
 - Auto-cleanup working effectively
 
 ## ESCALATION CRITERIA
@@ -211,13 +211,13 @@ You are part of a **three-AI collaboration system**. Act as specified by your ro
 
 - After 2 failed local test attempts
 - If FastAPI documentation unclear
-- If Railway-specific CORS issue suspected
+- If Render-specific CORS issue suspected
 - After 15 minutes without progress
 
 ### **When to escalate to Claude Code**
 
-- Railway deployment failures
-- Railway log analysis needed
+- Render deployment failures
+- Render log analysis needed
 - Infrastructure issues (not code issues)
 
 ### **When to escalate to CODEX**

@@ -5,7 +5,7 @@ set -e  # Exit on any error
 # Created: 2025-12-14
 # Purpose: Clean up old Railway service and create new canonical service
 
-PROJECT_DIR="/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+PROJECT_DIR="/Users/damianseguin/WIMD-Deploy-Project"
 cd "$PROJECT_DIR"
 
 echo "========================================="

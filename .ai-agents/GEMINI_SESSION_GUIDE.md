@@ -38,7 +38,7 @@ The script:
 
 ```
 Set working directory to:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 
 Then run this command:
 ./scripts/status.sh
@@ -59,7 +59,7 @@ Do NOT search files outside this directory.
 
 **With working directory set:**
 
-- Gemini starts in `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+- Gemini starts in `/Users/damianseguin/WIMD-Deploy-Project`
 - Searches stay within project bounds
 - All project files accessible
 - No permission errors
@@ -77,7 +77,7 @@ What is your current working directory?
 **Should see:**
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ```
 
 **If different, repeat the working directory command.**
@@ -90,7 +90,7 @@ When you see this message:
 
 ```
 Set working directory to:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ```
 
 **You MUST:**

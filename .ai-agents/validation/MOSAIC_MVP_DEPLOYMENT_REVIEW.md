@@ -184,7 +184,7 @@ Gemini successfully completed the Mosaic MVP 3-hour sprint. All code changes hav
 
 **Action Required:**
 
-- Verify `CLAUDE_API_KEY` is set on Railway (used by api/ps101.py:155)
+- Verify `CLAUDE_API_KEY` is set on Render (used by api/ps101.py:155)
 
 ---
 
@@ -245,14 +245,14 @@ with get_conn() as conn:
 ### Step 1: Pre-Deployment Checks
 
 ```bash
-# Verify Railway CLI logged in
-railway whoami
+# Verify Render CLI logged in
+render whoami
 
 # Check current environment variables
-railway variables | grep -E "(DATABASE_URL|CLAUDE_API_KEY|OPENAI_API_KEY)"
+render variables | grep -E "(DATABASE_URL|CLAUDE_API_KEY|OPENAI_API_KEY)"
 
 # If CLAUDE_API_KEY missing, add it:
-# railway variables --set CLAUDE_API_KEY=sk-ant-...
+# render variables --set CLAUDE_API_KEY=sk-ant-...
 ```
 
 ### Step 2: Commit Changes
@@ -294,9 +294,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ```bash
 # Deploy backend using wrapper script (MANDATORY)
-./scripts/deploy.sh railway
+./scripts/deploy.sh render
 
-# Wait 2-5 minutes for Railway deployment
+# Wait 2-5 minutes for Render deployment
 
 # Deploy frontend using wrapper script (MANDATORY)
 ./scripts/deploy.sh netlify
@@ -309,16 +309,16 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ```bash
 # 1. Check health endpoint
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
-# 2. Check Railway logs for errors
-railway logs --tail 50
+# 2. Check Render logs for errors
+render logs --tail 50
 
 # 3. Test context extraction endpoint (requires auth)
 # Manual test: Create user, complete PS101, trigger extraction via frontend
 
 # 4. Verify PostgreSQL connection
-railway logs | grep -i "storage\|postgres" | tail -20
+render logs | grep -i "storage\|postgres" | tail -20
 ```
 
 ---
@@ -408,7 +408,7 @@ git checkout prod-2025-11-18
 
 ### Immediate (Pre-Deploy)
 
-1. ✅ Verify `CLAUDE_API_KEY` set on Railway
+1. ✅ Verify `CLAUDE_API_KEY` set on Render
 2. ✅ Review code changes (COMPLETE)
 3. ⏳ Run database verification script
 4. ⏳ Commit changes with detailed message

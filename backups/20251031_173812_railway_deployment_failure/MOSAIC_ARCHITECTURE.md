@@ -12,10 +12,10 @@
 
 ### **Current Status**
 
-- **Backend**: FastAPI deployed on Railway (`https://what-is-my-delta-site-production.up.railway.app`)
+- **Backend**: FastAPI deployed on Render (`https://what-is-my-delta-site-production.up.render.app`)
 - **Frontend**: Mosaic UI demo (needs production deployment)
 - **Database**: SQLite with auto-cleanup (30-day expiry)
-- **Storage**: Railway Pro (8GB limit)
+- **Storage**: Render Pro (8GB limit)
 
 ---
 
@@ -28,7 +28,7 @@
 
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   USER          │    │   MOSAIC UI     │    │   FASTAPI API   │    │   DATABASE      │
-│   (Browser)     │◄──►│   (Vercel)      │◄──►│   (Railway)     │◄──►│   (SQLite)      │
+│   (Browser)     │◄──►│   (Vercel)      │◄──►│   (Render)     │◄──►│   (SQLite)      │
 │                 │    │                 │    │                 │    │                 │
 │ • whatismydelta.com │    │ • index.html    │    │ • WIMD endpoints │    │ • Sessions      │
 │ • Chat interface │    │ • Chat UI        │    │ • OB endpoints  │    │ • WIMD outputs  │
@@ -59,7 +59,7 @@ WIMD Service:                    OB Service:                     Resume Service:
 │                              STORAGE ARCHITECTURE                              │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
-Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
+Render Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 ├── SQLite database             ├── Session data                ├── Project folder
 ├── File uploads                ├── WIMD outputs                ├── Resume versions
 ├── Resume versions             ├── Job matches                 ├── User preferences
@@ -202,7 +202,7 @@ Railway Storage (8GB Pro):      User Data (30-day expiry):      Export/Import:
 - **Export functionality** (user control)
 - **Performance optimization** (indexed queries)
 
-### **Storage (Railway)**
+### **Storage (Render)**
 
 - **File uploads** (resumes, documents)
 - **Version control** (resume iterations)
@@ -309,7 +309,7 @@ CREATE TABLE file_uploads (
 ```javascript
 // Update askCoach function
 async function askCoach(prompt) {
-    const res = await fetch('https://what-is-my-delta-site-production.up.railway.app/wimd', {
+    const res = await fetch('https://what-is-my-delta-site-production.up.render.app/wimd', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ prompt })
@@ -324,7 +324,7 @@ document.getElementById('filePick').addEventListener('change', async (e) => {
     if (!f) return;
     const form = new FormData();
     form.append('file', f);
-    const res = await fetch('https://what-is-my-delta-site-production.up.railway.app/wimd/upload', {
+    const res = await fetch('https://what-is-my-delta-site-production.up.render.app/wimd/upload', {
         method: 'POST',
         body: form
     });
@@ -334,14 +334,14 @@ document.getElementById('filePick').addEventListener('change', async (e) => {
 
 // Add job matching functionality
 async function getOpportunities() {
-    const res = await fetch('https://what-is-my-delta-site-production.up.railway.app/ob/opportunities');
+    const res = await fetch('https://what-is-my-delta-site-production.up.render.app/ob/opportunities');
     const data = await res.json();
     return data.opportunities;
 }
 
 // Add resume rewrite functionality
 async function rewriteResume(jobId) {
-    const res = await fetch('https://what-is-my-delta-site-production.up.railway.app/resume/rewrite', {
+    const res = await fetch('https://what-is-my-delta-site-production.up.render.app/resume/rewrite', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ job_id: jobId })
@@ -364,7 +364,7 @@ async function rewriteResume(jobId) {
 
 ### **Storage Management**
 
-- **Railway Pro**: 8GB storage limit
+- **Render Pro**: 8GB storage limit
 - **Auto-cleanup**: Daily cleanup of expired sessions
 - **File compression**: Optimize stored data
 - **Monitoring**: Alert when approaching limits
@@ -469,18 +469,18 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 
 ### **Current Deployment**
 
-- **Backend**: Railway (`what-is-my-delta-site-production.up.railway.app`)
+- **Backend**: Render (`what-is-my-delta-site-production.up.render.app`)
 - **Frontend**: Mosaic UI demo (needs Vercel deployment)
 - **Domain**: `whatismydelta.com` (custom domain setup)
-- **Database**: SQLite (Railway filesystem)
+- **Database**: SQLite (Render filesystem)
 
 ### **Target Deployment**
 
-- **Backend**: Railway Pro (8GB storage)
+- **Backend**: Render Pro (8GB storage)
 - **Frontend**: Vercel (static hosting)
 - **Domain**: `whatismydelta.com` (custom domain)
 - **Database**: SQLite with auto-cleanup
-- **Storage**: Railway + external if needed
+- **Storage**: Render + external if needed
 
 ---
 
@@ -524,8 +524,8 @@ WIMD Analysis → Database → Cleanup Job → Project Folder
 
 ### **Current Capacity**
 
-- **Railway Free**: 1GB storage, 512MB RAM
-- **Target**: Railway Pro (8GB storage, 8GB RAM)
+- **Render Free**: 1GB storage, 512MB RAM
+- **Target**: Render Pro (8GB storage, 8GB RAM)
 - **Users**: 100-1000 concurrent sessions
 - **Storage**: 20-85MB per user session
 
@@ -641,8 +641,8 @@ This architecture provides a complete, scalable, and privacy-focused platform fo
 > **Ops Snapshot – 2025-09-29**
 >
 > - Netlify (`resonant-crostata-90b706`) serves the Mosaic UI at `https://www.whatismydelta.com` (apex redirects to `www`).
-> - Railway service `what-is-my-delta-site` hosts the FastAPI backend at `https://what-is-my-delta-site-production.up.railway.app`.
-> - `PUBLIC_SITE_ORIGIN` → `https://www.whatismydelta.com`; `PUBLIC_API_BASE` → Railway origin.
-> - Current gap: domain API routes return Netlify 404 until rewrite proxies requests to the Railway backend.
+> - Render service `what-is-my-delta-site` hosts the FastAPI backend at `https://what-is-my-delta-site-production.up.render.app`.
+> - `PUBLIC_SITE_ORIGIN` → `https://www.whatismydelta.com`; `PUBLIC_API_BASE` → Render origin.
+> - Current gap: domain API routes return Netlify 404 until rewrite proxies requests to the Render backend.
 
 The three-AI collaboration system (Codex, Claude Code, Human) ensures proper implementation, debugging, and oversight throughout the development process.

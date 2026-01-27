@@ -127,7 +127,7 @@ CREATE TABLE ps101_responses (
 
 **Data Backup:**
 
-- Strategy: Managed PostgreSQL service on Railway
+- Strategy: Managed PostgreSQL service on Render
 - Assessment: ✅ Sound and common practice
 
 **Risk Profile:**
@@ -358,7 +358,7 @@ def record_ps101_response(session_data: Dict[str, Any], step: int, response: str
 | **Does mosaic_context_bridge.py cover all needed functionality?** | ✅ Yes - correct, clean, fit for purpose |
 | **Are the code examples correct?** | ✅ Yes, with minor SQLAlchemy vs context manager inconsistency to resolve |
 | **Is there a clear rollback path?** | ✅ Yes - git revert strategy sufficient for additive changes |
-| **Are the safety protocols adequate?** | ✅ Yes - existing backup strategy (Railway PostgreSQL) is sound |
+| **Are the safety protocols adequate?** | ✅ Yes - existing backup strategy (Render PostgreSQL) is sound |
 | **Are the 70%+ thresholds realistic?** | ✅ Yes - correct metrics for behavioral validation |
 | **Is 3 days realistic?** | ✅ Ambitious but realistic with correct scoping and risk mitigation |
 | **Which day has highest risk?** | ✅ Day 1 - LLM extraction consistency (mitigated by quality code + Wizard of Oz fallback) |
@@ -536,7 +536,7 @@ CREATE TABLE user_contexts (
 - **Option A:** Timestamped tarball
 
   ```bash
-  tar -czf WIMD-Backup-$(date +%Y%m%d-%H%M%S).tar.gz WIMD-Railway-Deploy-Project/
+  tar -czf WIMD-Backup-$(date +%Y%m%d-%H%M%S).tar.gz WIMD-Render-Deploy-Project/
   ```
 
   - Pro: Complete snapshot
@@ -556,7 +556,7 @@ CREATE TABLE user_contexts (
 - **Option C:** Git initialization (if not already git repo)
 
   ```bash
-  cd WIMD-Railway-Deploy-Project
+  cd WIMD-Render-Deploy-Project
   git init
   git add .
   git commit -m "Pre-MVP baseline"

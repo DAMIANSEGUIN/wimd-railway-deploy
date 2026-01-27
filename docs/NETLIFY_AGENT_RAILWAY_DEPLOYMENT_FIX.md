@@ -1,7 +1,7 @@
-# Railway Deployment Fix - For Netlify Agent Runners
+# Render Deployment Fix - For Netlify Agent Runners
 
 **Date:** 2025-11-01
-**Issue:** Railway deployment failing with `python: command not found`
+**Issue:** Render deployment failing with `python: command not found`
 **Status:** 🔴 BLOCKING - Deployment cannot start
 **Priority:** HIGH
 
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Railway deployments are failing during container startup with error:
+Render deployments are failing during container startup with error:
 
 ```
 /bin/bash: line 1: python: command not found
@@ -33,25 +33,25 @@ Stopping Container
 ```
 
 **Error occurs:** During container startup, before application can run
-**Root cause:** Railway cannot find Python executable
+**Root cause:** Render cannot find Python executable
 **Impact:** Zero successful deployments since Oct 31, 2025
 
 ---
 
 ## Diagnosis Steps
 
-### Step 1: Verify Railway Root Directory Setting
+### Step 1: Verify Render Root Directory Setting
 
-**Problem:** Railway might be building from wrong directory (e.g., `mosaic_ui/` instead of repository root).
+**Problem:** Render might be building from wrong directory (e.g., `mosaic_ui/` instead of repository root).
 
 **Action:**
 
-1. Open Railway Dashboard → Your Service → Settings → Source
+1. Open Render Dashboard → Your Service → Settings → Source
 2. Check **"Root Directory"** setting
 3. **Should be:** Empty or `.` (repository root)
 4. **If set to subdirectory:** Change to empty/root
 
-**Why this matters:** If Railway builds from `mosaic_ui/`, it won't find `requirements.txt` in root and won't detect Python.
+**Why this matters:** If Render builds from `mosaic_ui/`, it won't find `requirements.txt` in root and won't detect Python.
 
 ---
 
@@ -60,18 +60,18 @@ Stopping Container
 **Check that these files exist in repository root:**
 
 ```
-what-is-my-delta-site/          # Railway source repository
+what-is-my-delta-site/          # Render source repository
 ├── api/                         # Python backend code
 ├── requirements.txt             # ✅ MUST EXIST (Python dependencies)
 ├── Procfile                     # ✅ MUST EXIST (startup command)
-├── railway.toml                 # Railway configuration
+├── render.toml                 # Render configuration
 └── frontend/                    # Frontend code
 ```
 
 **Action:**
 
 ```bash
-# Verify in Railway repository (what-is-my-delta-site)
+# Verify in Render repository (what-is-my-delta-site)
 cd /path/to/what-is-my-delta-site
 ls -la requirements.txt Procfile api/
 ```
@@ -101,15 +101,15 @@ cat nixpacks.toml
 **NARs Recommendation (from 2025-10-31):**
 
 - **Remove `nixpacks.toml`** if it exists
-- **Let Railway auto-detect** Python from `requirements.txt`
-- Railway's auto-detection works better than manual nixpacks config
+- **Let Render auto-detect** Python from `requirements.txt`
+- Render's auto-detection works better than manual nixpacks config
 
 **Fix:**
 
 ```bash
 git rm nixpacks.toml
-git commit -m "Remove nixpacks.toml - let Railway auto-detect Python"
-git push railway-origin main
+git commit -m "Remove nixpacks.toml - let Render auto-detect Python"
+git push render-origin main
 ```
 
 ---
@@ -128,9 +128,9 @@ cat Procfile
 web: python -m uvicorn api.index:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 120
 ```
 
-**Note:** Procfile uses `python -m uvicorn`. If Railway can't find `python`, this will fail. Railway should auto-detect Python from `requirements.txt` and make `python` available.
+**Note:** Procfile uses `python -m uvicorn`. If Render can't find `python`, this will fail. Render should auto-detect Python from `requirements.txt` and make `python` available.
 
-**If incorrect:** Railway won't know how to start the application.
+**If incorrect:** Render won't know how to start the application.
 
 ---
 
@@ -149,7 +149,7 @@ head -20 requirements.txt
 - `uvicorn`
 - All other dependencies
 
-**Railway auto-detects Python when it sees `requirements.txt`.**
+**Render auto-detects Python when it sees `requirements.txt`.**
 
 ---
 
@@ -157,7 +157,7 @@ head -20 requirements.txt
 
 ### Option A: Fix Root Directory (Most Likely)
 
-1. **Railway Dashboard:** Settings → Source → Root Directory
+1. **Render Dashboard:** Settings → Source → Root Directory
    - Set to: **Empty** (or `.`)
    - Save changes
 
@@ -168,10 +168,10 @@ head -20 requirements.txt
    echo "# $(date)" >> README.md
    git add README.md
    git commit -m "Trigger deployment after root directory fix"
-   git push railway-origin main
+   git push render-origin main
    ```
 
-3. **Monitor deployment:** Check Railway logs for Python detection
+3. **Monitor deployment:** Check Render logs for Python detection
 
 ---
 
@@ -181,8 +181,8 @@ head -20 requirements.txt
 
    ```bash
    git rm nixpacks.toml
-   git commit -m "Remove nixpacks.toml - let Railway auto-detect"
-   git push railway-origin main
+   git commit -m "Remove nixpacks.toml - let Render auto-detect"
+   git push render-origin main
    ```
 
 2. **Monitor deployment**
@@ -191,13 +191,13 @@ head -20 requirements.txt
 
 ### Option C: Verify Repository Sync
 
-**Problem:** Railway might be building from stale/incorrect repository state.
+**Problem:** Render might be building from stale/incorrect repository state.
 
 **Check:**
 
-1. Verify Railway is connected to: `DAMIANSEGUIN/what-is-my-delta-site`
-2. Verify latest commits are present in Railway repository
-3. Force rebuild if needed (Railway dashboard → Redeploy)
+1. Verify Render is connected to: `DAMIANSEGUIN/what-is-my-delta-site`
+2. Verify latest commits are present in Render repository
+3. Force rebuild if needed (Render dashboard → Redeploy)
 
 ---
 
@@ -214,7 +214,7 @@ head -20 requirements.txt
 - Added `python311Packages.pip` → Still failed
 - Changed to `python -m pip` → Still failed
 
-**These didn't work because Railway isn't detecting Python at all.**
+**These didn't work because Render isn't detecting Python at all.**
 
 ---
 
@@ -222,7 +222,7 @@ head -20 requirements.txt
 
 After applying fix:
 
-1. **Watch deployment logs** in Railway dashboard
+1. **Watch deployment logs** in Render dashboard
    - Look for: "Detected Python" or "Installing Python"
    - Should NOT see: "python: command not found"
 
@@ -238,7 +238,7 @@ After applying fix:
 3. **Verify health check:**
 
    ```bash
-   curl https://what-is-my-delta-site-production.up.railway.app/health
+   curl https://what-is-my-delta-site-production.up.render.app/health
    ```
 
    Should return: `{"ok": true, ...}`
@@ -248,12 +248,12 @@ After applying fix:
 ## Context
 
 **Source Repository:** `DAMIANSEGUIN/what-is-my-delta-site`
-**Working Repository:** `DAMIANSEGUIN/wimd-railway-deploy` (we push to `railway-origin`)
+**Working Repository:** `DAMIANSEGUIN/wimd-render-deploy` (we push to `render-origin`)
 
 **Git Remote:**
 
 ```bash
-railway-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
+render-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 ```
 
 **Current Status:**
@@ -262,7 +262,7 @@ railway-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 - ❌ New deployments: Failing (can't start container)
 
 **Previous Expert Diagnosis (NARs, 2025-10-31):**
-> "Railway likely building from wrong directory. Check Railway Root Directory setting. Remove nixpacks.toml and let Railway auto-detect from requirements.txt."
+> "Render likely building from wrong directory. Check Render Root Directory setting. Remove nixpacks.toml and let Render auto-detect from requirements.txt."
 
 ---
 
@@ -277,7 +277,7 @@ railway-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 
 ## Files to Check
 
-1. **Railway Dashboard:**
+1. **Render Dashboard:**
    - Settings → Source → Root Directory
    - Deployments → Latest → Logs
 
@@ -285,19 +285,19 @@ railway-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
    - `requirements.txt` (root directory) - ✅ Exists, contains FastAPI/uvicorn/gunicorn
    - `Procfile` (root directory) - ✅ Exists, uses `python -m uvicorn`
    - `api/index.py` (Python entry point) - ✅ Exists
-   - `railway.toml` - ✅ Exists, builder set to "nixpacks"
+   - `render.toml` - ✅ Exists, builder set to "nixpacks"
    - `nixpacks.toml` - ❓ Check if exists (should be removed per NARs recommendation)
 
 ---
 
 ## Questions?
 
-- **Repository location:** Check `railway-origin` remote in local repo
-- **Railway dashboard:** <https://railway.app/dashboard>
-- **Health check:** <https://what-is-my-delta-site-production.up.railway.app/health>
+- **Repository location:** Check `render-origin` remote in local repo
+- **Render dashboard:** <https://render.app/dashboard>
+- **Health check:** <https://what-is-my-delta-site-production.up.render.app/health>
 
 ---
 
 **Created:** 2025-11-01
-**For:** Netlify Agent Runners (Railway infrastructure fix)
+**For:** Netlify Agent Runners (Render infrastructure fix)
 **Reference:** RAILWAY_DEPLOYMENT_FACTS.md (previous diagnosis)

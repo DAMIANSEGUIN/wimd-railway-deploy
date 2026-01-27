@@ -781,7 +781,7 @@ Before deploying, test these scenarios:
 
 ## FILE LOCATIONS REFERENCE
 
-All changes in: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/frontend/index.html`
+All changes in: `/Users/damianseguin/WIMD-Deploy-Project/frontend/index.html`
 
 | Feature | Line Range | What to Change |
 |---------|------------|----------------|

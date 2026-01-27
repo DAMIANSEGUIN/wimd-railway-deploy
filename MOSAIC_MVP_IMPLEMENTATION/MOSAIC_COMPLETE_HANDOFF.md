@@ -30,7 +30,7 @@ This document is **100% self-contained**. All critical information from external
 **Primary Working Directory**:
 
 ```
-/Users/damianseguin/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Railway-Deploy-Project
+/Users/damianseguin/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Render-Deploy-Project
 ```
 
 **How to Access** (if Google Drive path is difficult):
@@ -38,13 +38,13 @@ This document is **100% self-contained**. All critical information from external
 ```bash
 # Alternative: Ask user to create a symlink or copy to easier path
 # For now, navigate using full path or tab completion
-cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Railway-Deploy-Project
+cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Render-Deploy-Project
 ```
 
 **GitHub Repository** (reference only):
 
 ```
-https://github.com/DAMIANSEGUIN/wimd-railway-deploy
+https://github.com/DAMIANSEGUIN/wimd-render-deploy
 ```
 
 ---
@@ -55,12 +55,12 @@ https://github.com/DAMIANSEGUIN/wimd-railway-deploy
 
 - **Mosaic**: Career transition platform helping users find jobs using AI/LLM
 - **Foundation**: Safety & evidence layer (planned integration)
-- **Stack**: FastAPI backend (Railway) + Vanilla JS frontend (Netlify) + PostgreSQL
+- **Stack**: FastAPI backend (Render) + Vanilla JS frontend (Netlify) + PostgreSQL
 
 **Production URLs**:
 
 - Main site: <https://whatismydelta.com>
-- Backend API: <https://what-is-my-delta-site-production.up.railway.app>
+- Backend API: <https://what-is-my-delta-site-production.up.render.app>
 - Netlify: Site ID `resonant-crostata-90b706`
 
 **Architecture**:
@@ -70,9 +70,9 @@ User Browser
     ↓
 Netlify (Frontend - Vanilla JavaScript ES6+)
     ↓ (Proxy)
-Railway (Backend - FastAPI + Python)
+Render (Backend - FastAPI + Python)
     ↓
-PostgreSQL Database (Railway managed)
+PostgreSQL Database (Render managed)
     ↓
 OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 ```
@@ -94,7 +94,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 
 **Backend API**:
 
-- ✅ FastAPI on Railway - operational
+- ✅ FastAPI on Render - operational
 - ✅ Authentication: login, register, password reset flows
 - ✅ Chat/Coach interface operational
 - ✅ File upload functional (resume/document handling)
@@ -126,7 +126,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 
 **Monitoring & Health**:
 
-- ✅ Railway health checks configured (`railway.toml`)
+- ✅ Render health checks configured (`render.toml`)
 - ✅ Multi-layer monitoring (`/health`, `/health/comprehensive`, `/health/recover`)
 - ✅ Automatic recovery on failure
 - ✅ Health logging to `prompt_health_log` table
@@ -151,7 +151,7 @@ OpenAI API (GPT-4, embeddings) + Anthropic API (Claude)
 **HIGH PRIORITY** (Should fix soon):
 4. ⚠️ **No Automated Testing**: No test pipeline, golden dataset, or regression tests
 5. ⚠️ **No Staging Environment**: Direct to production deployment (risky)
-6. ⚠️ **API Key Rotation**: Keys stored in Railway but never rotated
+6. ⚠️ **API Key Rotation**: Keys stored in Render but never rotated
 
 ### 📋 **What Exists in Code But NOT Deployed**
 
@@ -269,7 +269,7 @@ cursor.execute("INSERT INTO users VALUES (%s, %s)", (email, password))
 
 ## 🔧 ENVIRONMENT CONFIGURATION
 
-### **Required Environment Variables (Railway)**
+### **Required Environment Variables (Render)**
 
 ```bash
 # API Keys
@@ -278,24 +278,24 @@ CLAUDE_API_KEY=sk-ant-xxx  # For Anthropic
 
 # URLs
 PUBLIC_SITE_ORIGIN=https://whatismydelta.com
-PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.railway.app
+PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.render.app
 
-# Database (MUST contain railway.internal)
-DATABASE_URL=postgresql://user:pass@host.railway.internal:5432/railway
+# Database (MUST contain render.internal)
+DATABASE_URL=postgresql://user:pass@host.render.internal:5432/render
 
 # Optional
 SENTRY_DSN=  # Error tracking
 APP_SCHEMA_VERSION=v1
 ```
 
-**CRITICAL**: `DATABASE_URL` must contain `railway.internal` (NOT `railway.app`) or database connection will fail.
+**CRITICAL**: `DATABASE_URL` must contain `render.internal` (NOT `render.app`) or database connection will fail.
 
 ---
 
 ### **Feature Flags (Current State)**
 
 ```python
-# In Railway environment or api/config.py
+# In Render environment or api/config.py
 RAG_BASELINE = True                     # ✅ ENABLED
 JOB_SOURCES_STUBBED_ENABLED = True      # ✅ ENABLED
 AI_FALLBACK_ENABLED = True              # ✅ ENABLED
@@ -329,7 +329,7 @@ beautifulsoup4     # For web scraping
 
 ```bash
 # 1. Navigate to project
-cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Railway-Deploy-Project
+cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Render-Deploy-Project
 
 # 2. Set environment variables
 export OPENAI_API_KEY="your_key_here"
@@ -495,7 +495,7 @@ grep -rn "?" api/*.py | grep execute
 
 ```bash
 # 1. Navigate to project
-cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Railway-Deploy-Project
+cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Render-Deploy-Project
 
 # 2. Make sure you're on correct branch
 git status
@@ -505,18 +505,18 @@ git log --oneline -3
 git add .
 git commit -m "Clear description of what changed and why"
 
-# 4. Push to Railway
-git push railway-origin main
+# 4. Push to Render
+git push render-origin main
 
-# 5. Monitor deployment (Railway dashboard)
+# 5. Monitor deployment (Render dashboard)
 # - Watch Build Logs
 # - Watch Deploy Logs
 # - Look for [STORAGE] messages
 # - Look for exceptions
 
 # 6. Verify deployment
-curl https://what-is-my-delta-site-production.up.railway.app/health
-curl https://what-is-my-delta-site-production.up.railway.app/config
+curl https://what-is-my-delta-site-production.up.render.app/health
+curl https://what-is-my-delta-site-production.up.render.app/config
 
 # 7. Check frontend
 # Open browser: https://whatismydelta.com
@@ -528,7 +528,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/config
 ### **AFTER EVERY DEPLOYMENT** (Post-Deploy Checks)
 
 ```
-□ Monitor Railway logs for 5 minutes
+□ Monitor Render logs for 5 minutes
 □ Check /health endpoint - verify ok: true
 □ Verify PostgreSQL connected (database.type: "postgresql", NOT "sqlite")
 □ Test the specific feature/fix that was deployed
@@ -543,18 +543,18 @@ curl https://what-is-my-delta-site-production.up.railway.app/config
 ```bash
 # Immediate rollback to previous commit
 git revert HEAD
-git push railway-origin main --force
+git push render-origin main --force
 
 # Wait 2 minutes for deployment
 sleep 120
 
 # Verify health
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Or rollback to specific commit
 git log --oneline -10  # Find good commit hash
 git checkout <commit-hash>
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 ```
 
 ---
@@ -565,7 +565,7 @@ git push railway-origin HEAD:main --force
 
 | Category | Examples | First Action |
 |----------|----------|--------------|
-| **INFRA** | Railway deploy failed, PostgreSQL connection failed, env var missing | Check Railway logs, DATABASE_URL format |
+| **INFRA** | Render deploy failed, PostgreSQL connection failed, env var missing | Check Render logs, DATABASE_URL format |
 | **DATA** | Session orphaned, PS101 state corrupt, schema drift | Check database schema, foreign keys |
 | **MODEL** | OpenAI rate limit, API key invalid, context overflow | Check API keys, retry with backoff |
 | **PROMPT** | JSON parse error, CSV corrupt | Validate JSON/CSV files |
@@ -578,8 +578,8 @@ git push railway-origin HEAD:main --force
 | Error | Symptom | Solution |
 |-------|---------|----------|
 | `CONTEXT_MANAGER_BUG` | AttributeError: 'object has no attribute execute' | Fix to `with get_conn() as conn:` |
-| `SQLITE_FALLBACK_ACTIVE` | Data wiped on deploy | Fix DATABASE_URL (ensure railway.internal) |
-| `PG_CONNECTION_FAILED` | App crashes on startup | Check PostgreSQL service status in Railway |
+| `SQLITE_FALLBACK_ACTIVE` | Data wiped on deploy | Fix DATABASE_URL (ensure render.internal) |
+| `PG_CONNECTION_FAILED` | App crashes on startup | Check PostgreSQL service status in Render |
 | `OPENAI_RATE_LIMIT` | 429 errors | Add retry with exponential backoff |
 | `PYTHON_MULTIPART_MISSING` | File upload crashes | Add `python-multipart` to requirements.txt |
 
@@ -599,10 +599,10 @@ Where is it? (frontend? API? database? LLM?)
 **Step 2: Gather Context**
 
 ```
-□ Railway deployment logs (last 200 lines)
+□ Render deployment logs (last 200 lines)
 □ Health endpoint response (/health)
 □ Recent git commits (git log -5)
-□ Environment variables (railway variables)
+□ Environment variables (render variables)
 □ PostgreSQL service status
 □ Error message (full traceback)
 ```
@@ -682,7 +682,7 @@ If INTEGRATION error → Check external API status
 
 1. DATABASE_URL is wrong or missing
 2. PostgreSQL service is down
-3. Network routing issue (using railway.app instead of railway.internal)
+3. Network routing issue (using render.app instead of render.internal)
 
 ---
 
@@ -736,7 +736,7 @@ def test_job_source(source):
 # Add to requirements.txt:
 sendgrid  # if using SendGrid
 
-# Add to Railway env vars:
+# Add to Render env vars:
 SENDGRID_API_KEY=xxx
 FROM_EMAIL=noreply@whatismydelta.com
 
@@ -778,7 +778,7 @@ def test_csv_fallback():
 
 **5. Set Up Staging Environment**
 
-- Duplicate Railway project for testing
+- Duplicate Render project for testing
 - Configure separate DATABASE_URL
 - Test deployments before production
 
@@ -930,10 +930,10 @@ frontend/ or mosaic_ui/
 scripts/
 ├── predeploy_sanity.sh   # Pre-deployment checks
 ├── verify_deploy.sh      # Post-deployment verification
-└── one_shot_new_deploy.sh # Fresh Railway deployment
+└── one_shot_new_deploy.sh # Fresh Render deployment
 
 requirements.txt          # Python dependencies
-railway.toml              # Railway config
+render.toml              # Render config
 netlify.toml              # Netlify config (if exists)
 ```
 
@@ -943,7 +943,7 @@ netlify.toml              # Netlify config (if exists)
 
 ```bash
 # Navigate to project
-cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Railway-Deploy-Project
+cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Render-Deploy-Project
 
 # Check git status
 git status
@@ -953,16 +953,16 @@ git log --oneline -5
 python3 -m uvicorn api.index:app --host 0.0.0.0 --port 8000
 curl http://localhost:8000/health
 
-# Deploy to Railway
+# Deploy to Render
 git add .
 git commit -m "Description"
-git push railway-origin main
+git push render-origin main
 
 # Check production health
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Rollback
-git revert HEAD && git push railway-origin main --force
+git revert HEAD && git push render-origin main --force
 ```
 
 ---
@@ -973,14 +973,14 @@ git revert HEAD && git push railway-origin main --force
 
 ```
 IMMEDIATE:
-1. Check Railway dashboard - is service running?
+1. Check Render dashboard - is service running?
 2. If crashed: Check deploy logs for exception
 3. If context manager bug: Rollback immediately
 4. If PostgreSQL down: Check DATABASE_URL, PostgreSQL service
 
 ROLLBACK:
 git revert HEAD
-git push railway-origin main --force
+git push render-origin main --force
 # Wait 2 minutes
 curl /health
 ```
@@ -997,11 +997,11 @@ ASSESS:
 
 RECOVER:
 - If SQLite fallback: No recovery (ephemeral)
-- If PostgreSQL: Check Railway backups
+- If PostgreSQL: Check Render backups
 - Last resort: Restore from git history
 
 PREVENT:
-- Ensure DATABASE_URL uses railway.internal
+- Ensure DATABASE_URL uses render.internal
 - Verify PostgreSQL service active before deploy
 ```
 
@@ -1012,7 +1012,7 @@ PREVENT:
 ```
 DIAGNOSE:
 1. Check /health - p95_latency_ms value?
-2. Check Railway metrics - CPU/Memory usage?
+2. Check Render metrics - CPU/Memory usage?
 3. Check logs - slow queries? API timeouts?
 
 IMMEDIATE FIX:
@@ -1141,10 +1141,10 @@ Use this to decide what technology to use:
 
 ```bash
 # Check production health
-curl https://what-is-my-delta-site-production.up.railway.app/health | python3 -m json.tool
+curl https://what-is-my-delta-site-production.up.render.app/health | python3 -m json.tool
 
 # Navigate to project
-cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Railway-Deploy-Project
+cd ~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My\ Drive/WIMD-Render-Deploy-Project
 
 # Check git status
 git status
@@ -1176,7 +1176,7 @@ $(git log --oneline -10)
 
 ## What's Implemented (Working)
 - Frontend: All UI operational
-- Backend: FastAPI on Railway
+- Backend: FastAPI on Render
 - Database: PostgreSQL connected
 - Phase 1-3: All features deployed
 - Phase 4: 12 job sources deployed
@@ -1189,7 +1189,7 @@ $(git log --oneline -10)
 5. MEDIUM: Set up staging environment
 
 ## API Endpoints (All Implemented)
-$(curl https://what-is-my-delta-site-production.up.railway.app/health | python3 -m json.tool)
+$(curl https://what-is-my-delta-site-production.up.render.app/health | python3 -m json.tool)
 
 ## Current Issues
 - Job sources untested in production

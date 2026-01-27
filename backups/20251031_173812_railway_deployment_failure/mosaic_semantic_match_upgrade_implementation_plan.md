@@ -228,7 +228,7 @@ CREATE TABLE match_analytics (
 ### **For Claude Code (Deployment)**
 
 1. **Review**: Infrastructure requirements
-2. **Prepare**: Railway configuration updates
+2. **Prepare**: Render configuration updates
 3. **Monitor**: Cost and performance metrics
 4. **Support**: Deployment issues only
 

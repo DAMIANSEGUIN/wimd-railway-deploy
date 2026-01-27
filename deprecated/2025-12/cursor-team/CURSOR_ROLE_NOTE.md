@@ -79,7 +79,7 @@
 
 - `TROUBLESHOOTING_CHECKLIST.md` - Error classification
 - `SELF_DIAGNOSTIC_FRAMEWORK.md` - Auto-triage system
-- Railway logs, health endpoints
+- Render logs, health endpoints
 - Database connection diagnostics
 
 ---

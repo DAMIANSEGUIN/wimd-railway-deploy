@@ -17,7 +17,7 @@
 
 - **Git Tag:** `prod-2025-11-18`
 - **Commit:** `31d099c`
-- **Status:** Production deployed to Railway/Netlify
+- **Status:** Production deployed to Render/Netlify
 - **To Restore:** `git checkout prod-2025-11-18`
 - **To Create New Tag:** `git tag prod-YYYY-MM-DD` (after verified deployment)
 
@@ -40,10 +40,10 @@ git tag -l "prod-*" --sort=-version:refname | head -5
 **Run this checklist BEFORE making any code changes:**
 
 ```
-□ Read recent Railway deployment logs
+□ Read recent Render deployment logs
 □ Check /health endpoint status
-□ Verify DATABASE_URL format (postgresql://...railway.internal)
-□ Confirm PostgreSQL service status in Railway dashboard
+□ Verify DATABASE_URL format (postgresql://...render.internal)
+□ Confirm PostgreSQL service status in Render dashboard
 □ Review last 3 git commits for breaking changes
 □ Check if error is in known taxonomy (see below)
 ```
@@ -57,9 +57,9 @@ git tag -l "prod-*" --sort=-version:refname | head -5
 | Error Label | Symptom | Root Cause | First Action |
 |-------------|---------|------------|--------------|
 | `RAILWAY_RESTART_LOOP` | Container crashes repeatedly | Code bug, dependency missing | Check deploy logs for exception |
-| `PG_CONNECTION_FAILED` | App using SQLite fallback | Wrong DATABASE_URL, network issue | Verify DATABASE_URL contains `railway.internal` |
+| `PG_CONNECTION_FAILED` | App using SQLite fallback | Wrong DATABASE_URL, network issue | Verify DATABASE_URL contains `render.internal` |
 | `CONTEXT_MANAGER_BUG` | AttributeError: 'object has no attribute execute' | Using `conn = get_conn()` instead of `with get_conn() as conn:` | Search codebase for incorrect pattern |
-| `OPENAI_INVALID_KEY` | All AI features fail | API key revoked/wrong | Check OPENAI_API_KEY in Railway variables |
+| `OPENAI_INVALID_KEY` | All AI features fail | API key revoked/wrong | Check OPENAI_API_KEY in Render variables |
 
 ### 🟡 WARNING (Degraded)
 
@@ -116,12 +116,12 @@ DEPLOYMENT SAFETY:
 
 ```
 1. Check: Is PostgreSQL connected?
-   railway logs | grep STORAGE
+   render logs | grep STORAGE
    → Look for: "[STORAGE] ✅ PostgreSQL connection pool created"
    → If SQLite fallback: DATABASE_URL issue
 
 2. Check: Does user exist in database?
-   # This requires Railway shell or psql access
+   # This requires Render shell or psql access
    → If user missing: Database wiped (SQLite fallback confirmed)
 
 3. Check: Was deployment recent?
@@ -129,15 +129,15 @@ DEPLOYMENT SAFETY:
    → If deploy within last hour: Database reset on deploy
 
 4. Diagnosis: SQLITE_FALLBACK_ACTIVE
-   → Action: Fix DATABASE_URL (ensure railway.internal)
-   → Verify: PostgreSQL service status in Railway
+   → Action: Fix DATABASE_URL (ensure render.internal)
+   → Verify: PostgreSQL service status in Render
 ```
 
 ### Symptom: Deployment Failed
 
 ```
 1. Check: Build logs or deploy logs?
-   Railway dashboard → Deployment → Build Logs vs Deploy Logs
+   Render dashboard → Deployment → Build Logs vs Deploy Logs
    → If no deploy logs: App crashed on startup
    → If build failed: Dependency or syntax error
 
@@ -154,18 +154,18 @@ DEPLOYMENT SAFETY:
 
 4. Action: Rollback if needed
    git revert HEAD
-   git push railway-origin main
+   git push render-origin main
 ```
 
 ### Symptom: App Slow / Timeouts
 
 ```
 1. Check: Health endpoint
-   curl https://what-is-my-delta-site-production.up.railway.app/health
+   curl https://what-is-my-delta-site-production.up.render.app/health
    → Check p95_latency_ms
 
 2. Check: Is it OpenAI/Anthropic?
-   Railway logs | grep -i "openai\|anthropic"
+   Render logs | grep -i "openai\|anthropic"
    → Look for slow response times
 
 3. Check: Database queries
@@ -175,7 +175,7 @@ DEPLOYMENT SAFETY:
 4. Diagnosis:
    → If AI calls: Add timeout, retry logic
    → If DB: Add indexes, optimize queries
-   → If overall: Scale Railway instance
+   → If overall: Scale Render instance
 ```
 
 ### Symptom: Users Seeing Old Data
@@ -199,28 +199,28 @@ DEPLOYMENT SAFETY:
 
 ---
 
-## Railway-Specific Diagnostics
+## Render-Specific Diagnostics
 
 ### Check DATABASE_URL Format
 
 ```bash
-# In Railway CLI
-railway variables | grep DATABASE_URL
+# In Render CLI
+render variables | grep DATABASE_URL
 
 # Should contain:
 ✅ postgresql://
-✅ railway.internal (NOT railway.app)
-✅ :5432/railway
+✅ render.internal (NOT render.app)
+✅ :5432/render
 
 # Should NOT contain:
 ❌ sqlite://
-❌ railway.app (public URL, use internal)
+❌ render.app (public URL, use internal)
 ```
 
 ### Check PostgreSQL Service
 
 ```bash
-# In Railway dashboard:
+# In Render dashboard:
 1. Click PostgreSQL service
 2. Status should be: "Active" or "Running"
 3. Check "Metrics" - should show connections
@@ -230,7 +230,7 @@ railway variables | grep DATABASE_URL
 ### Check Deployment Logs
 
 ```bash
-# In Railway dashboard:
+# In Render dashboard:
 1. Click what-is-my-delta-site service
 2. Click "Deployments" tab
 3. Click most recent deployment
@@ -318,7 +318,7 @@ Ask yourself:
 4. Where is it? (frontend? API? database? LLM?)
 
 Map to category:
-- INFRA: Railway, PostgreSQL, networking
+- INFRA: Render, PostgreSQL, networking
 - DATA: Sessions, users, PS101 state
 - MODEL: OpenAI, Anthropic, prompts
 - PROMPT: CSV, JSON parsing
@@ -329,10 +329,10 @@ Map to category:
 
 ```
 Collect diagnostics:
-□ Railway deployment logs (last 200 lines)
+□ Render deployment logs (last 200 lines)
 □ Health endpoint response (/health)
 □ Recent git commits (git log -5)
-□ Environment variables (railway variables)
+□ Environment variables (render variables)
 □ PostgreSQL service status
 □ Error message (full traceback)
 □ User actions that triggered it
@@ -347,7 +347,7 @@ Based on error category + context:
 If INFRA error:
   → Check DATABASE_URL format
   → Check PostgreSQL service status
-  → Check recent Railway changes
+  → Check recent Render changes
 
 If DATA error:
   → Check database schema version
@@ -408,25 +408,25 @@ After fixing:
 
 ```bash
 # Check deployment status
-railway status
+render status
 
 # Get environment variables
-railway variables
+render variables
 
 # View recent logs
-railway logs
+render logs
 
 # Check health endpoint
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Check if PostgreSQL connected
-railway logs | grep -i "storage\|postgres"
+render logs | grep -i "storage\|postgres"
 
 # Rollback to previous commit
-git revert HEAD && git push railway-origin main
+git revert HEAD && git push render-origin main
 
 # Force redeploy (no code changes)
-git commit --allow-empty -m "Redeploy" && git push railway-origin main
+git commit --allow-empty -m "Redeploy" && git push render-origin main
 
 # Run tests locally
 pytest tests/test_golden_dataset.py -v
@@ -463,8 +463,8 @@ START
   │
   └─> ✅ SAFE TO DEPLOY
         │
-        ├─> Deploy: git push railway-origin main
-        ├─> Monitor: railway logs (5 min)
+        ├─> Deploy: git push render-origin main
+        ├─> Monitor: render logs (5 min)
         ├─> Verify: curl /health
         └─> Test: specific symptom resolved
 ```
@@ -477,14 +477,14 @@ START
 
 ```
 IMMEDIATE:
-1. Check Railway dashboard - is service running?
+1. Check Render dashboard - is service running?
 2. If crashed: Check deploy logs for error
 3. If context manager bug: Rollback immediately
 4. If PostgreSQL: Check DATABASE_URL, PostgreSQL service
 
 ROLLBACK:
 git revert HEAD
-git push railway-origin main --force
+git push render-origin main --force
 # Wait 2 minutes
 curl /health
 
@@ -504,11 +504,11 @@ ASSESS:
 
 RECOVER:
 - If SQLite: No recovery possible (ephemeral)
-- If PostgreSQL: Check for backups in Railway
+- If PostgreSQL: Check for backups in Render
 - Last resort: Restore from git history + redeploy
 
 PREVENT:
-- Ensure DATABASE_URL uses railway.internal
+- Ensure DATABASE_URL uses render.internal
 - Verify PostgreSQL service active
 - Add data backup strategy
 ```
@@ -518,7 +518,7 @@ PREVENT:
 ```
 DIAGNOSE:
 1. Check /health endpoint - what's p95_latency_ms?
-2. Check Railway metrics - CPU/Memory usage
+2. Check Render metrics - CPU/Memory usage
 3. Check logs - slow queries, API timeouts?
 
 IMMEDIATE FIX:
@@ -527,7 +527,7 @@ IMMEDIATE FIX:
 - If memory: Restart service, investigate leak
 
 LONG TERM:
-- Scale Railway instance
+- Scale Render instance
 - Add caching layer
 - Optimize hot paths
 ```

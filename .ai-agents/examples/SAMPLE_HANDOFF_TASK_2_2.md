@@ -288,7 +288,7 @@
 2. **Run tests:**
 
    ```bash
-   cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+   cd /Users/damianseguin/WIMD-Deploy-Project
    python3 .ai-agents/session_context/session_logger.py
    python3 .ai-agents/session_context/log_management.py
    ```

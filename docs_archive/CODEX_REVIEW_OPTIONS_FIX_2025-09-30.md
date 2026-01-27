@@ -11,9 +11,9 @@
 
 ### What Was Implemented
 
-Cursor AI added explicit OPTIONS handlers for all POST endpoints to resolve Railway edge server CORS interference.
+Cursor AI added explicit OPTIONS handlers for all POST endpoints to resolve Render edge server CORS interference.
 
-**File Modified**: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/index.py`
+**File Modified**: `/Users/damianseguin/WIMD-Deploy-Project/api/index.py`
 
 **Changes Made**:
 
@@ -28,7 +28,7 @@ Cursor AI added explicit OPTIONS handlers for all POST endpoints to resolve Rail
 
 ### Problem Being Solved
 
-- **Railway edge servers** (`x-railway-edge: railway/us-east4-eqdc4a`) intercept OPTIONS preflight requests
+- **Render edge servers** (`x-render-edge: render/us-east4-eqdc4a`) intercept OPTIONS preflight requests
 - Return HTTP 400 instead of HTTP 200
 - Missing `access-control-allow-origin` header in response
 - Browser blocks POST requests with `net::ERR_FAILED`
@@ -36,9 +36,9 @@ Cursor AI added explicit OPTIONS handlers for all POST endpoints to resolve Rail
 ### Evidence of Root Cause
 
 - ✅ Local test: OPTIONS returns HTTP 200 with CORS headers
-- ❌ Railway production: OPTIONS returns HTTP 400, missing CORS headers
+- ❌ Render production: OPTIONS returns HTTP 400, missing CORS headers
 - ✅ Code correct: CORSMiddleware properly configured (lines 106-113)
-- ❌ Infrastructure issue: Railway edge layer interfering
+- ❌ Infrastructure issue: Render edge layer interfering
 
 ---
 
@@ -70,7 +70,7 @@ Cursor AI added explicit OPTIONS handlers for all POST endpoints to resolve Rail
 ```python
 @app.options("/wimd")
 def wimd_options():
-    """Explicit OPTIONS handler for Railway edge compatibility"""
+    """Explicit OPTIONS handler for Render edge compatibility"""
     return Response(status_code=200)
 ```
 
@@ -110,7 +110,7 @@ from fastapi import (
 ```python
 @app.options("/resume/feedback")
 def resume_feedback_options():
-    """Explicit OPTIONS handler for Railway edge compatibility"""
+    """Explicit OPTIONS handler for Render edge compatibility"""
     return Response(status_code=200)
 ```
 
@@ -155,22 +155,22 @@ done
 # Expected: All return HTTP/1.1 200 OK with access-control-allow-origin header
 ```
 
-### Phase 3: Railway Deployment
+### Phase 3: Render Deployment
 
 ```bash
 git add api/index.py
 git commit -m "Fix: Add OPTIONS handler for /resume/feedback endpoint"
 git push origin main
 
-# Wait for Railway deployment
-# Expected: Railway auto-deploys within 2-3 minutes
+# Wait for Render deployment
+# Expected: Render auto-deploys within 2-3 minutes
 ```
 
 ### Phase 4: Production Testing
 
 ```bash
 # Test production OPTIONS
-curl -I -X OPTIONS https://what-is-my-delta-site-production.up.railway.app/wimd \
+curl -I -X OPTIONS https://what-is-my-delta-site-production.up.render.app/wimd \
   -H "Origin: https://whatismydelta.com" \
   -H "Access-Control-Request-Method: POST"
 
@@ -203,8 +203,8 @@ curl -I -X OPTIONS https://what-is-my-delta-site-production.up.railway.app/wimd 
 **Deployment**:
 
 - [ ] Push to GitHub
-- [ ] Verify Railway auto-deploy triggers
-- [ ] Monitor Railway deployment logs
+- [ ] Verify Render auto-deploy triggers
+- [ ] Monitor Render deployment logs
 - [ ] Wait for "Deployment successful" status
 
 **Post-Deployment**:
@@ -254,17 +254,17 @@ def _build_cors_origins() -> List[str]:
 
 ### Previous Failed Attempts (DO NOT RETRY)
 
-1. ❌ **Commit 1456992**: Added hardcoded origins - Railway edge ignored
+1. ❌ **Commit 1456992**: Added hardcoded origins - Render edge ignored
 2. ❌ **Commit fcad803**: Added `expose_headers=["*"]` - Still HTTP 400
 3. ❌ **Commit 9f8e157**: Removed `allow_origin_regex` - Still HTTP 400
 
-**Why they failed**: All modified CORSMiddleware config, which Railway edge bypasses
+**Why they failed**: All modified CORSMiddleware config, which Render edge bypasses
 
 ### What Changed (Current Approach)
 
-✅ **Add explicit OPTIONS handlers** - Bypass Railway edge automatic processing
+✅ **Add explicit OPTIONS handlers** - Bypass Render edge automatic processing
 ✅ **Pattern proven**: Codex local testing confirmed HTTP 200 with CORS headers
-✅ **Railway-specific fix**: Addresses edge server behavior, not code logic
+✅ **Render-specific fix**: Addresses edge server behavior, not code logic
 
 ---
 
@@ -284,7 +284,7 @@ def _build_cors_origins() -> List[str]:
 
 **Production Deployment**:
 
-- [ ] Railway deployment successful
+- [ ] Render deployment successful
 - [ ] Production OPTIONS return HTTP 200 (not 400)
 - [ ] Production responses include CORS headers
 
@@ -304,7 +304,7 @@ def _build_cors_origins() -> List[str]:
 - Add missing OPTIONS handler: 2 minutes
 - Local testing: 5 minutes
 - Git commit/push: 1 minute
-- Railway deployment: 2-3 minutes
+- Render deployment: 2-3 minutes
 - Production testing: 3 minutes
 - Browser verification: 2 minutes
 - **Total**: 15-20 minutes to working chat
@@ -333,7 +333,7 @@ def _build_cors_origins() -> List[str]:
 3. **Deployment Approval**: Ready to deploy after adding missing handler?
    - Code changes minimal (6 OPTIONS handlers)
    - Local testing confirmed pattern works
-   - Railway deployment risk low
+   - Render deployment risk low
 
 4. **Testing Protocol**: Should we test all OPTIONS endpoints locally before deploying?
    - Or deploy and test production immediately?
@@ -343,12 +343,12 @@ def _build_cors_origins() -> List[str]:
 
 ## HANDOFF CHAIN SUMMARY
 
-1. **Claude Code** → Diagnosed Railway edge server interference
+1. **Claude Code** → Diagnosed Render edge server interference
 2. **Claude Code** → Created `CURSOR_HANDOFF_2025-09-30_CORS.md` with solution
 3. **Cursor AI** → Implemented explicit OPTIONS handlers (5/6 complete)
 4. **Claude Code** → Created this review document for CODEX
 5. **CODEX** → **[CURRENT]** Review implementation and approve deployment
-6. **Cursor AI** → Add missing handler, test locally, deploy to Railway
+6. **Cursor AI** → Add missing handler, test locally, deploy to Render
 7. **Claude Code** → Verify production deployment and monitor
 
 ---
@@ -357,7 +357,7 @@ def _build_cors_origins() -> List[str]:
 
 **Implementation File**:
 
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/index.py`
+- `/Users/damianseguin/WIMD-Deploy-Project/api/index.py`
 
 **Documentation Files**:
 
@@ -385,7 +385,7 @@ def _build_cors_origins() -> List[str]:
 
 - Cursor AI will add missing OPTIONS handler
 - Cursor AI will test locally
-- Cursor AI will deploy to Railway
+- Cursor AI will deploy to Render
 - Claude Code will verify production
 
 **Expected outcome**: Working chat functionality within 15-20 minutes of approval.

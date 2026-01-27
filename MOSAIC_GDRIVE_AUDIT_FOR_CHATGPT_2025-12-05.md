@@ -3,7 +3,7 @@
 **Date**: 2025-12-05
 **For**: ChatGPT Diagnostic Review
 **Purpose**: Complete file inventory with Google Drive access paths
-**GDrive Root**: `WIMD-Railway-Deploy-Project/`
+**GDrive Root**: `WIMD-Render-Deploy-Project/`
 
 ---
 
@@ -12,13 +12,13 @@
 **All file paths in this document are relative to Google Drive root:**
 
 ```
-Google Drive > WIMD-Railway-Deploy-Project/
+Google Drive > WIMD-Render-Deploy-Project/
 ```
 
 **Example**: When you see `TEAM_PLAYBOOK.md`, the full path is:
 
 ```
-Google Drive > WIMD-Railway-Deploy-Project > TEAM_PLAYBOOK.md
+Google Drive > WIMD-Render-Deploy-Project > TEAM_PLAYBOOK.md
 ```
 
 ---
@@ -32,46 +32,46 @@ This is your priority reading list, organized by importance.
 **These 8 files define the entire execution environment:**
 
 1. **TEAM_PLAYBOOK.md**
-   - **GDrive Path**: `WIMD-Railway-Deploy-Project/TEAM_PLAYBOOK.md`
+   - **GDrive Path**: `WIMD-Render-Deploy-Project/TEAM_PLAYBOOK.md`
    - **Description**: Single source of truth, supersedes all other protocol docs
    - **Size**: 56.8 KB
    - **Status**: ✅ In GDrive
 
 2. **SESSION_START.md**
-   - **GDrive Path**: `WIMD-Railway-Deploy-Project/SESSION_START.md`
+   - **GDrive Path**: `WIMD-Render-Deploy-Project/SESSION_START.md`
    - **Description**: Mandatory session initialization with gate system
    - **Status**: ✅ In GDrive (uploaded 2025-12-05)
 
 3. **TROUBLESHOOTING_CHECKLIST.md**
-   - **GDrive Path**: `WIMD-Railway-Deploy-Project/TROUBLESHOOTING_CHECKLIST.md`
+   - **GDrive Path**: `WIMD-Render-Deploy-Project/TROUBLESHOOTING_CHECKLIST.md`
    - **Description**: Error classification, debugging workflows, sacred patterns
    - **Size**: 14.1 KB
    - **Status**: ✅ In GDrive
 
 4. **SELF_DIAGNOSTIC_FRAMEWORK.md**
-   - **GDrive Path**: `WIMD-Railway-Deploy-Project/SELF_DIAGNOSTIC_FRAMEWORK.md`
+   - **GDrive Path**: `WIMD-Render-Deploy-Project/SELF_DIAGNOSTIC_FRAMEWORK.md`
    - **Description**: Architecture-specific error prevention, playbooks-as-code
    - **Size**: 31.8 KB
    - **Status**: ✅ In GDrive
 
 5. **RECURRING_BLOCKERS.md**
-   - **GDrive Path**: `WIMD-Railway-Deploy-Project/RECURRING_BLOCKERS.md`
+   - **GDrive Path**: `WIMD-Render-Deploy-Project/RECURRING_BLOCKERS.md`
    - **Description**: Common blocker patterns and prevention
    - **Status**: ✅ In GDrive (uploaded 2025-12-05)
 
 6. **CLAUDE.md**
-   - **GDrive Path**: `WIMD-Railway-Deploy-Project/CLAUDE.md`
+   - **GDrive Path**: `WIMD-Render-Deploy-Project/CLAUDE.md`
    - **Description**: Architecture overview, deployment status, monitoring
    - **Size**: 11.4 KB
    - **Status**: ✅ In GDrive
 
 7. **DEPLOYMENT_TRUTH.md**
-   - **GDrive Path**: `WIMD-Railway-Deploy-Project/DEPLOYMENT_TRUTH.md`
+   - **GDrive Path**: `WIMD-Render-Deploy-Project/DEPLOYMENT_TRUTH.md`
    - **Description**: Authoritative deployment procedures
    - **Status**: ✅ In GDrive (uploaded 2025-12-05)
 
 8. **TECH_DEBT_TRACKING.md**
-   - **GDrive Path**: `WIMD-Railway-Deploy-Project/TECH_DEBT_TRACKING.md`
+   - **GDrive Path**: `WIMD-Render-Deploy-Project/TECH_DEBT_TRACKING.md`
    - **Description**: Known technical debt including file confusion issue
    - **Status**: ⚠️ May need upload (check GDrive)
 
@@ -82,21 +82,21 @@ This is your priority reading list, organized by importance.
 **Session Management:**
 
 9. **RESTART_PROTOCOL_README.md**
-   - **GDrive Path**: `WIMD-Railway-Deploy-Project/RESTART_PROTOCOL_README.md`
+   - **GDrive Path**: `WIMD-Render-Deploy-Project/RESTART_PROTOCOL_README.md`
    - **Status**: ⚠️ Check GDrive
 
 10. **CRITICAL_RESTART_CONTEXT.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/CRITICAL_RESTART_CONTEXT.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/CRITICAL_RESTART_CONTEXT.md`
     - **Status**: ⚠️ Check GDrive
 
 11. **HANDOFF_TO_NEW_SESSION.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/HANDOFF_TO_NEW_SESSION.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/HANDOFF_TO_NEW_SESSION.md`
     - **Status**: ⚠️ Check GDrive
 
 **Agent Coordination:**
 
 12. **AI_TEAM_METHODOLOGY.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/AI_TEAM_METHODOLOGY.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/AI_TEAM_METHODOLOGY.md`
     - **Status**: ⚠️ Check GDrive
 
 ---
@@ -106,19 +106,19 @@ This is your priority reading list, organized by importance.
 **MVP Implementation Files:**
 
 13. **MOSAIC_MVP_IMPLEMENTATION/GEMINI_DAY_1_REVIEW.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/MOSAIC_MVP_IMPLEMENTATION/GEMINI_DAY_1_REVIEW.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/MOSAIC_MVP_IMPLEMENTATION/GEMINI_DAY_1_REVIEW.md`
     - **Description**: Gemini's Day 1 code review with critical blockers (3 RESOLVED)
     - **Size**: 5.1 KB
     - **Status**: ✅ In GDrive
 
 14. **MOSAIC_MVP_IMPLEMENTATION/HANDOFF_TO_GPT51_CODEX_DAY1_COMPLETE.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/MOSAIC_MVP_IMPLEMENTATION/HANDOFF_TO_GPT51_CODEX_DAY1_COMPLETE.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/MOSAIC_MVP_IMPLEMENTATION/HANDOFF_TO_GPT51_CODEX_DAY1_COMPLETE.md`
     - **Description**: Day 1 completion handoff
     - **Size**: 18.6 KB
     - **Status**: ✅ In GDrive
 
 15. **MOSAIC_MVP_IMPLEMENTATION/HANDOFF_TO_GEMINI_DAY1_COMPLETE.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/MOSAIC_MVP_IMPLEMENTATION/HANDOFF_TO_GEMINI_DAY1_COMPLETE.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/MOSAIC_MVP_IMPLEMENTATION/HANDOFF_TO_GEMINI_DAY1_COMPLETE.md`
     - **Description**: Handoff to Gemini after Day 1
     - **Size**: 11.8 KB
     - **Status**: ✅ In GDrive
@@ -132,16 +132,16 @@ This is your priority reading list, organized by importance.
 **Architecture Documentation:**
 
 16. **MOSAIC_ARCHITECTURE.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/MOSAIC_ARCHITECTURE.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/MOSAIC_ARCHITECTURE.md`
     - **Description**: Mosaic system architecture documentation
     - **Status**: ✅ In GDrive (uploaded 2025-12-05)
 
 17. **PROJECT_STRUCTURE.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/PROJECT_STRUCTURE.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/PROJECT_STRUCTURE.md`
     - **Status**: ⚠️ Check GDrive
 
 18. **docs/ARCHITECTURAL_DECISIONS.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/docs/ARCHITECTURAL_DECISIONS.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/docs/ARCHITECTURAL_DECISIONS.md`
     - **Status**: ⚠️ Check GDrive (docs/ folder exists with 26 files)
 
 ---
@@ -151,34 +151,34 @@ This is your priority reading list, organized by importance.
 **Deployment Files:**
 
 19. **DEPLOYMENT_CHECKLIST.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/DEPLOYMENT_CHECKLIST.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/DEPLOYMENT_CHECKLIST.md`
     - **Size**: 2.6 KB
     - **Status**: ✅ In GDrive
 
 20. **DEPLOYMENT_STATUS.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/DEPLOYMENT_STATUS.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/DEPLOYMENT_STATUS.md`
     - **Status**: ⚠️ Check GDrive
 
 21. **DEPLOYMENT_WORKAROUNDS.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/DEPLOYMENT_WORKAROUNDS.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/DEPLOYMENT_WORKAROUNDS.md`
     - **Status**: ⚠️ Check GDrive
 
 22. **POST_DEPLOYMENT_TESTING.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/POST_DEPLOYMENT_TESTING.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/POST_DEPLOYMENT_TESTING.md`
     - **Status**: ⚠️ Check GDrive
 
-**Railway Specific:**
+**Render Specific:**
 
 23. **RAILWAY_AUTO_DEPLOY_DIAGNOSTIC.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/RAILWAY_AUTO_DEPLOY_DIAGNOSTIC.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/RAILWAY_AUTO_DEPLOY_DIAGNOSTIC.md`
     - **Status**: ⚠️ Check GDrive
 
 24. **RAILWAY_CLI_DEBUG_STATUS.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/RAILWAY_CLI_DEBUG_STATUS.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/RAILWAY_CLI_DEBUG_STATUS.md`
     - **Status**: ⚠️ Check GDrive
 
 25. **RAILWAY_DEPLOYMENT_FACTS.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/RAILWAY_DEPLOYMENT_FACTS.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/RAILWAY_DEPLOYMENT_FACTS.md`
     - **Status**: ⚠️ Check GDrive
 
 ---
@@ -194,7 +194,7 @@ This is your priority reading list, organized by importance.
 30. **scripts/deploy_frontend_netlify.sh** - Deploy frontend to Netlify
 31. **scripts/predeploy_sanity.sh** - Basic sanity checks
 
-**GDrive Path**: `WIMD-Railway-Deploy-Project/scripts/` (folder exists, check contents)
+**GDrive Path**: `WIMD-Render-Deploy-Project/scripts/` (folder exists, check contents)
 
 ---
 
@@ -203,17 +203,17 @@ This is your priority reading list, organized by importance.
 **Audit Files (Created Today):**
 
 32. **MOSAIC_DOCUMENTATION_AUDIT_2025-12-05.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/MOSAIC_DOCUMENTATION_AUDIT_2025-12-05.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/MOSAIC_DOCUMENTATION_AUDIT_2025-12-05.md`
     - **Description**: Complete 259-file inventory with local paths
     - **Status**: ✅ In GDrive (uploaded 2025-12-05)
 
 33. **DOCUMENTATION_CLEANUP_RECOMMENDATIONS_2025-12-05.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/DOCUMENTATION_CLEANUP_RECOMMENDATIONS_2025-12-05.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/DOCUMENTATION_CLEANUP_RECOMMENDATIONS_2025-12-05.md`
     - **Description**: Cleanup plan (52 files processed)
     - **Status**: ✅ In GDrive (uploaded 2025-12-05)
 
 34. **CLEANUP_SUMMARY_2025-12-05.md**
-    - **GDrive Path**: `WIMD-Railway-Deploy-Project/CLEANUP_SUMMARY_2025-12-05.md`
+    - **GDrive Path**: `WIMD-Render-Deploy-Project/CLEANUP_SUMMARY_2025-12-05.md`
     - **Description**: What was cleaned up today
     - **Status**: ✅ In GDrive (uploaded 2025-12-05)
 
@@ -222,7 +222,7 @@ This is your priority reading list, organized by importance.
 ## 📊 GDRIVE FOLDER STRUCTURE
 
 ```
-WIMD-Railway-Deploy-Project/
+WIMD-Render-Deploy-Project/
 ├── *.md (50+ markdown files in root)
 ├── MOSAIC_MVP_IMPLEMENTATION/
 │   ├── GEMINI_DAY_1_REVIEW.md ✅
@@ -251,16 +251,16 @@ WIMD-Railway-Deploy-Project/
 
 ## 🚨 CRITICAL FINDINGS FOR CHATGPT
 
-### 1. GitHub → Railway Auto-Deploy Not Working
+### 1. GitHub → Render Auto-Deploy Not Working
 
-**Current Blocker**: Pushes to `origin/main` do not trigger Railway deployment
+**Current Blocker**: Pushes to `origin/main` do not trigger Render deployment
 
 **Investigation Needed**:
 
 - Check GitHub webhook configuration
-- Verify Railway GitHub integration status
-- Review Railway deployment logs
-- Check if manual deploys work via Railway CLI
+- Verify Render GitHub integration status
+- Review Render deployment logs
+- Check if manual deploys work via Render CLI
 
 **Documentation**:
 
@@ -323,7 +323,7 @@ Focus areas:
 
 - Read: RAILWAY_AUTO_DEPLOY_DIAGNOSTIC.md
 - Check: GitHub webhook status
-- Verify: Railway integration active
+- Verify: Render integration active
 
 **If agent coordination issues**:
 
@@ -348,12 +348,12 @@ Focus areas:
 3. Are sacred coding patterns (context manager, PostgreSQL syntax) enforced?
 
 **Environment Configuration**:
-4. Is DATABASE_URL pointing to `railway.internal` (not `railway.app`)?
-5. Are all required environment variables set in Railway?
+4. Is DATABASE_URL pointing to `render.internal` (not `render.app`)?
+5. Are all required environment variables set in Render?
 6. Is GitHub webhook configured correctly?
 
 **Deployment Pipeline**:
-7. Why are pushes to `origin/main` not triggering Railway deploys?
+7. Why are pushes to `origin/main` not triggering Render deploys?
 8. Are wrapper scripts (`./scripts/deploy.sh`) being used?
 9. Are pre-deployment checks running and passing?
 
@@ -405,7 +405,7 @@ Execution integrity issues in a multi-AI-agent software development team working
 
 **Known Issues**:
 
-1. GitHub → Railway auto-deploy not triggering (BLOCKING)
+1. GitHub → Render auto-deploy not triggering (BLOCKING)
 2. Past incidents of protocol amnesia (agents not reading docs)
 3. Past incidents of regeneration loops (repeating failed actions)
 4. Past incidents of environment drift (SQLite vs PostgreSQL confusion)
@@ -440,7 +440,7 @@ Identify root causes of execution failures and recommend systemic fixes to preve
 
 **To share with ChatGPT**:
 
-1. Open Google Drive folder: `WIMD-Railway-Deploy-Project`
+1. Open Google Drive folder: `WIMD-Render-Deploy-Project`
 2. Share folder with ChatGPT (enable read access)
 3. Provide this audit file: `MOSAIC_GDRIVE_AUDIT_FOR_CHATGPT_2025-12-05.md`
 4. Tell ChatGPT to start with TEAM_PLAYBOOK.md

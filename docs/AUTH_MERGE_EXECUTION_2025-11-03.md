@@ -33,7 +33,7 @@ Following Claude_Code's urgent handoff document (`URGENT_TEAM_HANDOFF.md`), ther
 
 Claude_Code's handoff provided clear steps:
 
-1. Extract auth from OLD UI (`railway-origin/main:mosaic_ui/index.html`)
+1. Extract auth from OLD UI (`render-origin/main:mosaic_ui/index.html`)
 2. Insert into NEW UI (`frontend/index.html`)
 3. Verify merge
 4. Deploy
@@ -58,7 +58,7 @@ Previous attempts failed due to:
 
 ### Step 1: Extract Auth Components from OLD UI
 
-**Source:** `railway-origin/main:mosaic_ui/index.html` (2,766 lines)
+**Source:** `render-origin/main:mosaic_ui/index.html` (2,766 lines)
 
 **Auth Modal HTML (lines 258-326):**
 
@@ -250,7 +250,7 @@ git add frontend/index.html mosaic_ui/index.html
 git commit -m "MERGE: Add auth to NEW UI (3,427 line base + auth components)
 
 - Base: NEW UI from commit 890d2bc (Find Your Next Career Move)
-- Added: Authentication from railway-origin/main
+- Added: Authentication from render-origin/main
 - Result: NEW UI design + working authentication
 - Meets spec requirement: PS101_CANONICAL_SPEC_V2.md line 16"
 

@@ -14,10 +14,10 @@ Read this file first: **`RESTART_INSTRUCTIONS.md`**
 
 ## NEXT STEPS
 
-1. Deploy backend to Railway
+1. Deploy backend to Render
 2. Deploy frontend to Netlify
 3. Test domain routing
 
 **Everything is ready - just need deployment execution.**
 
-Project location: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/`
+Project location: `/Users/damianseguin/WIMD-Deploy-Project/`

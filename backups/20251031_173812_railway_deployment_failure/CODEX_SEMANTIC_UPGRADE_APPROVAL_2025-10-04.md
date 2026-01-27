@@ -87,7 +87,7 @@
 
 ### **For Claude Code (Deployment)**
 
-- ✅ **Infrastructure**: Railway configuration ready
+- ✅ **Infrastructure**: Render configuration ready
 - ✅ **Monitoring**: Cost and performance tracking
 - ✅ **Support**: Deployment issues only
 

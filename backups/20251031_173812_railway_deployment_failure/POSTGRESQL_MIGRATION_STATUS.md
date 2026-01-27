@@ -2,7 +2,7 @@
 
 **Date:** 2025-10-14
 **Migration Time:** 90 minutes (as estimated)
-**Status:** ⏳ DEPLOYED - Awaiting Railway PostgreSQL Provisioning
+**Status:** ⏳ DEPLOYED - Awaiting Render PostgreSQL Provisioning
 
 ---
 
@@ -12,8 +12,8 @@ Successfully migrated Mosaic platform from **ephemeral SQLite** to **persistent 
 
 ### Root Cause (Confirmed by NARs)
 
-- Railway uses ephemeral container filesystem
-- `railway.json` `include` directive only packages files, does NOT create persistent storage
+- Render uses ephemeral container filesystem
+- `render.json` `include` directive only packages files, does NOT create persistent storage
 - SQLite database at `data/mosaic.db` was wiped on every deployment
 - All user accounts, sessions, and application state lost on each deploy
 
@@ -24,7 +24,7 @@ Successfully migrated Mosaic platform from **ephemeral SQLite** to **persistent 
 - ✅ Updated all SQL syntax (? → %s, AUTOINCREMENT → SERIAL)
 - ✅ Added connection pooling for PostgreSQL
 - ✅ Maintained SQLite fallback for local development
-- ✅ Committed and pushed to `railway-origin main`
+- ✅ Committed and pushed to `render-origin main`
 
 ---
 
@@ -40,31 +40,31 @@ Successfully migrated Mosaic platform from **ephemeral SQLite** to **persistent 
 ### Phase 2: ✅ Deployment
 
 - Committed to git: `2b9fbc1`
-- Pushed to railway-origin main
-- Railway rebuild triggered
+- Pushed to render-origin main
+- Render rebuild triggered
 
 ### Phase 3: ⏳ **MANUAL STEP REQUIRED**
 
-**You must provision Railway PostgreSQL before the application will work:**
+**You must provision Render PostgreSQL before the application will work:**
 
-1. Go to Railway dashboard: <https://railway.app/project/5b2d701c-9d14-4d56-8836-149c0cbc8511>
+1. Go to Render dashboard: <https://render.app/project/5b2d701c-9d14-4d56-8836-149c0cbc8511>
 2. Click "New" → "Database" → "PostgreSQL"
 3. Wait for PostgreSQL to provision (~2 minutes)
 4. Copy the `DATABASE_URL` connection string
 5. Add to service environment variables:
    - Variable name: `DATABASE_URL`
    - Value: `postgresql://...` (from PostgreSQL service)
-6. Railway will auto-redeploy with DATABASE_URL set
+6. Render will auto-redeploy with DATABASE_URL set
 7. Database schema will be created automatically on first connection
 
 ---
 
 ## Verification Steps (After PostgreSQL Provisioned)
 
-### Step 1: Check Railway Build
+### Step 1: Check Render Build
 
 ```bash
-# Monitor Railway deployment logs
+# Monitor Render deployment logs
 # Should show: "Successfully built" and "Deployment successful"
 ```
 
@@ -82,12 +82,12 @@ Successfully migrated Mosaic platform from **ephemeral SQLite** to **persistent 
 echo "\n# PostgreSQL migration complete" >> README.md
 git add README.md
 git commit -m "Test: Verify PostgreSQL persistence"
-git push railway-origin main
+git push render-origin main
 ```
 
 ### Step 4: Verify User Persists
 
-1. Wait for Railway rebuild to complete (~2 minutes)
+1. Wait for Render rebuild to complete (~2 minutes)
 2. Go to <https://whatismydelta.com>
 3. Try to login with <test@example.com> / testpass123
 4. **Expected:** Login succeeds (user account survived deployment)
@@ -147,7 +147,7 @@ sed -i '' '/psycopg2-binary/d' requirements.txt
 # Commit and deploy
 git add api/storage.py requirements.txt
 git commit -m "Rollback: Restore SQLite storage layer"
-git push railway-origin main
+git push render-origin main
 ```
 
 **Note:** Rollback will lose all users created after PostgreSQL migration.
@@ -164,14 +164,14 @@ git push railway-origin main
 
 ## Next Steps
 
-1. **IMMEDIATE:** Provision Railway PostgreSQL database (5 minutes)
-2. **THEN:** Add `DATABASE_URL` to Railway environment variables
-3. **WAIT:** Railway auto-redeploy with DATABASE_URL set
+1. **IMMEDIATE:** Provision Render PostgreSQL database (5 minutes)
+2. **THEN:** Add `DATABASE_URL` to Render environment variables
+3. **WAIT:** Render auto-redeploy with DATABASE_URL set
 4. **VERIFY:** Follow verification steps above
 5. **CONFIRM:** Database persists across deployments
 
 ---
 
-**Status:** ⏳ Awaiting Railway PostgreSQL provisioning by user
+**Status:** ⏳ Awaiting Render PostgreSQL provisioning by user
 
 **Estimated Time to Full Resolution:** 10 minutes (manual provisioning + auto-redeploy)

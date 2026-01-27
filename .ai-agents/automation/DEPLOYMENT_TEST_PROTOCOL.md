@@ -29,16 +29,16 @@
 
 ```bash
 # Test 1.1: Basic health check
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Test 1.2: Comprehensive health
-curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
+curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive
 
 # Test 1.3: Configuration
-curl https://what-is-my-delta-site-production.up.railway.app/config
+curl https://what-is-my-delta-site-production.up.render.app/config
 
 # Test 1.4: Active prompts
-curl https://what-is-my-delta-site-production.up.railway.app/prompts/active
+curl https://what-is-my-delta-site-production.up.render.app/prompts/active
 ```
 
 **Success Criteria:**
@@ -51,7 +51,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/prompts/active
 
 **Gate Status:** [ ] PASS / [ ] FAIL
 
-**If FAIL:** Check Railway logs, verify DATABASE_URL, check PostgreSQL service
+**If FAIL:** Check Render logs, verify DATABASE_URL, check PostgreSQL service
 
 ---
 
@@ -63,20 +63,20 @@ curl https://what-is-my-delta-site-production.up.railway.app/prompts/active
 
 ```bash
 # Test 2.1: Career coaching (PS101)
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/wimd \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/wimd \
   -H "Content-Type: application/json" \
   -d '{"prompt": "I feel stuck in my career"}'
 
 # Test 2.2: User registration
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/register \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email": "test_'$(date +%s)'@example.com", "password": "testpass123"}'
 
 # Test 2.3: Job search
-curl "https://what-is-my-delta-site-production.up.railway.app/jobs/search?query=software+engineer&location=remote&limit=3"
+curl "https://what-is-my-delta-site-production.up.render.app/jobs/search?query=software+engineer&location=remote&limit=3"
 
 # Test 2.4: RAG health
-curl https://what-is-my-delta-site-production.up.railway.app/health/rag
+curl https://what-is-my-delta-site-production.up.render.app/health/rag
 ```
 
 **Success Criteria:**
@@ -114,7 +114,7 @@ curl -I https://whatismydelta.com/health
 - Frontend returns HTTP 200
 - HTML contains expected title
 - Favicon exists
-- Netlify proxy routes to Railway backend
+- Netlify proxy routes to Render backend
 
 **Gate Status:** [ ] PASS / [ ] FAIL
 

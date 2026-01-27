@@ -2,11 +2,11 @@
 
 ## Current Issue
 
-Auth proxy routes in netlify.toml are not working. Netlify returns "Page not found" HTML for `/auth/*` endpoints instead of proxying to Railway backend.
+Auth proxy routes in netlify.toml are not working. Netlify returns "Page not found" HTML for `/auth/*` endpoints instead of proxying to Render backend.
 
 ## What's Working
 
-✅ Railway backend fully operational at <https://what-is-my-delta-site-production.up.railway.app>
+✅ Render backend fully operational at <https://what-is-my-delta-site-production.up.render.app>
 ✅ `/health` proxy works correctly through Netlify
 ✅ `/config` proxy works correctly through Netlify
 ✅ `/prompts/*` proxy works correctly through Netlify
@@ -21,7 +21,7 @@ Auth proxy routes in netlify.toml are not working. Netlify returns "Page not fou
 
 - **Site**: <https://whatismydelta.com>
 - **Netlify Site ID**: resonant-crostata-90b706
-- **Git Repo**: <https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git>
+- **Git Repo**: <https://github.com/DAMIANSEGUIN/wimd-render-deploy.git>
 - **Branch**: main
 - **Build Directory**: mosaic_ui
 - **Publish Directory**: mosaic_ui
@@ -78,19 +78,19 @@ The netlify.toml should contain these redirects (in order):
 ```toml
 [[redirects]]
   from = "/auth/register"
-  to = "https://what-is-my-delta-site-production.up.railway.app/auth/register"
+  to = "https://what-is-my-delta-site-production.up.render.app/auth/register"
   status = 200
   force = true
 
 [[redirects]]
   from = "/auth/login"
-  to = "https://what-is-my-delta-site-production.up.railway.app/auth/login"
+  to = "https://what-is-my-delta-site-production.up.render.app/auth/login"
   status = 200
   force = true
 
 [[redirects]]
   from = "/auth/me"
-  to = "https://what-is-my-delta-site-production.up.railway.app/auth/me"
+  to = "https://what-is-my-delta-site-production.up.render.app/auth/me"
   status = 200
   force = true
 
@@ -175,15 +175,15 @@ Please provide:
 
 After successful deployment:
 
-- `/auth/register` → proxies to Railway, returns JSON
-- `/auth/login` → proxies to Railway, returns JSON
-- `/auth/me` → proxies to Railway, returns JSON
+- `/auth/register` → proxies to Render, returns JSON
+- `/auth/login` → proxies to Render, returns JSON
+- `/auth/me` → proxies to Render, returns JSON
 - All responses should be JSON, NOT HTML
 
 ## Context
 
-This is the Mosaic Platform authentication system. Railway backend is fully functional and tested. The only issue is Netlify not proxying the auth routes correctly. The netlify.toml configuration is correct and committed - we just need Netlify to deploy it.
+This is the Mosaic Platform authentication system. Render backend is fully functional and tested. The only issue is Netlify not proxying the auth routes correctly. The netlify.toml configuration is correct and committed - we just need Netlify to deploy it.
 
 ---
 
-**URGENT**: The Railway backend is working perfectly. This is purely a Netlify proxy configuration deployment issue. Focus on getting Netlify to read and apply the netlify.toml redirect rules.
+**URGENT**: The Render backend is working perfectly. This is purely a Netlify proxy configuration deployment issue. Focus on getting Netlify to read and apply the netlify.toml redirect rules.

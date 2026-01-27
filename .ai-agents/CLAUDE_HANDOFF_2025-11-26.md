@@ -20,7 +20,7 @@
 ### ✅ Local Dev Server Restarted
 
 - Server running on <http://localhost:3000>
-- Proxying API calls to production Railway backend
+- Proxying API calls to production Render backend
 - Serving static files from mosaic_ui/
 
 ## 🚨 CRITICAL BLOCKER
@@ -97,7 +97,7 @@ M frontend/index.html   (line 2468: removed extra })
 ### Architecture
 
 - **Frontend:** Vanilla JavaScript with IIFE pattern
-- **Backend:** Railway (production) at <https://what-is-my-delta-site-production.up.railway.app>
+- **Backend:** Render (production) at <https://what-is-my-delta-site-production.up.render.app>
 - **Database:** Production PostgreSQL (no local database)
 - **Auth:** Production credentials required (user needs to register)
 
@@ -159,7 +159,7 @@ mosaic_ui/index.html          - Login handler, coach-strip HTML
 mosaic_ui/js/state.js         - Auth state management
 mosaic_ui/js/api.js           - Login API call
 frontend/index.html           - Netlify deployed version
-local_dev_server.py           - Local dev proxy to Railway
+local_dev_server.py           - Local dev proxy to Render
 ```
 
 ## Git Status

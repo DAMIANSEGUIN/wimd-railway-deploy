@@ -27,8 +27,8 @@ open -a "Google Chrome" https://whatismydelta.com
 ## Production URLs
 
 **Frontend:** <https://whatismydelta.com>
-**Backend API:** <https://what-is-my-delta-site-production.up.railway.app>
-**Health Check:** <https://what-is-my-delta-site-production.up.railway.app/health>
+**Backend API:** <https://what-is-my-delta-site-production.up.render.app>
+**Health Check:** <https://what-is-my-delta-site-production.up.render.app/health>
 
 ---
 
@@ -39,7 +39,7 @@ open -a "Google Chrome" https://whatismydelta.com
 **Command:**
 
 ```bash
-curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3 -m json.tool
+curl -s https://what-is-my-delta-site-production.up.render.app/health | python3 -m json.tool
 ```
 
 **Expected Response:**
@@ -65,7 +65,7 @@ curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3
 
 **If Failed:**
 
-- Check Railway logs: `railway logs | head -100`
+- Check Render logs: `render logs | head -100`
 - Check for PostgreSQL connection errors
 - Verify DATABASE_URL is set
 
@@ -79,7 +79,7 @@ curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3
 
 ```bash
 # This will return 401/422 (expected - requires auth), not 404
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/api/ps101/extract-context \
   -H "Content-Type: application/json" \
   -v 2>&1 | grep -E "HTTP|404|401|422"
 ```
@@ -170,7 +170,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **If Failed:**
 
 - Check Network tab for /auth/register errors
-- Check Railway logs for auth errors
+- Check Render logs for auth errors
 - Verify users table exists in database
 
 **Capture Test User Credentials:**
@@ -255,18 +255,18 @@ User ID (from console): ____________________
 
 - Check Network tab for POST /api/ps101/extract-context
 - Check response status (should be 200)
-- Check Railway logs for extraction errors
+- Check Render logs for extraction errors
 - Verify CLAUDE_API_KEY is set
 
 **Debugging Commands:**
 
 ```bash
 # Check if context was saved to database
-# (Requires Railway shell or psql access)
-railway run psql $DATABASE_URL -c "SELECT user_id, extracted_at FROM user_contexts ORDER BY extracted_at DESC LIMIT 5;"
+# (Requires Render shell or psql access)
+render run psql $DATABASE_URL -c "SELECT user_id, extracted_at FROM user_contexts ORDER BY extracted_at DESC LIMIT 5;"
 
-# Check Railway logs for extraction
-railway logs | grep -i "extract\|context\|claude"
+# Check Render logs for extraction
+render logs | grep -i "extract\|context\|claude"
 ```
 
 ---
@@ -287,7 +287,7 @@ railway logs | grep -i "extract\|context\|claude"
 # Replace USER_ID with actual user_id from Test 4
 USER_ID="replace-with-actual-user-id"
 
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/api/ps101/extract-context \
   -H "Content-Type: application/json" \
   -H "X-User-ID: $USER_ID" \
   -s | python3 -m json.tool
@@ -440,17 +440,17 @@ admire. What would you say in that first message?
 
 - Check Network tab for POST /wimd/ask
 - Verify request includes session_id
-- Check Railway logs for context retrieval
+- Check Render logs for context retrieval
 - Verify user_contexts table has data for this user
 
 **Debugging Commands:**
 
 ```bash
 # Check if context is in database
-railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contexts WHERE user_id = 'USER_ID_HERE';"
+render run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contexts WHERE user_id = 'USER_ID_HERE';"
 
-# Check Railway logs for system prompt
-railway logs | grep -i "system_prompt\|ps101\|context"
+# Check Render logs for system prompt
+render logs | grep -i "system_prompt\|ps101\|context"
 ```
 
 ---
@@ -495,16 +495,16 @@ railway logs | grep -i "system_prompt\|ps101\|context"
 
 ```bash
 # Check users table
-railway run psql $DATABASE_URL -c "SELECT id, email, created_at FROM users ORDER BY created_at DESC LIMIT 5;"
+render run psql $DATABASE_URL -c "SELECT id, email, created_at FROM users ORDER BY created_at DESC LIMIT 5;"
 
 # Check ps101_responses table
-railway run psql $DATABASE_URL -c "SELECT user_id, step, prompt_index, LENGTH(response) as response_length FROM ps101_responses ORDER BY user_id DESC LIMIT 20;"
+render run psql $DATABASE_URL -c "SELECT user_id, step, prompt_index, LENGTH(response) as response_length FROM ps101_responses ORDER BY user_id DESC LIMIT 20;"
 
 # Check user_contexts table
-railway run psql $DATABASE_URL -c "SELECT user_id, extracted_at, extraction_model FROM user_contexts ORDER BY extracted_at DESC LIMIT 5;"
+render run psql $DATABASE_URL -c "SELECT user_id, extracted_at, extraction_model FROM user_contexts ORDER BY extracted_at DESC LIMIT 5;"
 
 # Check user_contexts content (pretty print JSON)
-railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contexts ORDER BY extracted_at DESC LIMIT 1;" | cat
+render run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contexts ORDER BY extracted_at DESC LIMIT 1;" | cat
 ```
 
 **Success Criteria:**
@@ -527,10 +527,10 @@ railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contex
 1. **Temporarily set CLAUDE_API_KEY to invalid value:**
 
    ```bash
-   railway variables --set CLAUDE_API_KEY=sk-ant-invalid-test-key
+   render variables --set CLAUDE_API_KEY=sk-ant-invalid-test-key
    ```
 
-2. **Wait for Railway to redeploy (~2 min)**
+2. **Wait for Render to redeploy (~2 min)**
 
 3. **Trigger context extraction:**
    - Complete PS101 with new test account
@@ -539,12 +539,12 @@ railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contex
 4. **Expected behavior:**
    - Console shows: "Context extraction failed: ..."
    - User can still use app (no crash)
-   - Error logged in Railway logs
+   - Error logged in Render logs
 
 5. **Restore correct API key:**
 
    ```bash
-   railway variables --set CLAUDE_API_KEY=sk-ant-api03-<actual-key>
+   render variables --set CLAUDE_API_KEY=sk-ant-api03-<actual-key>
    ```
 
 **Success Criteria:**
@@ -600,19 +600,19 @@ railway run psql $DATABASE_URL -c "SELECT user_id, context_data FROM user_contex
 
 ```bash
 # Check health endpoint
-watch -n 30 'curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3 -m json.tool'
+watch -n 30 'curl -s https://what-is-my-delta-site-production.up.render.app/health | python3 -m json.tool'
 
-# Monitor Railway logs for errors
-railway logs | grep -i "error\|warn\|exception" --color=always
+# Monitor Render logs for errors
+render logs | grep -i "error\|warn\|exception" --color=always
 
 # Check for context extraction events
-railway logs | grep -i "context extracted\|extract-context" --color=always
+render logs | grep -i "context extracted\|extract-context" --color=always
 
 # Check for completion gate events
-railway logs | grep -i "ps101\|completion\|questionnaire" --color=always
+render logs | grep -i "ps101\|completion\|questionnaire" --color=always
 
 # Check Claude API usage
-railway logs | grep -i "claude\|anthropic" --color=always
+render logs | grep -i "claude\|anthropic" --color=always
 ```
 
 **Success Criteria:**
@@ -688,24 +688,24 @@ railway logs | grep -i "claude\|anthropic" --color=always
 
 ```
 Frontend:  https://whatismydelta.com
-Backend:   https://what-is-my-delta-site-production.up.railway.app
-Health:    https://what-is-my-delta-site-production.up.railway.app/health
+Backend:   https://what-is-my-delta-site-production.up.render.app
+Health:    https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 **Key Commands:**
 
 ```bash
 # Health check
-curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3 -m json.tool
+curl -s https://what-is-my-delta-site-production.up.render.app/health | python3 -m json.tool
 
 # Open Chrome
 open -a "Google Chrome" https://whatismydelta.com
 
-# Railway logs
-railway logs | grep -i "error\|context"
+# Render logs
+render logs | grep -i "error\|context"
 
 # Database check
-railway run psql $DATABASE_URL -c "SELECT COUNT(*) FROM user_contexts;"
+render run psql $DATABASE_URL -c "SELECT COUNT(*) FROM user_contexts;"
 ```
 
 **Test Credentials Template:**
@@ -725,7 +725,7 @@ If you encounter issues during testing:
    - Screenshot of error
    - Browser console logs (DevTools → Console)
    - Network request details (DevTools → Network)
-   - Railway logs (railway logs | tail -100)
+   - Render logs (render logs | tail -100)
 
 2. **Check common issues:**
    - 404 on /api/ps101/extract-context → Router prefix issue
@@ -736,7 +736,7 @@ If you encounter issues during testing:
 3. **Report to Claude Code with:**
    - Which test failed (number and name)
    - Error messages (exact text)
-   - Logs (Railway + browser console)
+   - Logs (Render + browser console)
    - Test account details (email, user_id)
 
 ---

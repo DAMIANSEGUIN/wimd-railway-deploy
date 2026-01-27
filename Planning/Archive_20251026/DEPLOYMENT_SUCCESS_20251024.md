@@ -10,7 +10,7 @@
 
 Successfully deployed draggable windows functionality to production without requiring secondary test site.
 
-**Key Discovery:** Git repository divergence was a red herring. Netlify was already correctly configured to deploy from `origin` (wimd-railway-deploy.git).
+**Key Discovery:** Git repository divergence was a red herring. Netlify was already correctly configured to deploy from `origin` (wimd-render-deploy.git).
 
 ---
 
@@ -24,7 +24,7 @@ Successfully deployed draggable windows functionality to production without requ
 
 **Netlify Site:** resonant-crostata-90b706
 
-**Repository:** <https://github.com/DAMIANSEGUIN/wimd-railway-deploy>
+**Repository:** <https://github.com/DAMIANSEGUIN/wimd-render-deploy>
 
 ---
 
@@ -33,28 +33,28 @@ Successfully deployed draggable windows functionality to production without requ
 ### The Problem
 
 - Local repo has 13 commits ahead with `mosaic_ui/` structure
-- `railway-origin` remote pointed to different repo with `frontend/` structure
+- `render-origin` remote pointed to different repo with `frontend/` structure
 - Attempted pull/rebase caused conflicts
 
 ### The Solution
 
-- **`railway-origin` is NOT for frontend deployment**
-- **Netlify deploys from `origin` (wimd-railway-deploy.git)**
-- **`railway-origin` is the backend API repo (separate project)**
+- **`render-origin` is NOT for frontend deployment**
+- **Netlify deploys from `origin` (wimd-render-deploy.git)**
+- **`render-origin` is the backend API repo (separate project)**
 
 ### Architecture Clarity
 
 ```
 Frontend (Static HTML/JS)
-├── Repo: wimd-railway-deploy.git (origin)
+├── Repo: wimd-render-deploy.git (origin)
 ├── Deployment: Netlify
 ├── URL: https://whatismydelta.com
 └── Structure: mosaic_ui/
 
 Backend (Python FastAPI)
-├── Repo: what-is-my-delta-site.git (railway-origin)
-├── Deployment: Railway
-├── URL: what-is-my-delta-site-production.up.railway.app
+├── Repo: what-is-my-delta-site.git (render-origin)
+├── Deployment: Render
+├── URL: what-is-my-delta-site-production.up.render.app
 └── Structure: frontend/ (different codebase)
 ```
 
@@ -170,7 +170,7 @@ git push origin HEAD:main --force
 
 - ✅ Draggable windows deployed
 - ✅ Chat interface draggable on desktop (>768px)
-- ✅ Backend API functional (Railway)
+- ✅ Backend API functional (Render)
 - ✅ All existing features intact
 
 **Deployment Time:** < 2 seconds

@@ -164,7 +164,7 @@ User should only be:
 
 **Created This Session:**
 
-- `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/CODE_GOVERNANCE_STANDARD_v1.md`
+- `/Users/damianseguin/WIMD-Deploy-Project/CODE_GOVERNANCE_STANDARD_v1.md`
 
 **Existing Standards:**
 
@@ -187,7 +187,7 @@ User should only be:
 **PROMPT FOR NEXT SESSION:**
 
 ```
-Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/GOVERNANCE_REBUILD_PROMPT.md
+Read: /Users/damianseguin/WIMD-Deploy-Project/.ai-agents/GOVERNANCE_REBUILD_PROMPT.md
 
 Context: We're replacing human-written governance prose with machine-enforceable ISO standards.
 

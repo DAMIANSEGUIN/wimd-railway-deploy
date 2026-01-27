@@ -1,12 +1,12 @@
 # Handoff to ChatGPT: Troubleshooting Unresolved Pre-Commit Issues
 
-**Objective:** This document outlines the remaining blocking issues preventing a clean commit in the `wimd-railway-deploy` project. I require troubleshooting suggestions for the following specific pre-commit hook failures.
+**Objective:** This document outlines the remaining blocking issues preventing a clean commit in the `wimd-render-deploy` project. I require troubleshooting suggestions for the following specific pre-commit hook failures.
 
 ---
 
 ## 1. Context
 
-My primary goal is to get the repository into a clean, committable state so I can proceed with a GitHub-based deployment to Railway. I am systematically resolving a series of pre-commit hook failures. The environment is a `zsh` shell on macOS, using a Python 3.12 virtual environment (`.venv`).
+My primary goal is to get the repository into a clean, committable state so I can proceed with a GitHub-based deployment to Render. I am systematically resolving a series of pre-commit hook failures. The environment is a `zsh` shell on macOS, using a Python 3.12 virtual environment (`.venv`).
 
 I have already resolved issues related to Python environment paths, missing executables, script permissions, and redundant/conflicting formatters (`black`, `isort`).
 

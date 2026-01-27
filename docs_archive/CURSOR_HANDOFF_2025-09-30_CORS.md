@@ -1,4 +1,4 @@
-# CURSOR HANDOFF - Railway CORS OPTIONS Handler Fix
+# CURSOR HANDOFF - Render CORS OPTIONS Handler Fix
 
 **From**: Claude Code (Infrastructure Debugger)
 **To**: Claude in Cursor (Local Implementation Engineer)
@@ -14,25 +14,25 @@
 Browser chat requests fail with CORS error:
 
 ```
-POST https://what-is-my-delta-site-production.up.railway.app/wimd net::ERR_FAILED
+POST https://what-is-my-delta-site-production.up.render.app/wimd net::ERR_FAILED
 Access to fetch blocked by CORS policy: No 'Access-Control-Allow-Origin' header
 ```
 
 ### Root Cause Identified
 
-**Railway edge server interfering with OPTIONS preflight requests**
+**Render edge server interfering with OPTIONS preflight requests**
 
 **Evidence**:
 
 - ✅ **Local test (Codex)**: `curl -I -X OPTIONS http://localhost:8000/wimd` → HTTP 200 with `access-control-allow-origin` header
-- ❌ **Railway production**: `curl -I -X OPTIONS https://railway.../wimd` → HTTP 400, missing `access-control-allow-origin` header
+- ❌ **Render production**: `curl -I -X OPTIONS https://render.../wimd` → HTTP 400, missing `access-control-allow-origin` header
 - ✅ **Code is correct**: FastAPI CORSMiddleware properly configured (lines 105-112)
-- ✅ **Railway is live**: Latest deployment timestamp `2025-09-30T17:38:40Z`
-- ❌ **Railway edge behavior**: Header `x-railway-edge: railway/us-east4-eqdc4a` indicates edge server processing
+- ✅ **Render is live**: Latest deployment timestamp `2025-09-30T17:38:40Z`
+- ❌ **Render edge behavior**: Header `x-render-edge: render/us-east4-eqdc4a` indicates edge server processing
 
-### Why Railway Fails
+### Why Render Fails
 
-Railway's edge servers (`railway-edge`) intercept OPTIONS requests before they reach FastAPI's CORSMiddleware, returning HTTP 400 instead of letting FastAPI handle the CORS preflight properly.
+Render's edge servers (`render-edge`) intercept OPTIONS requests before they reach FastAPI's CORSMiddleware, returning HTTP 400 instead of letting FastAPI handle the CORS preflight properly.
 
 ---
 
@@ -40,11 +40,11 @@ Railway's edge servers (`railway-edge`) intercept OPTIONS requests before they r
 
 ### Add Explicit OPTIONS Handlers
 
-FastAPI's automatic OPTIONS handling isn't working through Railway's edge layer. Need explicit OPTIONS route handlers.
+FastAPI's automatic OPTIONS handling isn't working through Render's edge layer. Need explicit OPTIONS route handlers.
 
 ### Implementation Required
 
-**File**: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/index.py`
+**File**: `/Users/damianseguin/WIMD-Deploy-Project/api/index.py`
 
 **Step 1**: Add Response import (if not already present)
 
@@ -61,7 +61,7 @@ Insert these handlers **immediately before** their corresponding POST endpoints:
 ```python
 @app.options("/wimd")
 def wimd_options():
-    """Explicit OPTIONS handler for Railway edge compatibility"""
+    """Explicit OPTIONS handler for Render edge compatibility"""
     return Response(status_code=200)
 ```
 
@@ -70,7 +70,7 @@ def wimd_options():
 ```python
 @app.options("/wimd/upload")
 def wimd_upload_options():
-    """Explicit OPTIONS handler for Railway edge compatibility"""
+    """Explicit OPTIONS handler for Render edge compatibility"""
     return Response(status_code=200)
 ```
 
@@ -79,7 +79,7 @@ def wimd_upload_options():
 ```python
 @app.options("/ob/apply")
 def ob_apply_options():
-    """Explicit OPTIONS handler for Railway edge compatibility"""
+    """Explicit OPTIONS handler for Render edge compatibility"""
     return Response(status_code=200)
 ```
 
@@ -101,7 +101,7 @@ def resume_feedback_options():
 
 ### Why This Works
 
-- Explicit OPTIONS handlers bypass Railway edge server automatic processing
+- Explicit OPTIONS handlers bypass Render edge server automatic processing
 - FastAPI CORSMiddleware still adds proper CORS headers to the Response
 - HTTP 200 (not 400) signals browser that preflight succeeded
 - Browser proceeds with actual POST request
@@ -114,7 +114,7 @@ def resume_feedback_options():
 
 ```bash
 # Start local server
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 python -m uvicorn api.index:app --reload --port 8000
 
 # Test OPTIONS in another terminal
@@ -129,23 +129,23 @@ curl -I -X OPTIONS http://localhost:8000/wimd \
 # access-control-allow-methods: GET, POST, OPTIONS
 ```
 
-### Step 2: Deploy to Railway
+### Step 2: Deploy to Render
 
 ```bash
 git add api/index.py
-git commit -m "Fix: Add explicit OPTIONS handlers for Railway edge compatibility"
+git commit -m "Fix: Add explicit OPTIONS handlers for Render edge compatibility"
 git push origin main
 ```
 
-### Step 3: Wait for Railway Deployment
+### Step 3: Wait for Render Deployment
 
-- Check Railway dashboard shows "Deployment successful"
+- Check Render dashboard shows "Deployment successful"
 - Wait 1-2 minutes for edge servers to update
 
 ### Step 4: Test Production OPTIONS
 
 ```bash
-curl -I -X OPTIONS https://what-is-my-delta-site-production.up.railway.app/wimd \
+curl -I -X OPTIONS https://what-is-my-delta-site-production.up.render.app/wimd \
   -H "Origin: https://whatismydelta.com" \
   -H "Access-Control-Request-Method: POST"
 
@@ -170,7 +170,7 @@ curl -I -X OPTIONS https://what-is-my-delta-site-production.up.railway.app/wimd 
 
 ### Primary File to Modify
 
-`/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/api/index.py`
+`/Users/damianseguin/WIMD-Deploy-Project/api/index.py`
 
 ### Where to Add OPTIONS Handlers
 
@@ -218,22 +218,22 @@ HTTP/1.1 200 OK
 access-control-allow-origin: https://whatismydelta.com  # ← Present locally
 ```
 
-**Railway production output** (failing):
+**Render production output** (failing):
 
 ```bash
-$ curl -I -X OPTIONS https://railway.../wimd -H "Origin: https://whatismydelta.com"
+$ curl -I -X OPTIONS https://render.../wimd -H "Origin: https://whatismydelta.com"
 HTTP/2 400  # ← Wrong status code
 # access-control-allow-origin header MISSING
-x-railway-edge: railway/us-east4-eqdc4a  # ← Edge server interference
+x-render-edge: render/us-east4-eqdc4a  # ← Edge server interference
 ```
 
 ### Why Previous Fixes Failed
 
-1. ❌ **Commit 1456992**: Added hardcoded origins - Railway edge ignored them
-2. ❌ **Commit fcad803**: Added `expose_headers=["*"]` - Railway edge still intercepts
-3. ❌ **Commit 9f8e157**: Removed `allow_origin_regex` - Railway edge still returns 400
+1. ❌ **Commit 1456992**: Added hardcoded origins - Render edge ignored them
+2. ❌ **Commit fcad803**: Added `expose_headers=["*"]` - Render edge still intercepts
+3. ❌ **Commit 9f8e157**: Removed `allow_origin_regex` - Render edge still returns 400
 
-**All previous fixes modified CORSMiddleware config, which Railway edge bypasses.**
+**All previous fixes modified CORSMiddleware config, which Render edge bypasses.**
 
 ---
 
@@ -241,7 +241,7 @@ x-railway-edge: railway/us-east4-eqdc4a  # ← Edge server interference
 
 - [ ] Local OPTIONS test returns HTTP 200 with `access-control-allow-origin` header
 - [ ] Code changes committed and pushed to GitHub
-- [ ] Railway deployment completes successfully
+- [ ] Render deployment completes successfully
 - [ ] Production OPTIONS test returns HTTP 200 (not 400)
 - [ ] Production response includes `access-control-allow-origin: https://whatismydelta.com`
 - [ ] Browser chat window successfully sends messages
@@ -254,7 +254,7 @@ x-railway-edge: railway/us-east4-eqdc4a  # ← Edge server interference
 
 - **Local testing**: 5 minutes
 - **Code implementation**: 10 minutes (6 OPTIONS handlers)
-- **Railway deployment**: 2-3 minutes
+- **Render deployment**: 2-3 minutes
 - **Production verification**: 5 minutes
 - **Total**: ~25 minutes
 
@@ -269,17 +269,17 @@ x-railway-edge: railway/us-east4-eqdc4a  # ← Edge server interference
 - Verify Response imported from fastapi
 - Report back to Claude Code with error output
 
-### If Railway Deployment Fails
+### If Render Deployment Fails
 
-- Hand off to Claude Code for Railway log analysis
+- Hand off to Claude Code for Render log analysis
 - Provide deployment error messages
-- Check Railway dashboard for build failures
+- Check Render dashboard for build failures
 
 ### If Production Test Still Returns HTTP 400
 
-- This indicates deeper Railway configuration issue
-- Hand off to Claude Code for Railway support escalation
-- May need Railway support ticket
+- This indicates deeper Render configuration issue
+- Hand off to Claude Code for Render support escalation
+- May need Render support ticket
 
 ---
 
@@ -287,18 +287,18 @@ x-railway-edge: railway/us-east4-eqdc4a  # ← Edge server interference
 
 ### Infrastructure
 
-- **Railway**: Connected to `DAMIANSEGUIN/wimd-railway-deploy`
-- **Railway URL**: `https://what-is-my-delta-site-production.up.railway.app`
+- **Render**: Connected to `DAMIANSEGUIN/wimd-render-deploy`
+- **Render URL**: `https://what-is-my-delta-site-production.up.render.app`
 - **Netlify**: Connected to same repository, base directory `mosaic_ui`
 - **Domain**: `https://whatismydelta.com`
 
 ### Recent Deployments
 
-- **Latest Railway deploy**: `2025-09-30T17:38:40Z` (commit 9f8e157)
+- **Latest Render deploy**: `2025-09-30T17:38:40Z` (commit 9f8e157)
 - **Codex fix**: Removed `allow_origin_regex` conflict
-- **Status**: Code correct, Railway edge interfering
+- **Status**: Code correct, Render edge interfering
 
-### Environment Variables (Railway)
+### Environment Variables (Render)
 
 - ✅ OPENAI_API_KEY: Set
 - ✅ CLAUDE_API_KEY: Set
@@ -313,14 +313,14 @@ x-railway-edge: railway/us-east4-eqdc4a  # ← Edge server interference
 ### Claude in Cursor (YOU)
 
 - **Access**: Full local environment, terminal, git, file system
-- **Responsibilities**: Local testing, code implementation, Railway deployment
-- **This task**: Add explicit OPTIONS handlers, test locally, deploy to Railway
+- **Responsibilities**: Local testing, code implementation, Render deployment
+- **This task**: Add explicit OPTIONS handlers, test locally, deploy to Render
 
 ### Claude Code (ME)
 
-- **Access**: Infrastructure analysis, deployment logs, Railway debugging
+- **Access**: Infrastructure analysis, deployment logs, Render debugging
 - **Responsibilities**: Infrastructure diagnosis, deployment troubleshooting
-- **This task**: Diagnosed Railway edge server interference, provided solution
+- **This task**: Diagnosed Render edge server interference, provided solution
 
 ### CODEX
 
@@ -332,13 +332,13 @@ x-railway-edge: railway/us-east4-eqdc4a  # ← Edge server interference
 
 ## HANDOFF COMPLETE
 
-✅ **Root cause identified**: Railway edge server interfering with OPTIONS requests
+✅ **Root cause identified**: Render edge server interfering with OPTIONS requests
 ✅ **Solution provided**: Add explicit OPTIONS handlers
 ✅ **Evidence documented**: Local works, production fails
 ✅ **Verification steps provided**: Complete testing protocol
 ✅ **Success criteria defined**: Clear completion markers
 
-**Next action**: Claude in Cursor to implement explicit OPTIONS handlers, test locally, and deploy to Railway.
+**Next action**: Claude in Cursor to implement explicit OPTIONS handlers, test locally, and deploy to Render.
 
 **Expected outcome**: Chat functionality working end-to-end within 25 minutes.
 

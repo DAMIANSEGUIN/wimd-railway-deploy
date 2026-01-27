@@ -43,18 +43,18 @@ Organize all loose files from Downloads and Google Drive to create a clean, unam
 - ❌ MosaicPath (instance 2) - Empty duplicate
 - ⚠️ WIMD-JSM - Old data (Aug 2025)
 - ✅ Planning - Active (separate system)
-- ✅ WIMD-Railway-Deploy-Project - Current project
+- ✅ WIMD-Render-Deploy-Project - Current project
 
 **Actions Executed:**
 
 1. ✅ Deleted both empty MosaicPath folders
 2. ✅ Renamed WIMD-JSM → WIMD-JSM-Archive-Aug2025
 3. ✅ Kept Planning folder (separate strategic planning system)
-4. ✅ Kept WIMD-Railway-Deploy-Project (primary project)
+4. ✅ Kept WIMD-Render-Deploy-Project (primary project)
 
 **After:**
 
-- ✅ WIMD-Railway-Deploy-Project (4.4MB, 412 files) ← **ChatGPT references this**
+- ✅ WIMD-Render-Deploy-Project (4.4MB, 412 files) ← **ChatGPT references this**
 - ✅ Planning (8 .docx files) ← Personal planning system
 - ✅ WIMD-JSM-Archive-Aug2025 (8 Excel files) ← Archived data
 
@@ -114,7 +114,7 @@ Organize all loose files from Downloads and Google Drive to create a clean, unam
 - Documented GDrive cleanup execution
 - Final structure verification
 
-**Both commits pushed to:** `railway-origin main` (production)
+**Both commits pushed to:** `render-origin main` (production)
 
 ---
 
@@ -141,7 +141,7 @@ Organize all loose files from Downloads and Google Drive to create a clean, unam
 ~/Downloads/
 ├── Archive_Old_Backups_20251026/  (28 files preserved)
 ├── Planning/                       (Separate system - not touched)
-├── WIMD-Railway-Deploy-Project/   (Clean, organized project)
+├── WIMD-Render-Deploy-Project/   (Clean, organized project)
 │   ├── mosaic_ui/docs/redesign/
 │   │   ├── UI_Redesign_Master_Plan_v1.0.md ✅ NEW
 │   │   ├── REDESIGN_ADAPTIVE_FRAMEWORK.md
@@ -157,7 +157,7 @@ Organize all loose files from Downloads and Google Drive to create a clean, unam
 
 ```
 gdrive:/
-├── WIMD-Railway-Deploy-Project/   ← ChatGPT uses this
+├── WIMD-Render-Deploy-Project/   ← ChatGPT uses this
 │   ├── [All project files synced]
 │   ├── mosaic_ui/docs/redesign/
 │   │   └── [All 4 redesign docs including Master Plan]
@@ -203,7 +203,7 @@ Latest commit: d4cb2f6
 **Tell ChatGPT:**
 
 ```
-Access Google Drive folder: WIMD-Railway-Deploy-Project
+Access Google Drive folder: WIMD-Render-Deploy-Project
 
 Read these files in order:
 1. FOR_CHATGPT_INTEGRATION.md - Full context and file map
@@ -215,7 +215,7 @@ Read these files in order:
 You have everything you need. Build the detailed implementation spec for Scout.
 ```
 
-**Single source of truth:** `WIMD-Railway-Deploy-Project`
+**Single source of truth:** `WIMD-Render-Deploy-Project`
 
 **No ambiguity:** All duplicate/obsolete folders removed
 
@@ -229,7 +229,7 @@ You have everything you need. Build the detailed implementation spec for Scout.
 ✅ UI_Redesign_Master_Plan in correct project location
 ✅ GDrive duplicates removed (2 MosaicPath folders deleted)
 ✅ GDrive archives renamed (WIMD-JSM → WIMD-JSM-Archive-Aug2025)
-✅ Single source of truth established (WIMD-Railway-Deploy-Project)
+✅ Single source of truth established (WIMD-Render-Deploy-Project)
 ✅ Documentation complete (3 manifest files)
 ✅ Git commits pushed to production (2 commits)
 ✅ Auto-sync verified working (3 successful syncs)
@@ -242,7 +242,7 @@ You have everything you need. Build the detailed implementation spec for Scout.
 
 **For User:**
 
-1. Share `WIMD-Railway-Deploy-Project` GDrive folder with ChatGPT
+1. Share `WIMD-Render-Deploy-Project` GDrive folder with ChatGPT
 2. Give ChatGPT the integration instructions above
 3. Wait for ChatGPT to build implementation spec
 4. Share spec with Scout for execution
@@ -256,7 +256,7 @@ You have everything you need. Build the detailed implementation spec for Scout.
 
 **For ChatGPT:**
 
-1. ⏸ Access WIMD-Railway-Deploy-Project on Google Drive
+1. ⏸ Access WIMD-Render-Deploy-Project on Google Drive
 2. ⏸ Review all redesign documentation
 3. ⏸ Build detailed implementation plan for Scout
 4. ⏸ Specify exact file changes, component structure, API contracts

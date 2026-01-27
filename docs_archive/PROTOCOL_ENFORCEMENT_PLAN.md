@@ -4,9 +4,9 @@ This plan governs multi-agent collaboration. Follow these gates at every session
 
 ## Session Start Checklist (All Agents)
 
-1. `pwd` → confirm `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`.
+1. `pwd` → confirm `/Users/damianseguin/WIMD-Deploy-Project`.
 2. `git status --short` → ensure clean slate or list inherited diffs.
-3. `git remote -v` → verify `origin` and `railway-origin` URLs.
+3. `git remote -v` → verify `origin` and `render-origin` URLs.
 4. Read: `CODEX_HANDOFF_*.md` (latest date), `CODEX_INSTRUCTIONS.md:1`, `ROLLING_CHECKLIST.md:1`, `PROJECT_STRUCTURE.md`, `AI_ROUTING_PLAN.md`, `JOB_FEED_DISCOVERY_PLAN.md`.
 5. Append a brief session note in `CONVERSATION_NOTES.md` describing intended focus before making changes.
 
@@ -14,7 +14,7 @@ This plan governs multi-agent collaboration. Follow these gates at every session
 
 - **CODEX (Planning)**: Produces analyses, specs, run sheets. Stops before touching implementation without explicit approval. Logs plans + open questions.
 - **Claude in Cursor (Implementation)**: Executes approved run sheets, runs scripts/tests, manages git operations. Must not skip checklists or push absent approval.
-- **Claude Code (Infrastructure)**: Investigates Railway, DNS, and deploy logs. Does not edit repo files.
+- **Claude Code (Infrastructure)**: Investigates Render, DNS, and deploy logs. Does not edit repo files.
 - **Human (Gatekeeper)**: Approves deployments, environment mutations, cross-workspace moves, and role escalations.
 
 ## Handoff Triggers
@@ -30,7 +30,7 @@ This plan governs multi-agent collaboration. Follow these gates at every session
 - **Gate B (Plan Approval)**: Implementation waits for human approval on CODEX plan/run sheet.
 - **Gate C (Pre-Deploy)**: Run `scripts/predeploy_sanity.sh` and document result before any deploy action.
 - **Gate D (Post-Change Logging)**: Record modifications/tests in `CONVERSATION_NOTES.md` and update `ROLLING_CHECKLIST.md` if steps close.
-- **Gate E (Deployment Approval)**: Human must expressly approve Railway deploys, Netlify publishes, or remote pushes to `main`.
+- **Gate E (Deployment Approval)**: Human must expressly approve Render deploys, Netlify publishes, or remote pushes to `main`.
 
 ## Verification Procedures
 
@@ -44,7 +44,7 @@ This plan governs multi-agent collaboration. Follow these gates at every session
 - Two failed attempts at the same command/test.
 - Unknown files appearing outside documented structure.
 - Suspected secret exposure (stop work, notify human immediately).
-- Infrastructure anomalies (Railway deploy stuck, 5xx spikes, DNS drift).
+- Infrastructure anomalies (Render deploy stuck, 5xx spikes, DNS drift).
 - Any uncertainty about role boundaries or approvals.
 
 ## Enforcement

@@ -8,7 +8,7 @@
 
 ## SUMMARY
 
-Railway → Render migration successfully completed and verified.
+Render → Render migration successfully completed and verified.
 
 ### What Was Accomplished
 
@@ -27,7 +27,7 @@ Railway → Render migration successfully completed and verified.
 
 3. **Frontend Update** (completed 2026-01-06 21:10 UTC)
    - Updated index.html and index_cleaned.html
-   - Replaced Railway URLs with Render URLs
+   - Replaced Render URLs with Render URLs
    - Deployed via Netlify (auto-deploy on push)
    - Verified: Frontend now connects to Render backend
 
@@ -79,8 +79,8 @@ curl https://whatismydelta.com | grep onrender
 - **Status:** Available
 
 ### Environment Variables (Set in Render)
-- ✅ OPENAI_API_KEY (from Railway)
-- ✅ CLAUDE_API_KEY (from Railway)
+- ✅ OPENAI_API_KEY (from Render)
+- ✅ CLAUDE_API_KEY (from Render)
 - ✅ PUBLIC_SITE_ORIGIN: https://whatismydelta.com
 - ✅ APP_SCHEMA_VERSION: v2
 - ✅ DATABASE_URL: (auto-generated from mosaic-db)
@@ -99,7 +99,7 @@ curl https://whatismydelta.com | grep onrender
 | 2026-01-06 21:11 | Migration complete | End-to-end testing passed |
 
 **Total Migration Time:** ~10 minutes (backend deployment)
-**Downtime:** 0 minutes (Railway remained operational during migration)
+**Downtime:** 0 minutes (Render remained operational during migration)
 
 ---
 
@@ -111,9 +111,9 @@ curl https://whatismydelta.com | grep onrender
   - Recommended: Upgrade to PostgreSQL Starter plan ($7/month)
 
 ### Optional Cleanup
-- Railway service still running (can be decommissioned)
-- Railway database still exists (can be deleted after verification period)
-- Recommended: Keep Railway running for 48 hours as backup, then delete
+- Render service still running (can be decommissioned)
+- Render database still exists (can be deleted after verification period)
+- Recommended: Keep Render running for 48 hours as backup, then delete
 
 ### Monitoring
 - ✅ Render service logs: https://dashboard.render.com/web/srv-d5e4j0qli9vc73esori0
@@ -124,7 +124,7 @@ curl https://whatismydelta.com | grep onrender
 
 ## COST COMPARISON
 
-**Railway (before migration):**
+**Render (before migration):**
 - Usage-based pricing (unpredictable)
 - Estimated: $10-20/month
 - Issues: Frequent health check failures, nixpacks deprecated
@@ -142,16 +142,16 @@ curl https://whatismydelta.com | grep onrender
 ## TECHNICAL NOTES
 
 ### Why the Migration Was Needed
-1. **Railway Health Check Failures:** Continuous failures despite extended timeouts
+1. **Render Health Check Failures:** Continuous failures despite extended timeouts
 2. **Nixpacks Deprecated:** Build system no longer maintained
 3. **PostgreSQL Connection Issues:** Race conditions during startup
 4. **Better Alternative:** Render offers native Python support and proven reliability
 
 ### What Changed
-- **Backend URL:** Railway → Render
-- **Database:** Railway PostgreSQL → Render PostgreSQL 18
+- **Backend URL:** Render → Render
+- **Database:** Render PostgreSQL → Render PostgreSQL 18
 - **Build System:** Nixpacks → Native Python runtime
-- **Configuration:** railway.toml/nixpacks.toml → render.yaml
+- **Configuration:** render.toml/nixpacks.toml → render.yaml
 
 ### What Stayed the Same
 - Frontend: Still on Netlify
@@ -188,8 +188,8 @@ curl https://whatismydelta.com | grep onrender
 - .mosaic/session_log.jsonl (session events)
 
 **Frontend:**
-- mosaic_ui/index.html (Railway URL → Render URL)
-- mosaic_ui/index_cleaned.html (Railway URL → Render URL)
+- mosaic_ui/index.html (Render URL → Render URL)
+- mosaic_ui/index_cleaned.html (Render URL → Render URL)
 
 **Scripts:**
 - scripts/complete_render_migration.sh (created, not used)
@@ -217,7 +217,7 @@ curl https://whatismydelta.com | grep onrender
 **Backend Service:** https://dashboard.render.com/web/srv-d5e4j0qli9vc73esori0
 **Database:** https://dashboard.render.com/d/dpg-d5e4ilali9vc73esoj2g-a
 **Frontend:** https://whatismydelta.com
-**Repository:** https://github.com/DAMIANSEGUIN/wimd-railway-deploy
+**Repository:** https://github.com/DAMIANSEGUIN/wimd-render-deploy
 
 ---
 

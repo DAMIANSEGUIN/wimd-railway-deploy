@@ -17,7 +17,7 @@ I completed all the work you asked for. Here's what happened:
 
 ### ✅ CORS Issue Resolved
 
-- Identified the problem (Railway blocking localhost:8000)
+- Identified the problem (Render blocking localhost:8000)
 - Created a local development proxy server
 - Server running on <http://localhost:3000>
 
@@ -96,7 +96,7 @@ curl http://localhost:3000/config
 - Created `mosaic_ui/js/api.js` (235 lines)
 - Created `mosaic_ui/js/main.js` (100 lines)
 - Updated `mosaic_ui/index.html` (ES6 module import)
-- Updated `api/index.py` (CORS fix - pushed to Railway)
+- Updated `api/index.py` (CORS fix - pushed to Render)
 
 ### Infrastructure
 

@@ -136,7 +136,7 @@ discount_codes (
 
 - Database columns don't exist yet
 - Registration with discount codes will fail until migration runs
-- **Action required:** Run `python3 scripts/run_migrations.py` on Railway
+- **Action required:** Run `python3 scripts/run_migrations.py` on Render
 
 ---
 
@@ -156,7 +156,7 @@ discount_codes (
 
 ## 📊 DEPLOYMENT STATUS
 
-**Backend (Railway):**
+**Backend (Render):**
 
 - ✅ Code deployed (commit f9e0367)
 - ✅ Health endpoint operational
@@ -181,16 +181,16 @@ discount_codes (
 
 ### Critical: Run Database Migration
 
-**Option 1: Railway CLI**
+**Option 1: Render CLI**
 
 ```bash
-railway run python3 scripts/run_migrations.py
+render run python3 scripts/run_migrations.py
 ```
 
 **Option 2: Direct Database Access**
 
 ```bash
-# Get DATABASE_URL from Railway
+# Get DATABASE_URL from Render
 export DATABASE_URL="postgresql://..."
 python3 scripts/run_migrations.py
 ```
@@ -213,14 +213,14 @@ run_migrations()
 
 ```bash
 # Test discount code validation
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/validate-code \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/auth/validate-code \
   -H "Content-Type: application/json" \
   -d '{"code":"BETA2025"}'
 
 # Expected: {"valid":true,"message":"Code valid - grants beta access","grants_tier":"beta"}
 
 # Test registration with discount code
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/register \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"testpass123","discount_code":"BETA2025"}'
 
@@ -339,12 +339,12 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/regist
 **System:** Stable, operational
 **Booking:** Live and functional
 **Discount codes:** Code deployed, database pending migration
-**Next action:** Run migration script on Railway
+**Next action:** Run migration script on Render
 **Blocked on:** Database migration execution access
 
 ---
 
-**Scout reporting:** Mission objectives achieved within autonomous authority. Database migration requires Railway access credentials.
+**Scout reporting:** Mission objectives achieved within autonomous authority. Database migration requires Render access credentials.
 
 **Ready for:** User to run migration OR add auto-migration on startup.
 

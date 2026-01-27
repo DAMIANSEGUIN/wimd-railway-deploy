@@ -31,7 +31,7 @@
 
 ```bash
 # Create dated baseline snapshot
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ./scripts/create_baseline_snapshot.sh
 ```
 
@@ -40,7 +40,7 @@ cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
 - Current git state (branch, commit, status)
 - All modified/staged/untracked files
 - Key file checksums (index.html, config files)
-- Environment state (Railway, Netlify status)
+- Environment state (Render, Netlify status)
 - What features are currently working
 - What changes are being attempted
 
@@ -80,7 +80,7 @@ git reset --hard baseline-YYYYMMDD-HHMMSS
 ```bash
 # Backup entire working tree
 rsync -av --exclude='.git' \
-  /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/ \
+  /Users/damianseguin/WIMD-Deploy-Project/ \
   /Users/damianseguin/Downloads/WIMD-BACKUP-$(date +%Y%m%d-%H%M%S)/
 ```
 
@@ -147,7 +147,7 @@ git push origin main  # Deploy to verify UI renders
 
 **Manual checks:**
 
-- [ ] Railway deployment succeeded (check dashboard)
+- [ ] Render deployment succeeded (check dashboard)
 - [ ] Netlify deployment succeeded (check dashboard)
 - [ ] Health endpoint returns 200: `curl https://whatismydelta.com/health`
 - [ ] Frontend loads: `curl https://whatismydelta.com/`
@@ -360,7 +360,7 @@ $(git ls-files --others --exclude-standard)
 - package.json: $(shasum -a 256 package.json 2>/dev/null || echo "N/A")
 
 ## Deployment Status
-- Last Railway deploy: [Check Railway dashboard]
+- Last Render deploy: [Check Render dashboard]
 - Last Netlify deploy: [Check Netlify dashboard]
 - Health check: $(curl -s https://whatismydelta.com/health || echo "Failed")
 
@@ -570,7 +570,7 @@ ls -lt /Users/damianseguin/Downloads/WIMD-BACKUP-*/
 
 # 2. Restore from most recent backup
 rsync -av /Users/damianseguin/Downloads/WIMD-BACKUP-YYYYMMDD-HHMMSS/ \
-  /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/
+  /Users/damianseguin/WIMD-Deploy-Project/
 
 # 3. Verify critical files restored
 test -f frontend/index.html && echo "OK" || echo "STILL MISSING"
@@ -626,7 +626,7 @@ This fail-safe protocol implements the Pre-Flight Checklist from:
 1. **Create scripts directory:**
 
    ```bash
-   mkdir -p /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/scripts
+   mkdir -p /Users/damianseguin/WIMD-Deploy-Project/scripts
    ```
 
 2. **Create the 3 automation scripts** listed above

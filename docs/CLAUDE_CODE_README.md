@@ -2,26 +2,26 @@
 
 ## **🚨 CURRENT ISSUES – Domain API 404 & Claude API Key Not Detected**
 
-**Status**: Backend healthy at Railway origin; public domain still serves Netlify 404; Claude API key not accessible in app
-**Architecture**: Mosaic Platform deployed on Railway + Netlify; backend reachable only via Railway origin; environment variable loading suspect
+**Status**: Backend healthy at Render origin; public domain still serves Netlify 404; Claude API key not accessible in app
+**Architecture**: Mosaic Platform deployed on Render + Netlify; backend reachable only via Render origin; environment variable loading suspect
 **Impact**: Production UI hits Netlify 404 for API routes and Claude-powered flows remain disabled until env loading is fixed
 
 **Current Issue State**:
 
-- **Railway Health**: `https://what-is-my-delta-site-production.up.railway.app/health` → ✅ `{"ok": true}` (verified 2025-09-29)
+- **Render Health**: `https://what-is-my-delta-site-production.up.render.app/health` → ✅ `{"ok": true}` (verified 2025-09-29)
 - **Domain Health**: `https://whatismydelta.com/health` → ⚠️ Netlify HTML 404 (API not proxied)
 - **WWW Health**: `https://www.whatismydelta.com/health` → ⚠️ Netlify HTML 404
 - **Frontend**: Netlify deploy successful at <https://resonant-crostata-90b706.netlify.app>
 - **DNS**: Apex/www pointing to Netlify (rewrite rule needed for API)
-- **SSL**: Working (Railway automatic)
-- **API Endpoints**: Working via Railway origin (`https://what-is-my-delta-site-production.up.railway.app`)
+- **SSL**: Working (Render automatic)
+- **API Endpoints**: Working via Render origin (`https://what-is-my-delta-site-production.up.render.app`)
 - **❌ Claude API Key**: Not being recognized by the application
 - **❌ Environment Variables**: Not being loaded properly from .env file
 
 **Immediate Debugging Commands**:
 
 ```bash
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check .env file exists and has Claude API key
 cat .env
@@ -43,29 +43,29 @@ python3 -c "from dotenv import load_dotenv; load_dotenv(); import os; print('CLA
 
 ## 🎉 **MAJOR ISSUE RESOLVED - 2025-09-29**
 
-**Problem**: Railway deployment showed successful builds but served "Hello World" instead of complete FastAPI
+**Problem**: Render deployment showed successful builds but served "Hello World" instead of complete FastAPI
 **Root Cause**: Missing `python-multipart` dependency caused FastAPI startup failure
 **Solution**: Added `python-multipart` to requirements.txt
-**Result**: Railway now serves complete 449-line Mosaic Platform API
+**Result**: Render now serves complete 449-line Mosaic Platform API
 
 ### **Updated System Status**
 
 - ✅ **Local Development**: Mosaic works perfectly (all 449 lines, all endpoints)
-- ✅ **Railway Backend**: Complete API deployed and functional at Railway URL
-- ❌ **Domain Routing**: `whatismydelta.com` returns Netlify 404s instead of Railway API
+- ✅ **Render Backend**: Complete API deployed and functional at Render URL
+- ❌ **Domain Routing**: `whatismydelta.com` returns Netlify 404s instead of Render API
 - ❌ **User Access**: BLOCKED - API not accessible via production domain
-- ⚠️ **Root Cause**: Repository mismatch - Netlify monitors different source than Railway
+- ⚠️ **Root Cause**: Repository mismatch - Netlify monitors different source than Render
 
 ### **Key Learning**
 
-The issue was resolved using the local-first development approach rather than infrastructure debugging. Running the application locally immediately revealed the missing dependency error that Railway was masking with a fallback app.
+The issue was resolved using the local-first development approach rather than infrastructure debugging. Running the application locally immediately revealed the missing dependency error that Render was masking with a fallback app.
 
 ### **Working Commands**
 
 ```bash
-# Test Railway API (now working)
-curl https://what-is-my-delta-site-production.up.railway.app/health
-curl https://what-is-my-delta-site-production.up.railway.app/config
+# Test Render API (now working)
+curl https://what-is-my-delta-site-production.up.render.app/health
+curl https://what-is-my-delta-site-production.up.render.app/config
 
 # Local development setup (for future debugging)
 python3 -m uvicorn api.index:app --host 0.0.0.0 --port 8000
@@ -77,7 +77,7 @@ python3 -m uvicorn api.index:app --host 0.0.0.0 --port 8000
 
 **Current Problem**:
 
-1. **Domain Rewrite**: Netlify domain returns 404 for API routes; needs proxy to Railway origin
+1. **Domain Rewrite**: Netlify domain returns 404 for API routes; needs proxy to Render origin
 2. **Environment Variable Loading**: The .env file exists but variables aren't being loaded properly
 3. **Claude API Key**: Not accessible to the application
 4. **Python Environment**: May need to fix how environment variables are loaded
@@ -87,11 +87,11 @@ python3 -m uvicorn api.index:app --host 0.0.0.0 --port 8000
 - `.env` file in project root
 - `api/settings.py` - how environment variables are loaded
 - `api/startup_checks.py` - API key validation
-- Railway environment variables
+- Render environment variables
 
 **Next Steps for Claude_Code**:
 
-1. Add Netlify rewrite/proxy so public domain routes hit the Railway API
+1. Add Netlify rewrite/proxy so public domain routes hit the Render API
 2. Check how the application loads environment variables
 3. Fix the Claude API key recognition issue
 4. Ensure all API keys are properly accessible
@@ -101,7 +101,7 @@ python3 -m uvicorn api.index:app --host 0.0.0.0 --port 8000
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check current Procfile
 cat Procfile
@@ -109,17 +109,17 @@ cat Procfile
 # Check if uvicorn is in requirements
 grep -i uvicorn requirements.txt
 
-# Get latest Railway logs
-railway logs --deployment
+# Get latest Render logs
+render logs --deployment
 
 # Check if gunicorn is still referenced anywhere
 grep -r gunicorn .
 
 # Force fresh deployment
-railway up --detach
+render up --detach
 
 # Test the service
-curl -v https://what-is-my-delta-site-production.up.railway.app/health
+curl -v https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 ### **Latest Verification (2025-09-29)**
@@ -127,12 +127,12 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 - `curl https://whatismydelta.com/health` → Netlify HTML 404
 - `curl https://whatismydelta.com/config` → Netlify HTML 404
 - `curl https://whatismydelta.com/prompts/active` → Netlify HTML 404
-- `curl https://what-is-my-delta-site-production.up.railway.app/health` → `{"ok": true}`
+- `curl https://what-is-my-delta-site-production.up.render.app/health` → `{"ok": true}`
 
 **Environment Variables Confirmed**:
 
 - `PUBLIC_SITE_ORIGIN=https://www.whatismydelta.com`
-- `PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.railway.app`
+- `PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.render.app`
 
 ---
 
@@ -140,18 +140,18 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 
 ### **Primary Role: Senior Debugger**
 
-- **Railway deployment analysis** - Investigate build failures, runtime errors, infrastructure issues
+- **Render deployment analysis** - Investigate build failures, runtime errors, infrastructure issues
 - **Log investigation** - Analyze deployment logs, error messages, system diagnostics
 - **Infrastructure debugging** - Troubleshoot environment variables, dependencies, configuration
 - **Performance analysis** - Identify bottlenecks, optimization opportunities, scaling issues
 
 ### **Handoff Triggers**
 
-- **Build failures** - When Railway deployment fails to build
+- **Build failures** - When Render deployment fails to build
 - **Runtime errors** - When deployed application crashes or behaves unexpectedly
 - **Missing endpoints** - When API endpoints return 404 or don't exist
 - **Environment issues** - When environment variables, secrets, or configuration are missing
-- **Infrastructure problems** - When Railway services are down, domains not working, SSL issues
+- **Infrastructure problems** - When Render services are down, domains not working, SSL issues
 
 ---
 
@@ -160,7 +160,7 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 ### **Project Directory Structure**
 
 ```
-/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/
+/Users/damianseguin/WIMD-Deploy-Project/
 ├── api/
 │   ├── index.py                    # Main FastAPI application
 │   ├── settings.py                 # Environment configuration
@@ -177,7 +177,7 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 │   └── README.md                   # Frontend documentation
 ├── .env                           # Local environment variables
 ├── requirements.txt               # Python dependencies
-├── railway.json                   # Railway deployment config
+├── render.json                   # Render deployment config
 └── CONVERSATION_NOTES.md          # Project status tracking
 ```
 
@@ -207,23 +207,23 @@ curl -v https://what-is-my-delta-site-production.up.railway.app/health
 
 ### **Deployment Status (2025-09-29) - ⚠️ PARTIAL**
 
-- ✅ **Backend API**: Running on Railway; `/health` returns `{"ok": true}`
+- ✅ **Backend API**: Running on Render; `/health` returns `{"ok": true}`
 - ✅ **Frontend UI**: Live at `https://resonant-crostata-90b706.netlify.app` (Netlify)
-- ✅ **Railway Service**: `what-is-my-delta-site-production.up.railway.app` responding
-- ✅ **SSL Certificates**: Working (Railway automatic)
-- ✅ **API Endpoints**: All implemented; reachable via Railway origin
+- ✅ **Render Service**: `what-is-my-delta-site-production.up.render.app` responding
+- ✅ **SSL Certificates**: Working (Render automatic)
+- ✅ **API Endpoints**: All implemented; reachable via Render origin
 - ✅ **Prompts CSV**: Loaded and active
 - ⚠️ **Domain API Routes**: `https://whatismydelta.com/*` return Netlify 404 (rewrite missing)
 
 ### **Current Working State (verified 2025-09-29)**
 
-- **Railway Health**: `https://what-is-my-delta-site-production.up.railway.app/health` → `{"ok": true}`
+- **Render Health**: `https://what-is-my-delta-site-production.up.render.app/health` → `{"ok": true}`
 - **Domain Health**: `https://whatismydelta.com/health` → Netlify HTML 404
 - **WWW Health**: `https://www.whatismydelta.com/health` → Netlify HTML 404
 - **System Status**: Backend healthy; public domain still needs API proxy
-- **Frontend Integration**: Netlify UI live; API calls must target Railway origin until rewrite lands
+- **Frontend Integration**: Netlify UI live; API calls must target Render origin until rewrite lands
 
-### **Working Endpoints (call Railway origin)**
+### **Working Endpoints (call Render origin)**
 
 ```
 GET  /health              → `{"ok": true}`
@@ -257,13 +257,13 @@ GET  /resume/versions    → list and manage resume versions
 
 ### **Step 1: Initial Assessment**
 
-1. **Check Railway logs** - `railway logs` or Railway dashboard
+1. **Check Render logs** - `render logs` or Render dashboard
 2. **Verify service status** - Check if service is running
 3. **Test endpoints** - Use `curl` or browser to test API
 4. **Check environment variables** - Verify all required vars are set
 5. **Review recent changes** - Check git history for recent modifications
 
-**Working Directory**: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
+**Working Directory**: `/Users/damianseguin/WIMD-Deploy-Project`
 
 ### **Step 2: Common Issues & Solutions**
 
@@ -271,10 +271,10 @@ GET  /resume/versions    → list and manage resume versions
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check build logs
-railway logs --deployment
+render logs --deployment
 
 # Check local dependencies
 cat requirements.txt
@@ -291,10 +291,10 @@ pip list
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check runtime logs
-railway logs
+render logs
 
 # Check local environment
 cat .env
@@ -311,10 +311,10 @@ python3 -c "import os; print('OPENAI:', os.getenv('OPENAI_API_KEY')[:10] + '...'
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check environment variables
-railway variables
+render variables
 
 # Check local .env file
 cat .env
@@ -330,10 +330,10 @@ ls -la .env
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check domain status
-railway domain
+render domain
 
 # Test domain resolution
 dig whatismydelta.com
@@ -348,26 +348,26 @@ dig www.whatismydelta.com
 
 ### **Step 3: Diagnostic Commands**
 
-#### **Railway CLI Commands**
+#### **Render CLI Commands**
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check service status
-railway status
+render status
 
 # View logs
-railway logs
+render logs
 
 # Check variables
-railway variables
+render variables
 
 # Check domains
-railway domain
+render domain
 
 # Check deployments
-railway deployments
+render deployments
 ```
 
 #### **API Testing Commands**
@@ -390,7 +390,7 @@ curl -v https://whatismydelta.com/health
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Run local server
 python3 -m uvicorn api.index:app --reload
@@ -409,43 +409,43 @@ python3 -c "import os; print('CLAUDE:', os.getenv('CLAUDE_API_KEY')[:10] + '...'
 
 ## **TROUBLESHOOTING GUIDE**
 
-### **CRITICAL ISSUE: Railway 502 Error - Gunicorn Command Not Found**
+### **CRITICAL ISSUE: Render 502 Error - Gunicorn Command Not Found**
 
-**Current Problem**: Railway deployment failing with "gunicorn: command not found" despite Procfile update
+**Current Problem**: Render deployment failing with "gunicorn: command not found" despite Procfile update
 **Symptoms**: HTTP 502 errors, service completely down
-**Root Cause**: Railway still trying to use gunicorn instead of uvicorn
+**Root Cause**: Render still trying to use gunicorn instead of uvicorn
 
 **Immediate Debugging Steps**:
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check current Procfile
 cat Procfile
 
-# Check Railway logs for latest deployment
-railway logs --deployment
+# Check Render logs for latest deployment
+render logs --deployment
 
 # Check if uvicorn is in requirements.txt
 grep -i uvicorn requirements.txt
 
 # Force a fresh deployment
-railway up --detach
+render up --detach
 
 # Test the service
-curl -v https://what-is-my-delta-site-production.up.railway.app/health
+curl -v https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 **Environment Variables Check**:
 
 ```bash
-# Check Railway environment variables
-railway variables
+# Check Render environment variables
+render variables
 
 # Verify these are set:
 # PUBLIC_SITE_ORIGIN=https://www.whatismydelta.com
-# PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.railway.app
+# PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.render.app
 ```
 
 **Procfile Requirements**:
@@ -463,28 +463,28 @@ web: gunicorn api.index:app
 **Symptoms**: 404 errors, connection refused, timeout
 **Diagnosis**:
 
-1. Check Railway service status
+1. Check Render service status
 2. Verify domain configuration
 3. Check SSL certificate status
-4. Test Railway URL directly
+4. Test Render URL directly
 
 **Solutions**:
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check service status
-railway status
+render status
 
-# Test Railway URL directly
-curl https://what-is-my-delta-site-production.up.railway.app/health
+# Test Render URL directly
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Check domain configuration
-railway domain
+render domain
 
 # Redeploy if necessary
-railway up
+render up
 ```
 
 ### **Issue: API Keys Not Working**
@@ -492,7 +492,7 @@ railway up
 **Symptoms**: 500 errors, authentication failures, AI service errors
 **Diagnosis**:
 
-1. Check environment variables in Railway
+1. Check environment variables in Render
 2. Verify API key format and validity
 3. Test API keys independently
 4. Check rate limits and quotas
@@ -501,10 +501,10 @@ railway up
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check environment variables
-railway variables
+render variables
 
 # Check local .env file
 cat .env
@@ -514,8 +514,8 @@ python3 -c "import os; print('OPENAI:', os.getenv('OPENAI_API_KEY')[:10] + '...'
 python3 -c "import os; print('CLAUDE:', os.getenv('CLAUDE_API_KEY')[:10] + '...')"
 
 # Set missing variables
-railway variables --set "OPENAI_API_KEY=your_key_here"
-railway variables --set "CLAUDE_API_KEY=your_key_here"
+render variables --set "OPENAI_API_KEY=your_key_here"
+render variables --set "CLAUDE_API_KEY=your_key_here"
 ```
 
 ### **Issue: Database/Storage Problems**
@@ -523,7 +523,7 @@ railway variables --set "CLAUDE_API_KEY=your_key_here"
 **Symptoms**: Data not persisting, file upload failures, storage errors
 **Diagnosis**:
 
-1. Check Railway storage limits
+1. Check Render storage limits
 2. Verify file permissions
 3. Check database connectivity
 4. Review cleanup jobs
@@ -532,20 +532,20 @@ railway variables --set "CLAUDE_API_KEY=your_key_here"
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check storage usage
-railway logs | grep -i storage
+render logs | grep -i storage
 
 # Check local data directory
 ls -la data/
 cat data/prompts_clean.csv | head -5
 
 # Check file permissions
-railway run ls -la data/
+render run ls -la data/
 
 # Test database operations
-railway run python3 -c "import sqlite3; print('DB OK')"
+render run python3 -c "import sqlite3; print('DB OK')"
 ```
 
 ### **Issue: Frontend Integration Problems**
@@ -562,7 +562,7 @@ railway run python3 -c "import sqlite3; print('DB OK')"
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check CORS configuration in api/index.py
 grep -n "CORS" api/index.py
@@ -588,7 +588,7 @@ curl https://whatismydelta.com/ob/opportunities
 
 - **Response times** - API endpoints should respond < 2 seconds
 - **Error rates** - Should be < 5% of requests
-- **Storage usage** - Monitor Railway storage limits
+- **Storage usage** - Monitor Render storage limits
 - **Memory usage** - Check for memory leaks
 - **API key usage** - Monitor OpenAI/Anthropic quotas
 
@@ -597,23 +597,23 @@ curl https://whatismydelta.com/ob/opportunities
 - **Service down** - Health endpoint returns error
 - **High error rate** - > 10% of requests failing
 - **Slow response** - > 5 seconds average response time
-- **Storage full** - > 80% of Railway storage used
+- **Storage full** - > 80% of Render storage used
 - **API quota exceeded** - OpenAI/Anthropic rate limits hit
 
 ### **Monitoring Commands**
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check service health
 curl -s https://whatismydelta.com/health | jq
 
 # Monitor logs in real-time
-railway logs --follow
+render logs --follow
 
 # Check storage usage
-railway run df -h
+render run df -h
 
 # Test all endpoints
 ./scripts/verify_deploy.sh https://whatismydelta.com
@@ -627,25 +627,25 @@ cat CONVERSATION_NOTES.md | tail -10
 
 ## **COMMON DEBUGGING SCENARIOS**
 
-### **Scenario 0: CURRENT CRITICAL FAILURE - Railway 502 Gunicorn Error**
+### **Scenario 0: CURRENT CRITICAL FAILURE - Render 502 Gunicorn Error**
 
-**Problem**: Railway deployment failing with "gunicorn: command not found" despite Procfile update
+**Problem**: Render deployment failing with "gunicorn: command not found" despite Procfile update
 **Current State**:
 
-- Procfile updated to use Uvicorn, but Railway still failing
+- Procfile updated to use Uvicorn, but Render still failing
 - User reports redeploy "successful" but health endpoint still 502
 - No fresh log captured post-change
 - Frontend deployed to Netlify but shows request_failed (404) because API host is down
 
 **Immediate Actions**:
 
-1. Navigate to project directory: `cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
+1. Navigate to project directory: `cd /Users/damianseguin/WIMD-Deploy-Project`
 2. Check Procfile content: `cat Procfile`
 3. Verify requirements.txt has uvicorn: `grep -i uvicorn requirements.txt`
-4. Check latest Railway logs: `railway logs --deployment`
+4. Check latest Render logs: `render logs --deployment`
 5. Check if gunicorn is still referenced anywhere: `grep -r gunicorn .`
-6. Force fresh deployment: `railway up --detach`
-7. Test service: `curl -v https://what-is-my-delta-site-production.up.railway.app/health`
+6. Force fresh deployment: `render up --detach`
+7. Test service: `curl -v https://what-is-my-delta-site-production.up.render.app/health`
 
 **Expected Procfile**:
 
@@ -655,33 +655,33 @@ web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 
 **If still failing**:
 
-- Check if Railway is using cached deployment
-- Verify uvicorn is installed: `railway run pip list | grep uvicorn`
+- Check if Render is using cached deployment
+- Verify uvicorn is installed: `render run pip list | grep uvicorn`
 - Check if gunicorn is still referenced anywhere: `grep -r gunicorn .`
-- Consider pip install -r requirements.txt step if Railway uses build cache
+- Consider pip install -r requirements.txt step if Render uses build cache
 
 ### **Scenario 1: New Deployment Fails**
 
 **Problem**: Code changes deployed but service not responding
 **Steps**:
 
-1. Navigate to project directory: `cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
-2. Check Railway build logs for errors: `railway logs --deployment`
+1. Navigate to project directory: `cd /Users/damianseguin/WIMD-Deploy-Project`
+2. Check Render build logs for errors: `render logs --deployment`
 3. Verify all dependencies are installed: `cat requirements.txt`
-4. Check environment variables are set: `railway variables`
+4. Check environment variables are set: `render variables`
 5. Test service locally first: `python3 -m uvicorn api.index:app --reload`
-6. Redeploy if necessary: `railway up`
+6. Redeploy if necessary: `render up`
 
 ### **Scenario 2: API Endpoints Missing**
 
 **Problem**: Frontend calls API but gets 404 errors
 **Steps**:
 
-1. Navigate to project directory: `cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
+1. Navigate to project directory: `cd /Users/damianseguin/WIMD-Deploy-Project`
 2. Check if endpoints are implemented in code: `grep -n "POST\|GET" api/index.py`
 3. Verify route definitions in FastAPI: `cat api/index.py`
 4. Test endpoints directly with curl: `curl https://whatismydelta.com/wimd`
-5. Check if service needs restart: `railway redeploy`
+5. Check if service needs restart: `render redeploy`
 6. Implement missing endpoints in `api/index.py`
 
 ### **Scenario 3: Database Connection Issues**
@@ -689,11 +689,11 @@ web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 **Problem**: Data not persisting, database errors
 **Steps**:
 
-1. Navigate to project directory: `cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
+1. Navigate to project directory: `cd /Users/damianseguin/WIMD-Deploy-Project`
 2. Check SQLite file permissions: `ls -la data/`
-3. Verify database schema exists: `railway run python3 -c "import sqlite3; print('DB OK')"`
+3. Verify database schema exists: `render run python3 -c "import sqlite3; print('DB OK')"`
 4. Test database operations locally: `python3 -c "import sqlite3; print('Local DB OK')"`
-5. Check Railway storage limits: `railway run df -h`
+5. Check Render storage limits: `render run df -h`
 6. Implement proper error handling in `api/index.py`
 
 ### **Scenario 4: File Upload Problems**
@@ -723,12 +723,12 @@ web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 
 ### **Handoff to Human**
 
-**When**: Railway configuration needed, approvals required
+**When**: Render configuration needed, approvals required
 **What to provide**:
 
 - Clear explanation of the problem
 - Specific steps needed to resolve
-- Railway dashboard instructions
+- Render dashboard instructions
 - Environment variable settings
 
 ### **Communication Protocol**
@@ -743,23 +743,23 @@ web: uvicorn api.index:app --host 0.0.0.0 --port $PORT
 
 ## **USEFUL COMMANDS REFERENCE**
 
-### **Railway CLI**
+### **Render CLI**
 
 ```bash
 # Service management
-railway status
-railway logs
-railway variables
-railway domain
-railway deployments
+render status
+render logs
+render variables
+render domain
+render deployments
 
 # Deployment
-railway up
-railway redeploy
+render up
+render redeploy
 
 # Environment
-railway run <command>
-railway shell
+render run <command>
+render shell
 ```
 
 ### **API Testing**
@@ -809,8 +809,8 @@ ls -la data/
 ls -la data/prompts*
 
 # Test file operations
-railway run ls -la data/
-railway run cat data/prompts_clean.csv | head -5
+render run ls -la data/
+render run cat data/prompts_clean.csv | head -5
 ```
 
 ---
@@ -819,15 +819,15 @@ railway run cat data/prompts_clean.csv | head -5
 
 ### **Service Down**
 
-1. **Check Railway status** - `railway status`
-2. **View logs** - `railway logs`
+1. **Check Render status** - `render status`
+2. **View logs** - `render logs`
 3. **Test endpoints** - `curl https://whatismydelta.com/health`
-4. **Redeploy if needed** - `railway up`
+4. **Redeploy if needed** - `render up`
 5. **Notify team** - Update status in project docs
 
 ### **Data Loss**
 
-1. **Check database** - `railway run ls -la data/`
+1. **Check database** - `render run ls -la data/`
 2. **Verify backups** - Check if data exists
 3. **Restore if possible** - Use backup data
 4. **Implement recovery** - Add data recovery procedures

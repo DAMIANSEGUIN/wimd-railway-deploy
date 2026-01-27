@@ -35,7 +35,7 @@
    - Automatically finds latest files
    - Shows file ages and freshness warnings
    - Displays recent git commits
-   - Checks system health (Railway + domain)
+   - Checks system health (Render + domain)
    - Recommends reading order
    - **For Claude Code and terminal-based AI**
 
@@ -68,7 +68,7 @@
 
 ```bash
 # User pastes ONE command:
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && ./scripts/show_latest_context.sh
+cd /Users/damianseguin/WIMD-Deploy-Project && ./scripts/show_latest_context.sh
 
 # Script outputs:
 # 1. START_HERE.md location + age warning

@@ -362,7 +362,7 @@ If you already have PayPal credentials and want to ship faster:
 
 1. Create Stripe account: <https://dashboard.stripe.com/register>
 2. Get test API keys: Dashboard → Developers → API keys
-3. Add to Railway environment variables:
+3. Add to Render environment variables:
 
    ```
    STRIPE_PUBLISHABLE_KEY=pk_test_...
@@ -376,7 +376,7 @@ If you already have PayPal credentials and want to ship faster:
 
 1. Locate your PayPal API credentials (Client ID + Secret)
 2. Confirm they're for **live mode** (not sandbox)
-3. Add to Railway environment variables:
+3. Add to Render environment variables:
 
    ```
    PAYPAL_CLIENT_ID=...

@@ -22,16 +22,16 @@ The script auto-loads APP_URL from wimd_config.sh (asks once, then saves), runs 
 
 ---
 
-# 📝 WIMD Railway Deploy – Context Note
+# 📝 WIMD Render Deploy – Context Note
 
 > Action on Restart: run ~/restart_wimd.sh (auto-logs status; URL saved in wimd_config.sh)
 
-## Required Env Vars (Railway → Variables)
+## Required Env Vars (Render → Variables)
 
 OPENAI_API_KEY=sk-xxx
 CLAUDE_API_KEY=sk-ant-xxx
 PUBLIC_SITE_ORIGIN=<https://whatismydelta.com>
-PUBLIC_API_BASE=<https://what-is-my-delta-site-production.up.railway.app>
+PUBLIC_API_BASE=<https://what-is-my-delta-site-production.up.render.app>
 DATABASE_URL=
 SENTRY_DSN=
 APP_SCHEMA_VERSION=v1
@@ -55,9 +55,9 @@ APP_SCHEMA_VERSION=v1
 ## Verify Deploy
 
 ```zsh
-# Test Railway API directly
-curl https://what-is-my-delta-site-production.up.railway.app/health
-curl https://what-is-my-delta-site-production.up.railway.app/config
+# Test Render API directly
+curl https://what-is-my-delta-site-production.up.render.app/health
+curl https://what-is-my-delta-site-production.up.render.app/config
 
 # Run verification scripts
 ./scripts/predeploy_sanity.sh
@@ -85,23 +85,23 @@ curl http://localhost:8000/config
 curl http://localhost:8000/prompts/active
 ```
 
-## One-Shot Fresh Deploy (New Railway Project)
+## One-Shot Fresh Deploy (New Render Project)
 
-- Run to create a brand-new Railway project, set variables, and deploy:
+- Run to create a brand-new Render project, set variables, and deploy:
 
   ```zsh
   ./scripts/one_shot_new_deploy.sh
   ```
 
 - Notes:
-  - It does not delete your existing Railway project; it creates a new one with a timestamped name.
+  - It does not delete your existing Render project; it creates a new one with a timestamped name.
   - You’ll be prompted for variables based on `.env.example`.
   - After deploy, copy the service URL to `PUBLIC_API_BASE` as needed and re-run `./scripts/verify_deploy.sh`.
-  - If you want to remove the old service/project, do so from the Railway dashboard to avoid accidental data loss.
+  - If you want to remove the old service/project, do so from the Render dashboard to avoid accidental data loss.
 
-## Railway Variables (Build vs Runtime)
+## Render Variables (Build vs Runtime)
 
-- In the Railway service → Variables, ensure each variable is:
+- In the Render service → Variables, ensure each variable is:
   - Scoped to the correct environment (e.g., Production)
   - Marked "Available during deploy" so Nixpacks can access it at build time
 - Typical vars: `OPENAI_API_KEY`, `CLAUDE_API_KEY`, `PUBLIC_API_BASE`, `PUBLIC_SITE_ORIGIN`, `APP_SCHEMA_VERSION`

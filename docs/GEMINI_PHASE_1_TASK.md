@@ -53,7 +53,7 @@ class TriggerDetector:
                 r'\b(error|failed?|crash|bug|exception|broken|issue|problem|timeout)\b',
             ],
             "DEPLOYMENT_TRUTH": [
-                r'\b(deploy|push|railway|production|staging|release|rollback)\b',
+                r'\b(deploy|push|render|production|staging|release|rollback)\b',
             ],
             "STORAGE_PATTERNS": [
                 r'\b(database|postgresql|sqlite|query|migration|schema|connection|sql)\b',
@@ -289,7 +289,7 @@ if __name__ == "__main__":
 
 ```bash
 # Navigate to project directory
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Make trigger detector executable
 chmod +x .ai-agents/session_context/trigger_detector.py

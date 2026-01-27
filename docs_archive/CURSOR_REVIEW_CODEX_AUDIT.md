@@ -83,7 +83,7 @@ GitHub Actions workflow (line 43) reverts HEAD and force-pushes on ANY failure, 
 2. **Option B:** Gate behind human approval
    - Use `workflow_dispatch` or approval gates
 
-3. **Option C:** Use Netlify/Railway rollback APIs instead
+3. **Option C:** Use Netlify/Render rollback APIs instead
    - Platform-specific rollback (safer than git revert)
    - Only rollback deployment, not code
 
@@ -109,7 +109,7 @@ GitHub Actions workflow (line 43) reverts HEAD and force-pushes on ANY failure, 
 ✅ **CONFIRMED** - Looking at `scripts/push.sh`:
 
 - Line 38: Advertises bypass in error message
-- Lines 28-45: Only checks if remote is railway-origin
+- Lines 28-45: Only checks if remote is render-origin
 - **Missing:** No check for `SKIP_VERIFICATION` env var
 
 ### Impact
@@ -148,7 +148,7 @@ GitHub Actions workflow (line 43) reverts HEAD and force-pushes on ANY failure, 
 
 **Codex note:** Pushing via differently named remote bypasses hook
 
-**Assessment:** Valid but low risk. If user renames `railway-origin` to something else, hook won't catch it. However:
+**Assessment:** Valid but low risk. If user renames `render-origin` to something else, hook won't catch it. However:
 
 - Remote names are documented and standardized
 - Unlikely to change without team coordination

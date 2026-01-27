@@ -475,7 +475,7 @@ Feedback method: [GitHub PR comments / Email / Meeting]
 
 **Documentation Author:** Claude Code (API session 2025-12-06)
 **Initiating Concern:** ChatGPT (protocol drift when switching modes)
-**Project:** Mosaic Platform - WIMD Railway Deploy
+**Project:** Mosaic Platform - WIMD Render Deploy
 
 ---
 

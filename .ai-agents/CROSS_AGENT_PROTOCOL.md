@@ -26,8 +26,8 @@ cat .mosaic/current_task.json
 
 **DON'T:**
 ```markdown
-Read /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/PROTOCOL.md
-Read /home/user/wimd-railway-deploy/.mosaic/current_task.json
+Read /Users/damianseguin/WIMD-Deploy-Project/.ai-agents/PROTOCOL.md
+Read /home/user/wimd-render-deploy/.mosaic/current_task.json
 /absolute/path/to/scripts/deploy.sh
 ```
 

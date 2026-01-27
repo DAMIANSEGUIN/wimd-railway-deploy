@@ -168,7 +168,7 @@ November diagnostics and stage documents:
 ## 📁 NEW ARCHIVE STRUCTURE
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/
+/Users/damianseguin/WIMD-Deploy-Project/
 
 deprecated/
 └── 2025-12/
@@ -265,7 +265,7 @@ tar -xzf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz
 
 ### Google Drive Sync (PENDING)
 
-**Status**: GDrive sync verified - `gdrive:WIMD-Railway-Deploy-Project` exists with 121+ docs
+**Status**: GDrive sync verified - `gdrive:WIMD-Render-Deploy-Project` exists with 121+ docs
 
 **Recommended Actions**:
 

@@ -110,7 +110,7 @@ Working tree: Clean
 
 - ✅ mosaic_ui/index.html (baseline Mosaic UI, no Netlify features)
 - ✅ mosaic_ui/ directory structure
-- ✅ backend/ directory (Railway deployment)
+- ✅ backend/ directory (Render deployment)
 - ✅ docs/ directory (project docs)
 
 ### Files Missing (Lost)

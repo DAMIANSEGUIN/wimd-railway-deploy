@@ -2,17 +2,17 @@
 
 ## 1. Workspace & Repos
 
-- **Primary workspace**: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
+- **Primary workspace**: `/Users/damianseguin/WIMD-Deploy-Project`
 - **Git remotes**:
-  - `origin` → `https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git`
-  - `railway-origin` → `https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git`
+  - `origin` → `https://github.com/DAMIANSEGUIN/wimd-render-deploy.git`
+  - `render-origin` → `https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git`
 - **Frontend deploy target**: Netlify site `resonant-crostata-90b706` (`whatismydelta.com`)
-- **Backend deploy target**: Railway service `what-is-my-delta-site-production`
+- **Backend deploy target**: Render service `what-is-my-delta-site-production`
 
 ## 2. Directory Map (depth ≤ 2)
 
 ```
-/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ├── api/                     # FastAPI backend (see `api/index.py`)
 │   └── prompts_loader.py    # CSV + registry ingestion
 ├── data/                    # Prompt datasets & runtime artifacts
@@ -29,7 +29,7 @@
 │   ├── verify_deploy.sh
 │   └── setup_domain.sh
 ├── netlify.toml             # Proxy rules (ensure deployed)
-├── Procfile / railway.json  # Railway configuration
+├── Procfile / render.json  # Render configuration
 ├── requirements.txt         # Backend deps (needs AI SDK additions)
 ├── AI_ROUTING_PLAN.md       # CSV → AI → metrics fallback spec
 ├── PROJECT_STRUCTURE.md     # Canonical layout + drift checks
@@ -85,7 +85,7 @@
 ## 7. Contact & Escalation
 
 - Implementation questions → follow `PROTOCOL_ENFORCEMENT_PLAN.md` (Claude in Cursor role).
-- Infrastructure / Railway issues → escalate to Claude Code.
+- Infrastructure / Render issues → escalate to Claude Code.
 - Product requirements or missing artifacts → human gatekeeper (Damian Seguin).
 
 Keep this document updated if scope or paths change so future runners inherit a consistent map.

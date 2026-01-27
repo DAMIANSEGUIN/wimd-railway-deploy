@@ -1,7 +1,7 @@
 # WIMD Mosaic Deployment Issues - Cursor Team Internal
 
 **Project**: Mosaic Platform (WIMD - What Is My Delta)
-**Cursor Workspace**: WIMD-Railway-Deploy-Project
+**Cursor Workspace**: WIMD-Render-Deploy-Project
 **Support Channel**: Mosaic Support AI Team
 **Status**: 🚨 DEPLOYMENT BLOCKERS - Requires Mosaic AI Team Review
 
@@ -40,18 +40,18 @@ This document provides our internal Cursor development team with:
 **Files Configured**:
 
 - ✅ `Procfile`: `web: python -m uvicorn api.index:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 120`
-- ✅ `railway.json`: Nixpacks builder, gunicorn startup, health checks
+- ✅ `render.json`: Nixpacks builder, gunicorn startup, health checks
 - ✅ `requirements.txt`: All dependencies (FastAPI, OpenAI, Anthropic, etc.)
 - ✅ `netlify.toml`: Complete proxy configuration for all 15 API endpoints
 
 #### **3. Environment Variables (COMPLETE)**
 
-**Railway Variables Set**:
+**Render Variables Set**:
 
 - ✅ `OPENAI_API_KEY`: Rotated and functional
 - ✅ `CLAUDE_API_KEY`: Rotated and functional
 - ✅ `PUBLIC_SITE_ORIGIN`: Domain configuration
-- ✅ `PUBLIC_API_BASE`: Railway API URL
+- ✅ `PUBLIC_API_BASE`: Render API URL
 - ✅ `APP_SCHEMA_VERSION`: v1
 - ✅ `RAILWAY_DISABLE_BUILD_CACHE`: true (for cache clearing)
 - ✅ All variables marked "Available during deploy"
@@ -72,28 +72,28 @@ This document provides our internal Cursor development team with:
 **Timeline**: 45+ minutes of active deployment attempts
 **Actions Executed**:
 
-1. Added `RAILWAY_DISABLE_BUILD_CACHE=true` to Railway variables
+1. Added `RAILWAY_DISABLE_BUILD_CACHE=true` to Render variables
 2. Created cache-busting files with timestamps:
 
    ```bash
-   echo "# Nuclear cache bust: $(date +%s)" >> .railway-cache-bust
-   echo "RAILWAY_NUCLEAR_TIMESTAMP=$(date +%s)" > .env.railway
+   echo "# Nuclear cache bust: $(date +%s)" >> .render-cache-bust
+   echo "RAILWAY_NUCLEAR_TIMESTAMP=$(date +%s)" > .env.render
    ```
 
 3. Multiple forced git commits with unique timestamps
-4. Force-pushed ignored files: `git add -f .railway-cache-bust .env.railway`
+4. Force-pushed ignored files: `git add -f .render-cache-bust .env.render`
 5. Triggered 3+ separate deployment cycles
-6. Used Railway dashboard "Deploy Latest Commit" command palette
+6. Used Render dashboard "Deploy Latest Commit" command palette
 7. Manual redeploy from Deployments tab
 
-**Results**: Railway deployment succeeds but still serves `{"message":"Hello World"}` instead of our complete FastAPI
+**Results**: Render deployment succeeds but still serves `{"message":"Hello World"}` instead of our complete FastAPI
 
 #### **Netlify Proxy Configuration (COMPLETED - NOT DEPLOYED)**
 
 **Actions Executed**:
 
 1. Created complete `netlify.toml` with rewrite rules for all endpoints
-2. Configured proxy targets to Railway API URL
+2. Configured proxy targets to Render API URL
 3. Added fallback SPA routing for frontend
 4. Verified syntax and endpoint coverage
 5. File exists in repository but not active on Netlify CDN
@@ -110,20 +110,20 @@ This document provides our internal Cursor development team with:
    - `"deployment_timestamp": datetime.utcnow().isoformat() + "Z"`
    - `"cache_bust": "nuclear_reset_complete"`
 2. Git committed and pushed interface integration
-3. Verified Railway received the commit
+3. Verified Render received the commit
 
-**Results**: Code changes deployed but Railway still serves minimal app
+**Results**: Code changes deployed but Render still serves minimal app
 
 #### **Deployment Pipeline Debugging (EXTENSIVE)**
 
-**Railway Investigation**:
+**Render Investigation**:
 
-- ✅ Verified Railway connected to correct GitHub repository
+- ✅ Verified Render connected to correct GitHub repository
 - ✅ Checked deployment logs (showed successful builds)
-- ✅ Confirmed Procfile and railway.json syntax
+- ✅ Confirmed Procfile and render.json syntax
 - ✅ Validated Python dependencies and startup command
-- ✅ Tested direct Railway URL vs expected responses
-- ❌ Railway serves `{"message":"Hello World"}` (not our code)
+- ✅ Tested direct Render URL vs expected responses
+- ❌ Render serves `{"message":"Hello World"}` (not our code)
 
 **GitHub Integration**:
 
@@ -131,7 +131,7 @@ This document provides our internal Cursor development team with:
 - ✅ Confirmed latest commits contain complete implementation
 - ✅ Checked commit history shows progressive feature development
 - ✅ Validated no competing repositories or branches
-- ❌ Railway not deploying repository contents
+- ❌ Render not deploying repository contents
 
 #### **Alternative Deployment Strategies (PREPARED)**
 
@@ -140,30 +140,30 @@ This document provides our internal Cursor development team with:
 - ✅ Created Vercel deployment configuration (`vercel.json`)
 - ✅ Created Render deployment configuration (`render.yaml`)
 - ✅ Prepared multi-platform deployment scripts
-- ⏳ Ready for execution if Railway fails permanently
+- ⏳ Ready for execution if Render fails permanently
 
 ### **Root Cause Analysis (CURRENT THEORY)**
 
-#### **Railway Service Disconnect**
+#### **Render Service Disconnect**
 
-**Evidence**: Railway deployment pipeline completely ignores repository contents
+**Evidence**: Render deployment pipeline completely ignores repository contents
 **Symptoms**:
 
 - Git pushes succeed and trigger deployments
-- Railway shows successful build completion
-- Railway serves basic app that doesn't exist in our repository
+- Render shows successful build completion
+- Render serves basic app that doesn't exist in our repository
 - No correlation between committed code and served application
 
 **Possible Causes**:
 
-1. Railway connected to different/cached codebase
-2. Railway fallback mechanism overriding our application
-3. Railway service configuration pointing to wrong source
-4. Railway internal caching system beyond user control
+1. Render connected to different/cached codebase
+2. Render fallback mechanism overriding our application
+3. Render service configuration pointing to wrong source
+4. Render internal caching system beyond user control
 
 #### **Netlify Proxy Not Deployed**
 
-**Evidence**: Domain returns Netlify 404 HTML instead of proxying to Railway
+**Evidence**: Domain returns Netlify 404 HTML instead of proxying to Render
 **Symptoms**:
 
 - `netlify.toml` exists in repository
@@ -182,28 +182,28 @@ This document provides our internal Cursor development team with:
 
 ## 🚨 CURRENT DEPLOYMENT BLOCKERS
 
-### **Blocker 1: Railway-Mosaic Integration Failure**
+### **Blocker 1: Render-Mosaic Integration Failure**
 
-**Issue**: Railway deployment pipeline not executing Mosaic FastAPI code
+**Issue**: Render deployment pipeline not executing Mosaic FastAPI code
 **Current State**:
 
 - ✅ Mosaic implementation complete (449 lines FastAPI)
-- ❌ Railway serves basic "Hello World" instead of Mosaic platform
+- ❌ Render serves basic "Hello World" instead of Mosaic platform
 - ⚠️ Deployment succeeds but wrong application runs
 
 **Mosaic Team Questions**:
 
-1. Does Mosaic have specific Railway deployment patterns we should follow?
+1. Does Mosaic have specific Render deployment patterns we should follow?
 2. Are there Mosaic-specific build configurations for FastAPI deployments?
-3. Should we be using Mosaic's deployment tooling instead of standard Railway?
+3. Should we be using Mosaic's deployment tooling instead of standard Render?
 
 ### **Blocker 2: Mosaic Proxy Architecture**
 
-**Issue**: Domain routing between Netlify frontend and Railway backend failing
+**Issue**: Domain routing between Netlify frontend and Render backend failing
 **Current State**:
 
 - ✅ Mosaic frontend deployed to Netlify
-- ❌ API proxy rules not routing to Railway backend
+- ❌ API proxy rules not routing to Render backend
 - ⚠️ Domain shows 404 for all `/wimd/*`, `/ob/*`, `/resume/*` endpoints
 
 **Mosaic Team Questions**:
@@ -256,7 +256,7 @@ File Uploads       # Resume/document processing
 
 **Missing Documentation**:
 
-- Mosaic-recommended hosting platforms (Railway vs alternatives)
+- Mosaic-recommended hosting platforms (Render vs alternatives)
 - Multi-service deployment patterns (frontend + API)
 - Environment variable management for Mosaic applications
 - Cache management strategies for Mosaic deployments
@@ -296,7 +296,7 @@ File Uploads       # Resume/document processing
 
 ```
 Frontend: Netlify (https://whatismydelta.com)
-Backend:  Railway (https://what-is-my-delta-site-production.up.railway.app)
+Backend:  Render (https://what-is-my-delta-site-production.up.render.app)
 Database: SQLite (local file storage)
 CDN:      Netlify Edge (domain routing)
 ```
@@ -307,14 +307,14 @@ CDN:      Netlify Edge (domain routing)
 Framework: FastAPI 0.104.1
 Runtime:   Python 3.11 + Uvicorn
 AI APIs:   OpenAI GPT-4 + Anthropic Claude
-Storage:   Railway filesystem + SQLite
+Storage:   Render filesystem + SQLite
 Session:   Header-based (X-Session-ID)
 ```
 
 ### **Deployment Pipeline**
 
 ```bash
-GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
+GitHub → Render Auto-Deploy → Netlify Proxy → Domain
   ↓         ↓ (FAILING)        ↓ (FAILING)      ↓
  Code     Wrong App           404 Errors    Broken
 ```
@@ -325,10 +325,10 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 
 ### **Immediate Support Needed**
 
-1. **Deployment Review**: Validate our Railway + Netlify architecture against Mosaic best practices
+1. **Deployment Review**: Validate our Render + Netlify architecture against Mosaic best practices
 2. **Missing Assets**: Help locate the 600+ prompts CSV file required for `/prompts/active`
 3. **Integration Patterns**: Review our OpenAI/Claude integration approach
-4. **Troubleshooting**: Assist with Railway deployment pipeline diagnosis
+4. **Troubleshooting**: Assist with Render deployment pipeline diagnosis
 
 ### **Documentation Feedback**
 
@@ -339,7 +339,7 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 
 ### **Platform Questions**
 
-1. Does Mosaic provide infrastructure tools we should be using instead of Railway?
+1. Does Mosaic provide infrastructure tools we should be using instead of Render?
 2. Are there Mosaic-specific deployment templates or configurations?
 3. What is the recommended approach for Mosaic app monitoring and observability?
 4. Should we be using Mosaic's own hosting/deployment platform?
@@ -351,7 +351,7 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 ### **Completed Analysis**
 
 - ✅ Complete FastAPI implementation (449 lines, all endpoints)
-- ✅ Railway deployment configuration (Procfile, railway.json)
+- ✅ Render deployment configuration (Procfile, render.json)
 - ✅ Netlify proxy configuration (netlify.toml)
 - ✅ Environment variable management
 - ✅ Git repository structure and deployment pipeline
@@ -359,7 +359,7 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 
 ### **Outstanding Issues**
 
-- ❌ Railway serves wrong application (deployment disconnect)
+- ❌ Render serves wrong application (deployment disconnect)
 - ❌ Netlify proxy rules not deployed/active
 - ❌ Missing core Mosaic prompt dataset
 - ❌ No working health checks on production domain
@@ -368,7 +368,7 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 
 1. **Nuclear cache clearing**: Added `RAILWAY_DISABLE_BUILD_CACHE=true`
 2. **Force deployments**: Multiple git push triggers
-3. **Configuration validation**: Verified Procfile and railway.json
+3. **Configuration validation**: Verified Procfile and render.json
 4. **Environment variable check**: All required vars set correctly
 5. **Proxy configuration**: Created complete netlify.toml with rewrite rules
 
@@ -390,7 +390,7 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 - ✅ `OPERATIONS_MANUAL.md`: 300+ line operational procedures
 - ✅ `STRATEGIC_ACTION_PLAN.md`: Multi-pronged attack strategy with pre-built templates
 - ✅ `CLAUDE_CODE_README.md`: Updated with canonical rules and debugging procedures
-- ✅ `clear_railway_cache.sh`: Interactive cache clearing guide
+- ✅ `clear_render_cache.sh`: Interactive cache clearing guide
 - ✅ `NUCLEAR_RAILWAY_RESET.sh`: Automated cache-busting script (executed)
 
 **Security Measures Implemented**:
@@ -408,11 +408,11 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 2. ❌ Force deployment triggers (multiple attempts failed)
 3. ❌ Environment variable verification (all confirmed correct)
 4. ❌ Repository structure validation (confirmed complete)
-5. ❌ Build configuration debugging (Procfile/railway.json correct)
+5. ❌ Build configuration debugging (Procfile/render.json correct)
 
 #### **Strategic Options Remaining**
 
-1. **Railway Service Recreation**: Create new Railway service from scratch
+1. **Render Service Recreation**: Create new Render service from scratch
 2. **Netlify Configuration Deployment**: Deploy netlify.toml to live CDN
 3. **Alternative Platform Migration**: Execute Vercel/Render backup plans
 4. **Mosaic Support Escalation**: Request platform-specific guidance
@@ -421,14 +421,14 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 
 1. Deployment architecture validation against Mosaic best practices
 2. Missing 600+ prompts CSV asset location guidance
-3. Railway vs alternative platform recommendations
+3. Render vs alternative platform recommendations
 4. Mosaic-specific troubleshooting procedures
 
 ### **Team Handoff Summary**
 
 **Current State**: Complete implementation exists but deployment pipeline disconnected
 **Effort Invested**: 45+ minutes nuclear cache clearing, 4+ deployment strategies, comprehensive documentation
-**Blockers**: Railway ignores repository, Netlify proxy not deployed
+**Blockers**: Render ignores repository, Netlify proxy not deployed
 **Ready**: Alternative deployment configurations, comprehensive troubleshooting documentation
 
 ---
@@ -436,7 +436,7 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 ## 📞 CURSOR TEAM CONTACTS
 
 **Lead Developer**: Claude Code (Senior Debugger)
-**Project Directory**: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/`
+**Project Directory**: `/Users/damianseguin/WIMD-Deploy-Project/`
 **Repository**: [REDACTED - See local git config]
 **Last Updated**: 2025-09-29
 
@@ -463,24 +463,24 @@ GitHub → Railway Auto-Deploy → Netlify Proxy → Domain
 1. **Local Environment Setup**: Ran FastAPI locally with production variables
 2. **Immediate Error Discovery**: Missing dependency error appeared instantly
 3. **Simple Fix**: Added `python-multipart` to requirements.txt
-4. **Successful Deployment**: Railway immediately served complete API
+4. **Successful Deployment**: Render immediately served complete API
 
 ### **Why All Previous Attempts Failed**
 
 - **Infrastructure Focus**: Treated as deployment/caching issue instead of application issue
-- **Hidden Error Messages**: Railway masked startup failures with fallback app
+- **Hidden Error Messages**: Render masked startup failures with fallback app
 - **No Local Verification**: Assumed code was working, focused on deployment pipeline
 
 ### **Updated Status**
 
 - ✅ **Local Development**: Mosaic works perfectly (all 449 lines, all endpoints)
-- ✅ **Railway Backend**: Complete API deployed and functional at Railway URL
-- ❌ **Domain Routing**: `whatismydelta.com` still returns Netlify 404s instead of Railway API
+- ✅ **Render Backend**: Complete API deployed and functional at Render URL
+- ❌ **Domain Routing**: `whatismydelta.com` still returns Netlify 404s instead of Render API
 - ❌ **End-to-End Deployment**: INCOMPLETE - users cannot access API via domain
 
 ### **Remaining Blocker**
 
-**Repository Mismatch**: Netlify monitors different repository/branch than Railway deployment source. Proxy configuration exists in Railway repo but needs to be in Netlify source repo.
+**Repository Mismatch**: Netlify monitors different repository/branch than Render deployment source. Proxy configuration exists in Render repo but needs to be in Netlify source repo.
 
 ### **Key Learning for Cursor Team**
 

@@ -85,27 +85,27 @@ CREATE TABLE users (
 
 **Priority**: MEDIUM | **Timeline**: Next Week | **Dependencies**: CODEX completion
 
-#### Task 1: Railway Deployment Updates
+#### Task 1: Render Deployment Updates
 
-**What**: Deploy backend changes to Railway
+**What**: Deploy backend changes to Render
 **Files to Modify**:
 
-- Railway deployment configuration
+- Render deployment configuration
 - Environment variables
 - Database migration scripts
 
 **Specific Actions**:
 
 - Deploy updated backend with user authentication
-- Test all new endpoints in Railway environment
+- Test all new endpoints in Render environment
 - Verify database schema updates
 - Test frontend-backend integration
 
 **Acceptance Criteria**:
 
-- All new endpoints working in Railway
+- All new endpoints working in Render
 - Database schema updated
-- Frontend connects to Railway backend
+- Frontend connects to Render backend
 - No breaking changes to existing functionality
 
 #### Task 2: Production Testing & Monitoring
@@ -195,7 +195,7 @@ CREATE TABLE users (
 
 ### Phase 2: Production Deployment (Week 2)
 
-- [ ] All changes deployed to Railway
+- [ ] All changes deployed to Render
 - [ ] Database schema updated
 - [ ] End-to-end testing complete
 - [ ] No breaking changes
@@ -270,8 +270,8 @@ CREATE TABLE users (
 ### For Claude Code
 
 1. Wait for CODEX to complete backend implementation
-2. Review Railway deployment configuration
-3. Deploy updated backend to Railway
+2. Review Render deployment configuration
+3. Deploy updated backend to Render
 4. Test all endpoints in production environment
 5. Verify frontend-backend integration
 

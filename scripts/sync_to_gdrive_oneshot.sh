@@ -10,7 +10,7 @@ set -euo pipefail
 # CONFIGURATION
 # ============================================================================
 
-LOCAL_ROOT="/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+LOCAL_ROOT="/Users/damianseguin/WIMD-Deploy-Project"
 GDRIVE_REMOTE="gdrive:WIMD-Railway-Deploy-Project"
 RCLONE_BIN="/Users/damianseguin/coachvox_tools/bin/rclone"
 

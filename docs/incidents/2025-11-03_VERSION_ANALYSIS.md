@@ -7,7 +7,7 @@
 
 ## The Problem
 
-User states we're "back to the old UI" after deploying 2,766 line version from railway-origin/main.
+User states we're "back to the old UI" after deploying 2,766 line version from render-origin/main.
 Need to understand:
 
 1. What makes 2,766 lines "old UI"?
@@ -19,10 +19,10 @@ Need to understand:
 
 ## Version Comparison
 
-### Version A: 2,766 lines (railway-origin/main)
+### Version A: 2,766 lines (render-origin/main)
 
 **Currently Deployed:** ✅ YES
-**Source:** railway-origin/main
+**Source:** render-origin/main
 **Title:** "What Is My Delta — Clean Interface"
 **Line Count:** 2,766
 

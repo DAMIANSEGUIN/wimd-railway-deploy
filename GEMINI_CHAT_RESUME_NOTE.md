@@ -1,12 +1,12 @@
 **RAILWAY CLI ISSUE RESOLVED - DEPLOYMENT IN PROGRESS**
 
-The Railway CLI ambiguity blocker has been fixed. Here's where we are:
+The Render CLI ambiguity blocker has been fixed. Here's where we are:
 
-✅ **CLI Linked:** `mosaic-backend/wimd-railway-deploy`
-✅ **Deployment Started:** `railway up` executed successfully
+✅ **CLI Linked:** `mosaic-backend/wimd-render-deploy`
+✅ **Deployment Started:** `render up` executed successfully
 🔄 **Current Status:** Build in progress, logs streaming
 
-**Next Step:** Monitor build completion with `railway logs -f`
+**Next Step:** Monitor build completion with `render logs -f`
 
 **Key Finding:** Project was `mosaic-backend` (not `wimd-career-coaching`). Duplicate project names caused the linking failure.
 

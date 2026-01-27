@@ -35,19 +35,19 @@ The Mosaic governance system documents ideal behavior but **cannot enforce itsel
 User asked for deployment test commands (2025-12-11 ~16:15 UTC)
 
 Commands provided to user:
-1. curl https://what-is-my-delta-site-production.up.railway.app/health/compre
+1. curl https://what-is-my-delta-site-production.up.render.app/health/compre
      hensive
    ❌ BROKEN - line break mid-URL
 
-2. curl -X POST https://what-is-my-delta-site-production.up.railway.app/wimd
+2. curl -X POST https://what-is-my-delta-site-production.up.render.app/wimd
      \
    ❌ BROKEN - line break after URL
 
 3. curl -X POST
-     https://what-is-my-delta-site-production.up.railway.app/auth/register
+     https://what-is-my-delta-site-production.up.render.app/auth/register
    ❌ BROKEN - command split across lines
 
-4. curl "https://what-is-my-delta-site-production.up.railway.app/jobs/search?
+4. curl "https://what-is-my-delta-site-production.up.render.app/jobs/search?
      query=software+engineer&location=remote&limit=5"
    ❌ BROKEN - line break in query string
 ```

@@ -7,7 +7,7 @@
 
 ## Protocol Overview
 
-**Netlify Agent Runners** have been used multiple times successfully to diagnose and fix issues with GitHub and Railway deployments.
+**Netlify Agent Runners** have been used multiple times successfully to diagnose and fix issues with GitHub and Render deployments.
 
 This is an **established protocol** that can be triggered if the team agrees it will save time and cut down on potential errors.
 
@@ -18,7 +18,7 @@ This is an **established protocol** that can be triggered if the team agrees it 
 ### Use Cases
 
 - Diagnosing GitHub deployment issues
-- Diagnosing Railway deployment issues
+- Diagnosing Render deployment issues
 - Fixing deployment configuration problems
 - Debugging CI/CD pipeline failures
 - Troubleshooting integration between services
@@ -46,7 +46,7 @@ When appropriate, suggest using Netlify Agent Runner to:
 This protocol has been used **multiple times** successfully in the past for:
 
 - GitHub integration issues
-- Railway deployment problems
+- Render deployment problems
 - Cross-service configuration debugging
 
 ---

@@ -190,7 +190,7 @@ User can invoke these at any time:
 
 ### Example 1: Code Creation
 
-**User says:** "Fix the Railway deployment"
+**User says:** "Fix the Render deployment"
 
 **WRONG approach:**
 - Immediately start coding
@@ -200,13 +200,13 @@ User can invoke these at any time:
 **CORRECT approach:**
 ```markdown
 # INTENT DOC
-## Railway Deployment Fix
+## Render Deployment Fix
 
-**TASK:** Debug Railway deployment errors and implement fixes
+**TASK:** Debug Render deployment errors and implement fixes
 
 **SCOPE:**
 Included:
-- Review Railway logs for error messages
+- Review Render logs for error messages
 - Fix identified issues in deployment config
 - Test deployment after fixes
 
@@ -216,7 +216,7 @@ Excluded:
 - New feature additions
 
 **SOURCES:**
-- Railway logs from recent deployment attempt
+- Render logs from recent deployment attempt
 - nixpacks.toml configuration
 - requirements.txt dependencies
 

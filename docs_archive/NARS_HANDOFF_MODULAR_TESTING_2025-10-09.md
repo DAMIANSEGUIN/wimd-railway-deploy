@@ -11,16 +11,16 @@
 
 **Systematically compare working vs failing deployments and test new elements in isolation.**
 
-Break down the changes I made into modules and test each one independently to identify which specific change is breaking Railway deployments.
+Break down the changes I made into modules and test each one independently to identify which specific change is breaking Render deployments.
 
 ---
 
 ## Working Deployment (Baseline)
 
 **Commit**: `a583d26a` (Oct 6, 2025) or `067f33a` (Oct 7, 2025)
-**Status**: ✅ Active on Railway production
+**Status**: ✅ Active on Render production
 **Health endpoint**: Returns `{"ok": true, "timestamp": "..."}`
-**Location**: Railway service `what-is-my-delta-site`
+**Location**: Render service `what-is-my-delta-site`
 
 **Key characteristics**:
 
@@ -37,12 +37,12 @@ Break down the changes I made into modules and test each one independently to id
 **Commits**:
 
 1. `7c2807e` - Fix health check 503: Force boolean conversion for SQLite feature flags
-2. `2888657` - Force Railway cache clear
+2. `2888657` - Force Render cache clear
 
-**Status**: ❌ Both failed Railway health checks
+**Status**: ❌ Both failed Render health checks
 **Failure pattern**: Build succeeds → Container starts → Health check returns 503 → Deployment marked failed
 
-**Railway keeps**: Old deployment (a583d26a) active
+**Render keeps**: Old deployment (a583d26a) active
 
 ---
 
@@ -246,7 +246,7 @@ def debug_system_state():
 
 ---
 
-### 8. Railway Configuration (`railway.toml`)
+### 8. Render Configuration (`render.toml`)
 
 **Commit**: `027eaf2`
 
@@ -265,7 +265,7 @@ httpPath = "/health"
 httpMethod = "GET"
 ```
 
-**Impact**: Configures Railway to monitor /health endpoint with 300s timeout
+**Impact**: Configures Render to monitor /health endpoint with 300s timeout
 
 ---
 
@@ -273,26 +273,26 @@ httpMethod = "GET"
 
 **Commit**: `2888657`
 
-**Added**: `.railwaybust` (dummy file to force cache clear)
+**Added**: `.renderbust` (dummy file to force cache clear)
 
-**Impact**: Attempt to bypass Railway build cache
+**Impact**: Attempt to bypass Render build cache
 
 ---
 
 ## Root Cause Hypothesis
 
-**Railway health check timing issue:**
+**Render health check timing issue:**
 
-1. Railway starts container
+1. Render starts container
 2. FastAPI begins accepting requests
-3. **Railway hits `/health` endpoint** (starts health check timer)
+3. **Render hits `/health` endpoint** (starts health check timer)
 4. Startup migration begins running (`api/startup_checks.py:run()`)
 5. Health check sees `fallback_enabled: 0` (migration hasn't updated DB yet)
 6. Health check logic: `0 or False = False` → `prompt_system_ok = False`
 7. Health check returns **503**
-8. **Railway marks deployment failed** (before migration completes)
+8. **Render marks deployment failed** (before migration completes)
 9. Migration completes successfully (too late)
-10. Railway keeps old deployment (a583d26a) active
+10. Render keeps old deployment (a583d26a) active
 
 **Evidence**:
 
@@ -363,7 +363,7 @@ Files to modify:
 Files to modify:
 
 - `api/index.py:423-489` - Enhanced health check logic
-- `railway.toml` - Health check configuration
+- `render.toml` - Health check configuration
 
 **Expected**: **This is likely the breaking change** - will fail if prompt system not ready
 
@@ -382,13 +382,13 @@ Files to modify:
 
 ---
 
-### Test 7: Railway Config Only
+### Test 7: Render Config Only
 
-**Branch**: Create from `067f33a` + only `railway.toml` from `027eaf2`
+**Branch**: Create from `067f33a` + only `render.toml` from `027eaf2`
 
 Files to modify:
 
-- `railway.toml` - Health check configuration
+- `render.toml` - Health check configuration
 
 **Expected**: Should deploy successfully (simple health check still passes)
 
@@ -400,7 +400,7 @@ If individual tests pass, combine in phases:
 
 **Phase A**: Tests 1-4 together (AI + migration + caching + bool fix)
 **Phase B**: Add monitoring (Test 6)
-**Phase C**: Add Railway config (Test 7)
+**Phase C**: Add Render config (Test 7)
 **Phase D**: Add health check last (Test 5)
 
 **Expected**: Identifies which combination breaks
@@ -413,7 +413,7 @@ If individual tests pass, combine in phases:
 
 Check if migration is actually running and succeeding:
 
-1. Add HEALTH_DEBUG=1 to Railway environment variables
+1. Add HEALTH_DEBUG=1 to Render environment variables
 2. Deploy with enhanced logging
 3. Check logs for migration success/failure
 4. Verify database actually has `AI_FALLBACK_ENABLED = 1`
@@ -424,7 +424,7 @@ Test:
 
 1. Add `/health/prompts` endpoint test during deployment
 2. Verify `ai_available` value during health check
-3. Check if API keys are set in Railway environment
+3. Check if API keys are set in Render environment
 
 ---
 
@@ -452,7 +452,7 @@ Shows 21 files changed, 451 insertions, 19 deletions
 
 ---
 
-## Railway Deployment Info
+## Render Deployment Info
 
 **Project**: `wimd-career-coaching`
 **Service**: `what-is-my-delta-site`
@@ -470,7 +470,7 @@ Shows 21 files changed, 451 insertions, 19 deletions
 
 **Immediate**:
 
-1. Identify which specific change breaks Railway deployment
+1. Identify which specific change breaks Render deployment
 2. Determine if it's the enhanced health check or something else
 3. Propose minimal fix that gets new code deployed
 
@@ -485,7 +485,7 @@ Shows 21 files changed, 451 insertions, 19 deletions
 
 ## Reference Documents
 
-**In project directory** (`/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/`):
+**In project directory** (`/Users/damianseguin/WIMD-Deploy-Project/`):
 
 1. `CODEX_HANDOFF_HEALTH_CHECK_2025-10-09.md` - Full technical analysis
 2. `CLAUDE_CODE_DEBUGGING_REPORT_2025-10-08.md` - Original issue investigation
@@ -496,8 +496,8 @@ Shows 21 files changed, 451 insertions, 19 deletions
 
 ## Questions for NARs
 
-1. **Can you create isolated test branches** for each module and deploy to Railway staging/preview?
-2. **Can you verify the migration actually runs** by checking Railway database state?
+1. **Can you create isolated test branches** for each module and deploy to Render staging/preview?
+2. **Can you verify the migration actually runs** by checking Render database state?
 3. **Can you test health check timing** - does it fail before migration completes?
 4. **Can you add grace period** to health check (return 200 for first 60 seconds)?
 5. **Can you identify the minimal working fix** to unblock deployment?

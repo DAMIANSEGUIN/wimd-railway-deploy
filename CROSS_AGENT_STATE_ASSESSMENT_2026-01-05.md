@@ -12,8 +12,8 @@
 
 **Two AI agents are operating on the same repository with DIFFERENT file system paths:**
 
-- **Claude Code (Desktop):** `/home/user/wimd-railway-deploy` (Linux container)
-- **Claude (Cursor):** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project` (macOS local)
+- **Claude Code (Desktop):** `/home/user/wimd-render-deploy` (Linux container)
+- **Claude (Cursor):** `/Users/damianseguin/WIMD-Deploy-Project` (macOS local)
 
 **Impact:**
 - Documentation references break across agents
@@ -25,13 +25,13 @@
 
 ```bash
 # Claude Code sees:
-pwd → /home/user/wimd-railway-deploy
+pwd → /home/user/wimd-render-deploy
 
 # User's system (Cursor agent) sees:
-# /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+# /Users/damianseguin/WIMD-Deploy-Project
 
 # Git remote shows proxy:
-origin → http://local_proxy@127.0.0.1:55743/git/DAMIANSEGUIN/wimd-railway-deploy
+origin → http://local_proxy@127.0.0.1:55743/git/DAMIANSEGUIN/wimd-render-deploy
 ```
 
 **This is NOT the same as the GitHub remote, indicating Claude Code is operating in a sandboxed/containerized environment.**
@@ -43,7 +43,7 @@ origin → http://local_proxy@127.0.0.1:55743/git/DAMIANSEGUIN/wimd-railway-depl
 ### Repository Identity
 
 ```yaml
-Repository: DAMIANSEGUIN/wimd-railway-deploy
+Repository: DAMIANSEGUIN/wimd-render-deploy
 Branch: claude/start-new-session-nB5Jo
 Current Commit: 26bea5b (WIP: Pre-enforcement cleanup)
 Production Tag: prod-2025-11-18 (commit: 31d099c)
@@ -60,29 +60,29 @@ Commits Ahead: 5 commits ahead of production tag
 {
   "version": 1,
   "ssot": "session_start",
-  "canon_id": "DAMIANSEGUIN/wimd-railway-deploy:main:09c8c38326a363660cef7610558bfddc65fc5539"
+  "canon_id": "DAMIANSEGUIN/wimd-render-deploy:main:09c8c38326a363660cef7610558bfddc65fc5539"
 }
 
 // .mosaic/authority_map.json
 {
   "schema_version": "1.0",
   "repo": {
-    "slug": "DAMIANSEGUIN/wimd-railway-deploy",
-    "origin_ssh": "https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git",
+    "slug": "DAMIANSEGUIN/wimd-render-deploy",
+    "origin_ssh": "https://github.com/DAMIANSEGUIN/wimd-render-deploy.git",
     "deploy_branch": "main"
   },
   "services": [
     {
       "name": "mosaic-frontend",
-      "platform": "railway",
-      "railway_project": "wimd-career-coaching",
-      "railway_service": "mosaic-frontend"
+      "platform": "render",
+      "render_project": "wimd-career-coaching",
+      "render_service": "mosaic-frontend"
     },
     {
       "name": "mosaic-backend",
-      "platform": "railway",
-      "railway_project": "wimd-career-coaching",
-      "railway_service": "mosaic-backend"
+      "platform": "render",
+      "render_project": "wimd-career-coaching",
+      "render_service": "mosaic-backend"
     }
   ]
 }
@@ -133,12 +133,12 @@ Commits Ahead: 5 commits ahead of production tag
 **Mandatory first action:**
 
 ```
-Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
+Read: /Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
 ```
 
 **Problem:** This path is macOS-specific and DOES NOT WORK in Claude Code's Linux container.
 
-**Actual file location (Claude Code):** `/home/user/wimd-railway-deploy/.ai-agents/SESSION_RESUME_PROMPT.md`
+**Actual file location (Claude Code):** `/home/user/wimd-render-deploy/.ai-agents/SESSION_RESUME_PROMPT.md`
 
 **Status:** Broken for cross-agent coordination
 
@@ -157,7 +157,7 @@ Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SE
 
 **Location:** `.ai-agents/SESSION_RESUME_PROMPT.md`
 **Last Updated:** 2025-12-15
-**Content:** Railway Reset blocker (CLI linking ambiguity)
+**Content:** Render Reset blocker (CLI linking ambiguity)
 **Status:** Outdated - describes a stale task
 
 ---
@@ -166,14 +166,14 @@ Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SE
 
 ### From SESSION_RESUME_PROMPT.md (Dec 15):
 
-1. **Railway CLI Linking Ambiguity** - `railway list` sees project, `railway link` fails
-2. **User Approval Missing** - Railway reset not approved
+1. **Render CLI Linking Ambiguity** - `render list` sees project, `render link` fails
+2. **User Approval Missing** - Render reset not approved
 3. **PostgreSQL Scope Unknown** - Data loss risk unclear
 4. **Service Name Undecided** - New service naming TBD
 
 ### From SESSION_HANDOFF_2025-12-15.md:
 
-1. **Railway Deployment Timeout** - `railway up` exceeds 45MB upload limit
+1. **Render Deployment Timeout** - `render up` exceeds 45MB upload limit
 2. **Deployment Strategy Shift Needed** - Move from CLI to GitHub-based deploy
 
 ### From Recent Commits (Dec 2025):
@@ -231,22 +231,22 @@ Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SE
    - Create `blockers.json` (machine-readable blocker list)
    - Create `session_log.jsonl` (append-only session history)
 
-### Phase 3: Resolve Railway Deployment
+### Phase 3: Resolve Render Deployment
 
 **Objective:** Get the platform deployed and operational.
 
 **Choose ONE deployment strategy:**
 
 **Option A: GitHub-Based Deploy (Recommended)**
-- Configure Railway service to watch GitHub repo
+- Configure Render service to watch GitHub repo
 - Push commits to trigger deploys
 - No local CLI upload needed
 - Avoids 45MB timeout issue
 
 **Option B: Fix CLI Deploy**
-- Implement comprehensive `.railwayignore`
+- Implement comprehensive `.renderignore`
 - Reduce upload size below 45MB
-- Continue using `railway up`
+- Continue using `render up`
 
 **User decision required.**
 
@@ -258,7 +258,7 @@ Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SE
 
 1. **Read this file:** `CROSS_AGENT_STATE_ASSESSMENT_2026-01-05.md`
 2. **Verify file access:** Confirm you can access `.mosaic/session_start.json`
-3. **Check path:** Is your working directory `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`?
+3. **Check path:** Is your working directory `/Users/damianseguin/WIMD-Deploy-Project`?
 4. **Propose solution:** How should we handle the path divergence?
 
 ### For User (Damian):
@@ -379,12 +379,12 @@ Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SE
 **Rationale:** JSON for machine state, markdown for human context
 **User Decision:** [ ] PENDING
 
-### Decision 4: Railway Deployment Strategy
+### Decision 4: Render Deployment Strategy
 
 **Options:**
 - A) GitHub-based deploy (no CLI upload)
-- B) Fix CLI deploy with `.railwayignore`
-- C) Use Railway CLI for backend, GitHub for frontend
+- B) Fix CLI deploy with `.renderignore`
+- C) Use Render CLI for backend, GitHub for frontend
 
 **Recommendation:** Option A (GitHub-based)
 **Rationale:** Avoids 45MB timeout, standard practice, easier to debug
@@ -406,7 +406,7 @@ Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SE
 
 ```bash
 # Verify you're in the right repo
-git remote -v | grep wimd-railway-deploy
+git remote -v | grep wimd-render-deploy
 
 # Check current commit
 git log --oneline -1
@@ -448,7 +448,7 @@ cat .mosaic/blockers.json
 - Relative path docs: 0 files ❌ (needs creation)
 
 **Blocker Status:**
-- Railway deployment: BLOCKED (timeout + strategy unclear)
+- Render deployment: BLOCKED (timeout + strategy unclear)
 - CLI linking: BLOCKED (ambiguity unresolved)
 - User approvals: BLOCKED (4 decisions pending)
 - Cross-agent coordination: BLOCKED (path divergence)
@@ -477,9 +477,9 @@ cat .mosaic/blockers.json
 
 ### Warning 4: Do Not Deploy Without User Approval
 
-**Problem:** Railway reset has data loss risk. Deployment strategy is unclear.
+**Problem:** Render reset has data loss risk. Deployment strategy is unclear.
 
-**Solution:** Wait for user to answer Decision 4 before any Railway commands.
+**Solution:** Wait for user to answer Decision 4 before any Render commands.
 
 ---
 

@@ -19,20 +19,20 @@ curl -s https://mosaic-backend-tpog.onrender.com/__version
 
 # 2. Check which remote has that commit
 git branch -r --contains b5fabab
-# Result: origin/main ✅ (NOT on railway-origin)
+# Result: origin/main ✅ (NOT on render-origin)
 
 # 3. Check last activity on each remote
 git log origin/main -1 --format="%ci"
 # Result: Jan 24, 2026 (active)
 
-git log railway-origin/main -1 --format="%ci"
+git log render-origin/main -1 --format="%ci"
 # Result: Dec 17, 2025 (39 days stale)
 ```
 
 **Conclusion:**
-- ✅ Render watches `origin` (wimd-railway-deploy)
-- ❌ `railway-origin` is stale/unused
-- ❌ Pre-push hook logic is backwards (blocks origin, suggests railway-origin)
+- ✅ Render watches `origin` (wimd-render-deploy)
+- ❌ `render-origin` is stale/unused
+- ❌ Pre-push hook logic is backwards (blocks origin, suggests render-origin)
 
 **Evidence File:** `.mosaic/VALIDATION_REQUEST_FOR_GEMINI.md`
 
@@ -48,7 +48,7 @@ git log railway-origin/main -1 --format="%ci"
 if [[ "$remote" == "origin" ]]; then
     echo "⚠️  WARNING: You're pushing to 'origin' (backup repo)"
     echo "Production repos:"
-    echo "  - railway-origin: $(git remote get-url railway-origin)"
+    echo "  - render-origin: $(git remote get-url render-origin)"
     # Blocks push or requires manual confirmation
 fi
 ```
@@ -65,24 +65,24 @@ fi
 **Changes:**
 1. Recognize origin as production (not backup)
 2. Run Gate 9 health checks on origin pushes
-3. Remove railway-origin references
+3. Remove render-origin references
 
 **Status:** ✅ FIXED (commit 8b15ba3)
 
 ---
 
 ### Step 3: Updated Documentation
-**Problem:** MANDATORY_AGENT_BRIEFING.md said backend was on Railway
+**Problem:** MANDATORY_AGENT_BRIEFING.md said backend was on Render
 
 **File:** `.mosaic/MANDATORY_AGENT_BRIEFING.md`
 
 **Change:**
 ```diff
-- Backend: FastAPI + PostgreSQL (Railway)
+- Backend: FastAPI + PostgreSQL (Render)
 + Backend: FastAPI + PostgreSQL (Render)
 
-- Backend: Railway watches `origin` (wimd-railway-deploy)
-+ Backend: Render watches `origin` (wimd-railway-deploy)
+- Backend: Render watches `origin` (wimd-render-deploy)
++ Backend: Render watches `origin` (wimd-render-deploy)
 ```
 
 **Status:** ✅ FIXED (commit 8b15ba3)
@@ -90,16 +90,16 @@ fi
 ---
 
 ### Step 4: Renamed Misleading Git Remote
-**Problem:** Remote named "railway-origin" but not using Railway
+**Problem:** Remote named "render-origin" but not using Render
 
 **Command:**
 ```bash
-git remote rename railway-origin legacy
+git remote rename render-origin legacy
 ```
 
 **Result:**
 ```
-origin    https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git
+origin    https://github.com/DAMIANSEGUIN/wimd-render-deploy.git
 legacy    https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 ```
 
@@ -332,8 +332,8 @@ def test_integration_health():
 ### Immediate Fixes (Jan 25)
 1. ✅ **Frontend API URL** - Changed from Vercel to Render (commit 7113787)
 2. ✅ **Pre-push hook** - Recognize origin as production, run Gate 9 (commit 8b15ba3)
-3. ✅ **Documentation** - Update MANDATORY_AGENT_BRIEFING.md Railway → Render (commit 8b15ba3)
-4. ✅ **Git remote** - Rename railway-origin → legacy (commit 8b15ba3)
+3. ✅ **Documentation** - Update MANDATORY_AGENT_BRIEFING.md Render → Render (commit 8b15ba3)
+4. ✅ **Git remote** - Rename render-origin → legacy (commit 8b15ba3)
 5. ✅ **Analysis** - Document failure timeline and root causes (commit 41b8028)
 
 ### Impact

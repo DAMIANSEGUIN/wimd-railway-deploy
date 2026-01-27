@@ -76,7 +76,7 @@ Step 3: Respond acknowledging:
 ## Example (This Session)
 
 **User said:**
-> "we have used Netlify Agent Runners multiple times to diagnose and fix issues with Github and Railway deployments. This is an established protocol..."
+> "we have used Netlify Agent Runners multiple times to diagnose and fix issues with Github and Render deployments. This is an established protocol..."
 
 **What I did:**
 
@@ -86,7 +86,7 @@ Step 3: Respond acknowledging:
 
 **What I SHOULD have done:**
 
-1. ✅ Recognized "Netlify" as unfamiliar suggestion for Railway debugging
+1. ✅ Recognized "Netlify" as unfamiliar suggestion for Render debugging
 2. ✅ Auto-saved before responding
 3. ✅ Asked: "I don't see this in project history - is this an established pattern?"
 

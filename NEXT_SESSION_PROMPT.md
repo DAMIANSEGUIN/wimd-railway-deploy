@@ -63,8 +63,8 @@ ls -lt SESSION*.md .ai-agents/SESSION*.md | head -5
 ### What Is Blocked
 
 **CRITICAL BLOCKERS:**
-1. **Railway CLI Linking Ambiguity** - Requires user intervention
-2. **Railway Reset User Approval** - Waiting for user decision
+1. **Render CLI Linking Ambiguity** - Requires user intervention
+2. **Render Reset User Approval** - Waiting for user decision
 3. **Documentation Consolidation** - Multiple overlapping session start systems (needs architectural review)
 
 **READY TO PROCEED (No blockers):**
@@ -173,7 +173,7 @@ Present plan to user for approval, then implement.
 - Untracked file: START_HERE.md (may need to delete or integrate)
 
 **Recovery information:**
-- Working Directory: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+- Working Directory: `/Users/damianseguin/WIMD-Deploy-Project`
 - Git Commit: 684dad3 (Dec 14) + 11 unpushed commits
 - Branch: main
 
@@ -203,7 +203,7 @@ Present plan to user for approval, then implement.
 I'm starting a new session.
 
 Read this file first:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/NEXT_SESSION_PROMPT.md
+/Users/damianseguin/WIMD-Deploy-Project/NEXT_SESSION_PROMPT.md
 
 Then help me:
 1. Find the canonical starting document for this project

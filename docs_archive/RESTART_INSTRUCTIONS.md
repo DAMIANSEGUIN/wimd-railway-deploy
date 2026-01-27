@@ -11,15 +11,15 @@
 ## CRITICAL: CODEX SANDBOX LIMITATIONS
 
 - CODEX cannot access `/Users/damianseguin/projects/mosaic-platform/`
-- **MUST work from this location**: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/`
+- **MUST work from this location**: `/Users/damianseguin/WIMD-Deploy-Project/`
 - All fixed code already exists here (complete FastAPI, netlify.toml, requirements.txt)
 
 ## IMMEDIATE NEXT STEPS FOR CODEX
 
-1. **Deploy Backend to Railway**
+1. **Deploy Backend to Render**
    - Push complete FastAPI code (449 lines) from `./api/index.py`
    - Includes fixed `requirements.txt` with `python-multipart`
-   - Railway service: `what-is-my-delta-site`
+   - Render service: `what-is-my-delta-site`
 
 2. **Deploy Frontend to Netlify**
    - Push frontend with complete `netlify.toml` proxy rules
@@ -39,7 +39,7 @@
 
 ## BACKGROUND CONTEXT
 
-- Missing dependency `python-multipart` was root cause of Railway failures
+- Missing dependency `python-multipart` was root cause of Render failures
 - Local development approach solved issue in 15 minutes vs 3+ hours of infrastructure debugging
 - All architectural consolidation work completed but deployment from accessible location still needed
 

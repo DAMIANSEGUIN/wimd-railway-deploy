@@ -2730,7 +2730,7 @@ tests/__pycache__/test_rag_engine.cpython-37.pyc
 
 ## Deployment Status
 
-- Last Railway deploy: [Check Railway dashboard]
+- Last Render deploy: [Check Render dashboard]
 - Last Netlify deploy: [Check Netlify dashboard]
 - Health check: {"ok":true,"timestamp":"2025-10-24T21:26:47.283470Z","checks":{"database":true,"prompt_system":true,"ai_fallback_enabled":true,"ai_available":true}}
 

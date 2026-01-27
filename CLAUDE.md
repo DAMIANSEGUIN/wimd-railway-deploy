@@ -144,7 +144,7 @@ cat .mosaic/MANDATORY_AGENT_BRIEFING.md
 - Production URL: <https://whatismydelta.com> (LIVE ✅)
 - Backend API: Render deployment at mosaic-backend-tpog.onrender.com
 - Frontend: Netlify deployment (resonant-crostata-90b706)
-- Repository: github.com/DAMIANSEGUIN/wimd-railway-deploy
+- Repository: github.com/DAMIANSEGUIN/wimd-render-deploy
 
 **Deployment Status (2026-01-08):**
 - ✅ Backend: Render (live at https://mosaic-backend-tpog.onrender.com)
@@ -200,7 +200,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="reason" ./scripts/push.sh origin main
 
 **How Render Deploys:**
 
-- Render watches `origin` (wimd-railway-deploy) via GitHub integration
+- Render watches `origin` (wimd-render-deploy) via GitHub integration
 - Push to `origin` triggers Render auto-deploy (2-5 minutes)
 - Backend URL: https://mosaic-backend-tpog.onrender.com
 

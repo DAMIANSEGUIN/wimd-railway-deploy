@@ -3,7 +3,7 @@
 
 set -e
 
-PROJECT_DIR="/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+PROJECT_DIR="/Users/damianseguin/WIMD-Deploy-Project"
 SHELL_CONFIG="$HOME/.zshrc"
 
 echo "╔════════════════════════════════════════════════════════════════╗"

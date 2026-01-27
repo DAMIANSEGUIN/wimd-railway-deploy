@@ -99,7 +99,7 @@ Add to crontab:
 
 ```bash
 # Archive handoffs older than 7 days (daily at 2am)
-0 2 * * * cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project && \
+0 2 * * * cd /Users/damianseguin/WIMD-Deploy-Project && \
   find .ai-agents -name "handoff_*.json" -mtime +7 -exec mv {} .ai-agents/archive/ \;
 ```
 
@@ -126,7 +126,7 @@ Add to crontab:
     "api_base_configured": ["file1"]
   },
   "deployment_status": {
-    "railway_health": "true|false|unknown",
+    "render_health": "true|false|unknown",
     "production_auth_present": 0
   },
   "last_commit": {
@@ -203,7 +203,7 @@ git diff    # Review changes
 ### "Can't find scripts/end_session.sh"
 
 **Cause:** You're in wrong directory
-**Fix:** `cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+**Fix:** `cd /Users/damianseguin/WIMD-Deploy-Project`
 
 ---
 

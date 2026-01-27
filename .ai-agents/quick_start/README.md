@@ -25,7 +25,7 @@ This runs all automated checks:
 | Task | Command | File |
 |------|---------|------|
 | Open browser for testing | `open -a "Google Chrome" https://whatismydelta.com` | TESTING_COMMANDS.md |
-| Check backend health | `curl -s https://what-is-my-delta-site-production.up.railway.app/health \| python3 -m json.tool` | TESTING_COMMANDS.md |
+| Check backend health | `curl -s https://what-is-my-delta-site-production.up.render.app/health \| python3 -m json.tool` | TESTING_COMMANDS.md |
 | Browser testing prompt | See file → | BROWSER_TESTING_PROMPT.md |
 | Full testing guide | Open → | ../validation/MOSAIC_MVP_TESTING_GUIDE.md |
 | Deployment review | Open → | ../validation/MOSAIC_MVP_DEPLOYMENT_REVIEW.md |

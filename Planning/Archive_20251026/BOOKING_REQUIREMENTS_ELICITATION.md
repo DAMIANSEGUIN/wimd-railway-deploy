@@ -13,7 +13,7 @@
 - **Feature:** Google Calendar booking integration
 - **Context:** WIMD/Mosaic platform (career coaching + job search)
 - **UI Location:** mosaic_ui/index.html (frontend already has coach interface)
-- **Backend:** Railway FastAPI deployment (what-is-my-delta-site-production.up.railway.app)
+- **Backend:** Render FastAPI deployment (what-is-my-delta-site-production.up.render.app)
 
 ### What IS NOT Specified
 
@@ -180,7 +180,7 @@
 **ASSUMPTIONS TO VALIDATE:**
 
 - Graceful degradation (show error, don't crash)
-- Log all API errors to Railway
+- Log all API errors to Render
 - Idempotent: check if appointment exists before creating
 
 ### 8. **Testing & Validation**

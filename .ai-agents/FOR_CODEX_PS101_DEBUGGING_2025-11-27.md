@@ -48,7 +48,7 @@ Debug the PS101 flow to identify the **actual root cause** of the UX bugs found 
 ### 1. Start Local Server
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 python3 local_dev_server.py
 # Server should start on http://localhost:3000
 ```

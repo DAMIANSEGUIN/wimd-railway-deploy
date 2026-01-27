@@ -30,7 +30,7 @@
 ## Manual Action Required
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 git push origin main
 ```
 

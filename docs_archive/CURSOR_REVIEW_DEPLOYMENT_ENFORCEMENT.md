@@ -62,7 +62,7 @@ No existing `scripts/push.sh` or `scripts/deploy.sh` found. Safe to create.
 ## Plan Review: Strengths
 
 1. ✅ **Exit code-based verification** - No token files, harder to bypass
-2. ✅ **Remote detection** - Only enforces for `railway-origin` (correct)
+2. ✅ **Remote detection** - Only enforces for `render-origin` (correct)
 3. ✅ **Emergency bypass** - `SKIP_VERIFICATION=true` with audit logging
 4. ✅ **Layered enforcement** - Multiple safety nets
 5. ✅ **Integration-ready** - Uses existing verification scripts as foundation
@@ -73,13 +73,13 @@ No existing `scripts/push.sh` or `scripts/deploy.sh` found. Safe to create.
 
 ### 1. Pre-Push Hook: Remote Detection Logic
 
-**Current plan:** "Detects target remote; only enforces for `railway-origin`"
+**Current plan:** "Detects target remote; only enforces for `render-origin`"
 
 **Clarification needed:** The hook should handle:
 
-- `git push railway-origin main` → Full verification
+- `git push render-origin main` → Full verification
 - `git push origin main` → Light/no verification (backup repo)
-- `git push railway-origin <other-branch>` → Full verification (all production pushes)
+- `git push render-origin <other-branch>` → Full verification (all production pushes)
 
 **Recommendation:** Document this behavior explicitly in hook comments.
 
@@ -122,7 +122,7 @@ No existing `scripts/push.sh` or `scripts/deploy.sh` found. Safe to create.
 - Location: `.verification_audit.log` in repo root
 - Format: `TIMESTAMP | USER | REMOTE | REASON | COMMIT_HASH`
 - Rotation: Add to `.gitignore` (audit logs shouldn't be committed)
-- Example: `2025-11-01 12:00:00 | damianseguin | railway-origin | Emergency hotfix | abc1234`
+- Example: `2025-11-01 12:00:00 | damianseguin | render-origin | Emergency hotfix | abc1234`
 
 ---
 
@@ -162,10 +162,10 @@ REMOTE="$1"
 **Test sequence:**
 
 1. Create test branch
-2. Attempt push to `railway-origin` without verification → expect block
+2. Attempt push to `render-origin` without verification → expect block
 3. Run `scripts/pre_push_verification.sh` → expect success
 4. Attempt push again → expect success
-5. Test bypass: `SKIP_VERIFICATION=true git push railway-origin test-branch` → expect push succeeds with audit log entry
+5. Test bypass: `SKIP_VERIFICATION=true git push render-origin test-branch` → expect push succeeds with audit log entry
 
 ---
 
@@ -174,7 +174,7 @@ REMOTE="$1"
 **Integration points:**
 
 - `scripts/deploy.sh netlify` → Call `scripts/deploy_frontend_netlify.sh`
-- `scripts/deploy.sh railway` → Trigger git push (which will trigger pre-push hook)
+- `scripts/deploy.sh render` → Trigger git push (which will trigger pre-push hook)
 - `scripts/push.sh` → Wrapper around `git push` that runs verification first
 
 **Error handling:**
@@ -189,7 +189,7 @@ REMOTE="$1"
 
 **Key additions needed:**
 
-1. "Never use raw `git push railway-origin` - use `scripts/push.sh`"
+1. "Never use raw `git push render-origin` - use `scripts/push.sh`"
 2. "Never use raw `netlify deploy` - use `scripts/deploy.sh netlify`"
 3. Emergency bypass protocol with warning
 4. Troubleshooting section for verification failures
@@ -200,7 +200,7 @@ REMOTE="$1"
 
 ### Pre-Push Hook Testing
 
-- [ ] Push to `railway-origin` without verification → blocked ✅
+- [ ] Push to `render-origin` without verification → blocked ✅
 - [ ] Run verification, then push → succeeds ✅
 - [ ] Push to `origin` (backup) → succeeds without verification ✅
 - [ ] Emergency bypass works → push succeeds, audit log updated ✅
@@ -208,9 +208,9 @@ REMOTE="$1"
 
 ### Wrapper Script Testing
 
-- [ ] `scripts/push.sh railway-origin main` → runs verification first ✅
+- [ ] `scripts/push.sh render-origin main` → runs verification first ✅
 - [ ] `scripts/deploy.sh netlify` → calls existing Netlify script ✅
-- [ ] `scripts/deploy.sh railway` → triggers push with hook ✅
+- [ ] `scripts/deploy.sh render` → triggers push with hook ✅
 - [ ] Scripts fail gracefully with clear errors ✅
 
 ### Integration Testing

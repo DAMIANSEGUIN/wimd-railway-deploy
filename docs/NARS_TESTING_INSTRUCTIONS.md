@@ -1,19 +1,19 @@
 # TESTING INSTRUCTIONS FOR NARs - MOSAIC MVP
 
-**CRITICAL: Railway deployment is broken. Fix this FIRST.**
+**CRITICAL: Render deployment is broken. Fix this FIRST.**
 
 ---
 
 ## PROBLEM
 
-Railway is serving **9-day-old code** (commit `96e711c1` from Dec 3, 2025).
+Render is serving **9-day-old code** (commit `96e711c1` from Dec 3, 2025).
 
 The `/api/ps101/extract-context` endpoint exists in GitHub (commit `a968e9a`) but **is NOT deployed**.
 
 **Proof:**
 
 ```bash
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context
+curl -X POST https://what-is-my-delta-site-production.up.render.app/api/ps101/extract-context
 # Returns: 404 (WRONG - should be 422)
 ```
 
@@ -23,14 +23,14 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 
 ### Step 1: Reconnect GitHub Integration
 
-**Railway Dashboard:**
+**Render Dashboard:**
 
-1. Go to: <https://railway.app>
+1. Go to: <https://render.app>
 2. Project: `wimd-career-coaching`
 3. Service: `what-is-my-delta-site`
 4. **Settings** tab → **Source** section
 5. Click **"Disconnect"** then **"Reconnect Repository"**
-6. Select: `DAMIANSEGUIN/wimd-railway-deploy`
+6. Select: `DAMIANSEGUIN/wimd-render-deploy`
 7. Branch: `main`
 8. Save
 
@@ -44,11 +44,11 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 ### Step 3: Verify Deployment Worked
 
 ```bash
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context -H "Content-Type: application/json" -w "\nHTTP Status: %{http_code}\n"
+curl -X POST https://what-is-my-delta-site-production.up.render.app/api/ps101/extract-context -H "Content-Type: application/json" -w "\nHTTP Status: %{http_code}\n"
 ```
 
 **Expected:** `HTTP Status: 422`
-**If 404:** Railway didn't deploy new code - check commit hash in dashboard
+**If 404:** Render didn't deploy new code - check commit hash in dashboard
 
 ---
 
@@ -70,7 +70,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **If fails:**
 
 - Check Network tab for `/auth/register` response
-- Check Railway logs: `railway logs | grep -i auth`
+- Check Render logs: `render logs | grep -i auth`
 
 ### Test 2: PS101 Flow (10 Questions)
 
@@ -85,13 +85,13 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 
 **If 404:**
 
-- Railway still on old code
-- Go back to "Fix Railway First" section
+- Render still on old code
+- Go back to "Fix Render First" section
 
 **If 503:**
 
-- Check `CLAUDE_API_KEY` is set in Railway variables
-- Check Railway logs for Claude API errors
+- Check `CLAUDE_API_KEY` is set in Render variables
+- Check Render logs for Claude API errors
 
 ### Test 3: Personalized Coaching
 
@@ -107,20 +107,20 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 **If generic (not personalized):**
 
 - Context extraction failed
-- Check Railway logs: `railway logs | grep -i "context\|extract"`
-- Check database: `railway run psql $DATABASE_URL -c "SELECT COUNT(*) FROM user_contexts;"`
+- Check Render logs: `render logs | grep -i "context\|extract"`
+- Check database: `render run psql $DATABASE_URL -c "SELECT COUNT(*) FROM user_contexts;"`
 
 ---
 
 ## TROUBLESHOOTING
 
-### Issue: Railway shows "Deployment Successful" but endpoint still 404
+### Issue: Render shows "Deployment Successful" but endpoint still 404
 
-**Cause:** Railway redeployed same old commit
+**Cause:** Render redeployed same old commit
 
 **Fix:**
 
-1. Railway Dashboard → Deployments
+1. Render Dashboard → Deployments
 2. Check commit hash of active deployment
 3. If it's `96e711c1` → not the latest code
 4. Manually select commit `a968e9a` or later
@@ -139,11 +139,11 @@ git push origin main
 
 **Root cause:** Python 3.7 on system, bandit requires 3.8+
 
-### Issue: Railway CLI `railway up` fails with "Permission denied"
+### Issue: Render CLI `render up` fails with "Permission denied"
 
 **Error:** `Permission denied (os error 13)`
 
-**Fix:** Use Railway Dashboard instead of CLI
+**Fix:** Use Render Dashboard instead of CLI
 
 **Root cause:** File permission issue in local directory
 
@@ -153,14 +153,14 @@ git push origin main
 
 After completing all tests:
 
-- [ ] Railway deployed commit `a968e9a` or later (NOT `96e711c1`)
+- [ ] Render deployed commit `a968e9a` or later (NOT `96e711c1`)
 - [ ] `/api/ps101/extract-context` returns 422 (NOT 404)
 - [ ] User registration works (creates account, logs in)
 - [ ] PS101 flow completes all 10 questions
 - [ ] Context extraction succeeds (console shows success)
 - [ ] Coaching is personalized (references PS101 answers)
 - [ ] No 404 errors in Network tab
-- [ ] No 503 errors in Railway logs
+- [ ] No 503 errors in Render logs
 
 ---
 
@@ -169,11 +169,11 @@ After completing all tests:
 **Production:**
 
 - Frontend: <https://whatismydelta.com>
-- Backend: <https://what-is-my-delta-site-production.up.railway.app>
-- Health: <https://what-is-my-delta-site-production.up.railway.app/health>
+- Backend: <https://what-is-my-delta-site-production.up.render.app>
+- Health: <https://what-is-my-delta-site-production.up.render.app/health>
 
 **GitHub Repo:**
-<https://github.com/DAMIANSEGUIN/wimd-railway-deploy>
+<https://github.com/DAMIANSEGUIN/wimd-render-deploy>
 
 **Key Files:**
 
@@ -181,14 +181,14 @@ After completing all tests:
 - Deployment truth: `DEPLOYMENT_TRUTH.md`
 - Troubleshooting: `TROUBLESHOOTING_CHECKLIST.md`
 
-**Railway Dashboard:**
-<https://railway.app/project/wimd-career-coaching>
+**Render Dashboard:**
+<https://render.app/project/wimd-career-coaching>
 
 ---
 
 ## EXPECTED TIMELINE
 
-- Railway fix: 5 minutes
+- Render fix: 5 minutes
 - Test 1 (Registration): 2 minutes
 - Test 2 (PS101): 10 minutes
 - Test 3 (Coaching): 3 minutes
@@ -198,5 +198,5 @@ After completing all tests:
 ---
 
 **Last Updated:** 2025-12-12 17:30 PST
-**Status:** BLOCKED on Railway deployment
-**Priority:** P0 - Cannot test MVP until Railway deploys latest code
+**Status:** BLOCKED on Render deployment
+**Priority:** P0 - Cannot test MVP until Render deploys latest code

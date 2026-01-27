@@ -10,8 +10,8 @@
 
 - **Orchestration:** None (single FastAPI monolith)
 - **Model Serving:** Direct API calls (OpenAI GPT-4, Anthropic Claude via Python clients)
-- **Infrastructure:** Railway (backend), Netlify (frontend), PostgreSQL (database)
-- **Observability:** Railway logs, health endpoints, no APM
+- **Infrastructure:** Render (backend), Netlify (frontend), PostgreSQL (database)
+- **Observability:** Render logs, health endpoints, no APM
 - **Frontend:** Vanilla JavaScript ES6+
 - **Backend:** FastAPI + Pydantic + uvicorn
 - **Database:** PostgreSQL (migrated from SQLite)
@@ -23,7 +23,7 @@
 
 ### 1. Infrastructure Errors
 
-**Railway-Specific:**
+**Render-Specific:**
 
 - `RAILWAY_DEPLOY_FAILED` - Build or deploy crash
 - `RAILWAY_DB_EPHEMERAL` - SQLite fallback active (PostgreSQL failed)
@@ -36,7 +36,7 @@
 - `PG_CONNECTION_FAILED` - PostgreSQL connection pool initialization failed
 - `PG_SSL_REQUIRED` - Missing sslmode in DATABASE_URL
 - `PG_AUTH_FAILED` - Invalid credentials in DATABASE_URL
-- `PG_NETWORK_UNREACHABLE` - Internal network routing issue (railway.app vs railway.internal)
+- `PG_NETWORK_UNREACHABLE` - Internal network routing issue (render.app vs render.internal)
 - `SQLITE_FALLBACK_ACTIVE` - Using ephemeral SQLite instead of PostgreSQL
 
 **API Rate Limits:**
@@ -257,7 +257,7 @@ class ErrorRateMonitor:
   alert: "pager_high"
 
   gather:
-    - railway_logs: 200  # Last 200 lines
+    - render_logs: 200  # Last 200 lines
     - env_vars: ["DATABASE_URL"]  # Redacted
     - postgres_service_status: true
     - network_config: true
@@ -265,7 +265,7 @@ class ErrorRateMonitor:
   diagnose:
     - check: "DATABASE_URL starts with postgresql://"
       fail_label: "PG_URL_MALFORMED"
-    - check: "DATABASE_URL contains railway.internal"
+    - check: "DATABASE_URL contains render.internal"
       fail_label: "PG_USING_PUBLIC_URL"
       recommendation: "Switch to private network URL"
     - check: "PostgreSQL service status == Active"
@@ -338,7 +338,7 @@ class PlaybookExecutor:
     def _gather_context(self, gather_spec: List[Dict]) -> Dict:
         """Gather diagnostic context"""
         context = {}
-        # Implementation would fetch Railway logs, env vars, etc.
+        # Implementation would fetch Render logs, env vars, etc.
         return context
 
     def _diagnose(self, checks: List[Dict], context: Dict) -> List[str]:
@@ -703,7 +703,7 @@ DEPLOYMENT_MANIFEST = generate_deployment_manifest()
 def rollback_to_commit(commit_hash: str):
     """Rollback to specific commit"""
     subprocess.run(['git', 'checkout', commit_hash])
-    subprocess.run(['git', 'push', 'railway-origin', 'HEAD:main', '--force'])
+    subprocess.run(['git', 'push', 'render-origin', 'HEAD:main', '--force'])
     print(f"[ROLLBACK] Deployed commit {commit_hash}")
 
 def automatic_rollback_on_error_budget():
@@ -886,7 +886,7 @@ def call_openai(prompt: str):
 
 ### Pre-Deployment Checklist
 
-**Before pushing to Railway:**
+**Before pushing to Render:**
 
 ```bash
 # Run this script before every deploy
@@ -1087,15 +1087,15 @@ def is_safe_output(text: str) -> bool:
 5. Check: Idempotent operations?
 6. Check: Rollback path exists?
 7. Run: ./pre_deploy_check.sh
-8. Deploy: git push railway-origin main
+8. Deploy: git push render-origin main
 9. Verify: Check /health endpoint
-10. Monitor: Watch Railway logs for 5 minutes
+10. Monitor: Watch Render logs for 5 minutes
 ```
 
 **If deployment fails:**
 
 ```
-1. Get Railway logs (Deploy Logs tab)
+1. Get Render logs (Deploy Logs tab)
 2. Find error message in logs
 3. Classify error using ErrorCategory
 4. Execute playbook for error label

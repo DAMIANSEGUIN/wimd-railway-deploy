@@ -6,14 +6,14 @@ generated: 2025-12-09T16:20:00Z
 schema_version: v1.0
 ---
 
-# WIMD Railway Deploy - Governance Summary
+# WIMD Render Deploy - Governance Summary
 
 ## Project Identity
 
-- **Name:** Foundation & Mosaic Development (WIMD Railway Deploy)
+- **Name:** Foundation & Mosaic Development (WIMD Render Deploy)
 - **Production URL:** <https://whatismydelta.com> (LIVE ✅)
-- **Stack:** FastAPI + PostgreSQL (Railway) + Vanilla JS (Netlify)
-- **Repository:** github.com/DAMIANSEGUIN/wimd-railway-deploy
+- **Stack:** FastAPI + PostgreSQL (Render) + Vanilla JS (Netlify)
+- **Repository:** github.com/DAMIANSEGUIN/wimd-render-deploy
 - **Last Deployment:** prod-2025-11-18 (commit: 31d099c)
 
 ## Critical Deployment Commands
@@ -22,11 +22,11 @@ schema_version: v1.0
 
 ```bash
 ./scripts/deploy.sh netlify    # Frontend
-./scripts/deploy.sh railway    # Backend
+./scripts/deploy.sh render    # Backend
 ./scripts/push.sh origin main   # Git push with verification
 ```
 
-**Railway auto-deploys from `origin` main branch (2-5 min)**
+**Render auto-deploys from `origin` main branch (2-5 min)**
 
 ## Current Production Status
 
@@ -36,7 +36,7 @@ schema_version: v1.0
 
 ## Architecture Constraints
 
-- **Database:** PostgreSQL (Railway) - use `with get_conn() as conn:` pattern
+- **Database:** PostgreSQL (Render) - use `with get_conn() as conn:` pattern
 - **Context Manager Required:** All DB operations must use context manager
 - **PostgreSQL Syntax:** Use `%s` not `?`, `SERIAL` not `AUTOINCREMENT`
 - **Feature Flags:** Phase 4 features enabled, experiments disabled

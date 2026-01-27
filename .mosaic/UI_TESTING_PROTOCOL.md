@@ -62,7 +62,7 @@ fi
 echo "Test 3: No dead backend URLs in frontend"
 DEAD_URLS=(
     "mosaic-platform.vercel.app"
-    "what-is-my-delta-site-production.up.railway.app"
+    "what-is-my-delta-site-production.up.render.app"
     "localhost:8000"
 )
 

@@ -286,7 +286,7 @@ $notification.ShowBalloonTip(5000)
 #!/bin/bash
 
 # When notification clicked, auto-pull
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 git pull
 
 # Check for messages
@@ -356,7 +356,7 @@ $ git push
 $ export AI_AGENT_NAME="Gemini"
 $ git pull
 
-From github.com:user/WIMD-Railway-Deploy-Project
+From github.com:user/WIMD-Render-Deploy-Project
    1 file changed, 10 insertions(+)
    create mode 100644 .ai-agents/request_for_Gemini_1732544500.json
 
@@ -373,7 +373,7 @@ $ cat .ai-agents/request_for_Gemini_1732544500.json
 }
 
 # Gemini executes query
-$ railway run bash -c 'psql $DATABASE_URL -c "SELECT id, email, LENGTH(password_hash) as len, password_hash FROM users WHERE LOWER(email) = '\''damian.seguin@gmail.com'\''"'
+$ render run bash -c 'psql $DATABASE_URL -c "SELECT id, email, LENGTH(password_hash) as len, password_hash FROM users WHERE LOWER(email) = '\''damian.seguin@gmail.com'\''"'
 
  id   | email                    | len | password_hash
 ------+--------------------------+-----+-------------------
@@ -417,7 +417,7 @@ $ git push
 
 $ git pull
 
-From github.com:user/WIMD-Railway-Deploy-Project
+From github.com:user/WIMD-Render-Deploy-Project
    1 file changed, 9 insertions(+)
    create mode 100644 .ai-agents/response_req_1732544500.json
 

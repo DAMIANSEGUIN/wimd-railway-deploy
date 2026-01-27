@@ -127,7 +127,7 @@ async def rag_health():
 
 - **Effort:** 15 minutes
 - **Impact:** Low (system working)
-- **Action:** `railway run psql $DATABASE_URL -c "\dt"`
+- **Action:** `render run psql $DATABASE_URL -c "\dt"`
 
 ### Priority 3: E2E Testing Suite
 
@@ -166,7 +166,7 @@ async def rag_health():
 
 3. **Proactive testing:** Should verify commands work before providing
    - User feedback: "this happens easily 30% of the time"
-   - **Action:** Check git auth, Railway access before giving commands
+   - **Action:** Check git auth, Render access before giving commands
 
 ### Process Improvements Implemented
 
@@ -212,8 +212,8 @@ async def rag_health():
 ### Production URLs
 
 - **Frontend:** <https://whatismydelta.com>
-- **Backend:** <https://what-is-my-delta-site-production.up.railway.app>
-- **Health:** <https://what-is-my-delta-site-production.up.railway.app/health/comprehensive>
+- **Backend:** <https://what-is-my-delta-site-production.up.render.app>
+- **Health:** <https://what-is-my-delta-site-production.up.render.app/health/comprehensive>
 
 ### Deployment Commands Used
 
@@ -221,12 +221,12 @@ async def rag_health():
 # Frontend (Netlify)
 cd frontend && netlify deploy --prod --dir=. --site=bb594f69-4d23-4817-b7de-dadb8b4db874
 
-# Backend (Railway)
-git push railway-origin main
+# Backend (Render)
+git push render-origin main
 
 # Verification
 ./scripts/verify_critical_features.sh
-curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
+curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive
 ```
 
 ---

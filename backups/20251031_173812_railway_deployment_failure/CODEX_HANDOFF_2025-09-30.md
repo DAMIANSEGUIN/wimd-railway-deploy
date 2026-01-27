@@ -18,12 +18,12 @@ Per CODEX_INSTRUCTIONS.md:
 
 ## CURRENT BLOCKER
 
-**Issue**: Chat window shows `net::ERR_FAILED` when posting to Railway API
+**Issue**: Chat window shows `net::ERR_FAILED` when posting to Render API
 **Browser error**:
 
 ```
-POST https://what-is-my-delta-site-production.up.railway.app/wimd net::ERR_FAILED
-Access to fetch at 'https://what-is-my-delta-site-production.up.railway.app/wimd'
+POST https://what-is-my-delta-site-production.up.render.app/wimd net::ERR_FAILED
+Access to fetch at 'https://what-is-my-delta-site-production.up.render.app/wimd'
 from origin 'https://whatismydelta.com' has been blocked by CORS policy:
 Response to preflight request doesn't pass access control check:
 No 'Access-Control-Allow-Origin' header is present on the requested resource.
@@ -31,8 +31,8 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.
 
 **Verified working**:
 
-- ✅ Railway backend healthy: `/health` returns `{"ok":true}`
-- ✅ Railway API works: `curl -X POST /wimd` returns HTTP 200
+- ✅ Render backend healthy: `/health` returns `{"ok":true}`
+- ✅ Render API works: `curl -X POST /wimd` returns HTTP 200
 - ✅ Netlify frontend deployed: `https://whatismydelta.com` loads correctly
 - ✅ GET requests proxied: `/health`, `/config`, `/prompts/active` work via domain
 - ❌ POST requests fail: Browser `net::ERR_FAILED` but curl succeeds
@@ -82,7 +82,7 @@ app.add_middleware(
 ### Test 1: OPTIONS Preflight (FAILING)
 
 ```bash
-curl -I -X OPTIONS https://what-is-my-delta-site-production.up.railway.app/wimd \
+curl -I -X OPTIONS https://what-is-my-delta-site-production.up.render.app/wimd \
   -H "Origin: https://whatismydelta.com" \
   -H "Access-Control-Request-Method: POST"
 
@@ -99,7 +99,7 @@ vary: Origin
 ### Test 2: Actual POST (WORKING via curl)
 
 ```bash
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/wimd \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/wimd \
   -H "Content-Type: application/json" \
   -H "Origin: https://whatismydelta.com" \
   -d '{"prompt":"test"}'
@@ -134,7 +134,7 @@ content-type: application/json
 1. FastAPI CORSMiddleware requires additional configuration
 2. OPTIONS endpoint not properly configured
 3. Middleware order issue (CORS middleware needs to be first)
-4. Railway proxy stripping CORS headers
+4. Render proxy stripping CORS headers
 5. Missing CORS response handler for OPTIONS method
 
 ## SYSTEMATIC APPROACH NEEDED
@@ -142,8 +142,8 @@ content-type: application/json
 ### Phase 1: Local Testing (MISSING from previous attempts)
 
 ```bash
-# Run Railway app locally with production env
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+# Run Render app locally with production env
+cd /Users/damianseguin/WIMD-Deploy-Project
 export OPENAI_API_KEY="..."
 export CLAUDE_API_KEY="..."
 python -m uvicorn api.index:app --reload --port 8000
@@ -180,12 +180,12 @@ git add api/index.py
 git commit -m "Fix: CORS configuration for OPTIONS preflight"
 git push
 
-# Trigger Railway deploy
-railway deploy  # or manual trigger in dashboard
+# Trigger Render deploy
+render deploy  # or manual trigger in dashboard
 
 # Wait for deployment
 # Verify CORS headers
-curl -I -X OPTIONS https://what-is-my-delta-site-production.up.railway.app/wimd \
+curl -I -X OPTIONS https://what-is-my-delta-site-production.up.render.app/wimd \
   -H "Origin: https://whatismydelta.com"
 
 # Expected: access-control-allow-origin: https://whatismydelta.com
@@ -243,7 +243,7 @@ app.add_middleware(
 
 1. ❌ Local CORS testing before deployment
 2. ❌ OPTIONS preflight verification step
-3. ❌ Railway webhook validation (auto-deploy)
+3. ❌ Render webhook validation (auto-deploy)
 4. ❌ Browser-based testing protocol
 5. ❌ Systematic "test locally → deploy → verify" cycle
 
@@ -254,10 +254,10 @@ app.add_middleware(
 - [ ] Run API locally with production env vars
 - [ ] Test CORS with curl OPTIONS requests
 - [ ] Verify all CORS headers present locally
-- [ ] Deploy to Railway
-- [ ] Verify Railway auto-deploy triggered
-- [ ] Test OPTIONS request against Railway URL
-- [ ] Test POST request against Railway URL
+- [ ] Deploy to Render
+- [ ] Verify Render auto-deploy triggered
+- [ ] Test OPTIONS request against Render URL
+- [ ] Test POST request against Render URL
 - [ ] Test end-to-end in browser
 - [ ] Check browser console for errors
 - [ ] Check browser network tab for headers
@@ -269,32 +269,32 @@ app.add_middleware(
 
 - After 2 failed local test attempts
 - If FastAPI documentation unclear
-- If Railway-specific CORS issue suspected
+- If Render-specific CORS issue suspected
 - After 15 minutes without progress
 
 **When to escalate to Claude Code**:
 
-- Railway deployment failures
-- Railway log analysis needed
+- Render deployment failures
+- Render log analysis needed
 - Infrastructure issues (not code issues)
 
 ## CURRENT PROJECT STATE
 
 ### Infrastructure
 
-- **Railway**: Connected to GitHub `DAMIANSEGUIN/wimd-railway-deploy`
-- **Railway**: Manual deploy working (CMD+K → Deploy Latest Commit)
-- **Railway**: Auto-deploy working (webhooks functional)
-- **Netlify**: Connected to GitHub `DAMIANSEGUIN/wimd-railway-deploy`
+- **Render**: Connected to GitHub `DAMIANSEGUIN/wimd-render-deploy`
+- **Render**: Manual deploy working (CMD+K → Deploy Latest Commit)
+- **Render**: Auto-deploy working (webhooks functional)
+- **Netlify**: Connected to GitHub `DAMIANSEGUIN/wimd-render-deploy`
 - **Netlify**: Base directory `mosaic_ui`
 - **Netlify**: Proxy rules for GET requests working
 
-### Environment Variables (Railway)
+### Environment Variables (Render)
 
 - ✅ OPENAI_API_KEY: Set
 - ✅ CLAUDE_API_KEY: Set
 - ❌ PUBLIC_SITE_ORIGIN: Not set (but hardcoded in code)
-- Backend URL: `https://what-is-my-delta-site-production.up.railway.app`
+- Backend URL: `https://what-is-my-delta-site-production.up.render.app`
 
 ### Code Status
 
@@ -312,17 +312,17 @@ app.add_middleware(
 
 ## NEXT ACTIONS FOR CODEX/CURSOR
 
-1. **Immediate**: Run Railway app locally and test CORS
+1. **Immediate**: Run Render app locally and test CORS
 2. **Research**: FastAPI CORSMiddleware best practices for OPTIONS
 3. **Implement**: Fix CORS configuration based on local testing
-4. **Deploy**: Push fix to Railway
+4. **Deploy**: Push fix to Render
 5. **Verify**: Test end-to-end in browser
 6. **Document**: Update build plan with pre-deployment validation steps
 
 ## SUCCESS CRITERIA
 
 - [ ] OPTIONS preflight returns `access-control-allow-origin: https://whatismydelta.com`
-- [ ] Browser chat window successfully posts to Railway API
+- [ ] Browser chat window successfully posts to Render API
 - [ ] No CORS errors in browser console
 - [ ] Response appears in chat window
 - [ ] End-to-end user flow working
@@ -331,7 +331,7 @@ app.add_middleware(
 
 - **Claude Code troubleshooting**: 60+ minutes
 - **Commits made**: 3 (without systematic testing)
-- **Railway deployments**: 3 manual triggers
+- **Render deployments**: 3 manual triggers
 - **Remaining issue**: CORS preflight failure
 
 ## REFERENCE DOCUMENTS

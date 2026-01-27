@@ -9,21 +9,21 @@
 
 ### Answer: Multiple protocols for different purposes
 
-**SESSION_RESUME_PROMPT.md** (`/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md`)
+**SESSION_RESUME_PROMPT.md** (`/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md`)
 - **Status:** CANONICAL for session restarts
 - **Purpose:** Resume work from previous session with full context
 - **Last Updated:** 2025-12-15
 - **Authority:** CLAUDE.md explicitly states: "Read SESSION_RESUME_PROMPT.md BEFORE doing ANYTHING else"
 - **Use When:** Starting any new session
 
-**SESSION_START.md** (`/Users/damianseguin/wimd-railway-local/SESSION_START.md`)
+**SESSION_START.md** (`/Users/damianseguin/wimd-render-local/SESSION_START.md`)
 - **Status:** ACTIVE for local development enforcement
 - **Purpose:** Gated startup protocol with understanding mode, verification questions, session end monitoring
 - **Last Updated:** Recent (includes backup system verification added 2026-01-04)
 - **Authority:** Mandatory reading for local development work
-- **Use When:** Working in wimd-railway-local location, local development sessions
+- **Use When:** Working in wimd-render-local location, local development sessions
 
-**SESSION_RESTART_PROMPT.md** (`/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/SESSION_RESTART_PROMPT.md`)
+**SESSION_RESTART_PROMPT.md** (`/Users/damianseguin/WIMD-Deploy-Project/SESSION_RESTART_PROMPT.md`)
 - **Status:** OUTDATED - Specific to Dec 19 session
 - **Purpose:** Historical record of Mosaic local enforcement activation attempt
 - **Last Updated:** 2025-12-19
@@ -90,12 +90,12 @@
 
 **Canonical Location:**
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ```
 
 **Evidence:**
 - CLAUDE.md header: "MANDATORY FIRST ACTION: Read .ai-agents/SESSION_RESUME_PROMPT.md"
-- SESSION_RESUME_PROMPT.md: "Working Directory: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+- SESSION_RESUME_PROMPT.md: "Working Directory: /Users/damianseguin/WIMD-Deploy-Project"
 - Git HEAD: 684dad3 (Dec 14) at AI_Workspace location
 - .ai-agents/ folder: 146 files of governance documentation
 
@@ -103,11 +103,11 @@
 
 1. **AI_Workspace** (PRIMARY)
    - Purpose: Active development, deployment, team coordination
-   - Git repo: Yes (main branch, origin = wimd-railway-deploy)
+   - Git repo: Yes (main branch, origin = wimd-render-deploy)
    - Status: CANONICAL
-   - Use for: All code changes, Railway deployment, session work
+   - Use for: All code changes, Render deployment, session work
 
-2. **wimd-railway-local** (SECONDARY)
+2. **wimd-render-local** (SECONDARY)
    - Purpose: Backup system development, local testing
    - Git repo: Yes (re-initialized Dec 2)
    - Status: SPECIALIZED
@@ -122,12 +122,12 @@
 **No Consolidation Needed:**
 - Locations serve different purposes
 - Clear hierarchy prevents confusion
-- Backup system requires separate location (wimd-railway-local)
+- Backup system requires separate location (wimd-render-local)
 - Archive preserves historical working state
 
 **Current Working Directory Verification:**
 ```bash
-pwd  # Should show: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+pwd  # Should show: /Users/damianseguin/WIMD-Deploy-Project
 ```
 
 ---
@@ -137,7 +137,7 @@ pwd  # Should show: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 ### Answer: Version-controlled hooks + session backup integration
 
 **Current State (as of 2026-01-04):**
-- ✅ Post-commit hook restored at wimd-railway-local
+- ✅ Post-commit hook restored at wimd-render-local
 - ✅ Hook syncs to GDrive after commits
 - ✅ Documentation created (BACKUP_SYSTEM_RECOVERY_LOG.md)
 - ✅ SESSION_START.md updated with verification step
@@ -146,7 +146,7 @@ pwd  # Should show: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 
 **TODO 1: Move to version-controlled hooks**
 ```bash
-# Execute at wimd-railway-local location
+# Execute at wimd-render-local location
 mkdir -p hooks
 cp .git/hooks/post-commit hooks/post-commit
 ln -sf ../../hooks/post-commit .git/hooks/post-commit
@@ -189,8 +189,8 @@ echo "✅ Session backup committed and synced to GDrive"
 
 **Timeline:**
 - **Immediate:** Document TODOs (COMPLETE - this document)
-- **Next Session (wimd-railway-local work):** Implement TODO 1 (version-controlled hooks)
-- **Next Session (wimd-railway-local work):** Implement TODO 2 (session_end.sh update)
+- **Next Session (wimd-render-local work):** Implement TODO 1 (version-controlled hooks)
+- **Next Session (wimd-render-local work):** Implement TODO 2 (session_end.sh update)
 - **This Session:** Implement TODO 3 (update SESSION_RESUME_PROMPT.md)
 
 ---
@@ -199,25 +199,25 @@ echo "✅ Session backup committed and synced to GDrive"
 
 ### Answer: Two critical blockers from different contexts
 
-**BLOCKER GROUP A: Railway Reset (From SESSION_RESUME_PROMPT.md)**
+**BLOCKER GROUP A: Render Reset (From SESSION_RESUME_PROMPT.md)**
 
-**Status:** CRITICAL - Blocking all Railway work
+**Status:** CRITICAL - Blocking all Render work
 **Last Updated:** 2025-12-15
 
-1. **Railway CLI Linking Ambiguity** (CRITICAL)
-   - Description: `railway list` detects `wimd-career-coaching`, but `railway link -p "wimd-career-coaching"` fails
+1. **Render CLI Linking Ambiguity** (CRITICAL)
+   - Description: `render list` detects `wimd-career-coaching`, but `render link -p "wimd-career-coaching"` fails
    - Impact: Prevents CLI-based operations, blocks all deployment work
    - Resolution: Requires user intervention (manual link via interactive CLI)
    - Source: `.ai-agents/RAILWAY_CLI_AMBIGUITY_REPORT.md`
 
-2. **User Approval Missing for Railway Reset**
-   - User must review Railway reset instruction packet
+2. **User Approval Missing for Render Reset**
+   - User must review Render reset instruction packet
    - User must answer open questions (service name, migration strategy)
    - User must provide explicit: "APPROVED TO PROCEED"
 
 **BLOCKER GROUP B: Mosaic MVP (From TEAM_PLAYBOOK.md)**
 
-**Status:** SECURITY/RESILIENCE - Address after Railway reset
+**Status:** SECURITY/RESILIENCE - Address after Render reset
 **Last Updated:** 2025-12-03
 
 1. **[SECURITY]** `/api/ps101/extract-context` lacks authentication
@@ -242,14 +242,14 @@ echo "✅ Session backup committed and synced to GDrive"
 
 ### Work Order Priority
 
-1. **FIRST:** Resolve Railway CLI linking (requires user intervention)
-2. **SECOND:** Complete Railway reset (after user approval)
+1. **FIRST:** Resolve Render CLI linking (requires user intervention)
+2. **SECOND:** Complete Render reset (after user approval)
 3. **THIRD:** Address Mosaic MVP blocking issues (security/resilience)
 4. **FOURTH:** Implement backup system final steps (version-controlled hooks)
 
 ---
 
-## QUESTION 6: Railway deployment current state
+## QUESTION 6: Render deployment current state
 
 ### Answer: Deployment BROKEN - wrong GitHub repo connected
 
@@ -259,34 +259,34 @@ echo "✅ Session backup committed and synced to GDrive"
 ```
 HEAD: 684dad3 (Dec 14, 2025)
 Branch: main
-Remote origin: wimd-railway-deploy (CORRECT repo)
-Remote railway-origin: what-is-my-delta-site (LEGACY, wrong repo)
+Remote origin: wimd-render-deploy (CORRECT repo)
+Remote render-origin: what-is-my-delta-site (LEGACY, wrong repo)
 ```
 
-**Railway State:**
+**Render State:**
 ```
 Project: wimd-career-coaching
 Service: what-is-my-delta-site (404, not responding)
 PostgreSQL: Unknown scope (awaiting validation - BLOCKED by CLI ambiguity)
-Env vars backup: /tmp/railway_env_backup.json (10 variables)
+Env vars backup: /tmp/render_env_backup.json (10 variables)
 ```
 
 **Deployment Issue:**
 ```
-Railway watches: what-is-my-delta-site repo (WRONG)
-Should watch: wimd-railway-deploy repo (CORRECT)
+Render watches: what-is-my-delta-site repo (WRONG)
+Should watch: wimd-render-deploy repo (CORRECT)
 Commits not deployed: 26+ (since Nov 11, 2025)
 ```
 
 **Root Cause:**
-- Railway service connected to wrong GitHub repository
-- Development happens in wimd-railway-deploy (26+ commits)
-- Railway watches what-is-my-delta-site (legacy repo, no new commits)
+- Render service connected to wrong GitHub repository
+- Development happens in wimd-render-deploy (26+ commits)
+- Render watches what-is-my-delta-site (legacy repo, no new commits)
 - Result: Production is stale, 1.5 months behind
 
 **Resolution Plan:**
 - Phase 1: ✅ COMPLETE (forensic confirmation)
-- Phase 2-7: BLOCKED (awaiting Railway CLI fix + user approval)
+- Phase 2-7: BLOCKED (awaiting Render CLI fix + user approval)
 - See: `.ai-agents/RAILWAY_RESET_INSTRUCTION_PACKET.md` for full plan
 
 ---
@@ -297,18 +297,18 @@ Commits not deployed: 26+ (since Nov 11, 2025)
 
 **Canonical Working Directory:**
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ```
 
 **Verification:**
 ```bash
 pwd
-# Should output: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+# Should output: /Users/damianseguin/WIMD-Deploy-Project
 ```
 
 **If in wrong location:**
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ```
 
 **Evidence:**
@@ -327,8 +327,8 @@ cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 | 2. How to integrate INTENT_FRAMEWORK? | Cross-cutting governance layer, integrate into protocols | INTENT_FRAMEWORK.md | ✅ PLAN DEFINED |
 | 3. Project location consolidation? | AI_Workspace is canonical (no consolidation needed) | SESSION_RESUME_PROMPT.md, CLAUDE.md | ✅ CLEAR |
 | 4. Backup system final steps? | Version-controlled hooks + session_end.sh updates | BACKUP_SYSTEM_RECOVERY_LOG.md | ✅ PLAN DEFINED |
-| 5. Current blocking issues? | Railway CLI + 4 Mosaic MVP issues | SESSION_RESUME_PROMPT.md, TEAM_PLAYBOOK.md | ✅ IDENTIFIED |
-| 6. Railway deployment state? | BROKEN - wrong repo connected, 26+ commits not deployed | SESSION_RESUME_PROMPT.md | ✅ DIAGNOSED |
+| 5. Current blocking issues? | Render CLI + 4 Mosaic MVP issues | SESSION_RESUME_PROMPT.md, TEAM_PLAYBOOK.md | ✅ IDENTIFIED |
+| 6. Render deployment state? | BROKEN - wrong repo connected, 26+ commits not deployed | SESSION_RESUME_PROMPT.md | ✅ DIAGNOSED |
 | 7. Working directory? | AI_Workspace canonical location | SESSION_RESUME_PROMPT.md | ✅ CONFIRMED |
 
 ---
@@ -337,8 +337,8 @@ cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 
 **For User:**
 1. Review this answers document
-2. Decide: Address Railway CLI blocker OR continue with other work
-3. If Railway reset: Resolve CLI linking ambiguity, provide approval
+2. Decide: Address Render CLI blocker OR continue with other work
+3. If Render reset: Resolve CLI linking ambiguity, provide approval
 4. If other work: Specify priority (INTENT framework integration, Mosaic MVP fixes, backup system)
 
 **For Claude Code (This Session):**

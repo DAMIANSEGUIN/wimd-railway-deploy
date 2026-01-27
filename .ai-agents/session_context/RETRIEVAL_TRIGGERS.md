@@ -12,7 +12,7 @@
 
 ### 2. Deployment Keywords
 
-**Keywords:** deploy, push, railway, production, staging, release, rollback
+**Keywords:** deploy, push, render, production, staging, release, rollback
 **Fetch:** CLAUDE.md (Deployment Commands section)
 **Why:** Deployment procedures and verification
 

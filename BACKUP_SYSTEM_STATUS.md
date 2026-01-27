@@ -1,13 +1,13 @@
 # Backup System Finalization Status
 
 **Updated:** 2026-01-05
-**Location:** This documents the backup system at `/Users/damianseguin/wimd-railway-local` (different repository)
+**Location:** This documents the backup system at `/Users/damianseguin/wimd-render-local` (different repository)
 
 ---
 
 ## CURRENT STATUS
 
-✅ **Backup system is operational** at wimd-railway-local location
+✅ **Backup system is operational** at wimd-render-local location
 - Post-commit hook restored (syncs to GDrive after commits)
 - Documentation created (BACKUP_SYSTEM_RECOVERY_LOG.md)
 - SESSION_START.md includes verification step
@@ -17,10 +17,10 @@
 ## REMAINING TODOs (From Jan 4 Analysis)
 
 ### TODO 1: Version-Controlled Hooks ⏳ PENDING
-**Location:** `/Users/damianseguin/wimd-railway-local`
+**Location:** `/Users/damianseguin/wimd-render-local`
 
 ```bash
-cd /Users/damianseguin/wimd-railway-local
+cd /Users/damianseguin/wimd-render-local
 mkdir -p hooks
 cp .git/hooks/post-commit hooks/post-commit
 ln -sf ../../hooks/post-commit .git/hooks/post-commit
@@ -37,7 +37,7 @@ git push
 ---
 
 ### TODO 2: Auto-Commit Session Backups ⏳ PENDING
-**Location:** `/Users/damianseguin/wimd-railway-local/scripts/session_end.sh`
+**Location:** `/Users/damianseguin/wimd-render-local/scripts/session_end.sh`
 
 Add to end of session_end.sh:
 ```bash
@@ -72,13 +72,13 @@ Add backup verification:
 
 ## WHY THIS IS DOCUMENTED HERE (NOT IMPLEMENTED)
 
-**Reason:** Backup system is in a **different repository** (wimd-railway-local)
+**Reason:** Backup system is in a **different repository** (wimd-render-local)
 
-**This repository:** WIMD-Railway-Deploy-Project (AI_Workspace)
-**Backup repository:** wimd-railway-local (separate location)
+**This repository:** WIMD-Render-Deploy-Project (AI_Workspace)
+**Backup repository:** wimd-render-local (separate location)
 
 **The TODOs above should be executed:**
-- When working in the wimd-railway-local repository
+- When working in the wimd-render-local repository
 - By an agent with access to that location
 - Following the cross-agent protocol (update .mosaic state there too)
 
@@ -87,12 +87,12 @@ Add backup verification:
 ## CROSS-AGENT NOTE
 
 When working on backup system finalization:
-1. Switch to wimd-railway-local directory
+1. Switch to wimd-render-local directory
 2. Follow the same cross-agent protocol:
    - Read .mosaic/*.json if it exists
    - Use relative paths in all docs
    - Update state on completion
-3. Document completion in wimd-railway-local/.mosaic/agent_state.json
+3. Document completion in wimd-render-local/.mosaic/agent_state.json
 4. Optionally notify this repository by updating BACKUP_SYSTEM_STATUS.md
 
 ---

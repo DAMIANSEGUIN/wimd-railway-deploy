@@ -32,7 +32,7 @@ User encountered error message:
        "description": "Enable AI fallback when CSV prompts fail",
 ```
 
-**Deployment**: Committed (ebb12f4) and pushed to Railway
+**Deployment**: Committed (ebb12f4) and pushed to Render
 **Status**: Auto-deployment in progress
 
 ---
@@ -60,12 +60,12 @@ When failures detected, system automatically:
 
 **3. Health Check Endpoints**
 
-- `/health` - Basic health check (503 status triggers Railway restart)
+- `/health` - Basic health check (503 status triggers Render restart)
 - `/health/comprehensive` - Detailed monitoring with failure rates
 - `/health/recover` - Manual recovery trigger
 - `/health/prompts` - Prompt system specific health
 
-**4. Railway Auto-Restart** (`railway.toml`)
+**4. Render Auto-Restart** (`render.toml`)
 
 - Configured to monitor `/health` endpoint
 - 503 HTTP status codes trigger container restart
@@ -79,7 +79,7 @@ When failures detected, system automatically:
 
 Section "Monitoring & Auto-Restart System" documents:
 
-- Railway health checks configuration
+- Render health checks configuration
 - Automatic recovery procedures
 - Multi-layer monitoring endpoints
 - Failure detection methodology
@@ -163,7 +163,7 @@ def test_prompt_system():
     return {"success": success, ...}
 ```
 
-**Gap Identified**: Health check detects error message but may not trigger 503 status for Railway restart.
+**Gap Identified**: Health check detects error message but may not trigger 503 status for Render restart.
 
 ---
 
@@ -184,7 +184,7 @@ cat feature_flags.json | grep -A2 "AI_FALLBACK_ENABLED"
 Consider modifying `/health` endpoint to return 503 when:
 
 - AI fallback disabled AND CSV prompts unavailable
-- Would trigger Railway auto-restart
+- Would trigger Render auto-restart
 - Forces system into recovery mode
 
 **File to modify**: `api/index.py` (health endpoint)
@@ -255,7 +255,7 @@ if not get_feature_flag("AI_FALLBACK_ENABLED"):
 ## Questions for CODEX
 
 1. **Should health check return 503 when AI fallback disabled?**
-   - Would force Railway restart when misconfigured
+   - Would force Render restart when misconfigured
    - May be too aggressive if intentional staging config
 
 2. **Should feature flags be validated at startup?**
@@ -280,7 +280,7 @@ if not get_feature_flag("AI_FALLBACK_ENABLED"):
 - `api/monitoring.py` - Auto-recovery system
 - `api/prompt_selector.py` - CSV→AI fallback logic
 - `api/index.py` - Health check endpoints
-- `railway.toml` - Auto-restart configuration
+- `render.toml` - Auto-restart configuration
 
 **Configuration**:
 
@@ -300,7 +300,7 @@ if not get_feature_flag("AI_FALLBACK_ENABLED"):
 **For Claude Code** (Me):
 
 - ✅ Enable AI_FALLBACK_ENABLED flag
-- ✅ Deploy to Railway
+- ✅ Deploy to Render
 - ✅ Document system for CODEX
 - ⏳ Monitor deployment success
 

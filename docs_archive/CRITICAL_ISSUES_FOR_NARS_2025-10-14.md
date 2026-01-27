@@ -2,7 +2,7 @@
 
 **Date:** 2025-10-14
 **Session:** Claude Code troubleshooting session
-**Status:** ✅ ROOT CAUSE CONFIRMED - Railway SQLite Ephemeral Storage
+**Status:** ✅ ROOT CAUSE CONFIRMED - Render SQLite Ephemeral Storage
 **Updated:** 2025-10-14 (Post-NARs Investigation)
 
 ---
@@ -56,18 +56,18 @@ The Mosaic platform is experiencing **persistent authentication and session mana
 
 Based on symptoms pattern, the underlying issue is likely **ONE** of:
 
-### Hypothesis 1: Railway SQLite Ephemeral Storage (MOST LIKELY)
+### Hypothesis 1: Render SQLite Ephemeral Storage (MOST LIKELY)
 
 **Evidence:**
 
-- Railway uses ephemeral filesystem for SQLite
+- Render uses ephemeral filesystem for SQLite
 - Database at `data/mosaic.db` gets wiped on every deployment
 - User registers → user created in DB
-- We deploy a fix → Railway rebuilds → DB wiped → user gone
+- We deploy a fix → Render rebuilds → DB wiped → user gone
 - User tries to login → "Invalid credentials" because user no longer exists
 
 **From Architecture Audit (line 308):**
-> "Railway ephemeral storage - SQLite resets on deployment (CRITICAL)"
+> "Render ephemeral storage - SQLite resets on deployment (CRITICAL)"
 
 **This explains:**
 
@@ -98,13 +98,13 @@ Based on symptoms pattern, the underlying issue is likely **ONE** of:
 
 **Evidence:**
 
-- We pushed to wrong repo for 9 commits (wimd-railway-deploy vs what-is-my-delta-site)
+- We pushed to wrong repo for 9 commits (wimd-render-deploy vs what-is-my-delta-site)
 - Fixed the repo issue, but Netlify might still not auto-deploying
 - Code shows as deployed via `curl`, but actual runtime might be cached/old
 
 ---
 
-## EVIDENCE FOR HYPOTHESIS 1 (Railway SQLite)
+## EVIDENCE FOR HYPOTHESIS 1 (Render SQLite)
 
 **From `api/storage.py:12-13`:**
 
@@ -113,22 +113,22 @@ DATA_ROOT = Path(os.getenv("DATA_ROOT", "data"))
 DB_PATH = Path(os.getenv("DATABASE_PATH", DATA_ROOT / "mosaic.db"))
 ```
 
-**Railway Deployment Behavior:**
+**Render Deployment Behavior:**
 
 1. Git push triggers rebuild
 2. Container rebuilt from scratch
-3. `data/` directory **not persisted** (no Railway volume configured)
+3. `data/` directory **not persisted** (no Render volume configured)
 4. New container starts with **empty database**
 5. All users, sessions, PS101 state → **GONE**
 
 **From CLAUDE.md:**
 > "Production URL: <https://whatismydelta.com> (LIVE ✅)"
-> "Backend API: Railway deployment"
+> "Backend API: Render deployment"
 
 **No mention of:**
 
-- Railway PostgreSQL setup
-- Railway volume mount for SQLite persistence
+- Render PostgreSQL setup
+- Render volume mount for SQLite persistence
 - Database backup strategy
 - Migration to persistent storage
 
@@ -141,10 +141,10 @@ DB_PATH = Path(os.getenv("DATABASE_PATH", DATA_ROOT / "mosaic.db"))
 **Timeline:**
 
 1. User registers → works (user in DB)
-2. Claude deploys PS101 fix → Railway rebuilds → **DB wiped**
+2. Claude deploys PS101 fix → Render rebuilds → **DB wiped**
 3. User tries to login → "Invalid credentials" (user gone from DB)
 4. User registers again → works (new user in DB)
-5. Claude deploys logout fix → Railway rebuilds → **DB wiped again**
+5. Claude deploys logout fix → Render rebuilds → **DB wiped again**
 6. User tries to login → "Invalid credentials" **AGAIN**
 
 **We're in a cycle:**
@@ -157,32 +157,32 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 
 ## VALIDATION NEEDED
 
-**To confirm Hypothesis 1 (Railway SQLite), check:**
+**To confirm Hypothesis 1 (Render SQLite), check:**
 
-1. **SSH into Railway container and check DB:**
+1. **SSH into Render container and check DB:**
 
    ```bash
-   railway shell
+   render shell
    ls -la data/
    sqlite3 data/mosaic.db "SELECT COUNT(*) FROM users;"
    ```
 
-2. **Check Railway environment variables:**
+2. **Check Render environment variables:**
 
    ```bash
-   railway variables
+   render variables
    # Look for DATABASE_PATH, DATABASE_URL
    ```
 
-3. **Check Railway volumes:**
+3. **Check Render volumes:**
 
    ```bash
-   railway volumes list
+   render volumes list
    # Should be EMPTY if using ephemeral storage
    ```
 
-4. **Check Railway filesystem persistence:**
-   - Go to Railway dashboard
+4. **Check Render filesystem persistence:**
+   - Go to Render dashboard
    - Check if `data/` directory is mounted as a volume
    - If NO volume → confirms hypothesis
 
@@ -197,13 +197,13 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 
 ## RECOMMENDED SOLUTION (P0 CRITICAL)
 
-### Option 1: Migrate to Railway PostgreSQL (RECOMMENDED)
+### Option 1: Migrate to Render PostgreSQL (RECOMMENDED)
 
 **Why:** Production-grade, persistent, backed up
 **Timeline:** 2-4 hours
 **Steps:**
 
-1. Provision Railway PostgreSQL database
+1. Provision Render PostgreSQL database
 2. Update `api/storage.py` to use PostgreSQL instead of SQLite
 3. Add `psycopg2` to `requirements.txt`
 4. Run migration scripts
@@ -218,13 +218,13 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 - ✅ Scales properly
 - ✅ Fixes all symptoms
 
-### Option 2: Configure Railway Volume for SQLite
+### Option 2: Configure Render Volume for SQLite
 
 **Why:** Quick fix, keeps SQLite
 **Timeline:** 30 minutes
 **Steps:**
 
-1. Create Railway volume mounted at `/app/data`
+1. Create Render volume mounted at `/app/data`
 2. Update `DATA_ROOT` env var to point to volume
 3. Test that DB persists across deployments
 
@@ -250,13 +250,13 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 **Instead:**
 
 1. **NARs to validate Hypothesis 1:**
-   - Check Railway dashboard for volumes
-   - SSH into Railway container
+   - Check Render dashboard for volumes
+   - SSH into Render container
    - Check if `data/mosaic.db` persists across deploys
 
 2. **If Hypothesis 1 confirmed:**
    - STOP all feature work
-   - PRIORITY: Migrate to Railway PostgreSQL
+   - PRIORITY: Migrate to Render PostgreSQL
    - Timeline: 1 day max
    - Then retest all symptoms
 
@@ -281,10 +281,10 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 
 **Process Failures:**
 
-1. ❌ Pushed 9 commits to wrong repo (wimd-railway-deploy instead of what-is-my-delta-site)
+1. ❌ Pushed 9 commits to wrong repo (wimd-render-deploy instead of what-is-my-delta-site)
 2. ❌ Didn't verify deployments were live before claiming "fixed"
 3. ❌ Treated symptoms instead of investigating root cause
-4. ❌ Should have checked infrastructure first (Railway config, database persistence)
+4. ❌ Should have checked infrastructure first (Render config, database persistence)
 
 **Correct Actions:**
 
@@ -298,9 +298,9 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 
 ## RECOMMENDATION FOR NARS
 
-**Priority 1:** Confirm Railway SQLite persistence issue (30 min investigation)
+**Priority 1:** Confirm Render SQLite persistence issue (30 min investigation)
 
-**Priority 2:** If confirmed, migrate to Railway PostgreSQL (4 hours work)
+**Priority 2:** If confirmed, migrate to Render PostgreSQL (4 hours work)
 
 **Priority 3:** Retest all symptoms with persistent database
 
@@ -345,7 +345,7 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 
 **Before continuing troubleshooting:**
 
-1. NARs confirms or refutes Railway SQLite hypothesis
+1. NARs confirms or refutes Render SQLite hypothesis
 2. If confirmed: migrate to PostgreSQL FIRST
 3. If refuted: new hypothesis with evidence
 4. Only then continue symptom fixes
@@ -360,16 +360,16 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 
 ### NARs Findings
 
-1. **Railway Configuration Analysis:**
-   - `railway.json` contains `"include": ["data/**/*"]` directive
+1. **Render Configuration Analysis:**
+   - `render.json` contains `"include": ["data/**/*"]` directive
    - This directive **only copies files into build** - does NOT create persistent storage
-   - No Railway Volume configured in project dashboard
+   - No Render Volume configured in project dashboard
    - SQLite database stored in ephemeral container filesystem
 
 2. **Technical Confirmation:**
    - **Ephemeral Storage:** Files included via directive are wiped on each deployment
-   - **Persistent Storage:** Would require explicit Railway Volume or managed database service
-   - **Current Behavior:** `data/mosaic.db` recreated fresh on every Railway rebuild
+   - **Persistent Storage:** Would require explicit Render Volume or managed database service
+   - **Current Behavior:** `data/mosaic.db` recreated fresh on every Render rebuild
 
 3. **Root Cause Validated:**
    - ✅ Pattern matches: User registers → deploy → DB wiped → "Invalid credentials"
@@ -378,7 +378,7 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 
 ### Conclusion
 
-**The `railway.json` include directive is insufficient for database persistence.** Every deployment triggers Railway container rebuild, wiping the SQLite database and all user accounts/sessions.
+**The `render.json` include directive is insufficient for database persistence.** Every deployment triggers Render container rebuild, wiping the SQLite database and all user accounts/sessions.
 
 ---
 
@@ -386,7 +386,7 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 
 **Status:** P0 CRITICAL - Production blocker **CONFIRMED**
 
-**Solution:** Migrate to Railway PostgreSQL (managed database service)
+**Solution:** Migrate to Render PostgreSQL (managed database service)
 
 **Estimated Fix Time:** 4 hours (PostgreSQL migration + schema migration + testing)
 
@@ -398,7 +398,7 @@ Register → Works → Deploy → DB wiped → Login fails → Repeat
 
 **DO:**
 
-- Provision Railway PostgreSQL database immediately
+- Provision Render PostgreSQL database immediately
 - Migrate schema from SQLite to PostgreSQL
 - Update `api/storage.py` connection logic
 - Deploy and verify database persists across deployments

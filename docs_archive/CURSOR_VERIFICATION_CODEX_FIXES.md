@@ -85,7 +85,7 @@ scripts/setup_hooks.sh             ✅ (24 lines, executable)
     echo "❌ Deployment verification failed."
     echo "Manual intervention required..."
     echo "Recommended actions:"
-    echo "  1. Inspect Netlify and Railway logs."
+    echo "  1. Inspect Netlify and Render logs."
     echo "  2. Coordinate human-approved rollback if production is impacted."
 ```
 
@@ -174,7 +174,7 @@ git config core.hooksPath  # Should show: .githooks
 **What to test:**
 
 ```bash
-./scripts/push.sh railway-origin main
+./scripts/push.sh render-origin main
 # Should trigger hook, run verification, and push if successful
 ```
 

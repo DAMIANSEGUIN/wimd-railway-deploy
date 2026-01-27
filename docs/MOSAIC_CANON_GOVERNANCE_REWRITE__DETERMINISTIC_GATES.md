@@ -11,7 +11,7 @@ This document specifies **deterministic, non-behavioural** enforcement gates tha
 ## 1. One Rule for Enforcement (the load-bearing rule)
 
 **RULE-0 / NON-BYPASSABLE ENFORCEMENT:**  
-> Any action that can change runtime state (deploy, push-to-deploy, `railway up`, promotion, environment var changes) **MUST** be preceded by a successful `mosaic_enforce` run.  
+> Any action that can change runtime state (deploy, push-to-deploy, `render up`, promotion, environment var changes) **MUST** be preceded by a successful `mosaic_enforce` run.  
 > The enforcement tool must be invoked automatically by at least one mandatory mechanism (local wrapper, CI, and/or runtime), and must *fail closed* when prerequisites are missing.
 
 This is enforced as “cannot proceed” gates, not as guidance.
@@ -33,7 +33,7 @@ Repository contains a `.mosaic/` directory:
 
 ### 3.1 authority_map.json — **no unresolved placeholders**
 
-**Hard rule:** `authority_map.json` cannot contain raw placeholders like `<railway-url>` without a defined resolution mechanism.
+**Hard rule:** `authority_map.json` cannot contain raw placeholders like `<render-url>` without a defined resolution mechanism.
 
 Two allowed patterns:
 
@@ -50,7 +50,7 @@ Store a template string and the resolver rules:
   },
   "services": [
     {
-      "service_id": "railway:wimd-career-coaching/what-is-my-delta-site",
+      "service_id": "render:wimd-career-coaching/what-is-my-delta-site",
       "runtime_identity_path": "/__version",
       "runtime_base_url": {
         "mode": "template",
@@ -78,14 +78,14 @@ If you prefer explicit URLs, store them per environment and require `MOSAIC_ENV`
   "repo": { "github_owner": "DAMIANSEGUIN", "github_repo": "what-is-my-delta-site", "branch": "main" },
   "services": [
     {
-      "service_id": "railway:wimd-career-coaching/what-is-my-delta-site",
+      "service_id": "render:wimd-career-coaching/what-is-my-delta-site",
       "runtime_identity_path": "/__version",
       "runtime_base_url": {
         "mode": "env_map",
         "required_env": ["MOSAIC_ENV"],
         "env_map": {
-          "prod": "https://wimd-career-coaching-production.up.railway.app",
-          "staging": "https://wimd-career-coaching-staging.up.railway.app"
+          "prod": "https://wimd-career-coaching-production.up.render.app",
+          "staging": "https://wimd-career-coaching-staging.up.render.app"
         }
       }
     }

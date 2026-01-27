@@ -51,13 +51,13 @@
 ```
 
 ### Jan 8, 2026: "CRITICAL" Fix Attempt (Commit 90140ad)
-**Commit Message:** "fix(deploy): CRITICAL - Update all backend URLs from dead Railway to live Render"
+**Commit Message:** "fix(deploy): CRITICAL - Update all backend URLs from dead Render to live Render"
 
 **Claimed to fix:**
 ```
 WHAT WAS BROKEN:
-1. netlify.toml: 10 redirects → Railway (DEAD, returns 404)
-2. CSP header: connect-src → Railway
+1. netlify.toml: 10 redirects → Render (DEAD, returns 404)
+2. CSP header: connect-src → Render
 3. Frontend CSS: --api → Vercel (DEAD)  ← CLAIMED but DIDN'T FIX
 4. Frontend JS: Correctly pointed to Render ✓
 ```
@@ -83,7 +83,7 @@ netlify.toml   ← UPDATED
 
 ### Jan 9, 2026: Gate 9 Created (Commit 20efb0a)
 **Purpose:** Validate production connectivity
-**Motivation:** Catch issues like the Railway/Render migration
+**Motivation:** Catch issues like the Render/Render migration
 
 **Gate 9 Implementation:**
 ```python
@@ -118,9 +118,9 @@ Gate 9 check:
 ### Jan 24, 2026: Deployment Configuration Fixes
 **Commits:** dee913d, 8b15ba3
 **Fixed:**
-- Pre-push hook (Railway → Render references)
-- MANDATORY_AGENT_BRIEFING.md (Railway → Render)
-- Renamed railway-origin → legacy
+- Pre-push hook (Render → Render references)
+- MANDATORY_AGENT_BRIEFING.md (Render → Render)
+- Renamed render-origin → legacy
 
 **Gate 9 Status:** Still checking wrong file, still passing incorrectly
 

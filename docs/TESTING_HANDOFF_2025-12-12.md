@@ -11,54 +11,54 @@
 
 ### ✅ What Works
 
-- Backend health: <https://what-is-my-delta-site-production.up.railway.app/health> (PostgreSQL connected)
+- Backend health: <https://what-is-my-delta-site-production.up.render.app/health> (PostgreSQL connected)
 - Frontend: <https://whatismydelta.com> (loads)
 - Browser test script created: `./scripts/test_mosaic_browser.sh` (opens Chrome with CodexCapture)
 
-### ❌ Critical Blocker: Railway Deployment Stuck on Old Code
+### ❌ Critical Blocker: Render Deployment Stuck on Old Code
 
 **Problem:**
 
-- Railway is serving code from **Dec 3, 2025 (commit 96e711c1)** - 9 days old
+- Render is serving code from **Dec 3, 2025 (commit 96e711c1)** - 9 days old
 - Latest code with `/api/ps101/extract-context` endpoint is **NOT deployed**
 - GitHub repo has the code (commit a968e9a from Dec 10, 2025)
-- Railway's GitHub auto-deploy **IS NOT WORKING**
+- Render's GitHub auto-deploy **IS NOT WORKING**
 
 **Evidence:**
 
 ```bash
 # Endpoint returns 404 (should be 422 for missing auth header)
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context
+curl -X POST https://what-is-my-delta-site-production.up.render.app/api/ps101/extract-context
 
 # OpenAPI only shows old endpoint
-curl -s https://what-is-my-delta-site-production.up.railway.app/openapi.json | grep ps101
+curl -s https://what-is-my-delta-site-production.up.render.app/openapi.json | grep ps101
 # Shows: /wimd/start-ps101 (OLD)
 # Missing: /api/ps101/extract-context (NEW)
 
-# Railway dashboard shows: Active deployment 96e711c1 (Dec 3, 2025, 10:17 PM)
+# Render dashboard shows: Active deployment 96e711c1 (Dec 3, 2025, 10:17 PM)
 ```
 
 **Root Cause:**
-Railway's GitHub integration is connected but NOT pulling latest commits from `wimd-railway-deploy` repo.
+Render's GitHub integration is connected but NOT pulling latest commits from `wimd-render-deploy` repo.
 
 ---
 
 ## What Needs to Be Fixed FIRST
 
-### Option 1: Fix Railway GitHub Integration (RECOMMENDED)
+### Option 1: Fix Render GitHub Integration (RECOMMENDED)
 
-**In Railway Dashboard:**
+**In Render Dashboard:**
 
 1. Go to Project Settings → GitHub/Source
-2. Verify connected to: `github.com/DAMIANSEGUIN/wimd-railway-deploy`
+2. Verify connected to: `github.com/DAMIANSEGUIN/wimd-render-deploy`
 3. Verify watching branch: `main`
 4. Click "Disconnect" then "Reconnect Repository"
 5. Trigger new deployment
 6. **Verify it deploys commit `7354f00` or `a968e9a`** (NOT `96e711c1`)
 
-### Option 2: Manual Railway CLI Deploy (BLOCKED)
+### Option 2: Manual Render CLI Deploy (BLOCKED)
 
-Railway CLI command `railway up` fails with:
+Render CLI command `render up` fails with:
 
 ```
 Permission denied (os error 13)
@@ -66,19 +66,19 @@ Permission denied (os error 13)
 
 This suggests file permission issue in local directory. Not recommended path.
 
-### Option 3: Push to railway-origin (DON'T DO THIS)
+### Option 3: Push to render-origin (DON'T DO THIS)
 
-Per DEPLOYMENT_TRUTH.md, `railway-origin` is LEGACY and has no write access (403 errors).
+Per DEPLOYMENT_TRUTH.md, `render-origin` is LEGACY and has no write access (403 errors).
 
 ---
 
-## Once Railway Deploys Latest Code
+## Once Render Deploys Latest Code
 
 ### Test 1: Verify Endpoint Exists
 
 ```bash
 # Should return 422 (missing X-User-ID header), NOT 404
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/extract-context \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/api/ps101/extract-context \
   -H "Content-Type: application/json" \
   -w "\nHTTP Status: %{http_code}\n"
 
@@ -89,7 +89,7 @@ curl -X POST https://what-is-my-delta-site-production.up.railway.app/api/ps101/e
 ### Test 2: Verify OpenAPI Updated
 
 ```bash
-curl -s https://what-is-my-delta-site-production.up.railway.app/openapi.json | python3 -c "import sys, json; paths = json.load(sys.stdin).get('paths', {}); print([p for p in paths.keys() if 'ps101' in p])"
+curl -s https://what-is-my-delta-site-production.up.render.app/openapi.json | python3 -c "import sys, json; paths = json.load(sys.stdin).get('paths', {}); print([p for p in paths.keys() if 'ps101' in p])"
 
 # Expected: ['/wimd/start-ps101', '/api/ps101/extract-context']
 # Current (WRONG): ['/wimd/start-ps101']
@@ -140,8 +140,8 @@ curl -s https://what-is-my-delta-site-production.up.railway.app/openapi.json | p
 
 **If context extraction fails:**
 
-- Check Railway logs: `railway logs | grep -i "extract\|context"`
-- Verify CLAUDE_API_KEY is set in Railway variables
+- Check Render logs: `render logs | grep -i "extract\|context"`
+- Verify CLAUDE_API_KEY is set in Render variables
 - Check for 503 errors (Claude API issue)
 
 ### Test 6: Personalized Coaching
@@ -155,9 +155,9 @@ curl -s https://what-is-my-delta-site-production.up.railway.app/openapi.json | p
 
 **If not personalized:**
 
-- Check database: `railway run psql $DATABASE_URL -c "SELECT user_id, extracted_at FROM user_contexts;"`
+- Check database: `render run psql $DATABASE_URL -c "SELECT user_id, extracted_at FROM user_contexts;"`
 - Verify context was saved
-- Check Railway logs for context retrieval errors
+- Check Render logs for context retrieval errors
 
 ---
 
@@ -165,7 +165,7 @@ curl -s https://what-is-my-delta-site-production.up.railway.app/openapi.json | p
 
 ### OpenAI Quota Exceeded
 
-Railway logs show:
+Render logs show:
 
 ```
 OpenAI API error: Error code: 429 - {'error': {'message': 'You exceeded your current quota...'}}
@@ -176,7 +176,7 @@ OpenAI API error: Error code: 429 - {'error': {'message': 'You exceeded your cur
 
 ### FOREIGN KEY Constraint Failed
 
-Railway logs show:
+Render logs show:
 
 ```
 ⚠️ Fallback logging failed: FOREIGN KEY constraint failed
@@ -196,7 +196,7 @@ Railway logs show:
 
 | Test | Status | Notes |
 |------|--------|-------|
-| Railway Deployment Fixed | ⬜ | Commit deployed: _____ |
+| Render Deployment Fixed | ⬜ | Commit deployed: _____ |
 | Endpoint /api/ps101/extract-context | ⬜ | HTTP status: _____ |
 | Frontend Loads | ⬜ | |
 | User Registration | ⬜ | Email: _____ |
@@ -222,13 +222,13 @@ Railway logs show:
 **Production URLs:**
 
 - Frontend: <https://whatismydelta.com>
-- Backend: <https://what-is-my-delta-site-production.up.railway.app>
-- Health: <https://what-is-my-delta-site-production.up.railway.app/health>
+- Backend: <https://what-is-my-delta-site-production.up.render.app>
+- Health: <https://what-is-my-delta-site-production.up.render.app/health>
 
 **Local Testing Script:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ./scripts/test_mosaic_browser.sh
 ```
 
@@ -242,15 +242,15 @@ cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 
 ## Questions for User
 
-1. **Railway deployment:** Did reconnecting GitHub integration work?
-2. **Which commit is now deployed?** (Check Railway dashboard)
+1. **Render deployment:** Did reconnecting GitHub integration work?
+2. **Which commit is now deployed?** (Check Render dashboard)
 3. **Does `/api/ps101/extract-context` return 422 now?** (Not 404)
 
 ---
 
-**Status:** BLOCKED on Railway deployment
-**Next Agent:** Fix Railway deployment first, then run tests 3-6
-**Estimated Time:** 15 minutes to fix Railway + 20 minutes to test MVP flow
+**Status:** BLOCKED on Render deployment
+**Next Agent:** Fix Render deployment first, then run tests 3-6
+**Estimated Time:** 15 minutes to fix Render + 20 minutes to test MVP flow
 
 ---
 

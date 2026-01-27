@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-REPO_ROOT="/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+REPO_ROOT="/Users/damianseguin/WIMD-Deploy-Project"
 cd "$REPO_ROOT"
 
 echo "🔒 Validation Gate: Checking for Gemini ALLOW verdict..."

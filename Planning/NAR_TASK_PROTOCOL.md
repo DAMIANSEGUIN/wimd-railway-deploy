@@ -135,9 +135,9 @@ touch NAR_TASK_RAILWAY_ROUTES.txt
 ### NAR_TASK_RAILWAY_BOOKING_ROUTES.txt
 
 ```
-PROJECT: /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+PROJECT: /Users/damianseguin/WIMD-Deploy-Project
 
-TASK: Fix Railway booking routes returning 404
+TASK: Fix Render booking routes returning 404
 
 PROBLEM:
 - Booking routes deployed but not loading
@@ -150,7 +150,7 @@ KEY FILES:
 - api/index.py (lines 106-113: router registration)
 
 DIAGNOSE:
-- Check Railway logs for import errors
+- Check Render logs for import errors
 - Verify dependencies in requirements.txt
 - Test if migrations ran
 

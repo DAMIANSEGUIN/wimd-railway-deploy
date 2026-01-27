@@ -1,12 +1,12 @@
-# WIMD – Railway Deploy Project
+# WIMD – Render Deploy Project
 
-This repo is a **persisted handover** for Codex/Cursor: Protocol 0 (secrets), rolling checklist, minimal FastAPI app, and Railway deployment files.
+This repo is a **persisted handover** for Codex/Cursor: Protocol 0 (secrets), rolling checklist, minimal FastAPI app, and Render deployment files.
 
 ## Quick Start
 
-1. Set secrets in **Railway → Service or Shared Variables**:
+1. Set secrets in **Render → Service or Shared Variables**:
    - `OPENAI_API_KEY`, `CLAUDE_API_KEY`, optional: `PUBLIC_SITE_ORIGIN`, `PUBLIC_API_BASE`, `DATABASE_URL`, `SENTRY_DSN`
-2. Deploy via Git push. Railway uses `Procfile` / `railway.json`.
+2. Deploy via Git push. Render uses `Procfile` / `render.json`.
 3. Verify:
 
    ```bash
@@ -15,7 +15,7 @@ This repo is a **persisted handover** for Codex/Cursor: Protocol 0 (secrets), ro
 
 ## Files
 
-- `Procfile`, `railway.json` – start command & healthcheck
+- `Procfile`, `render.json` – start command & healthcheck
 - `api/index.py` – FastAPI app (`/health`, `/config`), strict CORS
 - `api/settings.py`, `api/startup_checks.py` – secrets validation & provider ping at startup
 - `api/prompts_loader.py` – CSV hashing, registry, activation

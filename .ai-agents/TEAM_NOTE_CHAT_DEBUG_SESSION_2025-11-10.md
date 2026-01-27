@@ -241,7 +241,7 @@ If you're reading this and Codex hasn't solved it yet:
 
 ## Production Status
 
-- ✅ Backend: Healthy (Railway)
+- ✅ Backend: Healthy (Render)
 - ✅ Auth system: Working
 - ⚠️ Chat window: Broken (doesn't open)
 - ✅ PS101 flow: Intact

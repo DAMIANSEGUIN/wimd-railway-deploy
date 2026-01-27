@@ -98,7 +98,7 @@ console.log('[INIT] Phase 2.5 complete');
 **Command:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ./scripts/deploy.sh netlify
 ```
 
@@ -136,7 +136,7 @@ netlify link --id resonant-crostata-90b706
 **Step 2: Deploy**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 netlify deploy --prod --dir mosaic_ui
 ```
 

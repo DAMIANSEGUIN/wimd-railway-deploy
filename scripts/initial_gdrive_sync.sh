@@ -2,7 +2,7 @@
 # Initial GDrive sync - run this ONCE manually
 # After this, the git post-commit hook will auto-sync on every commit
 
-PROJECT_DIR="/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project"
+PROJECT_DIR="/Users/damianseguin/WIMD-Deploy-Project"
 GDRIVE_PATH="gdrive:WIMD-Railway-Deploy-Project"
 RCLONE="/Users/damianseguin/coachvox_tools/bin/rclone"
 

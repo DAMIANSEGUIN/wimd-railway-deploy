@@ -17,7 +17,7 @@ success, error = logger.append_event(
     event_type="tool_call",
     agent="claude_code",
     source="./scripts/deploy.sh",
-    data={"command": "deploy railway"}
+    data={"command": "deploy render"}
 )
 
 if not success:
@@ -92,7 +92,7 @@ active_constraints=[
 ```python
 failure_ledger=[
     {
-        "attempt": "Direct git push to railway",
+        "attempt": "Direct git push to render",
         "failure_reason": "Permission denied",
         "timestamp": "2025-12-10T12:00:00Z",
         "error_code": "403"
@@ -197,7 +197,7 @@ logger.append_event(
     session_id="session_20251210_1400",
     event_type="error",
     agent="claude_code",
-    source="railway_api",
+    source="render_api",
     data={
         "error_code": "500",
         "message": "Internal server error",
@@ -206,12 +206,12 @@ logger.append_event(
     failure_ledger=[
         {
             "attempt": "Deploy via git push",
-            "failure_reason": "500 error from Railway",
+            "failure_reason": "500 error from Render",
             "timestamp": "2025-12-10T12:00:00Z",
             "error_code": "500"
         },
         {
-            "attempt": "Deploy via railway up",
+            "attempt": "Deploy via render up",
             "failure_reason": "Same 500 error",
             "timestamp": "2025-12-10T12:05:00Z",
             "error_code": "500"
@@ -221,7 +221,7 @@ logger.append_event(
         {
             "commitment": "Deploy to production",
             "status": "blocked",
-            "dependencies": ["Railway service operational"]
+            "dependencies": ["Render service operational"]
         }
     ]
 )

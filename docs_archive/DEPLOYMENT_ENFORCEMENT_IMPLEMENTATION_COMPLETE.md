@@ -73,7 +73,7 @@ Automated deployment enforcement system now active. AI agents cannot push to pro
 
 **How it works:**
 
-1. Detects if push target is `railway-origin` (production)
+1. Detects if push target is `render-origin` (production)
 2. Runs `scripts/pre_push_verification.sh`
 3. Blocks push if verification fails (exit code 1)
 4. Allows emergency bypass with audit logging
@@ -82,13 +82,13 @@ Automated deployment enforcement system now active. AI agents cannot push to pro
 
 ```bash
 # Should be blocked by hook
-git push railway-origin main
+git push render-origin main
 
 # Should work (wrapper runs verification)
-./scripts/push.sh railway-origin main
+./scripts/push.sh render-origin main
 
 # Emergency bypass (logged)
-SKIP_VERIFICATION=true BYPASS_REASON="Production down" git push railway-origin main
+SKIP_VERIFICATION=true BYPASS_REASON="Production down" git push render-origin main
 ```
 
 **Audit log location:** `.verification_audit.log` (gitignored)
@@ -130,9 +130,9 @@ SKIP_VERIFICATION=true BYPASS_REASON="Production down" git push railway-origin m
 
 - Runs verification before pushing
 - Works with any remote
-- Only enforces verification for `railway-origin`
+- Only enforces verification for `render-origin`
 
-**`scripts/deploy.sh <netlify|railway|all>`**
+**`scripts/deploy.sh <netlify|render|all>`**
 
 - Deploys with pre/post verification
 - Integrates with existing `deploy_frontend_netlify.sh`
@@ -240,8 +240,8 @@ SKIP_VERIFICATION=true BYPASS_REASON="Production down" git push railway-origin m
 **Verify enforcement has no bypass gaps:**
 
 - [ ] Run `./scripts/setup_hooks.sh` (or `git config core.hooksPath .githooks`) on fresh clone
-- [ ] Try `git push railway-origin main` directly → should be blocked by hook
-- [ ] Try `./scripts/push.sh railway-origin main` with failing verification → should be blocked
+- [ ] Try `git push render-origin main` directly → should be blocked by hook
+- [ ] Try `./scripts/push.sh render-origin main` with failing verification → should be blocked
 - [ ] Try emergency bypass → should work and log to `.verification_audit.log`
 - [ ] Try `git push origin main` → should skip verification (backup repo)
 - [ ] Review audit log format matches spec: `TIMESTAMP | USER | REMOTE | REASON | COMMIT_HASH`
@@ -308,7 +308,7 @@ SKIP_VERIFICATION=true BYPASS_REASON="Production down" git push railway-origin m
    git commit -m "Test deployment enforcement"
 
    # Test wrapper script
-   ./scripts/push.sh railway-origin main
+   ./scripts/push.sh render-origin main
    ```
 
 3. **Codex Post-Implementation Audit**

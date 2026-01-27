@@ -1,4 +1,4 @@
-# Handoff to Gemini: Railway Reset Validation
+# Handoff to Gemini: Render Reset Validation
 
 **CRITICAL: DO NOT EXECUTE - VALIDATION ONLY**
 
@@ -14,7 +14,7 @@
 **YOUR TASK IS VALIDATION, NOT EXECUTION**
 
 Do NOT proceed to Phase 2 (service creation).
-Do NOT make any changes to Railway.
+Do NOT make any changes to Render.
 Do NOT deploy anything.
 
 **Your ONLY job:** Run the validation tests below and report findings.
@@ -23,7 +23,7 @@ Do NOT deploy anything.
 
 ## CONTEXT
 
-User received ChatGPT spec for Railway reset (MOSAIC_RAILWAY_RESET_SPEC v1.0).
+User received ChatGPT spec for Render reset (MOSAIC_RAILWAY_RESET_SPEC v1.0).
 
 Claude Code completed PHASE 1 (forensic confirmation) and created validation documents.
 
@@ -36,8 +36,8 @@ Claude Code completed PHASE 1 (forensic confirmation) and created validation doc
 ## REQUIRED READING (In Order)
 
 1. **This file** (you're reading it)
-2. `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/RAILWAY_RESET_INSTRUCTION_PACKET.md`
-3. `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/RAILWAY_RESET_VALIDATION_CHECKLIST.md`
+2. `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/RAILWAY_RESET_INSTRUCTION_PACKET.md`
+3. `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/RAILWAY_RESET_VALIDATION_CHECKLIST.md`
 
 ---
 
@@ -53,7 +53,7 @@ Claude Code completed PHASE 1 (forensic confirmation) and created validation doc
 
 **How to Check:**
 
-1. Open Railway dashboard: <https://railway.app/project/wimd-career-coaching>
+1. Open Render dashboard: <https://render.app/project/wimd-career-coaching>
 2. Look at "Services" list in left sidebar
 3. Check if "PostgreSQL" appears as separate service
 4. If yes: Project-level ✅ SAFE
@@ -80,14 +80,14 @@ Recommendation: [GO / NO-GO]
 **Commands to Run:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Search for API endpoint references
 grep -r "mosaic-platform" mosaic_ui/
 grep -r "vercel.app" mosaic_ui/
 grep -r "what-is-my-delta" mosaic_ui/
 grep -r "apiBase\|API_BASE\|api_base" mosaic_ui/
-grep -r "railway.app" mosaic_ui/
+grep -r "render.app" mosaic_ui/
 
 # Check Netlify config
 cat netlify.toml 2>/dev/null
@@ -114,7 +114,7 @@ Recommendation: [exact edit needed to update]
 **Commands to Run:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Search for version endpoint
 grep -r "/__version" api/
@@ -147,13 +147,13 @@ Recommendation: [USE EXISTING / IMPLEMENT NEW / SKIP VERIFICATION]
 
 ```bash
 # Check backup exists and is valid JSON
-cat /tmp/railway_env_backup.json | python3 -m json.tool | head -50
+cat /tmp/render_env_backup.json | python3 -m json.tool | head -50
 
 # Count variables
-railway variables | grep "║" | grep -v "─" | wc -l
+render variables | grep "║" | grep -v "─" | wc -l
 
 # Compare count
-echo "Backup file should have same number of variables as railway variables output"
+echo "Backup file should have same number of variables as render variables output"
 ```
 
 **Report Format:**
@@ -162,7 +162,7 @@ echo "Backup file should have same number of variables as railway variables outp
 VALIDATION 4: [PASS/FAIL]
 Backup file status: [VALID JSON / CORRUPTED / MISSING]
 Variables in backup: [count]
-Variables in Railway: [count]
+Variables in Render: [count]
 Match: [YES/NO]
 If no match: [list missing variables]
 ```
@@ -171,15 +171,15 @@ If no match: [list missing variables]
 
 ### NICE-TO-HAVE VALIDATIONS (Non-Blocking)
 
-#### Validation 5: Railway CLI Service Creation Capability
+#### Validation 5: Render CLI Service Creation Capability
 
-**Question:** Can Railway CLI create services, or is dashboard required?
+**Question:** Can Render CLI create services, or is dashboard required?
 
 **Commands:**
 
 ```bash
-railway --help | grep -i service
-railway service --help 2>&1
+render --help | grep -i service
+render service --help 2>&1
 ```
 
 **Report Format:**
@@ -198,7 +198,7 @@ Conclusion: Dashboard [REQUIRED / OPTIONAL]
 
 **How to Check:**
 
-1. Open Railway dashboard
+1. Open Render dashboard
 2. For each project: `wimd-api-250923-1842`, `wimd-api-250923-1828`, `lovely-blessing`, `fabulous-appreciation`, `luminous-acceptance`
 3. Check last deployment date
 4. Check active services count
@@ -223,7 +223,7 @@ Recommendation: [SAFE TO DELETE / REVIEW NEEDED]
 **Copy this template and fill it out:**
 
 ```markdown
-# Railway Reset Validation Report
+# Render Reset Validation Report
 **Date:** 2025-12-14
 **Validator:** Gemini
 **Status:** [COMPLETE/INCOMPLETE]
@@ -340,7 +340,7 @@ Recommendation: [SAFE TO DELETE / REVIEW NEEDED]
 
 **You MUST NOT:**
 
-- Enter BUILD mode (create Railway services)
+- Enter BUILD mode (create Render services)
 - Enter REPAIR mode (modify code)
 - Proceed without successful verification
 
@@ -375,13 +375,13 @@ Before submitting your validation report, confirm:
 - [ ] I completed Validation 2 (Frontend API location)
 - [ ] I completed Validation 3 (version endpoint)
 - [ ] I completed Validation 4 (env var backup)
-- [ ] I attempted Validation 5 (Railway CLI)
+- [ ] I attempted Validation 5 (Render CLI)
 - [ ] I attempted Validation 6 (obsolete projects)
 - [ ] I filled out the validation report template
 - [ ] I provided clear GO/NO-GO recommendation
 - [ ] I listed any blocking issues
 - [ ] I did NOT execute any changes
-- [ ] I did NOT create any Railway services
+- [ ] I did NOT create any Render services
 - [ ] I did NOT modify any code
 
 **Only after all items checked:** Submit validation report to user.
@@ -391,7 +391,7 @@ Before submitting your validation report, confirm:
 ## EXAMPLE VALIDATION REPORT (Good)
 
 ```markdown
-# Railway Reset Validation Report
+# Render Reset Validation Report
 Date: 2025-12-14
 Validator: Gemini
 Status: COMPLETE
@@ -409,7 +409,7 @@ Status: COMPLETE
 - Status: ✅ PASS
 - Location: mosaic_ui/index.html:15
 - Current URL: var apiBase = 'https://mosaic-platform.vercel.app'
-- Update needed: Change line 15 to new Railway URL
+- Update needed: Change line 15 to new Render URL
 - Blocker: NO - location identified, easy to update
 
 ### Validation 3: /__version Endpoint
@@ -421,7 +421,7 @@ Status: COMPLETE
 ### Validation 4: Env Var Backup
 - Status: ✅ PASS
 - Backup valid: YES (valid JSON, 10 variables)
-- Variables match: YES (10 in Railway, 10 in backup)
+- Variables match: YES (10 in Render, 10 in backup)
 - Blocker: NO
 
 ## OVERALL RECOMMENDATION
@@ -430,14 +430,14 @@ Status: COMPLETE
 
 **Conditions:**
 1. Implement /__version endpoint before Phase 5, OR skip Phase 5 verification
-2. Update mosaic_ui/index.html:15 with new Railway URL before Phase 6
+2. Update mosaic_ui/index.html:15 with new Render URL before Phase 6
 
 **No blocking issues found.**
 
 ## QUESTIONS FOR USER
 
 1. Do you want /__version endpoint implemented, or should we skip Phase 5?
-2. What should the new Railway service be named? (suggest: mosaic-backend)
+2. What should the new Render service be named? (suggest: mosaic-backend)
 
 ---
 END OF VALIDATION REPORT
@@ -448,7 +448,7 @@ END OF VALIDATION REPORT
 ## EXAMPLE VALIDATION REPORT (Blocker Found)
 
 ```markdown
-# Railway Reset Validation Report
+# Render Reset Validation Report
 Date: 2025-12-14
 Validator: Gemini
 Status: COMPLETE
@@ -479,7 +479,7 @@ Status: COMPLETE
 1. PostgreSQL appears to be service-level, not project-level
    - Creating new service will lose database access
    - MUST resolve before proceeding
-   - Options: (a) Export database first, (b) Verify with Railway support, (c) Test with dummy service
+   - Options: (a) Export database first, (b) Verify with Render support, (c) Test with dummy service
 
 2. Frontend API endpoint unclear
    - Multiple files with different URLs
@@ -487,7 +487,7 @@ Status: COMPLETE
 
 ## QUESTIONS FOR USER
 
-1. CRITICAL: Can you confirm PostgreSQL service scope in Railway dashboard?
+1. CRITICAL: Can you confirm PostgreSQL service scope in Render dashboard?
 2. Which frontend file is canonical: mosaic_ui/index.html or frontend/index.html?
 3. Should we abort and investigate PostgreSQL issue, or proceed with database export?
 
@@ -502,7 +502,7 @@ END OF VALIDATION REPORT
 **When you're done:**
 
 Save your validation report to:
-`/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/GEMINI_RAILWAY_VALIDATION_REPORT_2025-12-14.md`
+`/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/GEMINI_RAILWAY_VALIDATION_REPORT_2025-12-14.md`
 
 Then notify user: "Validation complete. Report saved. Awaiting approval."
 

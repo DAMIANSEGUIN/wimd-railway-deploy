@@ -2,7 +2,7 @@
 
 **Purpose:** Standard verification steps for ALL deployments to production
 **Owner:** Damian (Project Owner)
-**Usage:** Run this checklist immediately after every Railway deployment completes
+**Usage:** Run this checklist immediately after every Render deployment completes
 **Created:** 2025-10-31
 **Last Updated:** 2025-10-31
 
@@ -27,7 +27,7 @@
 
 **Monitor these while deployment in progress:**
 
-### Railway Dashboard
+### Render Dashboard
 
 - [ ] Build logs show no errors
 - [ ] Build completes successfully
@@ -37,7 +37,7 @@
 
 ### Critical Log Messages
 
-Watch for these in Railway logs:
+Watch for these in Render logs:
 
 **✅ Good signs:**
 
@@ -67,7 +67,7 @@ psycopg2.OperationalError:
 ### 1. Health Check Endpoint
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 ```
 
 **Verify response:**
@@ -86,7 +86,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 ### 2. Config Endpoint
 
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/config
+curl https://what-is-my-delta-site-production.up.render.app/config
 ```
 
 **Verify response:**
@@ -101,10 +101,10 @@ curl https://what-is-my-delta-site-production.up.railway.app/config
 
 ```bash
 # Prompts endpoint
-curl https://what-is-my-delta-site-production.up.railway.app/prompts/active
+curl https://what-is-my-delta-site-production.up.render.app/prompts/active
 
 # Auth health check (should return 401 without credentials)
-curl https://what-is-my-delta-site-production.up.railway.app/auth/me
+curl https://what-is-my-delta-site-production.up.render.app/auth/me
 ```
 
 **Verify:**
@@ -125,7 +125,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/auth/me
 
 ### 5. Database Connection Verification
 
-**Check Railway logs for:**
+**Check Render logs for:**
 
 - [ ] `[STORAGE] ✅ PostgreSQL connection pool created`
 - [ ] No `SQLite fallback active` warnings
@@ -167,7 +167,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/auth/me
 
 ### 7. Error Rate Monitoring
 
-**Check Railway logs every 5-10 minutes:**
+**Check Render logs every 5-10 minutes:**
 
 - [ ] No new exception tracebacks appearing
 - [ ] No spike in error messages
@@ -180,7 +180,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/auth/me
 # Run 5 times, 1 minute apart
 for i in {1..5}; do
   echo "Check $i:"
-  curl -s https://what-is-my-delta-site-production.up.railway.app/health | jq '.metrics'
+  curl -s https://what-is-my-delta-site-production.up.render.app/health | jq '.metrics'
   sleep 60
 done
 ```
@@ -198,7 +198,7 @@ done
 **New user flow:**
 
 - [ ] Register new account
-- [ ] Verify email shows in users table (psql or Railway shell)
+- [ ] Verify email shows in users table (psql or Render shell)
 - [ ] Login with new account
 - [ ] Start PS101 journey
 - [ ] Complete Step 1
@@ -232,7 +232,7 @@ done
 - [ ] Page load time < 3 seconds
 - [ ] API response times < 2 seconds
 - [ ] No slow query warnings in logs
-- [ ] No memory warnings in Railway metrics
+- [ ] No memory warnings in Render metrics
 - [ ] CPU usage normal (not spiking)
 
 ---
@@ -243,11 +243,11 @@ done
 
 **Check the next day:**
 
-- [ ] No overnight errors in Railway logs
+- [ ] No overnight errors in Render logs
 - [ ] No user-reported issues
 - [ ] Database size normal (no unexpected growth)
 - [ ] No security alerts (if monitoring enabled)
-- [ ] Cost metrics normal (Railway usage dashboard)
+- [ ] Cost metrics normal (Render usage dashboard)
 
 ### 12. Update Documentation
 
@@ -273,11 +273,11 @@ git log --oneline -5
 
 # Rollback to previous commit
 git revert HEAD
-git push railway-origin main --force
+git push render-origin main --force
 
 # Or checkout specific commit
 git checkout <LAST_GOOD_COMMIT>
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 ```
 
 **After rollback:**
@@ -293,19 +293,19 @@ git push railway-origin HEAD:main --force
 **If feature flag enabled:**
 
 ```bash
-# Disable problematic feature via Railway variables
-railway variables set FEATURE_FLAG_NAME=false
+# Disable problematic feature via Render variables
+render variables set FEATURE_FLAG_NAME=false
 
 # Force redeploy
 git commit --allow-empty -m "Disable feature: FEATURE_FLAG_NAME"
-git push railway-origin main
+git push render-origin main
 ```
 
 ### Database Rollback (CRITICAL - USE WITH CAUTION)
 
 **Only if database migration failed:**
 
-- [ ] Check Railway PostgreSQL backups
+- [ ] Check Render PostgreSQL backups
 - [ ] Restore from most recent backup
 - [ ] Document data loss (if any)
 - [ ] Notify affected users (if any)
@@ -350,8 +350,8 @@ git push railway-origin main
 
 **If critical issues found during deployment:**
 
-1. **Database issues:** Check Railway PostgreSQL service status
-2. **API down:** Check Railway deployment logs, restart if needed
+1. **Database issues:** Check Render PostgreSQL service status
+2. **API down:** Check Render deployment logs, restart if needed
 3. **Data loss detected:** Check DATABASE_URL, verify PostgreSQL connected
 4. **Security incident:** Rotate API keys immediately, investigate breach
 
@@ -367,23 +367,23 @@ git push railway-origin main
 ## Quick Reference Commands
 
 ```bash
-# Check Railway deployment status
-railway status
+# Check Render deployment status
+render status
 
 # Get recent logs
-railway logs --tail 100
+render logs --tail 100
 
 # Check environment variables
-railway variables
+render variables
 
 # Health check
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Force redeploy (no code changes)
-git commit --allow-empty -m "Force redeploy" && git push railway-origin main
+git commit --allow-empty -m "Force redeploy" && git push render-origin main
 
 # Rollback to previous commit
-git revert HEAD && git push railway-origin main
+git revert HEAD && git push render-origin main
 ```
 
 ---

@@ -131,7 +131,7 @@ This document consolidates findings from:
 - Lines 145-158 state "API keys configured and ready"
 - No documentation on:
   - Key rotation process
-  - Secure storage beyond Railway env vars
+  - Secure storage beyond Render env vars
   - Key rotation schedule
   - Emergency key revocation procedure
   - Access control (who can view/edit keys)
@@ -167,7 +167,7 @@ This document consolidates findings from:
 **Action Required:**
 
 - [ ] **Codex:** Define measurement methodology for each metric
-- [ ] **Codex:** Specify tools (Railway metrics? Custom dashboard? Sentry?)
+- [ ] **Codex:** Specify tools (Render metrics? Custom dashboard? Sentry?)
 - [ ] **Codex:** Create "data quality" rubric with examples
 - [ ] **Codex:** Document how to run validation tests
 - [ ] **Codex:** Add monitoring dashboard setup to deployment checklist
@@ -268,7 +268,7 @@ This document consolidates findings from:
 ### Monitoring (NEW)
 
 - **Cost alerts:** Set up in OpenAI/Anthropic dashboard ($50/day threshold)
-- **Usage tracking:** Railway logs for API call volume
+- **Usage tracking:** Render logs for API call volume
 - **Error rate:** Monitor 401 errors (invalid key spike)
 
 ```
@@ -290,14 +290,14 @@ This document consolidates findings from:
 ### Response Time: <2 seconds
 
 **Measurement:**
-- Use Railway metrics dashboard (P95 latency)
+- Use Render metrics dashboard (P95 latency)
 - OR: Custom timing in `/health` endpoint
 - OR: Frontend performance.now() tracking
 
 **Test:**
 ```bash
 # Measure response time
-time curl https://what-is-my-delta-site-production.up.railway.app/wimd/ask \
+time curl https://what-is-my-delta-site-production.up.render.app/wimd/ask \
   -H "Content-Type: application/json" \
   -d '{"prompt": "test"}'
 ```
@@ -310,7 +310,7 @@ time curl https://what-is-my-delta-site-production.up.railway.app/wimd/ask \
 **Measurement:**
 
 - Track HTTP status codes (200 vs 4xx/5xx)
-- Use Railway logs or custom error tracking
+- Use Render logs or custom error tracking
 
 **Test:**
 
@@ -368,7 +368,7 @@ pytest tests/test_job_sources.py -v
 
 **Measurement:**
 
-- Railway health checks (automatic)
+- Render health checks (automatic)
 - Uptime Robot or similar service (free tier)
 
 **Calculation:**
@@ -400,7 +400,7 @@ Uptime = (total minutes - downtime minutes) / (total minutes) * 100
 - [ ] **Cursor** - Test: Keyboard navigation (Tab, Space)
 - [ ] **Cursor** - Git commit with message: "Fix PS101 v2 blocking issues before production deploy"
 - [ ] **Damian** - Code review approval
-- [ ] **Cursor** - Deploy to production (git push railway-origin main)
+- [ ] **Cursor** - Deploy to production (git push render-origin main)
 - [ ] **Damian** - Verify live site works
 - [ ] **Team** - Monitor logs for 24 hours
 
@@ -415,7 +415,7 @@ Uptime = (total minutes - downtime minutes) / (total minutes) * 100
 - [ ] **[Owner TBD]** - Install required dependencies (requests, beautifulsoup4, selenium)
   - **Status:** ✅ DONE (per CLAUDE.md, added to requirements.txt)
 - [ ] **[Owner TBD]** - Set up environment variables (DATABASE_URL, API keys)
-  - **Status:** ✅ DONE (Railway env vars configured)
+  - **Status:** ✅ DONE (Render env vars configured)
 - [ ] **[Owner TBD]** - Implement direct API integrations (6 sources: RemoteOK, WWR, HN, Greenhouse, Indeed, Reddit)
   - **Status:** ✅ DONE (deployed 2025-10-07, per CLAUDE.md)
 - [ ] **[Owner TBD]** - Implement web scraping integrations (6 sources: LinkedIn, Glassdoor, Dice, Monster, ZipRecruiter, CareerBuilder)
@@ -427,7 +427,7 @@ Uptime = (total minutes - downtime minutes) / (total minutes) * 100
 - [ ] **[Owner TBD]** - Implement error handling and fallbacks
   - **Status:** ✅ PARTIALLY DONE (basic try/catch, needs hardening)
 - [ ] **[Owner TBD]** - Set up monitoring and logging
-  - **Status:** ⏳ NOT STARTED (Railway logs only, no custom metrics)
+  - **Status:** ⏳ NOT STARTED (Render logs only, no custom metrics)
 - [ ] **[Owner TBD]** - Perform end-to-end testing
   - **Status:** ⏳ NOT STARTED (critical gap)
 - [ ] **[Owner TBD]** - Deploy to production
@@ -484,12 +484,12 @@ Uptime = (total minutes - downtime minutes) / (total minutes) * 100
 ### Decision #4: Success Metrics Monitoring Tool
 
 **What tool should we use for metrics tracking?**
-- Option A: Railway built-in metrics (free, limited)
+- Option A: Render built-in metrics (free, limited)
 - Option B: Sentry (error tracking, $26/mo)
 - Option C: Custom dashboard (more work, full control)
-- Option D: Combination (Railway + custom /health endpoint + Uptime Robot)
+- Option D: Combination (Render + custom /health endpoint + Uptime Robot)
 
-**Recommendation:** Option D (Railway + enhanced /health + Uptime Robot free tier)
+**Recommendation:** Option D (Render + enhanced /health + Uptime Robot free tier)
 
 **Decision Needed By:** 2025-11-05 (before monitoring setup)
 

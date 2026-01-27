@@ -11,7 +11,7 @@
 **A new canonical protocol document has been created:**
 
 **File**: `TEAM_PLAYBOOK.md`
-**Location**: `/Users/damianseguin/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Railway-Deploy-Project/TEAM_PLAYBOOK.md`
+**Location**: `/Users/damianseguin/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Render-Deploy-Project/TEAM_PLAYBOOK.md`
 **Status**: 🔒 **SINGLE SOURCE OF TRUTH** - Supersedes all previous protocol documents
 
 ---
@@ -239,7 +239,7 @@ except ValidationError as e:
 **Before we proceed with Day 1 implementation:**
 
 1. ✅ **Do you have access to TEAM_PLAYBOOK.md?**
-   - Location: `~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Railway-Deploy-Project/TEAM_PLAYBOOK.md`
+   - Location: `~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Render-Deploy-Project/TEAM_PLAYBOOK.md`
 
 2. ✅ **Is your role definition clear?**
    - Section 3: Gemini (QA & Architecture Review)

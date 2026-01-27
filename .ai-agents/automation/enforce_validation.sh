@@ -10,7 +10,7 @@
 
 set -e
 
-PROJECT_ROOT="/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+PROJECT_ROOT="/Users/damianseguin/WIMD-Deploy-Project"
 VALIDATOR="$PROJECT_ROOT/.ai-agents/automation/validate_command.sh"
 VIOLATION_LOG="$PROJECT_ROOT/.ai-agents/automation/validation_violations.log"
 

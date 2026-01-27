@@ -99,7 +99,7 @@
 ### Step 2: Verify Current State
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Check which backup we're using
 head -20 mosaic_ui/index.html | grep -i "backup\|version"

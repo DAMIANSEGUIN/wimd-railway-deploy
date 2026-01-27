@@ -3,7 +3,7 @@
 Scope: Defines how Gemini and other validators should access this repo and which files are authoritative inputs.
 
 Repo root (must contain .git):
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 
 Authoritative control plane:
 - .mosaic/ (single source of truth)

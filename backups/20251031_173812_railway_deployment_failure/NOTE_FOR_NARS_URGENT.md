@@ -2,7 +2,7 @@
 
 PostgreSQL migration deployed but **connection is failing silently**.
 
-**What I need:** Railway deployment logs showing the PostgreSQL connection error message.
+**What I need:** Render deployment logs showing the PostgreSQL connection error message.
 
 **Instructions:** See `URGENT_FOR_NARS_LOGS_NEEDED.md`
 

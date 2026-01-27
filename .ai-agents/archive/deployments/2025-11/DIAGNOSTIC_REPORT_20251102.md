@@ -115,7 +115,7 @@ cf26aa0 (Nov 2)  - Restored auth from 70b8392 (current)
 - PS101 v1 (10-step flow - 89 references)
 - Basic navigation
 - Chat interface
-- API proxy to Railway backend
+- API proxy to Render backend
 
 **⚠️ Unknown Status:**
 
@@ -132,7 +132,7 @@ cf26aa0 (Nov 2)  - Restored auth from 70b8392 (current)
 - Experiment components (Steps 6-9)
 - Enhanced UX states (calm/focus/recovery/explore)
 
-### Backend (Railway)
+### Backend (Render)
 
 **✅ Operational:**
 
@@ -168,10 +168,10 @@ source_analytics
 prompt_health_log
 ```
 
-**Action Required:** Connect to Railway PostgreSQL and run:
+**Action Required:** Connect to Render PostgreSQL and run:
 
 ```bash
-railway run psql $DATABASE_URL -c "\dt"
+render run psql $DATABASE_URL -c "\dt"
 ```
 
 ---
@@ -185,10 +185,10 @@ railway run psql $DATABASE_URL -c "\dt"
 - ✅ `AI_FALLBACK_ENABLED`: ENABLED
 - ⚠️ `EXPERIMENTS_ENABLED`: DISABLED
 
-**Need to verify actual values in Railway:**
+**Need to verify actual values in Render:**
 
 ```bash
-railway variables | grep ENABLED
+render variables | grep ENABLED
 ```
 
 ---
@@ -257,8 +257,8 @@ railway variables | grep ENABLED
 ### Immediate (Next 2 Hours)
 
 1. ✅ Complete this diagnostic ← IN PROGRESS
-2. ⏳ Verify database schema (connect to Railway PostgreSQL)
-3. ⏳ Check feature flags in Railway
+2. ⏳ Verify database schema (connect to Render PostgreSQL)
+3. ⏳ Check feature flags in Render
 4. ⏳ Test frontend UI features (job search, resume, upload)
 5. ⏳ Document findings in this report
 
@@ -303,7 +303,7 @@ railway variables | grep ENABLED
 
 **Continuing diagnostic:**
 
-1. Check Railway variables for feature flags
+1. Check Render variables for feature flags
 2. Connect to database and verify schema
 3. Test frontend UI features manually
 4. Complete findings documentation

@@ -13,7 +13,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 **Critical Finding**: Not all files are confirmed to be synchronized with Google Drive. A synchronization verification and backup protocol must be established immediately.
 
-**Canonical Project Location**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/`
+**Canonical Project Location**: `/Users/damianseguin/WIMD-Deploy-Project/`
 
 ---
 
@@ -22,7 +22,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 ### Primary Mosaic/WIMD Locations (Canonical)
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/
+/Users/damianseguin/WIMD-Deploy-Project/
 ├── Root Documentation (46 files)
 ├── MOSAIC_MVP_IMPLEMENTATION/ (7 files)
 ├── .ai-agents/ (121+ files)
@@ -36,14 +36,14 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 ```
 /Users/damianseguin/
-├── wimd-railway-local/ (legacy project clone)
+├── wimd-render-local/ (legacy project clone)
 ├── Planning/ (duplicate, may be stale)
 ├── Mosaic/ (standalone mosaic implementation)
 ├── MosaicBackup/ (2 dated backups from Sept 2025)
 ├── Archives/Pre-Recovery-2025-10-07/ (historical)
 ├── Archives/Pre-Migration_20251112-*/ (5 migration snapshots)
-├── Backups/WIMD-Railway-Deploy-Project_*/ (4+ dated backups)
-├── Downloads/AI_Workspace/WIMD-Railway-Deploy-Project/ (duplicate)
+├── Backups/WIMD-Render-Deploy-Project_*/ (4+ dated backups)
+├── Downloads/AI_Workspace/WIMD-Render-Deploy-Project/ (duplicate)
 ├── Downloads/Planning/ (duplicate)
 └── Documents/Active_Projects/Mosaic_Project/ (unknown status)
 ```
@@ -56,7 +56,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 ### 1. ROOT DOCUMENTATION (Canonical Project Root)
 
-**Location**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/`
+**Location**: `/Users/damianseguin/WIMD-Deploy-Project/`
 
 | File Name | Type | Last Modified | Status | Description |
 |-----------|------|---------------|--------|-------------|
@@ -67,13 +67,13 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 | **RECURRING_BLOCKERS.md** | Markdown | 2025-12-04 | ✅ CURRENT | Analysis of common blockers, root causes, prevention strategies |
 | **TECH_DEBT_TRACKING.md** | Markdown | 2025-12-05 | ✅ CURRENT | Technical debt log including multiple filename confusion issue |
 | **CLAUDE.md** | Markdown | 2025-11-24 | ✅ CURRENT | Architecture overview, deployment status, monitoring systems |
-| **DEPLOYMENT_TRUTH.md** | Markdown | 2025-11-25 | ✅ CURRENT | Authoritative deployment procedures (Railway, Netlify) |
+| **DEPLOYMENT_TRUTH.md** | Markdown | 2025-11-25 | ✅ CURRENT | Authoritative deployment procedures (Render, Netlify) |
 | **DEPLOYMENT_CHECKLIST.md** | Markdown | 2025-11-24 | ✅ CURRENT | Pre/post deployment validation checklist |
 | **DEPLOYMENT_STATUS.md** | Markdown | 2025-12-04 | ✅ CURRENT | Current deployment state tracking |
 | **DEPLOYMENT_WORKAROUNDS.md** | Markdown | 2025-12-04 | ✅ CURRENT | Known deployment issues and workarounds |
-| **RAILWAY_AUTO_DEPLOY_DIAGNOSTIC.md** | Markdown | 2025-12-04 | ✅ CURRENT | GitHub → Railway auto-deploy blocker investigation |
-| **RAILWAY_CLI_DEBUG_STATUS.md** | Markdown | 2025-12-04 | ✅ CURRENT | Railway CLI debugging status |
-| **RAILWAY_DEPLOYMENT_FACTS.md** | Markdown | 2025-11-25 | ✅ CURRENT | Facts about Railway deployment configuration |
+| **RAILWAY_AUTO_DEPLOY_DIAGNOSTIC.md** | Markdown | 2025-12-04 | ✅ CURRENT | GitHub → Render auto-deploy blocker investigation |
+| **RAILWAY_CLI_DEBUG_STATUS.md** | Markdown | 2025-12-04 | ✅ CURRENT | Render CLI debugging status |
+| **RAILWAY_DEPLOYMENT_FACTS.md** | Markdown | 2025-11-25 | ✅ CURRENT | Facts about Render deployment configuration |
 | **SETUP_AUTO_DEPLOY.md** | Markdown | 2025-12-04 | ✅ CURRENT | Auto-deploy setup instructions |
 | **POST_DEPLOYMENT_TESTING.md** | Markdown | 2025-12-04 | ✅ CURRENT | Post-deployment testing protocol |
 | **SESSION_HANDOFF_2025-12-03.md** | Markdown | 2025-12-04 | ✅ CURRENT | Latest session handoff notes |
@@ -105,13 +105,13 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 | **CURRENT_WORK.json** | JSON | Unknown | ✅ CURRENT | Current work state tracker |
 | **TEAM_STATUS.json** | JSON | Unknown | ✅ CURRENT | Team status tracker |
 | **feature_flags.json** | JSON | Unknown | ✅ CURRENT | Feature flags configuration |
-| **railway.json** | JSON | Unknown | ✅ CURRENT | Railway configuration |
+| **render.json** | JSON | Unknown | ✅ CURRENT | Render configuration |
 
 ---
 
 ### 2. MOSAIC MVP IMPLEMENTATION
 
-**Location**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/MOSAIC_MVP_IMPLEMENTATION/`
+**Location**: `/Users/damianseguin/WIMD-Deploy-Project/MOSAIC_MVP_IMPLEMENTATION/`
 
 | File Name | Type | Last Modified | Status | Description |
 |-----------|------|---------------|--------|-------------|
@@ -128,7 +128,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 ### 3. AI AGENTS DIRECTORY (.ai-agents/)
 
-**Location**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/`
+**Location**: `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/`
 
 **Total Files**: 121+ markdown files, plus JSON handoffs, logs, and evidence captures
 
@@ -236,13 +236,13 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 |-----------|------|---------------|--------|-------------|
 | **archive/ARCHIVE_LOG.md** | Markdown | Unknown | ✅ CURRENT | Archive change log |
 | **archive/RESOLVED_2025-10-14_PostgreSQL_Connection_Issue.md** | Markdown | 2025-10-14 | ✅ ARCHIVED | Resolved PostgreSQL issue |
-| **archive/RESOLVED_2025-11-01_Railway_Deployment_Fix.md** | Markdown | 2025-11-01 | ✅ ARCHIVED | Resolved Railway deployment issue |
+| **archive/RESOLVED_2025-11-01_Render_Deployment_Fix.md** | Markdown | 2025-11-01 | ✅ ARCHIVED | Resolved Render deployment issue |
 
 ---
 
 ### 4. PLANNING DIRECTORY
 
-**Location**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/Planning/`
+**Location**: `/Users/damianseguin/WIMD-Deploy-Project/Planning/`
 
 | File Name | Type | Last Modified | Status | Description |
 |-----------|------|---------------|--------|-------------|
@@ -260,7 +260,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 ### 5. DOCS DIRECTORY
 
-**Location**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/docs/`
+**Location**: `/Users/damianseguin/WIMD-Deploy-Project/docs/`
 
 **Total**: 59 markdown files
 
@@ -294,7 +294,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 | **DEPLOYMENT_VERIFICATION_CHECKLIST.md** | Markdown | Unknown | ✅ CURRENT | Deployment verification steps |
 | **DEPLOYMENT_AUTOMATION_ENFORCEMENT_PLAN.md** | Markdown | Unknown | ✅ CURRENT | Automation enforcement plan |
 | **DEPLOY_STATUS_NOTE.md** | Markdown | Unknown | ✅ CURRENT | Deployment status tracking |
-| **RAILWAY_DEPLOYMENT_DEBUG.md** | Markdown | Unknown | ✅ CURRENT | Railway debugging guide |
+| **RAILWAY_DEPLOYMENT_DEBUG.md** | Markdown | Unknown | ✅ CURRENT | Render debugging guide |
 | **DNS_CONFIGURATION.md** | Markdown | Unknown | ✅ CURRENT | DNS setup documentation |
 | **DNS_PROOF.md** | Markdown | Unknown | ✅ CURRENT | DNS configuration proof/evidence |
 | **ROLLING_CHECKLIST.md** | Markdown | Unknown | ✅ CURRENT | Rolling deployment checklist |
@@ -355,7 +355,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 | File Name | Type | Last Modified | Status | Description |
 |-----------|------|---------------|--------|-------------|
-| **NETLIFY_AGENT_RAILWAY_DEPLOYMENT_FIX.md** | Markdown | Unknown | ✅ CURRENT | Netlify agent Railway fix |
+| **NETLIFY_AGENT_RAILWAY_DEPLOYMENT_FIX.md** | Markdown | Unknown | ✅ CURRENT | Netlify agent Render fix |
 | **NETLIFY_AGENT_URGENT_DEPLOYMENT_FIX.md** | Markdown | Unknown | ✅ CURRENT | Netlify agent urgent fix |
 
 #### Project Management
@@ -373,7 +373,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 ### 6. SCRIPTS DIRECTORY
 
-**Location**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/`
+**Location**: `/Users/damianseguin/WIMD-Deploy-Project/scripts/`
 
 **Total**: 56 shell scripts (.sh files)
 
@@ -381,7 +381,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 | Script Name | Purpose | Status | Notes |
 |-------------|---------|--------|-------|
-| **deploy.sh** | Main deployment wrapper | ✅ CANONICAL | Entry point for all deployments (Railway/Netlify/all) |
+| **deploy.sh** | Main deployment wrapper | ✅ CANONICAL | Entry point for all deployments (Render/Netlify/all) |
 | **verify_live_deployment.sh** | Verify live production deployment | ✅ CANONICAL | Called by deploy.sh after deployment |
 | **push.sh** | Git push wrapper with verification | ✅ CANONICAL | Wrapper for git push, runs pre-push checks |
 | **pre_push_verification.sh** | Pre-push sanity checks | ✅ CANONICAL | Called by push.sh |
@@ -422,7 +422,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 | Script Name | Purpose | Status |
 |-------------|---------|--------|
-| **diagnose_railway_autodeploy.sh** | Diagnose auto-deploy issues | ✅ CURRENT |
+| **diagnose_render_autodeploy.sh** | Diagnose auto-deploy issues | ✅ CURRENT |
 | **full_check.sh** | Full system check | ✅ CURRENT |
 | **check_prompts.sh** | Check prompt system | ✅ CURRENT |
 
@@ -433,7 +433,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 | **setup_domain.sh** | Setup custom domain | ✅ CURRENT |
 | **fix_domain.sh** | Fix domain issues | ✅ CURRENT |
 | **dns_cache_reset_mac.sh** | Reset DNS cache (macOS) | ✅ CURRENT |
-| **cleanup_old_railway.sh** | Cleanup old Railway projects | ✅ CURRENT |
+| **cleanup_old_render.sh** | Cleanup old Render projects | ✅ CURRENT |
 | **setup_hooks.sh** | Setup git hooks | ✅ CURRENT |
 
 #### Sync & Integration
@@ -457,7 +457,7 @@ This audit identifies **259 governance and protocol files** across the Mosaic pr
 
 ### 7. SESSION BACKUPS
 
-**Location**: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/session_backups/`
+**Location**: `/Users/damianseguin/WIMD-Deploy-Project/session_backups/`
 
 **Recent Backups**:
 
@@ -524,7 +524,7 @@ Each backup contains:
 
 **Required Actions**:
 
-1. Verify Google Drive sync status for `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/`
+1. Verify Google Drive sync status for `/Users/damianseguin/WIMD-Deploy-Project/`
 2. If not synced: Create a Google Drive backup of the entire canonical project
 3. Document the Google Drive path for all governance files
 4. Establish automated sync protocol
@@ -535,10 +535,10 @@ Each backup contains:
 
 **Locations**:
 
-- `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/` (CANONICAL)
-- `/Users/damianseguin/wimd-railway-local/` (Legacy)
-- `/Users/damianseguin/Downloads/AI_Workspace/WIMD-Railway-Deploy-Project/` (Duplicate)
-- `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project/` (Duplicate)
+- `/Users/damianseguin/WIMD-Deploy-Project/` (CANONICAL)
+- `/Users/damianseguin/wimd-render-local/` (Legacy)
+- `/Users/damianseguin/Downloads/AI_Workspace/WIMD-Render-Deploy-Project/` (Duplicate)
+- `/Users/damianseguin/WIMD-Deploy-Project/` (Duplicate)
 - Multiple backup directories in `/Users/damianseguin/Backups/`
 - Multiple archive directories in `/Users/damianseguin/Archives/`
 
@@ -546,7 +546,7 @@ Each backup contains:
 
 **Recommendation**: Archive or delete all non-canonical copies, leaving only:
 
-- Canonical: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/`
+- Canonical: `/Users/damianseguin/WIMD-Deploy-Project/`
 - Google Drive sync location (to be determined)
 
 ### 3. Superseded Documents Still Present
@@ -626,7 +626,7 @@ Each backup contains:
 30. **scripts/deploy.sh** (Canonical deployment script)
 31. **scripts/verify_live_deployment.sh** (Canonical verification script)
 
-**Railway Specific:**
+**Render Specific:**
 32. **RAILWAY_AUTO_DEPLOY_DIAGNOSTIC.md** (Root)
 33. **RAILWAY_CLI_DEBUG_STATUS.md** (Root)
 34. **RAILWAY_DEPLOYMENT_FACTS.md** (Root)
@@ -635,7 +635,7 @@ Each backup contains:
 **Environment:**
 36. **env_template.txt** (Root)
 37. **feature_flags.json** (Root)
-38. **railway.json** (Root)
+38. **render.json** (Root)
 
 ### Tier 4: AGENT-SPECIFIC GUIDES
 
@@ -761,7 +761,7 @@ Each backup contains:
 
 **Resolved Issues (Archive):**
 107. **.ai-agents/archive/RESOLVED_2025-10-14_PostgreSQL_Connection_Issue.md**
-108. **.ai-agents/archive/RESOLVED_2025-11-01_Railway_Deployment_Fix.md**
+108. **.ai-agents/archive/RESOLVED_2025-11-01_Render_Deployment_Fix.md**
 
 ---
 
@@ -772,7 +772,7 @@ Each backup contains:
 **IMMEDIATE**:
 
 1. **Verify Google Drive Sync Status**
-   - Check if `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/` is synced
+   - Check if `/Users/damianseguin/WIMD-Deploy-Project/` is synced
    - Identify the Google Drive path where these files reside
    - Verify ChatGPT has access to the Google Drive location
 
@@ -781,7 +781,7 @@ Each backup contains:
    ```bash
    # Create timestamped backup for Google Drive upload
    cd /Users/damianseguin/AI_Workspace
-   tar -czf WIMD-Audit-Backup-2025-12-05.tar.gz WIMD-Railway-Deploy-Project/
+   tar -czf WIMD-Audit-Backup-2025-12-05.tar.gz WIMD-Render-Deploy-Project/
    # Upload WIMD-Audit-Backup-2025-12-05.tar.gz to Google Drive
    ```
 
@@ -800,7 +800,7 @@ Each backup contains:
 ```
 Google Drive/
 └── Mosaic_Project/
-    ├── WIMD-Railway-Deploy-Project/ (full project sync)
+    ├── WIMD-Render-Deploy-Project/ (full project sync)
     │   ├── *.md (all root documentation)
     │   ├── MOSAIC_MVP_IMPLEMENTATION/
     │   ├── .ai-agents/

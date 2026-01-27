@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-REPO_ROOT="/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+REPO_ROOT="/Users/damianseguin/WIMD-Deploy-Project"
 STATE_FILE="$REPO_ROOT/.mosaic/project_state.json"
 
 cd "$REPO_ROOT"

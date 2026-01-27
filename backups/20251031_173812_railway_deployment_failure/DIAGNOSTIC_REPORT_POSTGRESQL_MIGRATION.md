@@ -2,15 +2,15 @@
 
 **Date:** 2025-10-14
 **Author:** Claude Code (handoff for Codex)
-**Project:** What Is My Delta – Railway deployment
+**Project:** What Is My Delta – Render deployment
 
 ---
 
 ## Background & Root Cause
 
-- The FastAPI backend originally used SQLite at `data/mosaic.db`. Railway application containers have ephemeral storage, so every deploy erased the database, wiping users and sessions.
-- First mitigation attempt (`railway.json` include rules) only bundled the `.db` file into the deploy artifact; it did **not** provide persistence.
-- To resolve, Claude Code migrated the backend to PostgreSQL using Railway's managed database service. The code now expects a PostgreSQL connection string supplied via `DATABASE_URL`.
+- The FastAPI backend originally used SQLite at `data/mosaic.db`. Render application containers have ephemeral storage, so every deploy erased the database, wiping users and sessions.
+- First mitigation attempt (`render.json` include rules) only bundled the `.db` file into the deploy artifact; it did **not** provide persistence.
+- To resolve, Claude Code migrated the backend to PostgreSQL using Render's managed database service. The code now expects a PostgreSQL connection string supplied via `DATABASE_URL`.
 - Production still falls back to SQLite because the app service cannot reach PostgreSQL. The code quietly reverts to SQLite whenever the connection pool cannot initialize.
 
 ---
@@ -31,12 +31,12 @@ No schema migrations are pending: PostgreSQL tables are created automatically on
 
 ## Current Failure State (UPDATED 2025-10-14 19:15 UTC)
 
-- Environment variable `DATABASE_URL` has been updated to use **private network** (`postgres.railway.internal`).
+- Environment variable `DATABASE_URL` has been updated to use **private network** (`postgres.render.internal`).
 - Application deploys successfully and health check passes: `{"database":true}`
 - **CRITICAL ISSUE:** App is silently falling back to SQLite despite DATABASE_URL being set correctly
 - **ROOT CAUSE UNKNOWN:** The actual PostgreSQL connection error is being caught but we haven't retrieved the error message from logs
 - Evidence: Users still getting "Invalid credentials" (SQLite wiping on deploy)
-- **BLOCKER:** Need Railway deployment logs showing `[STORAGE] ❌ PostgreSQL connection failed:` message to diagnose
+- **BLOCKER:** Need Render deployment logs showing `[STORAGE] ❌ PostgreSQL connection failed:` message to diagnose
 
 **Architecture Flaw Identified:**
 
@@ -47,12 +47,12 @@ No schema migrations are pending: PostgreSQL tables are created automatically on
 
 ---
 
-## Railway Dashboard Instructions (Human Action Required)
+## Render Dashboard Instructions (Human Action Required)
 
 1. **Locate the private database URL**
-   - Railway Dashboard → `PostgreSQL` service → *Connect* → copy the `psql` connection string that includes `railway.internal`.
+   - Render Dashboard → `PostgreSQL` service → *Connect* → copy the `psql` connection string that includes `render.internal`.
 2. **Update the application environment**
-   - Railway Dashboard → `what-is-my-delta-site` service → *Variables*.
+   - Render Dashboard → `what-is-my-delta-site` service → *Variables*.
    - Edit `DATABASE_URL`, replace the existing value with the private/internal URL.
    - Ensure the protocol prefix is `postgresql://` (not `postgres://`).
 3. **Redeploy the app service**
@@ -71,20 +71,20 @@ Estimated time: ~10 minutes.
 
 ## Diagnostic Commands to Run
 
-Run locally with Railway CLI or through the dashboard shell:
+Run locally with Render CLI or through the dashboard shell:
 
 ```bash
 # 1. Verify the DATABASE_URL value seen by the service
-railway variables --service what-is-my-delta-site | grep DATABASE_URL
+render variables --service what-is-my-delta-site | grep DATABASE_URL
 
-# 2. Test outbound connectivity from the app container (requires Railway shell)
+# 2. Test outbound connectivity from the app container (requires Render shell)
 psql "$DATABASE_URL" -c '\dt'
 
 # 3. Check logs for fallback indicators
-railway logs --service what-is-my-delta-site --lines 200 | grep -E "STORAGE|mosaic.db"
+render logs --service what-is-my-delta-site --lines 200 | grep -E "STORAGE|mosaic.db"
 ```
 
-If Railway's CLI shell is unavailable, perform steps 1 and 3 via the dashboard UI.
+If Render's CLI shell is unavailable, perform steps 1 and 3 via the dashboard UI.
 
 ---
 
@@ -116,9 +116,9 @@ If Railway's CLI shell is unavailable, perform steps 1 and 3 via the dashboard U
 
 ## Additional Context
 
-- Repository path: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
-- Remote: `railway-origin` → `github.com/DAMIANSEGUIN/what-is-my-delta-site.git`
+- Repository path: `/Users/damianseguin/WIMD-Deploy-Project`
+- Remote: `render-origin` → `github.com/DAMIANSEGUIN/what-is-my-delta-site.git`
 - Latest migration commit: `2b9fbc1` (“CRITICAL: Migrate from SQLite to PostgreSQL for database persistence”).
-- Time spent by Claude Code: ~90 minutes. Remaining blocker is purely Railway configuration.
+- Time spent by Claude Code: ~90 minutes. Remaining blocker is purely Render configuration.
 
 **End of Report**

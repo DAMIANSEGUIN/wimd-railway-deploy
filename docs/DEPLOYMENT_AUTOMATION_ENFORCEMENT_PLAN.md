@@ -15,10 +15,10 @@
 
 ## Enforcement Layers
 
-1. **Git Pre-Push Hook (railway-origin)**
+1. **Git Pre-Push Hook (render-origin)**
    - Location: `.githooks/pre-push` (tracked)
    - Runs `scripts/pre_push_verification.sh`; blocks push on non-zero exit.
-   - Detects target remote; only enforces for `railway-origin` (production backend).
+   - Detects target remote; only enforces for `render-origin` (production backend).
    - Records bypasses when `SKIP_VERIFICATION=true` is set (append to `.verification_audit.log`).
    - Bootstrap: run `./scripts/setup_hooks.sh` (or `git config core.hooksPath .githooks`) after cloning.
 
@@ -28,7 +28,7 @@
    - Shared configuration for staging vs production URLs via env vars.
 
 3. **Wrapper Commands**
-   - `scripts/deploy.sh <railway|netlify|all>`: orchestrates pre-check, deploy, wait, post-verify, and reports status.
+   - `scripts/deploy.sh <render|netlify|all>`: orchestrates pre-check, deploy, wait, post-verify, and reports status.
    - `scripts/push.sh <remote> [branch]`: invokes `pre_push_verification.sh` before delegating to `git push`.
    - Both scripts log bypass usage and surface next steps clearly on failure.
 
@@ -38,7 +38,7 @@
 
 5. **CI/Branch Protection Follow-Up**
    - Protect `main` (or production) branch; require GitHub Action status checks before merge.
-   - Later phase: GitHub Actions workflow that mirrors the local verification, deploys, verifies, and (if needed) rolls back via Netlify/Railway APIs.
+   - Later phase: GitHub Actions workflow that mirrors the local verification, deploys, verifies, and (if needed) rolls back via Netlify/Render APIs.
 
 ## Roles & Handoffs
 
@@ -56,9 +56,9 @@
 
 ## Testing Checklist
 
-- Attempt `git push railway-origin main` without running verification → expect block.
+- Attempt `git push render-origin main` without running verification → expect block.
 - Run `scripts/pre_push_verification.sh`, reattempt push within allowed window → expect success.
-- Run `scripts/deploy.sh railway` and `scripts/deploy.sh netlify` in dry-run mode to validate flow.
+- Run `scripts/deploy.sh render` and `scripts/deploy.sh netlify` in dry-run mode to validate flow.
 - Trigger bypass (`SKIP_VERIFICATION=true git push …`) → confirm log entry and warning output.
 - Cursor to review diff + docs; Claude_Code to confirm hook installation across environments.
 

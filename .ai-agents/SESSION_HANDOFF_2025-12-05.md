@@ -34,7 +34,7 @@
 
 ### Project Status
 
-- **Working Directory:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+- **Working Directory:** `/Users/damianseguin/WIMD-Deploy-Project`
 - **Governance System:** v2 ACTIVE (upgraded from v1)
 - **System Version:** 3.0 (Mosaic Governance Core)
 - **Git Status:** Not committed (files modified but not pushed)

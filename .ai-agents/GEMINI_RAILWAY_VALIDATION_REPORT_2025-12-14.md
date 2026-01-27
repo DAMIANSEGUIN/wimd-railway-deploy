@@ -1,4 +1,4 @@
-# Railway Reset Validation Report
+# Render Reset Validation Report
 
 **Date:** 2025-12-14
 **Validator:** Gemini
@@ -18,8 +18,8 @@
 ### Validation 2: Frontend API Endpoint
 
 - Status: ✅ PASS
-- Location: The primary mechanism for API routing is the Netlify proxy configuration in `netlify.toml`. All API calls (e.g., `/config`, `/wimd/*`) are redirected to `https://what-is-my-delta-site-production.up.railway.app`. A hardcoded reference to this same URL also exists in the `Content-Security-Policy` header defined in `netlify.toml`.
-- Current URL: `https://what-is-my-delta-site-production.up.railway.app`
+- Location: The primary mechanism for API routing is the Netlify proxy configuration in `netlify.toml`. All API calls (e.g., `/config`, `/wimd/*`) are redirected to `https://what-is-my-delta-site-production.up.render.app`. A hardcoded reference to this same URL also exists in the `Content-Security-Policy` header defined in `netlify.toml`.
+- Current URL: `https://what-is-my-delta-site-production.up.render.app`
 - Blocker: NO. The locations for update are identified. The reset plan must update both the `[[redirects]]` and `[[headers]]` sections of `netlify.toml`.
 
 ### Validation 3: /__version Endpoint
@@ -31,8 +31,8 @@
 ### Validation 4: Env Var Backup
 
 - Status: ✅ PASS
-- Backup valid: YES. The file `/tmp/railway_env_backup.json` exists and is valid JSON.
-- Variables match: YES. The backup file contains 24 variables, and the live `railway variables` output also shows 24 variables. The variable names are identical.
+- Backup valid: YES. The file `/tmp/render_env_backup.json` exists and is valid JSON.
+- Variables match: YES. The backup file contains 24 variables, and the live `render variables` output also shows 24 variables. The variable names are identical.
 - Blocker: NO.
 
 ---
@@ -42,7 +42,7 @@
 ### Validation 5: CLI Service Creation
 
 - Status: ✅ PASS
-- Conclusion: CLI CAN. The `railway add --repo <REPO>` command allows for creating a new service and connecting it to a GitHub repository directly from the command line.
+- Conclusion: CLI CAN. The `render add --repo <REPO>` command allows for creating a new service and connecting it to a GitHub repository directly from the command line.
 - Evidence: The assumption in the planning documents that the dashboard is required is incorrect. The CLI provides a path for scripted creation.
 
 ### Validation 6: Obsolete Projects
@@ -68,8 +68,8 @@
 
 ## QUESTIONS FOR USER
 
-1. **CRITICAL:** Can you please access the Railway dashboard for the `wimd-career-coaching` project and confirm if "PostgreSQL" is listed as a separate service in the main service list?
-2. Given that the CLI **can** create services (`railway add`), would you prefer to proceed with a scripted, terminal-only approach for Phase 2, which aligns with the "Terminal-first" principle, instead of using the dashboard?
+1. **CRITICAL:** Can you please access the Render dashboard for the `wimd-career-coaching` project and confirm if "PostgreSQL" is listed as a separate service in the main service list?
+2. Given that the CLI **can** create services (`render add`), would you prefer to proceed with a scripted, terminal-only approach for Phase 2, which aligns with the "Terminal-first" principle, instead of using the dashboard?
 
 ---
 

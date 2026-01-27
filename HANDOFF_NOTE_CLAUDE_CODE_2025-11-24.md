@@ -44,22 +44,22 @@
 
 **Security:**
 
-- Both endpoints require `ADMIN_DEBUG_KEY` environment variable in Railway
+- Both endpoints require `ADMIN_DEBUG_KEY` environment variable in Render
 - Header validation prevents unauthorized access
 - Diagnostic endpoint does not expose password hashes
 
 ### 3. Deployment Process Investigation
 
 - Researched 403 errors in git history (commit 31d099c, 302bc98)
-- **Root cause documented:** `railway-origin` is legacy remote with NO WRITE ACCESS
-- Railway deploys via CLI or auto-deploy from GitHub, not git push
+- **Root cause documented:** `render-origin` is legacy remote with NO WRITE ACCESS
+- Render deploys via CLI or auto-deploy from GitHub, not git push
 - Code pushed to `origin` (GitHub) successfully - commits `3f1fe46`, `b7e042c`
 
 ### 4. Updated Team Status
 
 - Added completed task to `TEAM_STATUS.json`
 - Created `deploy_login_fix` task in queue (assigned to User)
-- Updated warnings to note pending Railway deployment
+- Updated warnings to note pending Render deployment
 
 ---
 
@@ -86,29 +86,29 @@
 
 ## What Other Agents Need to Know
 
-### CRITICAL: Railway Deployment Required
+### CRITICAL: Render Deployment Required
 
 **Code is ready but NOT deployed to production:**
 
 - ✅ Diagnostic endpoints implemented
 - ✅ Code committed (b7e042c)
 - ✅ Pushed to origin/main (GitHub)
-- ❌ NOT deployed to Railway yet (CLI auth failed)
+- ❌ NOT deployed to Render yet (CLI auth failed)
 
 **Deployment blocked by:**
 
-- Railway CLI requires interactive login (`railway login`)
+- Render CLI requires interactive login (`render login`)
 - Auto-deploy from GitHub may or may not be configured
 
 **Next steps for User:**
 
-1. **Deploy to Railway:**
-   - **Option A (Railway Dashboard):** Go to <https://railway.app/dashboard> → Select project → Trigger redeploy
-   - **Option B (Railway CLI):** Run `railway login` interactively, then `railway up`
-   - **Option C (Auto-deploy):** Verify Railway is watching `origin` repo and wait 2-3 minutes
+1. **Deploy to Render:**
+   - **Option A (Render Dashboard):** Go to <https://render.app/dashboard> → Select project → Trigger redeploy
+   - **Option B (Render CLI):** Run `render login` interactively, then `render up`
+   - **Option C (Auto-deploy):** Verify Render is watching `origin` repo and wait 2-3 minutes
 
 2. **Set ADMIN_DEBUG_KEY:**
-   - In Railway dashboard → Environment Variables
+   - In Render dashboard → Environment Variables
    - Add: `ADMIN_DEBUG_KEY=<secure-random-string>`
    - Example: `openssl rand -hex 32`
    - **DO NOT share this key publicly**
@@ -118,7 +118,7 @@
    ```bash
    # After deployment completes
    curl -H "X-Admin-Key: YOUR_KEY_HERE" \
-     https://what-is-my-delta-site-production.up.railway.app/auth/diagnose/damian.seguin@gmail.com
+     https://what-is-my-delta-site-production.up.render.app/auth/diagnose/damian.seguin@gmail.com
    ```
 
 4. **Expected Result:**
@@ -132,7 +132,7 @@
      -H "X-Admin-Key: YOUR_KEY_HERE" \
      -H "Content-Type: application/json" \
      -d '{"email":"damian.seguin@gmail.com","new_password":"NEW_SECURE_PASSWORD"}' \
-     https://what-is-my-delta-site-production.up.railway.app/auth/force-reset
+     https://what-is-my-delta-site-production.up.render.app/auth/force-reset
    ```
 
 ### Production Login Issue Context
@@ -165,7 +165,7 @@ From Gemini's handoff note:
 
 ## Next Task
 
-**Priority 1 (CRITICAL):** Deploy login fix to Railway
+**Priority 1 (CRITICAL):** Deploy login fix to Render
 
 - See `deploy_login_fix` task in TEAM_STATUS.json queue
 - User must complete deployment and set ADMIN_DEBUG_KEY
@@ -190,24 +190,24 @@ From Gemini's handoff note:
 
 ## Important Context for Next Agent
 
-### Railway Deployment Process (FROM GIT HISTORY)
+### Render Deployment Process (FROM GIT HISTORY)
 
-**DO NOT attempt:** `git push railway-origin main`
+**DO NOT attempt:** `git push render-origin main`
 
 - Will fail with 403 (expected, documented in commit 302bc98)
-- `railway-origin` is legacy remote with NO WRITE ACCESS
+- `render-origin` is legacy remote with NO WRITE ACCESS
 
 **Correct deployment methods:**
 
-1. Railway CLI: `railway up` (requires `railway login` first)
-2. Railway Dashboard: Manual redeploy trigger
-3. Auto-deploy: If configured, Railway watches GitHub repo
+1. Render CLI: `render up` (requires `render login` first)
+2. Render Dashboard: Manual redeploy trigger
+3. Auto-deploy: If configured, Render watches GitHub repo
 
 **Evidence:**
 
 - Commit 31d099c: Documents deployment ambiguity
 - Commit 302bc98: Post-deploy audit, corrects documentation
-- `deploy.sh` script is OUTDATED (line 122 still tries railway-origin)
+- `deploy.sh` script is OUTDATED (line 122 still tries render-origin)
 
 ### Code Already Pushed
 
@@ -218,12 +218,12 @@ b7e042c feat: Add admin diagnostic endpoints for login investigation
 3f1fe46 docs: Add comprehensive login failure diagnostic for NARs
 ```
 
-If Railway is configured for auto-deploy from GitHub, it may already be deploying or completed by the time next agent starts.
+If Render is configured for auto-deploy from GitHub, it may already be deploying or completed by the time next agent starts.
 
 **Verify deployment status:**
 
 ```bash
-curl -s https://what-is-my-delta-site-production.up.railway.app/health | \
+curl -s https://what-is-my-delta-site-production.up.render.app/health | \
   jq -r '.deployment.git_commit // "no git_commit field"'
 ```
 

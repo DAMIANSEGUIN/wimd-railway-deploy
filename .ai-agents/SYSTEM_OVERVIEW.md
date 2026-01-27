@@ -43,7 +43,7 @@
 │  • Latest handoff (if exists)                              │
 │  • Recent git commits (last 5)                             │
 │  • Urgent files (if any)                                   │
-│  • System health (Railway + domain)                        │
+│  • System health (Render + domain)                        │
 │  • Recommended reading order                               │
 └────────────────┬────────────────────────────────────────────┘
                  │
@@ -296,7 +296,7 @@ User: [explains current state manually]
 
 ```
 User: [Pastes from COPY_PASTE_FOR_AI.txt]
-      "cd /Users/.../WIMD-Railway-Deploy-Project && ./scripts/show_latest_context.sh"
+      "cd /Users/.../WIMD-Render-Deploy-Project && ./scripts/show_latest_context.sh"
 
 AI: [runs script, sees output]
     "I can see:
@@ -359,7 +359,7 @@ ls -t .ai-agents/handoff_*.json | tail -n +11 | xargs -I {} mv {} .ai-agents/arc
 
 ```bash
 # Make sure you're in project root
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Make script executable if needed
 chmod +x ./scripts/show_latest_context.sh

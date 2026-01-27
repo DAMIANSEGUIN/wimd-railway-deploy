@@ -134,7 +134,7 @@ Embed booking directly in the site.
 - **Packages already installed** - no need to run npm install
 - **Branch**: `feature/draggable-windows-and-booking`
 - **Full specs available** in `docs/specs/` folder
-- **Deploy when complete** - push to branch, will auto-deploy via Railway/Netlify
+- **Deploy when complete** - push to branch, will auto-deploy via Render/Netlify
 
 ---
 

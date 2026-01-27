@@ -109,7 +109,7 @@ git commit -m "Your message"
 **How to Run:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ./scripts/verify_compliance.sh
 ```
 
@@ -127,7 +127,7 @@ cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
 ### Task 1: Verify Pre-Commit Hooks Work
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Test 1: Check pre-commit is installed
 /Users/damianseguin/Library/Python/3.7/bin/pre-commit --version
@@ -160,7 +160,7 @@ bandit --version
 ### Task 3: Run Compliance Verification
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Run full ISO 5055 compliance check
 ./scripts/verify_compliance.sh
@@ -467,7 +467,7 @@ pip3 install --user ruff black mypy bandit
 **Key Files Created:**
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/
+/Users/damianseguin/WIMD-Deploy-Project/
 ├── .pre-commit-config.yaml          # Pre-commit hooks config
 ├── pyproject.toml                   # Tool configurations
 ├── CODE_GOVERNANCE_STANDARD_v1.md   # ISO-based standard

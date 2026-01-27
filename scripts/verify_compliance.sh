@@ -4,7 +4,7 @@
 
 set -e
 
-PROJECT_ROOT="/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+PROJECT_ROOT="/Users/damianseguin/WIMD-Deploy-Project"
 cd "$PROJECT_ROOT" || exit 1
 
 echo "╔══════════════════════════════════════════════════════════════╗"

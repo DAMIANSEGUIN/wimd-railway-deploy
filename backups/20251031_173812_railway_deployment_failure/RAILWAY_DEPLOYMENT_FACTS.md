@@ -1,40 +1,40 @@
-# Railway Deployment - Known Facts
+# Render Deployment - Known Facts
 
 **Created:** 2025-10-31
-**Purpose:** Single source of truth for Railway deployment configuration
+**Purpose:** Single source of truth for Render deployment configuration
 **DO NOT FORGET THESE FACTS**
 
 ---
 
 ## Critical Information
 
-### Railway Configuration
+### Render Configuration
 
 **Source Repository:** `DAMIANSEGUIN/what-is-my-delta-site`
 
 - User shared this 3 times (2025-10-31)
-- This is the repository Railway actually deploys from
-- NOT the same as our working directory (`wimd-railway-deploy`)
+- This is the repository Render actually deploys from
+- NOT the same as our working directory (`wimd-render-deploy`)
 
-**Working Directory:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/`
+**Working Directory:** `/Users/damianseguin/WIMD-Deploy-Project/`
 
-- This is `DAMIANSEGUIN/wimd-railway-deploy` repository
-- We push to `railway-origin` remote which points to `what-is-my-delta-site`
+- This is `DAMIANSEGUIN/wimd-render-deploy` repository
+- We push to `render-origin` remote which points to `what-is-my-delta-site`
 
 **Git Remotes:**
 
 ```
-origin         → https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git
-railway-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
+origin         → https://github.com/DAMIANSEGUIN/wimd-render-deploy.git
+render-origin → https://github.com/DAMIANSEGUIN/what-is-my-delta-site.git
 ```
 
-**When we push to Railway:**
+**When we push to Render:**
 
 ```bash
-git push railway-origin main
+git push render-origin main
 ```
 
-This pushes to `DAMIANSEGUIN/what-is-my-delta-site`, which Railway deploys.
+This pushes to `DAMIANSEGUIN/what-is-my-delta-site`, which Render deploys.
 
 ---
 
@@ -57,15 +57,15 @@ This pushes to `DAMIANSEGUIN/what-is-my-delta-site`, which Railway deploys.
 
 **Root Cause Identified:**
 
-- Railway likely building from wrong directory
+- Render likely building from wrong directory
 - OR buildpack caching issue
 - Repository structure may be confusing auto-detection
 
 **NARs Recommendation:**
 
-1. Check Railway Root Directory setting (may be pointing to `mosaic_ui/` instead of root)
-2. Remove `nixpacks.toml` and let Railway auto-detect from `requirements.txt`
-3. Verify `requirements.txt` exists in Railway repository root
+1. Check Render Root Directory setting (may be pointing to `mosaic_ui/` instead of root)
+2. Remove `nixpacks.toml` and let Render auto-detect from `requirements.txt`
+3. Verify `requirements.txt` exists in Render repository root
 
 **STATUS:** Recommendation NOT YET FOLLOWED
 
@@ -78,10 +78,10 @@ This pushes to `DAMIANSEGUIN/what-is-my-delta-site`, which Railway deploys.
 
 **DO THIS:**
 
-1. Verify Railway dashboard → Settings → Source → Root Directory
+1. Verify Render dashboard → Settings → Source → Root Directory
 2. If set to subdirectory → Change to empty or `.`
 3. Remove nixpacks.toml: `git rm nixpacks.toml`
-4. Let Railway auto-detect Python from requirements.txt
+4. Let Render auto-detect Python from requirements.txt
 5. Push and monitor
 
 **DO NOT:**
@@ -100,23 +100,23 @@ This pushes to `DAMIANSEGUIN/what-is-my-delta-site`, which Railway deploys.
 /
 ├── api/               # Backend Python code
 ├── requirements.txt   # Python dependencies (ROOT)
-├── railway.toml       # Railway config (ROOT)
+├── render.toml       # Render config (ROOT)
 ├── nixpacks.toml      # Currently causing issues (ROOT)
 ├── mosaic_ui/         # Frontend (Netlify deploys this)
 └── frontend/          # Deprecated frontend directory
 ```
 
-**Railway SHOULD build from:** Repository root (to find `requirements.txt`)
-**Railway MIGHT be building from:** `mosaic_ui/` (would explain errors)
+**Render SHOULD build from:** Repository root (to find `requirements.txt`)
+**Render MIGHT be building from:** `mosaic_ui/` (would explain errors)
 
 ---
 
 ## Deployment Endpoints
 
-**Backend (Railway):**
+**Backend (Render):**
 
-- URL: `https://what-is-my-delta-site-production.up.railway.app`
-- Health: `https://what-is-my-delta-site-production.up.railway.app/health`
+- URL: `https://what-is-my-delta-site-production.up.render.app`
+- Health: `https://what-is-my-delta-site-production.up.render.app/health`
 - Currently: DOWN (service unavailable)
 
 **Frontend (Netlify):**
@@ -128,9 +128,9 @@ This pushes to `DAMIANSEGUIN/what-is-my-delta-site`, which Railway deploys.
 
 ## Key Facts to Remember
 
-1. **Source repository:** `DAMIANSEGUIN/what-is-my-delta-site` (Railway deploys this)
+1. **Source repository:** `DAMIANSEGUIN/what-is-my-delta-site` (Render deploys this)
 2. **NARs provided diagnosis** - follow their guidance, don't improvise
-3. **Check Railway Root Directory setting** - likely the root cause
+3. **Check Render Root Directory setting** - likely the root cause
 4. **Stop modifying nixpacks.toml** - it's not helping
 
 ---

@@ -1,4 +1,4 @@
-# STRATEGIC ACTION PLAN - WIMD Railway Deploy Project
+# STRATEGIC ACTION PLAN - WIMD Render Deploy Project
 
 **Date**: 2025-09-29
 **Status**: Active - Multi-pronged attack strategy
@@ -8,54 +8,54 @@
 
 ## **IMMEDIATE CRITICAL ISSUES ANALYSIS**
 
-### **Root Cause**: Railway-Netlify Domain Routing Gap
+### **Root Cause**: Render-Netlify Domain Routing Gap
 
 **Current State**:
 
-- ✅ Railway API: Complete 448-line FastAPI working at Railway origin
+- ✅ Render API: Complete 448-line FastAPI working at Render origin
 - ✅ Netlify Frontend: Live at `https://resonant-crostata-90b706.netlify.app`
 - ❌ Domain Integration: `https://whatismydelta.com` serves Netlify 404 for API routes
-- ⚠️ Railway Cache: Network deployment failures preventing fresh builds
+- ⚠️ Render Cache: Network deployment failures preventing fresh builds
 
 ### **Architecture Risk Assessment**
 
 #### **HIGH RISK - Single Points of Failure**
 
-1. **Railway Cache Dependencies**: Persistent cache issues blocking API deployment
-2. **Netlify Proxy Missing**: No rewrite rules routing API calls to Railway
+1. **Render Cache Dependencies**: Persistent cache issues blocking API deployment
+2. **Netlify Proxy Missing**: No rewrite rules routing API calls to Render
 3. **Domain Split**: Frontend and API on different infrastructure
-4. **Manual Intervention Required**: Railway cache clearing needs human dashboard access
+4. **Manual Intervention Required**: Render cache clearing needs human dashboard access
 
 #### **MEDIUM RISK - Scalability Constraints**
 
-1. **Railway Pro Limits**: 8GB storage, potential scaling bottlenecks
+1. **Render Pro Limits**: 8GB storage, potential scaling bottlenecks
 2. **SQLite Database**: Not horizontally scalable, single-point storage
 3. **API Key Management**: Manual rotation process, security exposure window
 4. **Session Cleanup**: 30-day auto-expiry may cause data loss
 
 #### **LOW RISK - Operational Issues**
 
-1. **Multiple Git Repositories**: Code sync between `wimd-railway-deploy` and `what-is-my-delta-site`
-2. **Environment Variable Drift**: Local vs Railway variable consistency
+1. **Multiple Git Repositories**: Code sync between `wimd-render-deploy` and `what-is-my-delta-site`
+2. **Environment Variable Drift**: Local vs Render variable consistency
 3. **Mosaic UI Integration**: Frontend-backend API contract dependencies
 
 ---
 
 ## **MULTI-PRONGED ATTACK STRATEGY**
 
-### **PRONG 1: Immediate Railway Resolution**
+### **PRONG 1: Immediate Render Resolution**
 
 **Priority**: CRITICAL
 **Timeline**: Next 30 minutes
 
-#### **Template: Railway Cache Nuclear Option**
+#### **Template: Render Cache Nuclear Option**
 
 ```bash
 #!/bin/bash
 # NUCLEAR_RAILWAY_RESET.sh - Last resort cache clearing
 set -e
 
-echo "🚨 NUCLEAR OPTION: Complete Railway Cache Reset"
+echo "🚨 NUCLEAR OPTION: Complete Render Cache Reset"
 echo "1. Add RAILWAY_DISABLE_BUILD_CACHE=true to Variables"
 echo "2. Create dummy file change for cache bust"
 echo "3. Force multiple deployment triggers"
@@ -63,31 +63,31 @@ echo "4. Monitor with 5-minute intervals"
 
 # Create unique cache-busting changes
 TIMESTAMP=$(date +%s)
-echo "# Nuclear cache bust: $TIMESTAMP" >> .railway-cache-bust
-echo "RAILWAY_NUCLEAR_TIMESTAMP=$TIMESTAMP" > .env.railway
+echo "# Nuclear cache bust: $TIMESTAMP" >> .render-cache-bust
+echo "RAILWAY_NUCLEAR_TIMESTAMP=$TIMESTAMP" > .env.render
 
-git add .railway-cache-bust .env.railway
+git add .render-cache-bust .env.render
 git commit -m "NUCLEAR: Force cache reset $TIMESTAMP"
 git push origin main --force
 
 echo "✅ Nuclear cache bust deployed"
-echo "⏱️  Test in 5 minutes: curl https://what-is-my-delta-site-production.up.railway.app/config"
+echo "⏱️  Test in 5 minutes: curl https://what-is-my-delta-site-production.up.render.app/config"
 ```
 
-#### **Template: Railway Alternative Service Creation**
+#### **Template: Render Alternative Service Creation**
 
 ```bash
 #!/bin/bash
 # RAILWAY_SERVICE_CLONE.sh - Create backup service
 set -e
 
-echo "🔄 Creating backup Railway service strategy"
-echo "1. Connect NEW Railway service to same GitHub repo"
+echo "🔄 Creating backup Render service strategy"
+echo "1. Connect NEW Render service to same GitHub repo"
 echo "2. Copy all environment variables"
 echo "3. Test parallel deployment"
 echo "4. Switch domain if primary fails"
 
-cat > railway-backup-config.json << EOF
+cat > render-backup-config.json << EOF
 {
   "service_name": "what-is-my-delta-backup",
   "environment_variables": {
@@ -115,43 +115,43 @@ echo "✅ Backup service configuration ready"
 # NETLIFY_PROXY_SETUP.sh - Domain routing fix
 set -e
 
-echo "🌐 Setting up Netlify → Railway proxy"
+echo "🌐 Setting up Netlify → Render proxy"
 
 # Create netlify.toml with API proxy rules
 cat > netlify.toml << 'EOF'
 [[redirects]]
   from = "/health"
-  to = "https://what-is-my-delta-site-production.up.railway.app/health"
+  to = "https://what-is-my-delta-site-production.up.render.app/health"
   status = 200
   force = true
 
 [[redirects]]
   from = "/config"
-  to = "https://what-is-my-delta-site-production.up.railway.app/config"
+  to = "https://what-is-my-delta-site-production.up.render.app/config"
   status = 200
   force = true
 
 [[redirects]]
   from = "/prompts/*"
-  to = "https://what-is-my-delta-site-production.up.railway.app/prompts/:splat"
+  to = "https://what-is-my-delta-site-production.up.render.app/prompts/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/wimd/*"
-  to = "https://what-is-my-delta-site-production.up.railway.app/wimd/:splat"
+  to = "https://what-is-my-delta-site-production.up.render.app/wimd/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/ob/*"
-  to = "https://what-is-my-delta-site-production.up.railway.app/ob/:splat"
+  to = "https://what-is-my-delta-site-production.up.render.app/ob/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/resume/*"
-  to = "https://what-is-my-delta-site-production.up.railway.app/resume/:splat"
+  to = "https://what-is-my-delta-site-production.up.render.app/resume/:splat"
   status = 200
   force = true
 
@@ -234,9 +234,9 @@ cat > monitor_health.sh << 'EOF'
 # Health monitoring with fallback alerts
 
 ENDPOINTS=(
-  "https://what-is-my-delta-site-production.up.railway.app/health"
+  "https://what-is-my-delta-site-production.up.render.app/health"
   "https://whatismydelta.com/health"
-  "https://what-is-my-delta-site-production.up.railway.app/config"
+  "https://what-is-my-delta-site-production.up.render.app/config"
   "https://whatismydelta.com/config"
 )
 
@@ -263,7 +263,7 @@ echo "✅ Health monitoring script ready"
 
 ### **What Will Break Next**
 
-#### **1. Railway Infrastructure Failures** (70% probability)
+#### **1. Render Infrastructure Failures** (70% probability)
 
 - **Symptoms**: More network deployment failures, cache persistence
 - **Pre-built Solution**: Alternative platform deployment (Vercel/Render)
@@ -272,7 +272,7 @@ echo "✅ Health monitoring script ready"
 #### **2. Netlify CDN Cache Issues** (60% probability)
 
 - **Symptoms**: Domain shows old content despite proxy setup
-- **Pre-built Solution**: CloudFlare CDN bypass, direct Railway routing
+- **Pre-built Solution**: CloudFlare CDN bypass, direct Render routing
 - **Mitigation**: Cache-busting headers, manual CDN purge
 
 #### **3. API Key Rate Limiting** (40% probability)
@@ -303,7 +303,7 @@ echo "✅ Health monitoring script ready"
 
 ```bash
 # EMERGENCY_RESTORE.sh
-# 1. Switch to backup Railway service
+# 1. Switch to backup Render service
 # 2. Enable CloudFlare proxying
 # 3. Activate alternative domain
 # 4. Notify stakeholders
@@ -324,7 +324,7 @@ echo "✅ Health monitoring script ready"
 ```bash
 # SECURITY_LOCKDOWN.sh
 # 1. Rotate all API keys immediately
-# 2. Revoke Railway access tokens
+# 2. Revoke Render access tokens
 # 3. Enable IP restrictions
 # 4. Audit access logs
 ```
@@ -335,14 +335,14 @@ echo "✅ Health monitoring script ready"
 
 ### **Technical Constraints**
 
-- **Railway Cache System**: Cannot be bypassed easily
+- **Render Cache System**: Cannot be bypassed easily
 - **Netlify Proxy Limits**: 100K requests/month on free tier
 - **SQLite Scalability**: Single-node limitation
 - **FastAPI Async**: Memory usage scaling issues
 
 ### **Business Constraints**
 
-- **Budget Limits**: Railway Pro ($20/month), additional platforms cost
+- **Budget Limits**: Render Pro ($20/month), additional platforms cost
 - **Time Constraints**: Manual interventions slow deployment
 - **Skill Dependencies**: Platform-specific knowledge required
 - **User Impact**: Downtime affects user experience
@@ -350,7 +350,7 @@ echo "✅ Health monitoring script ready"
 ### **Operational Constraints**
 
 - **Manual Processes**: Cache clearing, key rotation
-- **Platform Lock-in**: Railway-specific configurations
+- **Platform Lock-in**: Render-specific configurations
 - **Geographic Limits**: CDN edge locations
 - **Compliance Requirements**: Data retention, privacy
 
@@ -383,14 +383,14 @@ echo "✅ Health monitoring script ready"
 **Time to Resolution**: 15 minutes using local-first debugging
 **Solution**: Added `python-multipart` to requirements.txt
 
-**Status**: ✅ Railway now serves complete 449-line FastAPI implementation
+**Status**: ✅ Render now serves complete 449-line FastAPI implementation
 **Result**: All multi-pronged strategies were unnecessary - simple dependency fix resolved the issue
 
 **Key Learning**: Infrastructure-first debugging (cache clearing, deployment strategies) failed to identify the actual application startup error. Local development immediately revealed the missing dependency.
 
 **Updated Success Metrics**:
 
-- ✅ Railway API: `{"message":"Mosaic Platform API - Complete Implementation",...}`
+- ✅ Render API: `{"message":"Mosaic Platform API - Complete Implementation",...}`
 - ✅ Health endpoint: Working
 - ✅ Configuration endpoint: Working
 - ✅ Prompts endpoint: Working (with minor data access optimization needed)

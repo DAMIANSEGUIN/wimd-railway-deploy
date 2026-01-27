@@ -34,7 +34,7 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 | **Search results from Glob/Grep** | TRANSIENT (operation-scoped) | Can't find files/code again | Stale results after code changes | Discard after using results, re-search if needed |
 | **User's original task description** | DURABLE (session-scoped) | Agent loses track of original goal, scope creep | Minimal risk, usually <200 words | Keep entire session to prevent drift |
 | **Git commit history (last 5-10)** | DECISION-RELEVANT | Can't understand recent changes, breaks rollback decisions | Minimal (~2KB for 10 commits), but rarely needed | Load on-demand for rollback/history questions |
-| **Railway/Netlify deployment logs** | TRANSIENT (debugging-scoped) | Can't diagnose deployment failures | Log spam (200+ lines), irrelevant after fix | Fetch only when deployment fails, discard after resolution |
+| **Render/Netlify deployment logs** | TRANSIENT (debugging-scoped) | Can't diagnose deployment failures | Log spam (200+ lines), irrelevant after fix | Fetch only when deployment fails, discard after resolution |
 | **Database schema** | DECISION-RELEVANT | Agent writes wrong SQL syntax, breaks queries | Moderate bloat (~5KB), but schema rarely changes | Load once per session if DB work expected, cache |
 | **Feature flags state** | DECISION-RELEVANT | Agent references disabled features, deploys broken code | Minimal (~1KB), but outdated flags cause confusion | Load at session start, refresh before deployments |
 | **API endpoint inventory** | DECISION-RELEVANT | Agent can't navigate codebase, wrong endpoint references | Moderate bloat (~3KB for 40+ endpoints), but stable | Load once per session if API work expected |
@@ -76,7 +76,7 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 | Trigger Scenario | Signal (keywords/state/tool) | Retrieval Mechanism | Context Source |
 |------------------|------------------------------|---------------------|----------------|
 | **Error during code execution** | Tool result contains "Error", "Exception", "Failed" | Fetch TROUBLESHOOTING_CHECKLIST.md section matching error type | MCP query: `retrieve(type="troubleshooting", query=error_message)` |
-| **Deployment command detected** | User prompt contains "deploy", "push", "railway" | Fetch DEPLOYMENT_TRUTH.md | MCP query: `retrieve(type="deployment", section="all")` |
+| **Deployment command detected** | User prompt contains "deploy", "push", "render" | Fetch DEPLOYMENT_TRUTH.md | MCP query: `retrieve(type="deployment", section="all")` |
 | **Database operation detected** | Tool usage: Bash with SQL keywords, or Edit on `api/storage.py` | Fetch database schema summary + context manager pattern rules | MCP query: `retrieve(type="architecture", topic="database")` |
 | **Code change to critical file** | Edit/Write to files matching patterns: `api/*.py`, `frontend/*.js`, deployment configs | Fetch relevant architecture doc section + pre-commit checklist | MCP query: `retrieve(type="checklist", context=file_path)` |
 | **Git operation detected** | Bash tool with "git commit", "git push", "git revert" | Fetch git workflow rules + recent commit history | MCP query: `retrieve(type="workflow", operation="git")` |
@@ -137,16 +137,16 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 | **Code files** (api/, frontend/, tests/, etc.) | NO - Too large (100+ files, 50KB+ total) | Keep in git repo, read on-demand | Direct Read tool when needed, never bulk load |
 | **Bash command outputs** | NO - Ephemeral, discarded after use | NOT STORED (except in terminal scrollback) | N/A - re-run command if needed |
 | **TODO lists** | YES - Current task list only (~1KB) | Store in-context during session, discard after | TodoWrite tool manages in-memory |
-| **Error logs** (Railway, Netlify, local) | YES - Summarize last error only (~500 bytes) | Logs stored in Railway/Netlify services | Bash tool fetches on-demand when debugging |
+| **Error logs** (Render, Netlify, local) | YES - Summarize last error only (~500 bytes) | Logs stored in Render/Netlify services | Bash tool fetches on-demand when debugging |
 | **Git history** | YES - Last 5 commits summarized (~1KB) | Full history in `.git/` folder | Bash tool (`git log`) on-demand |
-| **Database schema** | YES - Schema summary with table names/columns (~2KB) | Full schema in PostgreSQL (Railway) | SQL query or schema introspection on-demand |
+| **Database schema** | YES - Schema summary with table names/columns (~2KB) | Full schema in PostgreSQL (Render) | SQL query or schema introspection on-demand |
 | **Feature flags** | YES - Current flags loaded at session start (~1KB) | Stored in `feature_flags.json` | Read tool at session start, refresh before deploy |
 | **API endpoint inventory** | YES - Summarize routes/handlers (~2KB) | Full implementation in `api/` code | Grep tool to find specific endpoints on-demand |
 | **Cross-agent handoff notes** | YES - Summary of last handoff (~500 bytes) | Full notes in docs folder (HANDOFF_NOTE_*.md) | Read tool when resuming another agent's work |
-| **Deployment status** | YES - Last deployment info (~500 bytes) | Stored in Railway/Netlify dashboards + git tags | Bash tool (`git describe --tags`, `railway status`) |
+| **Deployment status** | YES - Last deployment info (~500 bytes) | Stored in Render/Netlify dashboards + git tags | Bash tool (`git describe --tags`, `render status`) |
 | **Test results** | NO - Too verbose, changes constantly | Stored in `.pytest_cache/`, discarded after | Bash tool re-runs tests when verification needed |
 | **User session data** (PS101 state, uploads, etc.) | NO - Belongs to application database | Stored in PostgreSQL (users, sessions, uploads tables) | SQL queries via backend API |
-| **MCP server state** (FUTURE) | YES - Connection config + query cache (~2KB) | MCP servers (location TBD - Railway? Local? Separate?) | MCP client library (protocol TBD - HTTP? WebSocket?) |
+| **MCP server state** (FUTURE) | YES - Connection config + query cache (~2KB) | MCP servers (location TBD - Render? Local? Separate?) | MCP client library (protocol TBD - HTTP? WebSocket?) |
 
 ### Analysis
 
@@ -166,7 +166,7 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 ### Key Decision Points
 
 1. **Where do MCP servers run?**
-   - Option A: Railway service (new deployment, $5-10/month)
+   - Option A: Render service (new deployment, $5-10/month)
    - Option B: Local process (started by session script, no cost but availability issues)
    - Option C: Separate cloud service (AWS Lambda, higher reliability but complexity)
    - **Recommendation:** Start with Option B (local), migrate to Option A if valuable
@@ -190,7 +190,7 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 
 ### Open Questions
 
-- @Damian: Budget for MCP server infrastructure? (Railway service ~$5-10/month)
+- @Damian: Budget for MCP server infrastructure? (Render service ~$5-10/month)
 - @Codex: Can ChatGPT query HTTP MCP servers, or only file-based retrieval?
 - @Gemini: How would API mode broker scripts interact with MCP servers?
 - @ALL: Should we store agent query history for learning/optimization?
@@ -213,7 +213,7 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 | **MCP query history** (FUTURE) | N/A - no MCP yet | Cannot debug MCP retrieval issues | MCP server logs all queries: `{agent, query, results, latency, timestamp}` |
 | **Context summarization log** | NONE - no record of summarization decisions | Cannot audit what info was lost in summarization | Log summaries: `{original_size, summarized_size, compression_ratio, fields_dropped}` |
 | **Tool output retention** | Ephemeral - discarded after use | Cannot review past tool outputs for debugging | Keep last 10 tool outputs in `.ai-agents/tool_history.jsonl` |
-| **Error context capture** | Partial - errors logged to Railway/terminal | Error context not captured (what was agent doing when error occurred?) | On error: dump context + last 5 messages to `.ai-agents/error_context_TIMESTAMP.txt` |
+| **Error context capture** | Partial - errors logged to Render/terminal | Error context not captured (what was agent doing when error occurred?) | On error: dump context + last 5 messages to `.ai-agents/error_context_TIMESTAMP.txt` |
 | **Cross-session continuity** | NONE - each session is blank slate | Cannot see what previous sessions did | Session log: `.ai-agents/sessions.jsonl` with {start, end, work_done, files_modified} |
 | **Governance compliance audit** | NONE - no verification that rules were followed | Cannot prove agent followed governance | Log governance rule checks: `{rule, checked, passed, evidence, timestamp}` |
 
@@ -302,7 +302,7 @@ I'm a CLI-based AI agent running locally on macOS. My lifecycle is session-based
 **Go/No-Go Opinion:** 🟡 **CAUTIOUS YES** - BUT start small
 
 - Phase 1: Local MCP server, file-based only, prove value
-- Phase 2: If valuable, migrate to Railway, add structured storage
+- Phase 2: If valuable, migrate to Render, add structured storage
 - Phase 3: If still valuable, add advanced features (semantic search, cross-session memory)
 
 ### Critical Success Factors

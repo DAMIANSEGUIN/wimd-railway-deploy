@@ -15,8 +15,8 @@
 
   ```bash
   git remote -v
-  # PRODUCTION = railway-origin (what-is-my-delta-site)
-  # BACKUP = origin (wimd-railway-deploy)
+  # PRODUCTION = render-origin (what-is-my-delta-site)
+  # BACKUP = origin (wimd-render-deploy)
   ```
 
 - [ ] Ensure you're on the correct branch
@@ -57,23 +57,23 @@
 - [ ] Push to **PRODUCTION** using wrapper (not origin!)
 
   ```bash
-  ./scripts/push.sh railway-origin main
+  ./scripts/push.sh render-origin main
   ```
 
 - [ ] Confirm push succeeded
 
   ```bash
-  git log railway-origin/main --oneline -1
+  git log render-origin/main --oneline -1
   # Should show your latest commit
   ```
 
 ## Post-Deployment Verification
 
-- [ ] Wait for Railway backend rebuild (2 minutes)
+- [ ] Wait for Render backend rebuild (2 minutes)
 
   ```bash
-  # Check Railway deployment status
-  curl -s https://what-is-my-delta-site-production.up.railway.app/health | jq
+  # Check Render deployment status
+  curl -s https://what-is-my-delta-site-production.up.render.app/health | jq
   ```
 
 - [ ] Wait for Netlify frontend rebuild (1 minute)
@@ -105,18 +105,18 @@
 
 ## If Deployment Failed
 
-- [ ] Check Railway logs: <https://railway.app/dashboard>
+- [ ] Check Render logs: <https://render.app/dashboard>
 - [ ] Check Netlify logs: <https://app.netlify.com/sites/resonant-crostata-90b706/deploys>
 - [ ] Verify correct remote was used: `git remote -v`
-- [ ] Rollback if needed: `git revert <commit-hash> && git push railway-origin main`
+- [ ] Rollback if needed: `git revert <commit-hash> && git push render-origin main`
 
 ## Common Mistakes to Avoid
 
 ❌ **WRONG:** `git push` (goes to 'origin' = backup repo)
-✅ **RIGHT:** `./scripts/push.sh railway-origin main` (enforced verification + production push)
+✅ **RIGHT:** `./scripts/push.sh render-origin main` (enforced verification + production push)
 
-❌ **WRONG:** `git push railway-origin main` (bypasses wrapper script)
-✅ **RIGHT:** `./scripts/push.sh railway-origin main` (wrapper enforces verification)
+❌ **WRONG:** `git push render-origin main` (bypasses wrapper script)
+✅ **RIGHT:** `./scripts/push.sh render-origin main` (wrapper enforces verification)
 
 ❌ **WRONG:** `netlify deploy --prod` (no verification)
 ✅ **RIGHT:** `./scripts/deploy.sh netlify` (automated verification)
@@ -136,13 +136,13 @@
 ./scripts/deploy.sh netlify
 
 # Deploy backend only
-./scripts/deploy.sh railway
+./scripts/deploy.sh render
 
 # Deploy both
 ./scripts/deploy.sh all
 
 # Push to production (with verification)
-./scripts/push.sh railway-origin main
+./scripts/push.sh render-origin main
 
 # Push to backup repo (no verification required)
 ./scripts/push.sh origin main
@@ -151,7 +151,7 @@
 **Emergency bypass (logged to audit):**
 
 ```bash
-SKIP_VERIFICATION=true BYPASS_REASON="Production hotfix" ./scripts/push.sh railway-origin main
+SKIP_VERIFICATION=true BYPASS_REASON="Production hotfix" ./scripts/push.sh render-origin main
 ```
 
 ## Quick Reference
@@ -162,14 +162,14 @@ git add <files>
 git commit -m "message"
 
 # 2. Deploy to PRODUCTION (uses wrapper script)
-./scripts/push.sh railway-origin main
+./scripts/push.sh render-origin main
 
 # Script will automatically:
 # - Run verification checks
-# - Push to railway-origin
+# - Push to render-origin
 # - Display next steps
 
-# 3. Wait 3 minutes for Railway + Netlify
+# 3. Wait 3 minutes for Render + Netlify
 
 # 4. Verify deployment
 ./scripts/verify_deployment.sh

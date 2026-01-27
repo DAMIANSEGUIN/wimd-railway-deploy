@@ -95,7 +95,7 @@ New files that describe the push backlog (`DEPLOYMENT_READY_FOR_PUSH.md`, `PUSH_
 
 ## 6. Post-Commit Steps
 
-- Once verification passes, prep for the eventual push (`./scripts/push.sh railway-origin main`) when approved.
+- Once verification passes, prep for the eventual push (`./scripts/push.sh render-origin main`) when approved.
 - Update `NOTE_FOR_CURSOR_AND_CLAUDE_CODE_2025-10-27.md` with the commit hash and BUILD_ID so the enforcement log stays current.
 - Notify Codex when the tree is clean; we’ll schedule the deployment dry-run.
 

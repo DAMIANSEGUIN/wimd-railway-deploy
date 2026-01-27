@@ -11,13 +11,13 @@
 Host: whatismydelta.com
 TTL: 3600
 Type: IN CNAME
-Value: igv415qp.up.railway.app
+Value: igv415qp.up.render.app
 ```
 
 ## Status Confirmation
 
 - ✅ **DNS record added** - User confirmed in Netlify
-- ✅ **CNAME pointing to Railway** - igv415qp.up.railway.app
+- ✅ **CNAME pointing to Render** - igv415qp.up.render.app
 - ✅ **TTL set to 3600** - Standard value
 - ✅ **Domain registered through Netlify** - Sep 11, 2025
 - ✅ **Auto-renewal enabled** - Aug 10, 2026
@@ -35,7 +35,7 @@ Value: igv415qp.up.railway.app
   Host: www.whatismydelta.com
   TTL: 3600
   Type: CNAME
-  Value: igv415qp.up.railway.app
+  Value: igv415qp.up.render.app
   ```
 
 ## Proof Source

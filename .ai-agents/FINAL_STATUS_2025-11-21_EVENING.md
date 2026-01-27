@@ -18,20 +18,20 @@
 
 - User attempted local testing at localhost:8000
 - Login failed with "Fails to fetch" error
-- CodexCapture revealed CORS blocking requests to Railway
+- CodexCapture revealed CORS blocking requests to Render
 
 ### 12:45 PM - CORS Fix Attempted
 
-- Added localhost:8000 to Railway CORS allowlist
+- Added localhost:8000 to Render CORS allowlist
 - Pushed to GitHub (commit dfa38d0)
-- Waited for Railway auto-deploy
+- Waited for Render auto-deploy
 
 ### 1:00 PM - Local Proxy Solution
 
-- Railway deploy taking too long
+- Render deploy taking too long
 - Created `local_dev_server.py` - Python HTTP proxy
 - Runs on localhost:3000
-- Proxies /config and API calls to Railway
+- Proxies /config and API calls to Render
 - Eliminates CORS issue entirely
 
 ### 1:10 PM - Applied Gemini's Fix

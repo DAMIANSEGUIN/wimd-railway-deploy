@@ -56,10 +56,10 @@ Organized all loose files from `~/Downloads/` to prevent:
 
 ### WIMD Project Backups (6 files)
 
-1. `WIMD-Railway-Deploy-Backup-20250919-005711.zip` (345B) - Sep 18
-2. `WIMD-Railway-Deploy-Project 2.zip` (60KB) - Sep 18
-3. `WIMD-Railway-Deploy-Project.zip` (60KB) - Sep 18
-4. `WIMD-Railway-Deploy-Project_with_CODEX_INSTRUCTIONS.zip` (9.1KB) - Sep 17
+1. `WIMD-Render-Deploy-Backup-20250919-005711.zip` (345B) - Sep 18
+2. `WIMD-Render-Deploy-Project 2.zip` (60KB) - Sep 18
+3. `WIMD-Render-Deploy-Project.zip` (60KB) - Sep 18
+4. `WIMD-Render-Deploy-Project_with_CODEX_INSTRUCTIONS.zip` (9.1KB) - Sep 17
 5. `WIMD_FRESH_DEPLOY.zip` (98KB) - Sep 15
 6. `WIMD_OpportunityBridge_v1.zip` (4.9KB) - Sep 22
 

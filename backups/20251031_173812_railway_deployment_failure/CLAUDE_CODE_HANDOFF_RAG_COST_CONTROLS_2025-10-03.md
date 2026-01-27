@@ -6,7 +6,7 @@
 
 ## 🚨 **CRITICAL DEPLOYMENT STATUS**
 
-**⚠️ IMPORTANT**: All implementations are **LOCAL ONLY** - no Railway or Netlify deployment has occurred. Claude Code must handle all production deployment.
+**⚠️ IMPORTANT**: All implementations are **LOCAL ONLY** - no Render or Netlify deployment has occurred. Claude Code must handle all production deployment.
 
 ## 📋 **IMPLEMENTATION SUMMARY**
 
@@ -110,7 +110,7 @@
 
 ## 🚀 **DEPLOYMENT REQUIREMENTS**
 
-### **1. Environment Variables (Railway)**
+### **1. Environment Variables (Render)**
 
 ```bash
 # Existing variables (already set)
@@ -126,13 +126,13 @@ GLASSDOOR_API_KEY=your_glassdoor_key
 ANGELIST_API_KEY=your_angelist_key
 ```
 
-### **2. Database Migrations (Railway)**
+### **2. Database Migrations (Render)**
 
 - Run migrations 004, 005, 006 in order
 - Verify all tables created successfully
 - Test cost control tables are functional
 
-### **3. Feature Flags (Railway)**
+### **3. Feature Flags (Render)**
 
 ```json
 {
@@ -145,7 +145,7 @@ ANGELIST_API_KEY=your_angelist_key
 }
 ```
 
-### **4. Dependencies (Railway)**
+### **4. Dependencies (Render)**
 
 - All existing dependencies maintained
 - No new Python packages required (temporarily disabled for testing)

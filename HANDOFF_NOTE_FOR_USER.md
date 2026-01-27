@@ -23,13 +23,13 @@ Implemented **Grok's 48-hour action plan** to replace prose governance with ISO-
 **File to read:**
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/HANDOFF_TO_GEMINI_2025-12-12.md
+/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/HANDOFF_TO_GEMINI_2025-12-12.md
 ```
 
 **Copy-paste prompt for Gemini:**
 
 ```
-Read and follow: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/HANDOFF_TO_GEMINI_2025-12-12.md
+Read and follow: /Users/damianseguin/WIMD-Deploy-Project/.ai-agents/HANDOFF_TO_GEMINI_2025-12-12.md
 
 Your task:
 1. Test pre-commit hooks are working (blocks bad code)
@@ -348,14 +348,14 @@ scripts/start_session.sh             # Simplified, no mode detection
 **Test pre-commit:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 /Users/damianseguin/Library/Python/3.7/bin/pre-commit run --all-files
 ```
 
 **Run compliance check:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ./scripts/verify_compliance.sh
 ```
 

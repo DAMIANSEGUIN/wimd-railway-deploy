@@ -354,7 +354,7 @@ Could consolidate, but separation makes each clearer.
 **After Codex review, delete these obsolete docs:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/docs
+cd /Users/damianseguin/WIMD-Deploy-Project/docs
 rm CURSOR_AGENT_PROMPT_PS101_V2.md
 rm TEAM_ANNOUNCEMENT_PS101_V2.md
 rm TEAM_EMAIL_READY_TO_SHARE.md

@@ -8,8 +8,8 @@
 
   ```bash
   git remote -v
-  # PRODUCTION = railway-origin (what-is-my-delta-site)
-  # BACKUP = origin (wimd-railway-deploy)
+  # PRODUCTION = render-origin (what-is-my-delta-site)
+  # BACKUP = origin (wimd-render-deploy)
   ```
 
 - [ ] Ensure you're on the correct branch
@@ -31,23 +31,23 @@
 - [ ] Push to **PRODUCTION** remote (not origin!)
 
   ```bash
-  git push railway-origin main
+  git push render-origin main
   ```
 
 - [ ] Confirm push succeeded
 
   ```bash
-  git log railway-origin/main --oneline -1
+  git log render-origin/main --oneline -1
   # Should show your latest commit
   ```
 
 ## Post-Deployment Verification
 
-- [ ] Wait for Railway backend rebuild (2 minutes)
+- [ ] Wait for Render backend rebuild (2 minutes)
 
   ```bash
-  # Check Railway deployment status
-  curl -s https://what-is-my-delta-site-production.up.railway.app/health | jq
+  # Check Render deployment status
+  curl -s https://what-is-my-delta-site-production.up.render.app/health | jq
   ```
 
 - [ ] Wait for Netlify frontend rebuild (1 minute)
@@ -72,15 +72,15 @@
 
 ## If Deployment Failed
 
-- [ ] Check Railway logs: <https://railway.app/dashboard>
+- [ ] Check Render logs: <https://render.app/dashboard>
 - [ ] Check Netlify logs: <https://app.netlify.com/sites/resonant-crostata-90b706/deploys>
 - [ ] Verify correct remote was used: `git remote -v`
-- [ ] Rollback if needed: `git revert <commit-hash> && git push railway-origin main`
+- [ ] Rollback if needed: `git revert <commit-hash> && git push render-origin main`
 
 ## Common Mistakes to Avoid
 
 ❌ **WRONG:** `git push` (goes to 'origin' = backup repo)
-✅ **RIGHT:** `git push railway-origin main` (goes to production)
+✅ **RIGHT:** `git push render-origin main` (goes to production)
 
 ❌ **WRONG:** Marking as "deployed" immediately after push
 ✅ **RIGHT:** Wait 2-3 minutes, verify live, THEN mark as deployed
@@ -96,7 +96,7 @@ git add <files>
 git commit -m "message"
 
 # 2. Push to PRODUCTION
-git push railway-origin main
+git push render-origin main
 
 # 3. Wait 2-3 minutes
 

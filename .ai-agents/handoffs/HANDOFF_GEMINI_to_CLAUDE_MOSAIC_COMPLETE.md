@@ -107,7 +107,7 @@
 - **Owner:** Claude Code (deployment expert)
 - **Completion Criteria:**
   - Code reviewed and approved
-  - Deployed via wrapper scripts (`./scripts/deploy.sh railway` and `./scripts/deploy.sh netlify`)
+  - Deployed via wrapper scripts (`./scripts/deploy.sh render` and `./scripts/deploy.sh netlify`)
   - Production testing confirms personalized coaching works
 
 ### Commitment 2: Testing with Real Users
@@ -272,15 +272,15 @@
 
 1. Review code changes (api/index.py, api/storage.py, api/ai_clients.py, frontend/index.html)
 2. Verify database migrations not needed (user_contexts table already exists?)
-3. Check if CLAUDE_API_KEY env var set on Railway
+3. Check if CLAUDE_API_KEY env var set on Render
 4. Run pre-deploy safety checks
 
 **Deployment:**
 
 1. Commit changes with message: "feat(mosaic): Add PS101 context extraction and personalized coaching"
-2. Deploy backend: `./scripts/deploy.sh railway`
+2. Deploy backend: `./scripts/deploy.sh render`
 3. Deploy frontend: `./scripts/deploy.sh netlify`
-4. Verify deployment health: `curl https://what-is-my-delta-site-production.up.railway.app/health`
+4. Verify deployment health: `curl https://what-is-my-delta-site-production.up.render.app/health`
 
 **Post-Deployment Testing:**
 
@@ -314,7 +314,7 @@
    ```
 
 2. **Check environment variables:**
-   - Verify `CLAUDE_API_KEY` set on Railway (needed for context extraction)
+   - Verify `CLAUDE_API_KEY` set on Render (needed for context extraction)
    - Verify `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` set (for chat)
 
 3. **Database verification:**
@@ -340,7 +340,7 @@
 5. **Verify:**
    - Test PS101 completion → context extraction
    - Test chat with personalized context
-   - Check Railway logs for errors
+   - Check Render logs for errors
 
 ---
 
@@ -353,10 +353,10 @@
    - **Options:** ["Table exists", "Need migration", "Need to create table"]
    - **Needs Input From:** Database inspection or schema files
 
-2. **Q:** Is CLAUDE_API_KEY environment variable set on Railway?
+2. **Q:** Is CLAUDE_API_KEY environment variable set on Render?
    - **Context:** Context extraction endpoint uses Claude API
    - **Options:** ["Already set", "Need to add", "Use different API"]
-   - **Needs Input From:** Railway dashboard → Variables
+   - **Needs Input From:** Render dashboard → Variables
 
 3. **Q:** Should we add analytics/logging for context extraction?
    - **Context:** Would be helpful to track success rate, failures

@@ -127,7 +127,7 @@ Password: TestPass123!
 - Chat response references your ML/consulting context
 
 **If context extraction fails:**
-railway logs | grep -i "extract\|context\|claude"
+render logs | grep -i "extract\|context\|claude"
 
 **Files created:**
 - .ai-agents/quick_start/TESTING_COMMANDS.md (one-line commands)
@@ -152,7 +152,7 @@ It's deployed to production.
 Deployment complete. Here's the current status:
 
 **Health check:**
-curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3 -m json.tool
+curl -s https://what-is-my-delta-site-production.up.render.app/health | python3 -m json.tool
 
 **Last deployment:**
 - Commit: a968e9a (fix: Add prefix to PS101 router)
@@ -170,7 +170,7 @@ curl -s https://what-is-my-delta-site-production.up.railway.app/health | python3
 
 **If rollback needed:**
 git revert a968e9a 493e62c
-./scripts/deploy.sh railway
+./scripts/deploy.sh render
 
 **Deployment summary:**
 .ai-agents/validation/MOSAIC_MVP_DEPLOYMENT_COMPLETE.md
@@ -317,7 +317,7 @@ scripts/
 
 **Never say:**
 - ❌ "You can check the logs"
-  - ✅ Instead: "railway logs | grep -i 'error' --color=always"
+  - ✅ Instead: "render logs | grep -i 'error' --color=always"
 
 - ❌ "Test it in the browser"
   - ✅ Instead: "open -a 'Google Chrome' https://whatismydelta.com"

@@ -175,7 +175,7 @@ def get_job_details(self, job_id: str) -> Optional[JobPosting]:
 
 1. **Re-run persona stress test** - Verify 6 direct API sources return real data
 2. **Test web scraping sources** - Check if BeautifulSoup implementations work
-3. **Monitor Railway logs** - Look for HTTP errors from external APIs
+3. **Monitor Render logs** - Look for HTTP errors from external APIs
 
 ### Short-term
 

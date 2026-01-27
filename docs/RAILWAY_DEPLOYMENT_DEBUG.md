@@ -1,6 +1,6 @@
-# Railway Deployment Health Check Debugging
+# Render Deployment Health Check Debugging
 
-**Issue:** New Railway deployments failing with "service unavailable" errors during health checks.
+**Issue:** New Render deployments failing with "service unavailable" errors during health checks.
 
 **Current Status:**
 
@@ -9,9 +9,9 @@
 
 ## Immediate Action Needed
 
-### 1. Check Railway Dashboard
+### 1. Check Render Dashboard
 
-**Go to:** Railway Dashboard → Your Service → Deployments → Latest Failed Deployment
+**Go to:** Render Dashboard → Your Service → Deployments → Latest Failed Deployment
 
 **Look for:**
 
@@ -79,7 +79,7 @@ Ensure `get_prompt_health()` returns correct values immediately after startup.
 1. **Enable Health Debug Logging:**
 
    ```bash
-   # In Railway environment variables
+   # In Render environment variables
    HEALTH_DEBUG=true
    ```
 
@@ -143,7 +143,7 @@ def health():
 
 ### 6. Next Steps
 
-1. **Check Railway dashboard** to see actual error
+1. **Check Render dashboard** to see actual error
 2. **Review deploy logs** for startup sequence
 3. **Check health check response** in failed attempts
 4. **Apply appropriate fix** based on what you find
@@ -151,4 +151,4 @@ def health():
 ---
 
 **Last Updated:** 2025-11-01
-**Status:** Awaiting Railway dashboard review
+**Status:** Awaiting Render dashboard review

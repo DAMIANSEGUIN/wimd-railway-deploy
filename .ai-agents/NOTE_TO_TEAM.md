@@ -56,7 +56,7 @@ The platform is in excellent shape and ready for your team. Everything you need 
 
 ```bash
 # Backend health check
-curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
+curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive
 
 # Should show: "recent_failures": 0, "failure_rate_percent": 0
 ```
@@ -75,7 +75,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensiv
 
 ```bash
 ./scripts/verify_critical_features.sh
-curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive
+curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive
 ```
 
 **Why?** This 30-second check prevented a 4-hour recovery yesterday. The pre-commit hook will also block dangerous changes, but running the script manually gives you confidence.
@@ -99,7 +99,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensiv
 ### ⚠️ Minor Items (2 things)
 
 1. `/rag/health` endpoint missing (15 min fix, low priority)
-2. Database schema not verified (15 min, requires Railway login)
+2. Database schema not verified (15 min, requires Render login)
 
 ### 📋 Future Enhancements (Not Urgent)
 
@@ -129,7 +129,7 @@ These protect the codebase from accidental feature removal:
    - Emergency rollback steps
    - **Status:** ✅ Documented
 
-4. **Health Monitoring** (Railway auto-restart)
+4. **Health Monitoring** (Render auto-restart)
    - Backend checks every 60 seconds
    - Auto-restarts on failure
    - **Status:** ✅ Operational
@@ -142,7 +142,7 @@ These protect the codebase from accidental feature removal:
 
 1. **Check the diagnostics first:** `.ai-agents/FINAL_DIAGNOSTIC_20251102.md`
 2. **Run verification:** `./scripts/verify_critical_features.sh`
-3. **Check logs:** `railway logs`
+3. **Check logs:** `render logs`
 4. **Backend health:** `curl <backend-url>/health/comprehensive`
 
 ### Emergency Rollback
@@ -153,7 +153,7 @@ git log --oneline -5
 
 # Revert to it
 git revert HEAD
-git push railway-origin main --force
+git push render-origin main --force
 
 # Verify restoration
 ./scripts/verify_critical_features.sh
@@ -165,8 +165,8 @@ See `TROUBLESHOOTING_CHECKLIST.md` for a complete guide.
 
 **Quick fixes:**
 
-- **Production down?** Check Railway logs, may need restart
-- **Auth not working?** Verify DATABASE_URL uses `railway.internal`
+- **Production down?** Check Render logs, may need restart
+- **Auth not working?** Verify DATABASE_URL uses `render.internal`
 - **Features missing?** Run verification script, check git history
 - **Backend errors?** Check `/health/comprehensive` for diagnostics
 
@@ -199,11 +199,11 @@ cd frontend
 netlify deploy --prod --dir=. --site=bb594f69-4d23-4817-b7de-dadb8b4db874
 ```
 
-**Backend (Railway):**
+**Backend (Render):**
 
 ```bash
-git push railway-origin main
-# Railway auto-deploys on push
+git push render-origin main
+# Render auto-deploys on push
 ```
 
 **After deployment:**
@@ -240,7 +240,7 @@ git push railway-origin main
 ### Safety
 
 - **`.git/hooks/pre-commit`** - Blocks dangerous commits
-- **`railway.toml`** - Auto-restart configuration
+- **`render.toml`** - Auto-restart configuration
 
 ---
 
@@ -300,7 +300,7 @@ git push railway-origin main
 3. **Check production health:**
 
    ```bash
-   curl https://what-is-my-delta-site-production.up.railway.app/health/comprehensive | jq
+   curl https://what-is-my-delta-site-production.up.render.app/health/comprehensive | jq
    ```
 
 4. **Browse the live site:**
@@ -392,7 +392,7 @@ Run it before changes. Run it after deployment. It takes 30 seconds and saves ho
 - Error message
 - Steps to reproduce
 - Verification script output
-- Backend logs (`railway logs`)
+- Backend logs (`render logs`)
 - Recent commits (`git log --oneline -10`)
 
 ---

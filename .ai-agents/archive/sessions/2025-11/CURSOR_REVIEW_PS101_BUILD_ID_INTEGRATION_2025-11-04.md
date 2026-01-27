@@ -42,7 +42,7 @@ Formal review of PS101 continuity BUILD_ID integration changes implemented by Cl
 
 - Integrates with existing deployment workflow
 - No breaking changes to existing functionality
-- Compatible with all deployment targets (netlify, railway, all)
+- Compatible with all deployment targets (netlify, render, all)
 
 ### 2. DEPLOYMENT_CHECKLIST.md
 

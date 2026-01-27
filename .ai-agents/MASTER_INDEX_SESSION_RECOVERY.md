@@ -8,7 +8,7 @@
 ## 🚀 QUICK START PROMPT (Copy/Paste This)
 
 ```
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 Read this file first:
 .ai-agents/MASTER_INDEX_SESSION_RECOVERY.md
@@ -120,7 +120,7 @@ ls -1 URGENT_* FOR_*_AGENT*.md 2>/dev/null
 
 11. **STAGE3_VERIFICATION_2025-11-05.md** - Prior verification attempts
 12. **CURSOR_COMPLETION_SUMMARY_2025-11-05.md** - Code consolidation work
-13. **FOR_NETLIFY_AGENT_RAILWAY_FIX.md** - Railway deployment issues (older)
+13. **FOR_NETLIFY_AGENT_RAILWAY_FIX.md** - Render deployment issues (older)
 14. **URGENT_FOR_NARS_LOGS_NEEDED.md** - PostgreSQL issues (older, resolved)
 
 ### Tier 5: Handoffs & Team Communication
@@ -174,7 +174,7 @@ Do not skip the verification stage. I need to see your self-critique before the 
 ## 🗂️ PROJECT STRUCTURE REFERENCE
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/
+/Users/damianseguin/WIMD-Deploy-Project/
 │
 ├── .ai-agents/              ← START HERE for session recovery
 │   ├── MASTER_INDEX_SESSION_RECOVERY.md  ← THIS FILE
@@ -196,7 +196,7 @@ Do not skip the verification stage. I need to see your self-critique before the 
 ├── frontend/                ← Frontend mirror (sync with mosaic_ui)
 │   └── index.html          ← Sync after fixing mosaic_ui
 │
-├── api/                     ← Backend (Railway) - working, no issues
+├── api/                     ← Backend (Render) - working, no issues
 │
 ├── scripts/                 ← Deployment & verification
 │   ├── verify_critical_features.sh  ← Run before deploy
@@ -224,7 +224,7 @@ Do not skip the verification stage. I need to see your self-critique before the 
 
 ```bash
 # Change to project directory
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Verify critical features
 ./scripts/verify_critical_features.sh
@@ -242,7 +242,7 @@ ls -1 URGENT_* FOR_*_AGENT*.md 2>/dev/null
 
 ```bash
 # Backend health
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Production site status
 curl -I https://whatismydelta.com
@@ -258,14 +258,14 @@ curl -s https://whatismydelta.com | wc -l
 ./scripts/deploy.sh netlify
 
 # Deploy backend (CORRECT)
-./scripts/deploy.sh railway
+./scripts/deploy.sh render
 
 # Deploy both (CORRECT)
 ./scripts/deploy.sh all
 
 # ❌ WRONG - Don't use raw commands
 # netlify deploy --prod
-# git push railway-origin main
+# git push render-origin main
 ```
 
 ### Post-Deploy Verification
@@ -287,15 +287,15 @@ curl -s https://whatismydelta.com | grep "Phase 2.5"
 
 ### NEVER Do These Without Wrapper Scripts
 
-- ❌ `git push railway-origin main`
+- ❌ `git push render-origin main`
 - ❌ `netlify deploy --prod`
 - ❌ Any deployment command directly
 
 ### ALWAYS Use Wrapper Scripts
 
-- ✅ `./scripts/push.sh railway-origin main`
+- ✅ `./scripts/push.sh render-origin main`
 - ✅ `./scripts/deploy.sh netlify`
-- ✅ `./scripts/deploy.sh railway`
+- ✅ `./scripts/deploy.sh render`
 
 ### Before ANY Code Changes
 
@@ -380,7 +380,7 @@ START
 **Primary (Local - Project Directory):**
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/
+/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/
 ├── MASTER_INDEX_SESSION_RECOVERY.md (THIS FILE)
 ├── SESSION_RECOVERY_2025-11-07_1712.md
 └── [all other session docs]
@@ -444,7 +444,7 @@ START
 
 ### Previous Issues (Resolved)
 
-1. **Railway deployment failures** - Resolved (see FOR_NETLIFY_AGENT_RAILWAY_FIX.md)
+1. **Render deployment failures** - Resolved (see FOR_NETLIFY_AGENT_RAILWAY_FIX.md)
 2. **PostgreSQL connection issues** - Resolved (see URGENT_FOR_NARS_LOGS_NEEDED.md)
 3. **Multiple DOMContentLoaded handlers** - Resolved (see CURSOR_COMPLETION_SUMMARY)
 

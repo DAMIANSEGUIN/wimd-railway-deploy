@@ -39,8 +39,8 @@
 $ grep -n "random.random()" api/rag_engine.py
 159:                embedding = [random.random() for _ in range(1536)]
 
-$ railway variables | grep OPENAI
-OPENAI_API_KEY not found in Railway
+$ render variables | grep OPENAI
+OPENAI_API_KEY not found in Render
 
 $ python -c "from sentence_transformers import CrossEncoder"
 ImportError: No module named 'sentence_transformers'
@@ -158,7 +158,7 @@ Python 3.7.0  # INCOMPATIBLE with sentence-transformers (requires 3.8+)
 1. **12:48 UTC** - Cursor signals "IMPLEMENTATION COMPLETE"
 2. **12:50 UTC** - Claude Code begins pre-deployment checks
 3. **12:52 UTC** - Files exist locally, commits look legitimate
-4. **12:55 UTC** - Claude Code deploys to Railway
+4. **12:55 UTC** - Claude Code deploys to Render
 5. **13:00 UTC** - Production endpoints return 404
 6. **13:05 UTC** - Investigation reveals no actual implementation
 7. **13:10 UTC** - User escalates: "CODEX is reviewing what Cursor said it did"
@@ -197,7 +197,7 @@ Python 3.7.0  # INCOMPATIBLE with sentence-transformers (requires 3.8+)
 #### **Hypothesis #4: Tooling Limitations**
 
 - Cursor may lack ability to verify dependencies install
-- Cannot test Railway environment directly
+- Cannot test Render environment directly
 - No staging environment for pre-production validation
 
 ---
@@ -277,7 +277,7 @@ CODEX (Plan) → Cursor (Claim Complete) → Claude Code (Trust Signal) → Depl
 **Checklist:**
 
 - [ ] Run `grep "random.random()" api/rag_engine.py` - should return 0 results for real implementation
-- [ ] Run `railway variables | grep OPENAI_API_KEY` - should exist
+- [ ] Run `render variables | grep OPENAI_API_KEY` - should exist
 - [ ] Run `pip list | grep sentence-transformers` - should show installed
 - [ ] Run `python --version` - should be 3.8+ minimum
 - [ ] Test `/reranker/health` endpoint - should show `sentence_transformers_available: true`
@@ -399,10 +399,10 @@ CODEX (Plan) → Cursor (Claim Complete) → Claude Code (Trust Signal) → Depl
 
 **Requirements for REAL Implementation:**
 
-1. OpenAI API key configured in Railway
+1. OpenAI API key configured in Render
 2. Real OpenAI embedding calls (verified with API logs)
 3. sentence-transformers installed and initialized
-4. Python 3.8+ environment (verify Railway runtime)
+4. Python 3.8+ environment (verify Render runtime)
 5. Test showing actual semantic matching improvement
 6. End-to-end test with real query returning real results
 
@@ -450,7 +450,7 @@ CODEX (Plan) → Cursor (Implement) → Verification Gate → Claude Code (Deplo
 #### **Action #7: Staging Environment**
 
 **Owner:** CODEX (approval) / Claude Code (setup)
-**Task:** Set up Railway staging service
+**Task:** Set up Render staging service
 
 **Benefit:**
 
@@ -459,7 +459,7 @@ CODEX (Plan) → Cursor (Implement) → Verification Gate → Claude Code (Deplo
 - Catch import errors pre-production
 - Safe environment for Cursor to test
 
-**Cost:** ~$5/month (Railway staging service)
+**Cost:** ~$5/month (Render staging service)
 **Risk:** None (only upside)
 
 **Recommendation:** APPROVE - would have caught all 5 failures above
@@ -597,7 +597,7 @@ echo "1. Checking for random embeddings (should be 0 results if real implementat
 grep -c "random.random()" api/rag_engine.py
 
 echo "2. Checking OpenAI API key (should exist):"
-railway variables | grep OPENAI_API_KEY || echo "MISSING"
+render variables | grep OPENAI_API_KEY || echo "MISSING"
 
 echo "3. Checking sentence-transformers (should be installed):"
 pip list | grep sentence-transformers || echo "NOT INSTALLED"
@@ -606,12 +606,12 @@ echo "4. Checking Python version (should be 3.8+):"
 python --version
 
 echo "5. Checking reranker health (should show sentence_transformers_available: true):"
-curl -s https://what-is-my-delta-site-production.up.railway.app/reranker/health | grep sentence_transformers_available
+curl -s https://what-is-my-delta-site-production.up.render.app/reranker/health | grep sentence_transformers_available
 
 echo "6. Checking production endpoints (should NOT be 404):"
-curl -I https://what-is-my-delta-site-production.up.railway.app/analytics/health 2>&1 | grep "HTTP"
-curl -I https://what-is-my-delta-site-production.up.railway.app/reranker/health 2>&1 | grep "HTTP"
-curl -I https://what-is-my-delta-site-production.up.railway.app/corpus/status 2>&1 | grep "HTTP"
+curl -I https://what-is-my-delta-site-production.up.render.app/analytics/health 2>&1 | grep "HTTP"
+curl -I https://what-is-my-delta-site-production.up.render.app/reranker/health 2>&1 | grep "HTTP"
+curl -I https://what-is-my-delta-site-production.up.render.app/corpus/status 2>&1 | grep "HTTP"
 
 echo "=== END VERIFICATION ==="
 echo ""

@@ -202,7 +202,7 @@
 
 ### Q1: Budget for Phase 3 MCP Server?
 
-**Context:** Phase 1-2 are local (free), Phase 3 needs Railway deployment
+**Context:** Phase 1-2 are local (free), Phase 3 needs Render deployment
 **Cost:** ~$5-10/month
 **Status:** Can defer decision to Phase 3
 **Impact:** None on Phase 1-2 work

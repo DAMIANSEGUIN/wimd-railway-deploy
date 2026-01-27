@@ -23,7 +23,7 @@ Status: Production-ready
 ## Installation
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/mosaic-diag
+cd /Users/damianseguin/WIMD-Deploy-Project/mosaic-diag
 chmod +x cli.py
 
 # Optional: Add to PATH
@@ -53,13 +53,13 @@ export PATH="$PATH:$(pwd)"
 ### Log an Incident
 
 ```bash
-# Log Railway auto-deploy failure
+# Log Render auto-deploy failure
 ./cli.py incident add \
   --category deployment \
   --severity high \
-  --symptom "Railway restarted but didn't pull new code from GitHub" \
-  --root-cause "GitHub webhook → Railway integration broken" \
-  --resolution "Manual railway up deployment"
+  --symptom "Render restarted but didn't pull new code from GitHub" \
+  --root-cause "GitHub webhook → Render integration broken" \
+  --resolution "Manual render up deployment"
 
 # Log Python SSL missing
 ./cli.py incident add \
@@ -199,7 +199,7 @@ diagnostics/
 
 Based on `RECURRING_BLOCKERS.md`:
 
-- **DEPLOYMENT** - Railway auto-deploy, BUILD_ID loop, git issues
+- **DEPLOYMENT** - Render auto-deploy, BUILD_ID loop, git issues
 - **ENVIRONMENT** - Python version, SSL missing, dependencies
 - **PERMISSIONS** - Agent access, tool availability
 - **DOCUMENTATION** - Missing docs, outdated instructions
@@ -211,7 +211,7 @@ Based on `RECURRING_BLOCKERS.md`:
 
 - **CRITICAL** - Blocks all work (e.g., Python too old)
 - **HIGH** - Blocks current task (e.g., SSL missing)
-- **MEDIUM** - Workaround exists (e.g., manual Railway deploy)
+- **MEDIUM** - Workaround exists (e.g., manual Render deploy)
 - **LOW** - Annoying but not blocking (e.g., old docs)
 
 ---
@@ -246,13 +246,13 @@ SUMMARY: 2 passed, 0 failed, 1 warnings
 $ ./cli.py incident add \
   --category deployment \
   --severity high \
-  --symptom "Railway auto-deploy not pulling new code" \
+  --symptom "Render auto-deploy not pulling new code" \
   --root-cause "GitHub webhook broken"
 
 ✅ Incident logged: a3f9b12c
    Category: deployment
    Severity: high
-   Symptom: Railway auto-deploy not pulling new code
+   Symptom: Render auto-deploy not pulling new code
 ```
 
 ### Example 3: Review Recent Incidents
@@ -266,7 +266,7 @@ INCIDENT LOG (3 total)
 
 🟠 [a3f9b12c] DEPLOYMENT
    Timestamp: 2025-12-04T16:00:00.000000Z
-   Symptom: Railway auto-deploy not pulling new code
+   Symptom: Render auto-deploy not pulling new code
    Root Cause: GitHub webhook broken
 
 🔴 [7e2d4a1f] ENVIRONMENT

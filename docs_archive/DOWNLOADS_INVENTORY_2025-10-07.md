@@ -26,7 +26,7 @@
 
 | Folder | Size | Last Modified | Rationale |
 |--------|------|---------------|-----------|
-| **WIMD-Railway-Deploy-Project** | 6.3MB | 2025-10-07 | PRIMARY - Active production project |
+| **WIMD-Render-Deploy-Project** | 6.3MB | 2025-10-07 | PRIMARY - Active production project |
 | **Foundation_Vault** | 1.6MB | 2025-09-27 | Active knowledge base (confirm with user) |
 
 **Action**: KEEP - No changes
@@ -38,10 +38,10 @@
 | Folder | Size | Last Modified | Status |
 |--------|------|---------------|--------|
 | WIMD_PUBLIC_TEST | 616KB | 2025-09-14 | Old test deployment |
-| WIMD_FRESH_DEPLOY | 324KB | 2025-09-15 | Superseded by Railway deploy |
+| WIMD_FRESH_DEPLOY | 324KB | 2025-09-15 | Superseded by Render deploy |
 | wimdtest | 312KB | 2025-09-14 | Test instance |
 | WIMD_Hosting_Starter | 52KB | Unknown | Obsolete starter |
-| WIMD-Railway-Deploy-Backup-20250919-005711 | Unknown | 2025-09-24 | Old backup |
+| WIMD-Render-Deploy-Backup-20250919-005711 | Unknown | 2025-09-24 | Old backup |
 
 **Total Space**: ~1.3MB
 **Action**: ARCHIVE to `~/Archives/Pre-Recovery-2025-10-07/WIMD-backups/`
@@ -71,7 +71,7 @@
 
 | Folder | Size | Last Modified | Status |
 |--------|------|---------------|--------|
-| OpportunityBridge | 992KB | 2025-09-27 | Pre-Railway project |
+| OpportunityBridge | 992KB | 2025-09-27 | Pre-Render project |
 | jsm_csv_runner | 12KB | Unknown | Old version |
 | jsm_csv_runner_v2 | 28KB | Unknown | Old version |
 | jsm_csv_runner_v3 | 24KB | Unknown | Old version |
@@ -153,7 +153,7 @@ Damian (212KB, 2025-09-18) - unclear what this is
 │   ├── WIMD_FRESH_DEPLOY/
 │   ├── wimdtest/
 │   ├── WIMD_Hosting_Starter/
-│   └── WIMD-Railway-Deploy-Backup-20250919-005711/
+│   └── WIMD-Render-Deploy-Backup-20250919-005711/
 ├── Mosaic-old-versions/
 │   ├── Mosaic/
 │   ├── Mosaic Launcher.app/
@@ -223,7 +223,7 @@ mv WIMD_PUBLIC_TEST ~/Archives/Pre-Recovery-2025-10-07/WIMD-backups/
 mv WIMD_FRESH_DEPLOY ~/Archives/Pre-Recovery-2025-10-07/WIMD-backups/
 mv wimdtest ~/Archives/Pre-Recovery-2025-10-07/WIMD-backups/
 mv WIMD_Hosting_Starter ~/Archives/Pre-Recovery-2025-10-07/WIMD-backups/
-mv WIMD-Railway-Deploy-Backup-20250919-005711 ~/Archives/Pre-Recovery-2025-10-07/WIMD-backups/
+mv WIMD-Render-Deploy-Backup-20250919-005711 ~/Archives/Pre-Recovery-2025-10-07/WIMD-backups/
 ```
 
 ### Step 3: Move Mosaic Old Versions
@@ -285,7 +285,7 @@ mv Damian ~/Archives/Pre-Recovery-2025-10-07/Misc/  # Review this first
 
 ```bash
 # Confirm only active projects remain
-ls -la ~/Downloads/WIMD-Railway-Deploy-Project
+ls -la ~/Downloads/WIMD-Render-Deploy-Project
 ls -la ~/Downloads/Foundation_Vault
 
 # Confirm archives exist

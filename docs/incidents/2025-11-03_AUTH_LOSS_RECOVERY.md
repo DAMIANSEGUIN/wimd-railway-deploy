@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-Authentication UI was completely removed from production deployment, requiring emergency restoration. Root cause was restoring from a commit that predated authentication implementation without verifying feature completeness against specs. **Resolution:** Restored from `railway-origin/main` which had both auth and required PS101 features. Implemented mandatory spec verification process to prevent recurrence.
+Authentication UI was completely removed from production deployment, requiring emergency restoration. Root cause was restoring from a commit that predated authentication implementation without verifying feature completeness against specs. **Resolution:** Restored from `render-origin/main` which had both auth and required PS101 features. Implemented mandatory spec verification process to prevent recurrence.
 
 ---
 
@@ -51,16 +51,16 @@ Authentication UI was completely removed from production deployment, requiring e
 
 ### Recovery (16:40-17:00)
 
-- **Decision:** Restore from `railway-origin/main` (known stable with auth)
+- **Decision:** Restore from `render-origin/main` (known stable with auth)
 - **Verification:**
 
   ```bash
-  git show railway-origin/main:mosaic_ui/index.html | grep -c "authModal"
+  git show render-origin/main:mosaic_ui/index.html | grep -c "authModal"
   # Result: 39 ✅
   ```
 
-- **Action:** Restored both `mosaic_ui/index.html` and `frontend/index.html` from `railway-origin/main`
-- **Commit:** 6e026fa "RESTORE: Auth UI from railway-origin/main (2766 lines with auth working)"
+- **Action:** Restored both `mosaic_ui/index.html` and `frontend/index.html` from `render-origin/main`
+- **Commit:** 6e026fa "RESTORE: Auth UI from render-origin/main (2766 lines with auth working)"
 
 ### Mandatory Spec Verification (17:00-17:30)
 
@@ -108,7 +108,7 @@ Commit 345d906 restored PS101 v2 files from commit 890d2bc, which was created on
 - ❌ Session management UI
 - ❌ Auth token handling
 
-### Recovered from railway-origin/main
+### Recovered from render-origin/main
 
 - ✅ Authentication: 7 authModal references
 - ✅ All 10 PS101 steps
@@ -145,7 +145,7 @@ Commit 345d906 restored PS101 v2 files from commit 890d2bc, which was created on
 
 ### Immediate Actions Taken
 
-1. ✅ Restored working version from `railway-origin/main`
+1. ✅ Restored working version from `render-origin/main`
 2. ✅ Verified auth present (39 references)
 3. ✅ Created spec verification checklist
 4. ✅ Verified against all canonical specs
@@ -191,7 +191,7 @@ Commit 345d906 restored PS101 v2 files from commit 890d2bc, which was created on
 1. ✅ Issue caught before production deployment
 2. ✅ Clear user feedback enabled rapid diagnosis
 3. ✅ Git history preserved recovery path
-4. ✅ railway-origin/main had complete working version
+4. ✅ render-origin/main had complete working version
 
 ---
 
@@ -327,7 +327,7 @@ User quote that triggered protocol change:
 ### A. Commit History
 
 ```
-6e026fa RESTORE: Auth UI from railway-origin/main (2766 lines with auth working)
+6e026fa RESTORE: Auth UI from render-origin/main (2766 lines with auth working)
 1eec9b0 Fix chat: Add /wimd proxy rule to root netlify.toml
 de731e7 Fix chat: Add /wimd proxy rule (without wildcard) to netlify.toml
 15977c2 Fix chat: Update API_BASE to use Netlify proxy (empty string)
@@ -337,7 +337,7 @@ de731e7 Fix chat: Add /wimd proxy rule (without wildcard) to netlify.toml
 
 ### B. Feature Comparison
 
-| Feature | Commit 345d906 | railway-origin/main | Required by Spec |
+| Feature | Commit 345d906 | render-origin/main | Required by Spec |
 |---------|----------------|---------------------|------------------|
 | Authentication | ❌ 0 refs | ✅ 39 refs | ✅ MUST HAVE |
 | PS101 10 Steps | ✅ Present | ✅ Present | ✅ MUST HAVE |

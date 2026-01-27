@@ -181,7 +181,7 @@
 
 | Question | Raised By | Date | Blocking Section(s) | Answer / Resolution |
 |----------|-----------|------|---------------------|---------------------|
-| Where do MCP servers run? (Railway/Local/Separate?) | Claude Code | 2025-12-09 | 6, 7 | PENDING |
+| Where do MCP servers run? (Render/Local/Separate?) | Claude Code | 2025-12-09 | 6, 7 | PENDING |
 | Can ChatGPT query external MCP servers? | Claude Code | 2025-12-09 | 7 | PENDING - Ask Codex |
 | What's the budget for MCP infrastructure? | Claude Code | 2025-12-09 | 6 | PENDING - Ask Damian |
 

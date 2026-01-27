@@ -137,16 +137,16 @@ When you identify a problem:
 
 **❌ FORBIDDEN:**
 
-- `git push railway-origin main`
+- `git push render-origin main`
 - `git push origin main`
 - `netlify deploy --prod`
 - `netlify deploy --prod --dir=mosaic_ui`
 
 **✅ REQUIRED:**
 
-- `./scripts/push.sh railway-origin main` (enforces verification)
+- `./scripts/push.sh render-origin main` (enforces verification)
 - `./scripts/deploy.sh netlify` (frontend with verification)
-- `./scripts/deploy.sh railway` (backend with verification)
+- `./scripts/deploy.sh render` (backend with verification)
 - `./scripts/deploy.sh all` (full stack deployment)
 
 **Why:** Wrapper scripts enforce automated verification that prevents false positive deployments.
@@ -154,7 +154,7 @@ When you identify a problem:
 **Emergency bypass only:**
 
 ```bash
-SKIP_VERIFICATION=true BYPASS_REASON="Hotfix for production down" ./scripts/push.sh railway-origin main
+SKIP_VERIFICATION=true BYPASS_REASON="Hotfix for production down" ./scripts/push.sh render-origin main
 ```
 
 This will be logged to `.verification_audit.log` for review.

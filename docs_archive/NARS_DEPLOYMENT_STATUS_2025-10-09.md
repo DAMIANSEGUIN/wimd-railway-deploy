@@ -4,7 +4,7 @@
 
 **Latest Fix Applied**: Missing `get_conn` import (commit 34ab317)
 **Ready for Deployment**: Yes
-**Next Step**: Trigger Railway deployment and monitor
+**Next Step**: Trigger Render deployment and monitor
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### Issue 1: Health Check Timing ✅ FIXED
 
-**Problem**: Railway health check runs before startup migration completes
+**Problem**: Render health check runs before startup migration completes
 **Solution**: CODEX added startup readiness gate (commit 88dac89)
 **Result**: Migration now completes before health validation
 
@@ -68,13 +68,13 @@ def health():
 
 1. **Build** (~80 seconds): ✅ Success confirmed
 2. **Container starts**: Application initializes
-3. **Health checks begin**: Railway hits `/health`
+3. **Health checks begin**: Render hits `/health`
 4. **Grace period**: Returns `{"ok": true, "status": "initializing"}` → 200 OK
 5. **Migration runs**: Updates database, sets feature flags to True
 6. **SERVICE_READY set**: Grace period ends
 7. **Full validation**: Health check now enforces all checks
 8. **Expected result**: All checks pass → 200 OK
-9. **Deployment succeeds**: Railway promotes new deployment as active
+9. **Deployment succeeds**: Render promotes new deployment as active
 
 ---
 
@@ -97,13 +97,13 @@ def health():
 
 ## How to Deploy
 
-**Via Railway CLI**:
+**Via Render CLI**:
 
 ```bash
-railway redeploy --yes
+render redeploy --yes
 ```
 
-**Via Railway Dashboard**:
+**Via Render Dashboard**:
 
 1. Go to what-is-my-delta-site service
 2. Deployments tab
@@ -146,7 +146,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 ✅ **Container starts** (logs show "Starting Container")
 ✅ **Migration runs** (✅ Feature flags synced to database)
 ✅ **Health check passes** (200 OK instead of 503)
-✅ **Deployment succeeds** (Railway marks as Active)
+✅ **Deployment succeeds** (Render marks as Active)
 ✅ **Production updated** (whatismydelta.com serves new code)
 
 ---
@@ -171,7 +171,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 
 **Immediate** (NARs or Claude Code):
 
-1. Trigger Railway deployment (commit 34ab317)
+1. Trigger Render deployment (commit 34ab317)
 2. Monitor Deploy Logs for health check status
 3. Verify deployment succeeds
 
@@ -193,7 +193,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 
 **Claude Code**: Standing by for deployment execution
 **CODEX**: Available for systematic planning if needed
-**Railway Service**: wimd-career-coaching → what-is-my-delta-site (production)
+**Render Service**: wimd-career-coaching → what-is-my-delta-site (production)
 
 ---
 
@@ -205,7 +205,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 
 ### Verification Results
 
-**Railway Backend Health** (`https://what-is-my-delta-site-production.up.railway.app/health`):
+**Render Backend Health** (`https://what-is-my-delta-site-production.up.render.app/health`):
 
 ```json
 {
@@ -235,7 +235,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 }
 ```
 
-**Prompt System Health** (`https://what-is-my-delta-site-production.up.railway.app/health/prompts`):
+**Prompt System Health** (`https://what-is-my-delta-site-production.up.render.app/health/prompts`):
 
 ```json
 {
@@ -266,7 +266,7 @@ INFO: "GET /health HTTP/1.1" 200 OK  ← Should be 200, not 503
 ✅ **Container starts** (logs show "Starting Container")
 ✅ **Migration runs** (✅ Feature flags synced to database)
 ✅ **Health check passes** (200 OK instead of 503)
-✅ **Deployment succeeds** (Railway marks as Active)
+✅ **Deployment succeeds** (Render marks as Active)
 ✅ **Production updated** (whatismydelta.com serves new code)
 ✅ **All checks return true** (database, prompt_system, ai_fallback_enabled, ai_available)
 ✅ **Boolean conversion working** (fallback_enabled returns `true` not `0`)

@@ -47,7 +47,7 @@ Terminal 1 (Claude Code)               Message Broker               Terminal 2 (
 ### Terminal 1 - Claude Code
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 export AI_AGENT_NAME="Claude-Code"
 ./scripts/session_with_auto_messages.sh --interactive
@@ -63,7 +63,7 @@ export AI_AGENT_NAME="Claude-Code"
 ### Terminal 2 - Gemini
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 export AI_AGENT_NAME="Gemini"
 ./scripts/session_with_auto_messages.sh --interactive
@@ -126,7 +126,7 @@ ID: msg_1764085900_0
 
 [Gemini] ~/project $ # Now I run the query...
 
-[Gemini] ~/project $ railway run bash -c 'psql $DATABASE_URL -c "SELECT id, email, LENGTH(password_hash) as len, password_hash FROM users WHERE LOWER(email) = '\''damian.seguin@gmail.com'\''"'
+[Gemini] ~/project $ render run bash -c 'psql $DATABASE_URL -c "SELECT id, email, LENGTH(password_hash) as len, password_hash FROM users WHERE LOWER(email) = '\''damian.seguin@gmail.com'\''"'
 
  id   | email                    | len | password_hash
 ------+--------------------------+-----+-------------------

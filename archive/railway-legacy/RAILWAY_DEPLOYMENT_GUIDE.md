@@ -1,4 +1,4 @@
-# Railway Deployment Guide (GitHub-Based)
+# Render Deployment Guide (GitHub-Based)
 
 **Version:** 1.0
 **Created:** 2026-01-05
@@ -13,21 +13,21 @@
 **Why GitHub vs CLI:**
 - ✅ No 45MB upload timeout (CLI limitation)
 - ✅ No CLI linking ambiguity issues
-- ✅ Standard practice for Railway
+- ✅ Standard practice for Render
 - ✅ Automatic deploys on git push
-- ✅ Deployment history in Railway dashboard
-- ❌ Slightly slower first deploy (Railway clones repo)
+- ✅ Deployment history in Render dashboard
+- ❌ Slightly slower first deploy (Render clones repo)
 
 ---
 
 ## USER SETUP (ONE-TIME)
 
-**Step 1: Railway Dashboard**
+**Step 1: Render Dashboard**
 ```
-1. Go to railway.app/dashboard
+1. Go to render.app/dashboard
 2. Select project: wimd-career-coaching
 3. Click "+ New" → "GitHub Repo"
-4. Connect: DAMIANSEGUIN/wimd-railway-deploy
+4. Connect: DAMIANSEGUIN/wimd-render-deploy
 5. Set branch: main
 6. Set root directory: / (default)
 7. Save
@@ -46,8 +46,8 @@ All existing environment variables should remain:
 
 **Step 3: Build Configuration**
 ```
-Railway auto-detects FastAPI apps.
-If needed, override in railway.toml:
+Render auto-detects FastAPI apps.
+If needed, override in render.toml:
 - Build command: pip install -r requirements.txt
 - Start command: gunicorn api.index:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
 ```
@@ -67,19 +67,19 @@ git merge claude/start-new-session-nB5Jo
 # 3. Push to GitHub
 git push origin main
 
-# 4. Railway auto-deploys
-# Watch: railway.app/project/PROJECTID/deployments
+# 4. Render auto-deploys
+# Watch: render.app/project/PROJECTID/deployments
 ```
 
 **Feature Branch Testing:**
 ```bash
-# Railway doesn't auto-deploy feature branches by default
+# Render doesn't auto-deploy feature branches by default
 # For testing, either:
 
 # Option A: Merge to main (standard)
 git checkout main && git merge feature-branch && git push
 
-# Option B: Configure branch deploy in Railway dashboard
+# Option B: Configure branch deploy in Render dashboard
 # Project → Settings → Environments → Add "staging" environment
 # Link staging to your feature branch
 ```
@@ -90,19 +90,19 @@ git checkout main && git merge feature-branch && git push
 
 **Check 1: Service Health**
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 # Should return: {"ok":true, ...}
 ```
 
 **Check 2: Config Endpoint**
 ```bash
-curl https://what-is-my-delta-site-production.up.railway.app/config
+curl https://what-is-my-delta-site-production.up.render.app/config
 # Should return: {"apiBase":"...","schemaVersion":"v2"}
 ```
 
 **Check 3: Database Connection**
 ```bash
-# Check logs in Railway dashboard
+# Check logs in Render dashboard
 # Look for: "[STORAGE] ✅ PostgreSQL connection pool created"
 # Should NOT see: "SQLite fallback"
 ```
@@ -115,7 +115,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/config
 ```
 Cause: Large dependency install
 Fix: Wait (first deploy takes 2-5 minutes)
-Check: Railway dashboard → Deployment → Build Logs
+Check: Render dashboard → Deployment → Build Logs
 ```
 
 **Issue: Deploy fails with "ModuleNotFoundError"**
@@ -128,7 +128,7 @@ Check: requirements.txt includes all imports
 **Issue: "503 Service Unavailable"**
 ```
 Cause: App crashed on startup
-Fix: Check Railway → Deployment → Deploy Logs
+Fix: Check Render → Deployment → Deploy Logs
 Common causes:
   - Missing environment variable
   - Database connection failed
@@ -137,8 +137,8 @@ Common causes:
 
 **Issue: Old code still running**
 ```
-Cause: Railway cached old deployment
-Fix: Railway dashboard → Deployments → Redeploy
+Cause: Render cached old deployment
+Fix: Render dashboard → Deployments → Redeploy
 ```
 
 ---
@@ -153,12 +153,12 @@ Fix: Railway dashboard → Deployments → Redeploy
 - [ ] Commit message follows convention
 - [ ] Feature branch merged to main
 
-**After Railway Deploy:**
+**After Render Deploy:**
 - [ ] Health endpoint returns {"ok":true}
 - [ ] Config shows schemaVersion:"v2"
 - [ ] Database connection active (PostgreSQL, not SQLite)
 - [ ] Frontend can reach backend API
-- [ ] No errors in Railway logs
+- [ ] No errors in Render logs
 
 ---
 
@@ -171,10 +171,10 @@ Fix: Railway dashboard → Deployments → Redeploy
 git log --oneline -5  # Find last good commit
 git revert HEAD  # Or: git revert abc1234
 git push origin main
-# Railway auto-deploys the revert
+# Render auto-deploys the revert
 
-# Option 2: Redeploy Previous via Railway Dashboard
-1. Railway → Project → Deployments
+# Option 2: Redeploy Previous via Render Dashboard
+1. Render → Project → Deployments
 2. Find last working deployment
 3. Click "..." → "Redeploy"
 ```
@@ -186,38 +186,38 @@ git push origin main
 **Production Health:**
 ```bash
 # Automated check (add to cron or monitoring service)
-curl -f https://what-is-my-delta-site-production.up.railway.app/health || echo "ALERT: Service down"
+curl -f https://what-is-my-delta-site-production.up.render.app/health || echo "ALERT: Service down"
 ```
 
-**Railway Logs:**
+**Render Logs:**
 ```bash
 # Via CLI (if configured)
-railway logs --tail 100
+render logs --tail 100
 
 # Via Dashboard
-Railway → Project → Deployments → [Latest] → Deploy Logs
+Render → Project → Deployments → [Latest] → Deploy Logs
 ```
 
 ---
 
 ## COST MANAGEMENT
 
-**Railway Pricing:**
+**Render Pricing:**
 - Free tier: $5 credit/month
 - Pro: $20/month + usage
 - Usage: ~$0.000463/GB-hour for compute
 
 **Cost Optimization:**
 - Use GitHub deployment (no CLI upload charges)
-- Monitor usage in Railway dashboard
-- Set up billing alerts in Railway settings
+- Monitor usage in Render dashboard
+- Set up billing alerts in Render settings
 
 ---
 
 ## ENVIRONMENT-SPECIFIC URLS
 
 **Production:**
-- Backend: `https://what-is-my-delta-site-production.up.railway.app`
+- Backend: `https://what-is-my-delta-site-production.up.render.app`
 - Frontend: `https://whatismydelta.com` (Netlify)
 
 **Development:**
@@ -238,4 +238,4 @@ Railway → Project → Deployments → [Latest] → Deploy Logs
 **END OF RAILWAY DEPLOYMENT GUIDE**
 
 **Status:** GitHub-based deployment configured
-**Next Deploy:** Merge feature branch → Push to main → Railway auto-deploys
+**Next Deploy:** Merge feature branch → Push to main → Render auto-deploys

@@ -380,7 +380,7 @@ scripts/start_session.sh             # Simplified, no mode detection
 
 ```bash
 # Working directory
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 
 # Test pre-commit
 /Users/damianseguin/Library/Python/3.7/bin/pre-commit run --all-files
@@ -397,7 +397,7 @@ pip3 install --user ruff black mypy bandit safety pytest pytest-cov radon
 ## PROMPT FOR NEXT SESSION (GEMINI)
 
 ```
-Read and follow: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/HANDOFF_TO_GEMINI_2025-12-12.md
+Read and follow: /Users/damianseguin/WIMD-Deploy-Project/.ai-agents/HANDOFF_TO_GEMINI_2025-12-12.md
 
 Context: We replaced prose governance with ISO-based automated enforcement. Pre-commit hooks, CI/CD gates, and compliance scripts are ready.
 

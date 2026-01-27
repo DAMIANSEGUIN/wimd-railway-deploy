@@ -1,12 +1,12 @@
-# Agent Task: Fix Railway Health Check 503 Failure
+# Agent Task: Fix Render Health Check 503 Failure
 
 ## Objective
 
-Fix the Railway deployment health check that returns 503 despite successful application startup, preventing deployment of fixes to production.
+Fix the Render deployment health check that returns 503 despite successful application startup, preventing deployment of fixes to production.
 
 ## Context
 
-Railway deployment (commit 80155006) builds and starts successfully with all components initialized, but `/health` endpoint returns 503 causing deployment failure. The old deployment (Oct 6, commit a583d26a) remains active.
+Render deployment (commit 80155006) builds and starts successfully with all components initialized, but `/health` endpoint returns 503 causing deployment failure. The old deployment (Oct 6, commit a583d26a) remains active.
 
 ## Evidence of Successful Startup
 
@@ -91,7 +91,7 @@ def health():
 
         print(f"🔍 HEALTH STATUS: overall_ok={overall_ok}, prompt_system_ok={prompt_system_ok}, db_ok={db_ok}")
 
-        # Return 503 if not healthy (triggers Railway restart)
+        # Return 503 if not healthy (triggers Render restart)
         if not overall_ok:
             print(f"⚠️ HEALTH CHECK FAILED - Returning 503")
             raise HTTPException(status_code=503, detail=health_status)
@@ -151,7 +151,7 @@ def debug_system_state():
 ```bash
 git add api/index.py
 git commit -m "Add health check diagnostic logging and debug endpoint"
-git push railway-origin main
+git push render-origin main
 ```
 
 4. **Monitor deployment logs** - Watch for the debug output lines starting with 🔍
@@ -273,7 +273,7 @@ Commit with clear message:
 
 ```bash
 git commit -m "TEMPORARY: Bypass health check to unblock deployment - investigate after"
-git push railway-origin main
+git push render-origin main
 ```
 
 **After successful deployment**, revert the bypass and investigate why original logic failed.
@@ -282,7 +282,7 @@ git push railway-origin main
 
 After applying fixes:
 
-1. **Check deployment succeeds** - Railway build and health check pass
+1. **Check deployment succeeds** - Render build and health check pass
 2. **Test production endpoint**:
 
    ```bash
@@ -304,11 +304,11 @@ After applying fixes:
    # Should show: fallback_enabled: 1, openai.available: true
    ```
 
-5. **Verify old deployment replaced** - Check Railway dashboard shows new commit as active
+5. **Verify old deployment replaced** - Check Render dashboard shows new commit as active
 
 ## Success Criteria
 
-- [ ] Railway deployment succeeds (no 503 health check failures)
+- [ ] Render deployment succeeds (no 503 health check failures)
 - [ ] `/health` returns 200 OK
 - [ ] `/health/prompts` shows `fallback_enabled: 1` and `openai.available: true`
 - [ ] New deployment (commit 80155006 or later) is active on whatismydelta.com
@@ -321,17 +321,17 @@ If fixes cause worse problems:
 ```bash
 # Revert to last working state
 git revert HEAD
-git push railway-origin main
+git push render-origin main
 ```
 
-Or manually rollback via Railway dashboard to commit a583d26a.
+Or manually rollback via Render dashboard to commit a583d26a.
 
 ## Repository Details
 
 - **Repo**: github.com/DAMIANSEGUIN/what-is-my-delta-site
 - **Branch**: main
-- **Remote**: railway-origin
-- **Working Directory**: `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
+- **Remote**: render-origin
+- **Working Directory**: `/Users/damianseguin/WIMD-Deploy-Project`
 
 ## Files to Modify
 

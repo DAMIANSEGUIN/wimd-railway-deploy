@@ -95,7 +95,7 @@ The following files now reference the new governance system:
 ### Quick Start Command
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 cat AI_START_HERE.txt
 ```
 

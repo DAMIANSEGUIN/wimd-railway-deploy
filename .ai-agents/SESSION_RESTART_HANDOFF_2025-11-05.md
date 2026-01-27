@@ -326,6 +326,6 @@ document.getElementById('authModal')?.style.display
 # 5. Review Codex Agent evidence, then update Stage 3 verification doc
 ```
 
-**Current working directory:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+**Current working directory:** `/Users/damianseguin/WIMD-Deploy-Project`
 
 **All changes committed and ready to deploy.**

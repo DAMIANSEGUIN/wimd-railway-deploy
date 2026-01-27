@@ -114,8 +114,8 @@ This folder contains the complete implementation plan for rewriting the Mosaic p
 ✅ Authentication (login/register/password reset)
 ✅ PS101 flow (10 questions exist)
 ✅ Chat interface (functional)
-✅ PostgreSQL database (connected on Railway)
-✅ Backend API deployed (Railway)
+✅ PostgreSQL database (connected on Render)
+✅ Backend API deployed (Render)
 ✅ Frontend deployed (Netlify)
 
 ### The Gap (What's Missing)
@@ -303,7 +303,7 @@ cursor.execute("""
 **Production codebase:**
 
 ```
-~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Railway-Deploy-Project/
+~/Library/CloudStorage/GoogleDrive-damian.seguin@gmail.com/My Drive/WIMD-Render-Deploy-Project/
 ```
 
 ---

@@ -128,7 +128,7 @@
    npm list -g @modelcontextprotocol/server-filesystem
    ```
 
-3. Create/Update `~/Library/Application Support/Claude/claude_desktop_config.json` to expose `~/Downloads/WIMD-Railway-Deploy-Project` and related paths, then restart Claude Desktop.
+3. Create/Update `~/Library/Application Support/Claude/claude_desktop_config.json` to expose `~/Downloads/WIMD-Render-Deploy-Project` and related paths, then restart Claude Desktop.
 4. Install Grok CLI if credentials are available:
 
    ```bash
@@ -211,7 +211,7 @@
 
 **Dependencies**: Phases 1–3 complete (clean workspace, toolchain, and governance in place).
 
-**Inputs**: Local repo, Railway/Netlify dashboards, feature flag files, logs.
+**Inputs**: Local repo, Render/Netlify dashboards, feature flag files, logs.
 
 **Key Tasks**:
 
@@ -230,12 +230,12 @@
 
    ```bash
    curl -I https://whatismydelta.com
-   curl https://what-is-my-delta-site-production.up.railway.app/health
-   railway status
-   railway logs --limit 50
+   curl https://what-is-my-delta-site-production.up.render.app/health
+   render status
+   render logs --limit 50
    ```
 
-4. Phase 4 Reality Audit: Review `feature_flags.json`, `.env`, `api/rag_engine.py`, `api/job_sources/*.py`, and Railway env vars to distinguish real integrations from mocks.
+4. Phase 4 Reality Audit: Review `feature_flags.json`, `.env`, `api/rag_engine.py`, `api/job_sources/*.py`, and Render env vars to distinguish real integrations from mocks.
 5. Summarize in `WIMD_STATE_ASSESSMENT_2025-10-07.md` with clear keep/fix/remove recommendations.
 
 **Deliverables**:
@@ -384,16 +384,16 @@
 1. **Database Migrations**
 
    ```bash
-   railway run python api/run_migrations.py
-   railway run python -c "import sqlite3; print(sqlite3.connect('data/mosaic.db').execute('SELECT name FROM sqlite_master WHERE type=\"table\"').fetchall())"
+   render run python api/run_migrations.py
+   render run python -c "import sqlite3; print(sqlite3.connect('data/mosaic.db').execute('SELECT name FROM sqlite_master WHERE type=\"table\"').fetchall())"
    ```
 
 2. **API Deployment**
 
    ```bash
    git push origin main
-   railway logs --follow
-   curl https://what-is-my-delta-site-production.up.railway.app/health
+   render logs --follow
+   curl https://what-is-my-delta-site-production.up.render.app/health
    ```
 
 3. **Frontend Deployment**
@@ -415,7 +415,7 @@
 
 - All critical endpoints return 200.
 - Feature flags reflect intended configuration.
-- Railway logs clean; analytics dashboard populates within expected timeframe.
+- Render logs clean; analytics dashboard populates within expected timeframe.
 - Cost monitors show real API usage.
 
 **Rollback Procedure**:

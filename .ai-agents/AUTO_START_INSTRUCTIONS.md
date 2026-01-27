@@ -6,7 +6,7 @@ Add to your shell RC file (`~/.bashrc`, `~/.zshrc`, or `~/.bash_profile`):
 
 ```bash
 # AI Agent Auto-Check Messages
-if [ "$PWD" = "/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project" ]; then
+if [ "$PWD" = "/Users/damianseguin/WIMD-Deploy-Project" ]; then
     export AI_AGENT_NAME="Claude-Code"
 
     # Auto-start broker if not running
@@ -28,7 +28,7 @@ fi
 Create `.envrc` in project root:
 
 ```bash
-# /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.envrc
+# /Users/damianseguin/WIMD-Deploy-Project/.envrc
 
 export AI_AGENT_NAME="Claude-Code"
 
@@ -70,7 +70,7 @@ Create `~/.ai_agent_init.sh`:
 #!/bin/bash
 # Auto-run when starting AI agent terminal
 
-PROJECT_DIR="/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project"
+PROJECT_DIR="/Users/damianseguin/WIMD-Deploy-Project"
 
 if [ "$PWD" = "$PROJECT_DIR" ]; then
     cd "$PROJECT_DIR"

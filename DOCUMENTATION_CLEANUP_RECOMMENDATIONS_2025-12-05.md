@@ -21,10 +21,10 @@
    - Job search functionality (12 free sources)
    - Resume optimization
    - Frontend UI (Netlify)
-   - Railway infrastructure
+   - Render infrastructure
 
 3. **Current Blockers**
-   - GitHub → Railway auto-deploy trigger not working
+   - GitHub → Render auto-deploy trigger not working
    - Schema version reporting mismatch (minor)
 
 ### Out of Scope / Deferred
@@ -392,7 +392,7 @@ The following docs are Cursor-specific and may be superseded by TEAM_PLAYBOOK.md
 
 ```bash
 # Create deprecated directory
-mkdir -p /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/deprecated/2025-12
+mkdir -p /Users/damianseguin/WIMD-Deploy-Project/deprecated/2025-12
 
 # Move superseded files
 mv OPERATIONS_MANUAL.md deprecated/2025-12/
@@ -471,7 +471,7 @@ mkdir -p .ai-agents/archive/{handoffs,deployments,sessions,testing,issues}/{2025
 
    ```bash
    cd /Users/damianseguin/AI_Workspace
-   tar -czf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz WIMD-Railway-Deploy-Project/
+   tar -czf WIMD-Pre-Cleanup-Backup-2025-12-05.tar.gz WIMD-Render-Deploy-Project/
    ```
 
 2. ✅ Verify backup created successfully:

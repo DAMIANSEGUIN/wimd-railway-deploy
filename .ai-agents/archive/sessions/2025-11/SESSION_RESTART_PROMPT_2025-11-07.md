@@ -8,17 +8,17 @@
 ## Prompt to Use
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md
+/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_START_PROTOCOL.md
 ```
 
 Then immediately after protocol completion:
 
 ```
 Read diagnostic report:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/DOM_TIMING_DIAGNOSTIC_2025-11-07.md
+/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/DOM_TIMING_DIAGNOSTIC_2025-11-07.md
 
 Read playbook protocol:
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/DOM_TIMING_PLAYBOOK_PROTOCOL.md
+/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/DOM_TIMING_PLAYBOOK_PROTOCOL.md
 ```
 
 ---
@@ -53,7 +53,7 @@ The DOM timing fix IS COMPLETE in local code, but production is running an OLDER
 ```
 8d8d83f - fix: Move all immediate DOM access inside initApp (Stage 1 fix)
 bac92d5 - fix: Move DOMContentLoaded listener inside IIFE scope
-356fd4d - fix: Update API_BASE to Railway backend URL
+356fd4d - fix: Update API_BASE to Render backend URL
 4b8414f - build: update BUILD_ID to 6d8f2ed
 ```
 

@@ -177,7 +177,7 @@
 3. Create service account
 4. Download service account key (JSON)
 5. Share coach's calendar with service account email
-6. Store service account key in Railway environment variable
+6. Store service account key in Render environment variable
 
 ### Calendar Strategy: Coach Only ✅
 

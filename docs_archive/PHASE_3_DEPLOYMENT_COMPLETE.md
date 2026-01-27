@@ -118,11 +118,11 @@
 ### **Deployment Architecture**
 
 - **Frontend:** Netlify → whatismydelta.com
-- **Backend:** Railway → what-is-my-delta-site-production.up.railway.app
-- **Database:** SQLite on Railway
+- **Backend:** Render → what-is-my-delta-site-production.up.render.app
+- **Database:** SQLite on Render
 - **Git Repos:**
-  - Frontend: `wimd-railway-deploy` (Netlify watches)
-  - Backend: `what-is-my-delta-site` (Railway watches)
+  - Frontend: `wimd-render-deploy` (Netlify watches)
+  - Backend: `what-is-my-delta-site` (Render watches)
 
 ### **Phase 3 New Endpoints**
 
@@ -198,7 +198,7 @@ POST /auth/reset-password          - Send password reset (placeholder)
 ### **Monitoring:**
 
 - Production stable since deployment
-- No errors in Railway logs
+- No errors in Render logs
 - Netlify deployments completing in ~9 seconds
 - All Phase 1-3 endpoints responding correctly
 

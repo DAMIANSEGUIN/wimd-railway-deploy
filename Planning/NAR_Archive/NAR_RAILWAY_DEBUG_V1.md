@@ -1,4 +1,4 @@
-# Netlify Agent Task - Fix Railway Booking Routes
+# Netlify Agent Task - Fix Render Booking Routes
 
 **Date:** 2025-10-26
 **Priority:** HIGH - Production Issue
@@ -8,14 +8,14 @@
 
 ## Problem
 
-Railway deployment successful but booking routes NOT loading:
+Render deployment successful but booking routes NOT loading:
 
 - ❌ `/booking/promo/WIMD25` returns 404 (should be 401 auth required)
 - ❌ Booking routes missing from `/openapi.json` spec
 - ✅ API health works: `/health`
 - ✅ Other routes work: `/wimd`, `/ob`, `/resume`
 
-**Railway Service:** <https://what-is-my-delta-site-production.up.railway.app>
+**Render Service:** <https://what-is-my-delta-site-production.up.render.app>
 
 ---
 
@@ -57,7 +57,7 @@ except Exception as e:
 
 ## Diagnosis Steps
 
-1. Check Railway logs for import errors
+1. Check Render logs for import errors
 2. Verify dependencies in requirements.txt
 3. Test if migrations created booking tables
 4. Check for circular imports
@@ -72,13 +72,13 @@ After fix:
 - `/booking/promo/WIMD25` returns 401, NOT 404
 - Booking routes in `/openapi.json`
 - Migrations log shows tables created
-- No import errors in Railway logs
+- No import errors in Render logs
 
 ---
 
 ## Repository
 
-**Path:** `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
+**Path:** `/Users/damianseguin/WIMD-Deploy-Project`
 
 **Latest commit:** `fa95c45` - Added error logging for booking router
 

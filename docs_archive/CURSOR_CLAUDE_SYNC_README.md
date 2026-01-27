@@ -27,9 +27,9 @@ Use this note at session start. It captures changes since 2025-09-30, guardrails
   - Stage recent doc updates (`PROJECT_STRUCTURE.md`, `PROTOCOL_ENFORCEMENT_PLAN.md`, `CONVERSATION_NOTES.md`) with the loader change when preparing a commit.
   - Run `scripts/predeploy_sanity.sh` before any deploy gate (Gate C) and summarize results.
 - **Claude Code (infrastructure)**
-  - When `/prompts/active` returns `null` on Railway, verify whether the registry file is present in the deploy image; capture logs and redeploy after confirming fallback behavior.
+  - When `/prompts/active` returns `null` on Render, verify whether the registry file is present in the deploy image; capture logs and redeploy after confirming fallback behavior.
   - Coordinate with human on the prompts registry storage decision and note outcomes in `PROTOCOL_ENFORCEMENT_PLAN.md` + `PROJECT_STRUCTURE.md`.
-  - Keep Railway deploys aligned with the Downloads workspace repo (`origin`).
+  - Keep Render deploys aligned with the Downloads workspace repo (`origin`).
 
 ## 5. Reference Stack
 

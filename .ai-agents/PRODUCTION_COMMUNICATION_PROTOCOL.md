@@ -131,16 +131,16 @@ New AI_START_HERE.txt content:
 All 12 job sources implemented but not deployed. Phase 4 stuck in local testing.
 
 ## Solution
-Deployed to Railway production
+Deployed to Render production
 - Branch: main (f439633 → a7b2c1d)
 - Files: api/job_sources/*.py, requirements.txt
 - Feature flags: RAG_BASELINE=true, JOB_SOURCES_STUBBED_ENABLED=true
 
 ## Evidence
 Health check confirms deployment:
-- curl https://what-is-my-delta-site-production.up.railway.app/health
+- curl https://what-is-my-delta-site-production.up.render.app/health
 - Response: {"ok": true, "job_sources": 12}
-- No errors in Railway logs (5 min monitor)
+- No errors in Render logs (5 min monitor)
 
 ## Way Forward
 **USER: MANUAL TEST REQUIRED**

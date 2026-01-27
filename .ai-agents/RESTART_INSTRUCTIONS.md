@@ -108,7 +108,7 @@ Branch with Phase 1 work: phase1-incomplete
 ### What It Does
 
 - Serves static files from `mosaic_ui/`
-- Proxies API calls to Railway production
+- Proxies API calls to Render production
 - Should have no-cache headers (latest restart)
 
 ---

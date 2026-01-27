@@ -28,29 +28,29 @@
 
 ```bash
 # Test 1: Backend Health - PASSES
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 # Result: {"ok":true,"database":true,"prompt_system":true}
 
 # Test 2: Register New Account - WORKS
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/register \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email":"testuser@test.com","password":"testpass123"}'
 # Result: {"user_id":"6c27a2bf-bf11-4d27-ad8c-e52631bb485f",...}
 
 # Test 3: Login with New Account - WORKS
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/login \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"testuser@test.com","password":"testpass123"}'
 # Result: {"user_id":"6c27a2bf-bf11-4d27-ad8c-e52631bb485f",...}
 
 # Test 4: Register damian.seguin@gmail.com - ACCOUNT EXISTS
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/register \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email":"damian.seguin@gmail.com","password":"anypassword"}'
 # Result: {"detail":"User already exists"}
 
 # Test 5: Login with damian.seguin@gmail.com - FAILS
-curl -X POST https://what-is-my-delta-site-production.up.railway.app/auth/login \
+curl -X POST https://what-is-my-delta-site-production.up.render.app/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"damian.seguin@gmail.com","password":"[any password tried]"}'
 # Result: {"detail":"Invalid credentials"}
@@ -283,20 +283,20 @@ alembic upgrade head  # or whatever migration system is used
 
 **User feedback:** "cant you look at prod logs and git history so you dont keep trying the same solutions that do not work?"
 
-### Railway Logs to Check
+### Render Logs to Check
 
 ```bash
 # View recent production logs
-railway logs --service production
+render logs --service production
 
 # Filter for authentication attempts
-railway logs --service production | grep "auth/login"
+render logs --service production | grep "auth/login"
 
 # Look for password verification failures
-railway logs --service production | grep "verify_password\|Invalid credentials"
+render logs --service production | grep "verify_password\|Invalid credentials"
 
 # Check for any database errors
-railway logs --service production | grep "ERROR\|Exception"
+render logs --service production | grep "ERROR\|Exception"
 ```
 
 **What to look for:**

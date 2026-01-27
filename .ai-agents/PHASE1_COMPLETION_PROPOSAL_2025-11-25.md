@@ -182,7 +182,7 @@ if (window.__WIMD_MODULES__) {
 **Steps:**
 
 1. Deploy current `main` branch (login fix + deployment fix)
-2. Let Railway auto-deploy
+2. Let Render auto-deploy
 3. Return to Phase 2 integration in next session
 
 **Pros:**
@@ -462,7 +462,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
    git push origin main
    ```
 
-2. Railway auto-deploys reverted state (~3 minutes)
+2. Render auto-deploys reverted state (~3 minutes)
 3. Document failure in incident report
 4. Return to current state (huge index.html)
 

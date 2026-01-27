@@ -11,7 +11,7 @@
 ## Using Wrapper Script
 
 ```bash
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/scripts/start_browser_for_codex.sh https://whatismydelta.com
+/Users/damianseguin/WIMD-Deploy-Project/scripts/start_browser_for_codex.sh https://whatismydelta.com
 ```
 
 ## CodexCapture Usage

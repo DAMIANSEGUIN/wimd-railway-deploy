@@ -1,7 +1,7 @@
 # Pre-Deployment Spec Verification
 
 **Date:** 2025-11-03
-**Commit:** 6e026fa RESTORE: Auth UI from railway-origin/main
+**Commit:** 6e026fa RESTORE: Auth UI from render-origin/main
 
 ---
 
@@ -53,7 +53,7 @@
 
 - [ ] Chat window functional
 - [ ] API_BASE correctly configured (empty string for Netlify proxy)
-- [ ] /wimd endpoint proxied to Railway
+- [ ] /wimd endpoint proxied to Render
 - [ ] Coach responses working
 
 ### 5. Peripheral Calm Aesthetic (MUST HAVE)
@@ -70,7 +70,7 @@
 
 ### Restored Version (6e026fa)
 
-**Source:** railway-origin/main
+**Source:** render-origin/main
 **Line Count:** 2,766 lines
 **Title:** "What Is My Delta — Clean Interface"
 
@@ -226,7 +226,7 @@
 
 - ✅ API_BASE: Empty string (Netlify proxy)
 - ✅ /wimd proxy rules added to netlify.toml
-- ✅ Railway backend configured
+- ✅ Render backend configured
 
 ### Peripheral Calm Aesthetic
 
@@ -254,7 +254,7 @@
 
 **What We're Deploying:**
 
-- Source: railway-origin/main (known stable)
+- Source: render-origin/main (known stable)
 - Line count: 2,766 lines
 - Features: Auth + PS101 + Experiments + Inline Forms
 - Status: Production-ready

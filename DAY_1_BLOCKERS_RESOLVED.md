@@ -187,13 +187,13 @@ curl http://localhost:8000/config
 **Deployment Commands**:
 
 ```bash
-# Standard deployment to Railway
-git push railway-origin phase1-incomplete:main
+# Standard deployment to Render
+git push render-origin phase1-incomplete:main
 
 # Or if using main branch:
 git checkout main
 git merge phase1-incomplete
-git push railway-origin main
+git push render-origin main
 ```
 
 **Post-Deployment Validation**:
@@ -207,7 +207,7 @@ curl https://whatismydelta.com/config | jq '.schemaVersion'
 # Should return: "v2"
 
 # 3. Monitor logs
-railway logs --follow
+render logs --follow
 ```
 
 ---
@@ -219,11 +219,11 @@ railway logs --follow
 ```bash
 # Revert to previous commit
 git revert 799046f
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 
 # Or restore from backup
 git checkout b6d2781  # Previous commit before blocker fixes
-git push railway-origin HEAD:main --force
+git push render-origin HEAD:main --force
 ```
 
 **No Database Rollback Needed**: No schema changes in this implementation.

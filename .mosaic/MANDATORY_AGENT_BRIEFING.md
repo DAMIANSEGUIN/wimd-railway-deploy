@@ -26,17 +26,17 @@
 3. INTENT Framework integration (Intent → Check → Receipt pattern)
 4. Mosaic MVP security fixes (Claude API timeout + retry)
 5. Documentation consolidation (DOCUMENTATION_MAP.md)
-6. Railway deployment guide (GitHub-based strategy)
+6. Render deployment guide (GitHub-based strategy)
 
 **User Decisions Already Made (DO NOT RE-ASK):**
 - D1: Use relative paths only → **YES** (approved)
 - D2: Archive old session docs → **YES** (approved)
 - D3: .mosaic/ JSON as canonical state → **YES** (approved)
-- D4: GitHub-based Railway deployment → **YES** (approved)
+- D4: GitHub-based Render deployment → **YES** (approved)
 
 **Blockers Resolved:**
-- B002: Railway deployment timeout → Resolved (GitHub strategy)
-- B003: Railway CLI linking → Resolved (no longer needed)
+- B002: Render deployment timeout → Resolved (GitHub strategy)
+- B003: Render CLI linking → Resolved (no longer needed)
 - B004: Documentation overload → Resolved (archived + map)
 
 ---
@@ -48,7 +48,7 @@
 ```bash
 # 1. Verify you're in the right directory
 pwd
-# Should be: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+# Should be: /Users/damianseguin/WIMD-Deploy-Project
 
 # 2. Check current branch
 git branch --show-current
@@ -84,7 +84,7 @@ git log --oneline -5
 
 ### 1. NEVER Use Absolute Paths
 ```
-❌ WRONG: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/api/index.py
+❌ WRONG: /Users/damianseguin/WIMD-Deploy-Project/api/index.py
 ✅ CORRECT: api/index.py
 ```
 
@@ -214,7 +214,7 @@ Deploy cross-agent coordination system to production
 **Pending Actions:**
 1. Merge `claude/start-new-session-nB5Jo` to `main`
 2. Push to GitHub (`git push origin main`)
-3. Monitor Railway deployment (auto-triggers on push)
+3. Monitor Render deployment (auto-triggers on push)
 4. Verify health endpoints
 5. Update `.mosaic/agent_state.json` with deployment status
 
@@ -245,7 +245,7 @@ If you've read this briefing, you should be able to answer:
    **A:** `with get_conn() as conn:` (context manager, NOT `conn = get_conn()`)
 
 7. **Q:** What blockers have been resolved?
-   **A:** B002 (Railway timeout), B003 (CLI linking), B004 (doc overload)
+   **A:** B002 (Render timeout), B003 (CLI linking), B004 (doc overload)
 
 8. **Q:** What was just completed on Jan 5, 2026?
    **A:** Cross-agent coordination system (7 phases), INTENT integration, security fixes, docs
@@ -295,7 +295,7 @@ INIT → BUILD → DIAGNOSE → REPAIR → VERIFY → HANDOFF
 
 **Deployment:**
 - Method: GitHub-based (auto-deploy on push to main)
-- Backend: Render watches `origin` (wimd-railway-deploy)
+- Backend: Render watches `origin` (wimd-render-deploy)
 - Frontend: Netlify deployment (resonant-crostata-90b706)
 
 **Critical Files:**
@@ -312,7 +312,7 @@ INIT → BUILD → DIAGNOSE → REPAIR → VERIFY → HANDOFF
 **Past incidents prevented by this briefing:**
 
 1. **Nov 1, 2025:** Auth system accidentally removed (didn't check pre-flight)
-2. **Dec 15, 2025:** Railway CLI linking failed (wrong deployment strategy)
+2. **Dec 15, 2025:** Render CLI linking failed (wrong deployment strategy)
 3. **Jan 4, 2026:** Multiple agents broke coordination (absolute paths)
 4. **Jan 5, 2026:** Agent forgot INTENT framework (didn't read Jan 4 analysis)
 

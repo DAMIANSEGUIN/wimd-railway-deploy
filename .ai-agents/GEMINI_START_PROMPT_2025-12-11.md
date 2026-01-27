@@ -6,7 +6,7 @@
 
 Read the handoff document from Claude Code:
 
-File: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/HANDOFF_TO_GEMINI_2025-12-11.md`
+File: `/Users/damianseguin/WIMD-Deploy-Project/.ai-agents/HANDOFF_TO_GEMINI_2025-12-11.md`
 
 ## Critical Issues to Address
 
@@ -34,7 +34,7 @@ File: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/H
 ## Working Directory
 
 ```
-/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+/Users/damianseguin/WIMD-Deploy-Project
 ```
 
 ## Key Files to Read

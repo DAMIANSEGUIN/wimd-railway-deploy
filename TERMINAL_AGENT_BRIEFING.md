@@ -15,13 +15,13 @@ Two AI agents (you in terminal, me in Cursor) are working on the same git reposi
 
 **YOUR ENVIRONMENT:**
 - Tool: Claude Code (terminal/CLI)
-- Working directory: Unknown (possibly `/home/user/wimd-railway-deploy` based on previous sessions)
+- Working directory: Unknown (possibly `/home/user/wimd-render-deploy` based on previous sessions)
 - Access method: Terminal commands, file operations
 - Limited to: Current session context, cannot see Cursor IDE
 
 **MY ENVIRONMENT:**
 - Tool: Claude (Cursor IDE)
-- Working directory: `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+- Working directory: `/Users/damianseguin/WIMD-Deploy-Project`
 - Access method: IDE, full file tree, git integration
 - Limited to: What Cursor IDE provides
 
@@ -43,7 +43,7 @@ Use ONLY relative paths (e.g., `.ai-agents/FILE.md`) and create path-agnostic JS
 
 ### Repository Identity
 ```yaml
-Repository: DAMIANSEGUIN/wimd-railway-deploy
+Repository: DAMIANSEGUIN/wimd-render-deploy
 Branch: claude/start-new-session-nB5Jo
 Latest Commit: 7d7ac80 (docs(handoff): Create quick-share doc for Cursor agent)
 Production Tag: prod-2025-11-18 (commit: 31d099c)
@@ -53,7 +53,7 @@ Working Tree: Clean (all changes committed)
 
 ### Git Remote Configuration
 ```bash
-origin → https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git
+origin → https://github.com/DAMIANSEGUIN/wimd-render-deploy.git
 ```
 
 ### Active Branch
@@ -92,7 +92,7 @@ I (Claude in Cursor) completed comprehensive analysis and created solution docum
 - Script to archive stale documentation (archive_stale_docs.sh)
 - Cross-agent protocol rules (6 mandatory rules)
 - Validation tests (4 test suites)
-- Railway deployment options (GitHub-based vs CLI-based)
+- Render deployment options (GitHub-based vs CLI-based)
 - Implementation checklist with success criteria
 
 ### Document 3: SHARE_WITH_CURSOR_AGENT.md
@@ -149,7 +149,7 @@ Status: Pushed to origin, ready for you to pull
 **System D: SESSION_RESUME_PROMPT.md**
 - Location: .ai-agents/SESSION_RESUME_PROMPT.md
 - Last updated: 2025-12-15
-- Content: Railway reset blocker (CLI linking ambiguity)
+- Content: Render reset blocker (CLI linking ambiguity)
 - Status: OUTDATED, describes stale task from December
 
 ---
@@ -178,20 +178,20 @@ Current mode (this session): HANDOFF (me) → INIT (you)
 {
   "version": 1,
   "ssot": "session_start",
-  "canon_id": "DAMIANSEGUIN/wimd-railway-deploy:main:09c8c38..."
+  "canon_id": "DAMIANSEGUIN/wimd-render-deploy:main:09c8c38..."
 }
 
 // .mosaic/authority_map.json
 {
   "schema_version": "1.0",
   "repo": {
-    "slug": "DAMIANSEGUIN/wimd-railway-deploy",
-    "origin_ssh": "https://github.com/DAMIANSEGUIN/wimd-railway-deploy.git",
+    "slug": "DAMIANSEGUIN/wimd-render-deploy",
+    "origin_ssh": "https://github.com/DAMIANSEGUIN/wimd-render-deploy.git",
     "deploy_branch": "main"
   },
   "services": [
-    {"name": "mosaic-frontend", "platform": "railway", ...},
-    {"name": "mosaic-backend", "platform": "railway", ...}
+    {"name": "mosaic-frontend", "platform": "render", ...},
+    {"name": "mosaic-backend", "platform": "render", ...}
   ]
 }
 ```
@@ -215,23 +215,23 @@ Current mode (this session): HANDOFF (me) → INIT (you)
   - D1: Use relative paths only? (Recommended: YES)
   - D2: Archive 100+ old session docs? (Recommended: YES)
   - D3: Use .mosaic/*.json as canonical state? (Recommended: YES)
-  - D4: Railway deployment strategy - GitHub-based or CLI? (Recommended: GitHub)
+  - D4: Render deployment strategy - GitHub-based or CLI? (Recommended: GitHub)
 - **Impact:** Cannot proceed with implementation without approval
 - **Status:** Waiting for user input
 - **Owner:** User (Damian)
 
 ### 🟡 HIGH PRIORITY (Blocks Deployment)
 
-**BLOCKER 3: Railway Deployment Timeout**
-- **Description:** `railway up` times out due to 45MB upload size limit
-- **Impact:** Cannot deploy via Railway CLI
-- **Solution:** Switch to GitHub-based deployment OR implement comprehensive .railwayignore
+**BLOCKER 3: Render Deployment Timeout**
+- **Description:** `render up` times out due to 45MB upload size limit
+- **Impact:** Cannot deploy via Render CLI
+- **Solution:** Switch to GitHub-based deployment OR implement comprehensive .renderignore
 - **Status:** Blocked by user decision D4
 - **Owner:** User decision required
 
-**BLOCKER 4: Railway CLI Linking Ambiguity**
-- **Description:** `railway list` shows project, but `railway link` fails with "Project not found"
-- **Impact:** Cannot use Railway CLI commands
+**BLOCKER 4: Render CLI Linking Ambiguity**
+- **Description:** `render list` shows project, but `render link` fails with "Project not found"
+- **Impact:** Cannot use Render CLI commands
 - **Solution:** User manual link via interactive CLI OR switch to GitHub deployment
 - **Status:** Blocked by user decision D4
 - **Owner:** User intervention required
@@ -247,10 +247,10 @@ Current mode (this session): HANDOFF (me) → INIT (you)
 - **Owner:** Either agent can execute after approval
 
 **BLOCKER 6: PostgreSQL Scope Unknown**
-- **Description:** Unclear if PostgreSQL is service-level or project-level in Railway
+- **Description:** Unclear if PostgreSQL is service-level or project-level in Render
 - **Impact:** Data loss risk if service is deleted/recreated
-- **Solution:** Validate via Railway CLI or dashboard before any destructive operations
-- **Status:** LOW PRIORITY (only matters if we recreate Railway service)
+- **Solution:** Validate via Render CLI or dashboard before any destructive operations
+- **Status:** LOW PRIORITY (only matters if we recreate Render service)
 - **Owner:** Either agent, low urgency
 
 ---
@@ -335,24 +335,24 @@ cat .mosaic/agent_state.json      # What did last agent do?
 ```json
 {
   "version": 1,
-  "task_id": "mosaic-railway-deploy-2026-01-05",
-  "objective": "Fix cross-agent coordination and deploy Railway services",
+  "task_id": "mosaic-render-deploy-2026-01-05",
+  "objective": "Fix cross-agent coordination and deploy Render services",
   "status": "blocked",
   "priority": "critical",
   "assigned_agent": "pending_user_decision",
   "created_at": "2026-01-05T00:00:00Z",
   "updated_at": "2026-01-05T00:00:00Z",
   "details": {
-    "description": "Enable both Claude Code (Terminal) and Claude (Cursor) to work on the same repository without path conflicts. Deploy Mosaic platform to Railway.",
+    "description": "Enable both Claude Code (Terminal) and Claude (Cursor) to work on the same repository without path conflicts. Deploy Mosaic platform to Render.",
     "success_criteria": [
       "Both agents can read the same state files",
       "All documentation uses relative paths",
-      "Railway backend deployed and responding",
-      "Railway frontend deployed and responding"
+      "Render backend deployed and responding",
+      "Render frontend deployed and responding"
     ],
     "dependencies": [
       "User decision on deployment strategy",
-      "Railway CLI linking resolution",
+      "Render CLI linking resolution",
       "Documentation consolidation approval"
     ]
   }
@@ -376,19 +376,19 @@ cat .mosaic/agent_state.json      # What did last agent do?
     },
     {
       "id": "B002",
-      "title": "Railway Deployment Timeout",
+      "title": "Render Deployment Timeout",
       "severity": "high",
       "status": "active",
-      "description": "railway up times out due to 45MB upload size limit",
-      "solution": "Switch to GitHub-based deployment OR .railwayignore",
+      "description": "render up times out due to 45MB upload size limit",
+      "solution": "Switch to GitHub-based deployment OR .renderignore",
       "owner": "user_decision_required"
     },
     {
       "id": "B003",
-      "title": "Railway CLI Linking Ambiguity",
+      "title": "Render CLI Linking Ambiguity",
       "severity": "high",
       "status": "active",
-      "description": "railway link fails with 'Project not found'",
+      "description": "render link fails with 'Project not found'",
       "solution": "User manual link OR GitHub deployment",
       "owner": "user_intervention_required"
     },
@@ -419,7 +419,7 @@ cat .mosaic/agent_state.json      # What did last agent do?
     "D1: Use relative paths only?",
     "D2: Archive old session docs?",
     "D3: Use .mosaic/*.json as canonical state?",
-    "D4: Railway deployment strategy?"
+    "D4: Render deployment strategy?"
   ]
 }
 ```
@@ -438,7 +438,7 @@ cat .mosaic/agent_state.json      # What did last agent do?
 **🚨 MANDATORY FIRST ACTION ON EVERY SESSION:**
 
 ```bash
-Read: /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
+Read: /Users/damianseguin/WIMD-Deploy-Project/.ai-agents/SESSION_RESUME_PROMPT.md
 ```
 ```
 
@@ -552,25 +552,25 @@ grep -r "/home/user" *.md .ai-agents/*.md
 
 **Test 3: State update round-trip** (requires coordination with other agent)
 
-### PHASE 7: Railway Deployment (30 minutes)
+### PHASE 7: Render Deployment (30 minutes)
 
 **Option A: GitHub-Based (RECOMMENDED)**
 ```bash
-# User configures in Railway dashboard:
-# - Connect GitHub repo: DAMIANSEGUIN/wimd-railway-deploy
+# User configures in Render dashboard:
+# - Connect GitHub repo: DAMIANSEGUIN/wimd-render-deploy
 # - Branch: main
 # - Root directory: /
 
 # Then deploy via git:
 git push origin main
-# Railway auto-deploys
+# Render auto-deploys
 ```
 
 **Option B: CLI-Based (if user chooses)**
 ```bash
-# Create .railwayignore
-# Fix railway link
-# railway up
+# Create .renderignore
+# Fix render link
+# render up
 ```
 
 ---
@@ -595,7 +595,7 @@ git push origin main
 - **Impact:** Path-agnostic state, machine-readable, version controlled
 - **User decision:** [ ] PENDING
 
-### D4: Railway Deployment Strategy
+### D4: Render Deployment Strategy
 - **Question:** GitHub-based or CLI-based deployment?
 - **Recommendation:** GitHub-based (avoids 45MB timeout, standard practice)
 - **Impact:** Determines how we deploy to production
@@ -608,7 +608,7 @@ git push origin main
 ### Step 1: Verify Access (2 minutes)
 ```bash
 # Confirm you're in the right repo
-git remote -v | grep wimd-railway-deploy
+git remote -v | grep wimd-render-deploy
 
 # Check current branch
 git branch --show-current
@@ -651,8 +651,8 @@ Answer these questions for the user:
 2. ✅ No documentation contains absolute paths
 3. ✅ Session handoffs work via git commits
 4. ✅ Both agents can update state and see each other's changes
-5. ✅ Railway backend deployed and responding
-6. ✅ Railway frontend deployed and responding
+5. ✅ Render backend deployed and responding
+6. ✅ Render frontend deployed and responding
 
 ---
 
@@ -715,7 +715,7 @@ git push origin HEAD
 ### ⚠️ DO NOT:
 - Create new SESSION_*.md files (use .mosaic/ instead)
 - Use absolute paths in any documentation
-- Deploy to Railway without user approval on D4
+- Deploy to Render without user approval on D4
 - Skip reading the two comprehensive assessment docs
 - Assume your file paths work for Cursor agent
 

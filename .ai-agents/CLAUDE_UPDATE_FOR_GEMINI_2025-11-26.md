@@ -45,7 +45,7 @@ Per your guidance, now debugging: **"Chat disappears after login"**
 **Local dev environment:**
 
 - Server running on <http://localhost:3000>
-- Proxying to Railway backend
+- Proxying to Render backend
 - Testing in Chromium
 
 ---

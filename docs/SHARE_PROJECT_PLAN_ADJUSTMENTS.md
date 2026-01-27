@@ -95,8 +95,8 @@ Phased approach with owners and deadlines:
    - Recommendation: Shared (Codex process, Cursor technical)
    - Needed by: 2025-11-02
 
-4. **Monitoring tool**: Railway only vs Sentry vs custom dashboard?
-   - Recommendation: Railway + enhanced /health + Uptime Robot (free)
+4. **Monitoring tool**: Render only vs Sentry vs custom dashboard?
+   - Recommendation: Render + enhanced /health + Uptime Robot (free)
    - Needed by: 2025-11-05
 
 ### 5. **Risk Assessment** (Section 7)

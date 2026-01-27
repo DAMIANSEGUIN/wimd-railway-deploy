@@ -1123,7 +1123,7 @@ if __name__ == "__main__":
 
 If issues arise after enabling payments:
 
-1. **Immediate**: Set `PAYMENTS_ENABLED=false` in Railway
+1. **Immediate**: Set `PAYMENTS_ENABLED=false` in Render
 2. **Verify**: Beta users still have access
 3. **Communicate**: Notify users payments temporarily disabled
 4. **Debug**: Check webhook logs, payment events table

@@ -79,21 +79,21 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 
 ### Active Locations Identified
 
-1. **Primary Working Directory:** `/Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project`
+1. **Primary Working Directory:** `/Users/damianseguin/WIMD-Deploy-Project`
    - Last modified: 2026-01-01 09:00
    - Contains: .ai-agents/ folder with 146 files
    - Contains: SESSION_RESTART_PROMPT.md (2025-12-20)
    - Git repo: Active (.git directory present)
    - Status: **CANONICAL AI_WORKSPACE LOCATION**
 
-2. **Railway Local Project:** `/Users/damianseguin/wimd-railway-local`
+2. **Render Local Project:** `/Users/damianseguin/wimd-render-local`
    - Contains: TEAM_PLAYBOOK.md, SESSION_START.md, BACKUP_SYSTEM_RECOVERY_LOG.md
    - Contains: Recent session backups (2025-12-03, 2025-12-29)
    - Git repo: Re-initialized 2025-12-02
    - Backup system: Post-commit hook restored 2026-01-04
    - Status: **ACTIVE DEVELOPMENT LOCATION**
 
-3. **Downloads Archive:** `/Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project`
+3. **Downloads Archive:** `/Users/damianseguin/WIMD-Deploy-Project`
    - Contains: October 2025 backup system (working post-commit hook)
    - Contains: INTENT_FRAMEWORK.md (new discovery)
    - Status: **ARCHIVE + NEW PROTOCOL DOCUMENTS**
@@ -110,7 +110,7 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 
 ### Session Management
 
-1. **SESSION_START.md** (wimd-railway-local)
+1. **SESSION_START.md** (wimd-render-local)
    - Purpose: Mandatory startup protocol
    - Includes: Understanding mode gates, verification questions, decision tree
    - Includes: Session end monitoring (trigger phrase detection)
@@ -127,7 +127,7 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 
 ### Team Coordination
 
-1. **TEAM_PLAYBOOK.md** (wimd-railway-local)
+1. **TEAM_PLAYBOOK.md** (wimd-render-local)
    - Contains: Current sprint status, blocking issues, code state
    - Last updated: 2026-01-04 (backup system restoration)
    - Status: **ACTIVE**
@@ -139,12 +139,12 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 
 ### Safety & Quality Controls
 
-1. **TROUBLESHOOTING_CHECKLIST.md** (wimd-railway-local + Downloads)
+1. **TROUBLESHOOTING_CHECKLIST.md** (wimd-render-local + Downloads)
    - Purpose: Pre-flight checks for all code changes
    - Contains: Error classification dashboard, debugging workflow
    - Status: **MANDATORY READING**
 
-2. **SELF_DIAGNOSTIC_FRAMEWORK.md** (wimd-railway-local + Downloads)
+2. **SELF_DIAGNOSTIC_FRAMEWORK.md** (wimd-render-local + Downloads)
    - Purpose: Architecture-specific error prevention
    - Contains: Error taxonomy, playbooks-as-code, automated fixes
    - Status: **MANDATORY READING**
@@ -156,13 +156,13 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 ### Current State (as of 2026-01-04)
 
 **Git Post-Commit Hook:**
-- Location: `/Users/damianseguin/wimd-railway-local/.git/hooks/post-commit`
+- Location: `/Users/damianseguin/wimd-render-local/.git/hooks/post-commit`
 - Status: ✅ **RESTORED** (2026-01-04)
 - Function: Auto-sync to GDrive after every commit
-- Target: `gdrive:WIMD-Railway-Deploy-Project`
+- Target: `gdrive:WIMD-Render-Deploy-Project`
 
 **Root Cause of Previous Failure:**
-- Repository re-initialized 2025-12-02 at wimd-railway-local
+- Repository re-initialized 2025-12-02 at wimd-render-local
 - Git hooks live in `.git/hooks/` (NOT version-controlled)
 - Hook was lost during repo move from Downloads location
 
@@ -182,9 +182,9 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 
 ### Project Information
 
-**Project:** mosaic-backend (confirmed via `railway status`)
-**Service:** wimd-railway-deploy
-**Current Working Directory:** `/Users/damianseguin/wimd-railway-local`
+**Project:** mosaic-backend (confirmed via `render status`)
+**Service:** wimd-render-deploy
+**Current Working Directory:** `/Users/damianseguin/wimd-render-local`
 
 ### Current Code Version
 
@@ -193,7 +193,7 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 
 ### Database
 
-**Type:** PostgreSQL (Railway managed service)
+**Type:** PostgreSQL (Render managed service)
 **Connection:** Via `DATABASE_URL` environment variable
 **Pattern:** Context manager required: `with get_conn() as conn:`
 **Fallback:** SQLite (ephemeral, local dev only)
@@ -203,7 +203,7 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 ## OUTSTANDING QUESTIONS
 
 1. **Which SESSION_START protocol is canonical?**
-   - SESSION_START.md (wimd-railway-local)
+   - SESSION_START.md (wimd-render-local)
    - SESSION_RESTART_PROMPT.md (AI_Workspace)
    - Need to reconcile these two documents
 
@@ -214,7 +214,7 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 
 3. **Project location consolidation:**
    - Should AI_Workspace become primary location?
-   - Should wimd-railway-local be migrated?
+   - Should wimd-render-local be migrated?
    - How to handle multiple git repos?
 
 4. **Backup system final steps:**
@@ -232,7 +232,7 @@ The INTENT_FRAMEWORK establishes a mandatory **Intent → Check → Receipt** pa
 2. ✅ Create current state inventory
 3. ⏳ Integrate INTENT_FRAMEWORK into session protocols
 4. ⏳ Read SESSION_RESTART_PROMPT.md to understand canonical restart process
-5. ⏳ Verify current Railway deployment status
+5. ⏳ Verify current Render deployment status
 6. ⏳ Check TEAM_PLAYBOOK.md for current blocking issues
 
 ### Short-Term (Next Session)

@@ -47,7 +47,7 @@ ChatGPT needs to reference the latest project files to build the interface redes
 ### Step 1: Run Initial Sync
 
 ```bash
-cd /Users/damianseguin/Downloads/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 ./scripts/initial_gdrive_sync.sh
 ```
 
@@ -56,9 +56,9 @@ Wait for completion (shows progress bar).
 ### Step 2: Share GDrive Folder with ChatGPT
 
 1. Open Google Drive in browser
-2. Find folder: `WIMD-Railway-Deploy-Project`
+2. Find folder: `WIMD-Render-Deploy-Project`
 3. Get shareable link or give ChatGPT access
-4. Tell ChatGPT: "Reference files in my Google Drive folder: WIMD-Railway-Deploy-Project"
+4. Tell ChatGPT: "Reference files in my Google Drive folder: WIMD-Render-Deploy-Project"
 
 ### Step 3: Normal Workflow (No Manual Steps)
 
@@ -85,7 +85,7 @@ tail -f /tmp/gdrive-sync.log
 
 - All source code (`api/`, `mosaic_ui/`, `scripts/`)
 - All documentation (`.md` files)
-- Configuration files (`requirements.txt`, `.env.railway`)
+- Configuration files (`requirements.txt`, `.env.render`)
 - Specifications (`Planning/`, `docs/`)
 - Database migrations (`data/migrations/`)
 
@@ -125,7 +125,7 @@ tail -10 /tmp/gdrive-sync.log
 ### Check GDrive Contents
 
 ```bash
-/Users/damianseguin/coachvox_tools/bin/rclone ls gdrive:WIMD-Railway-Deploy-Project | head -20
+/Users/damianseguin/coachvox_tools/bin/rclone ls gdrive:WIMD-Render-Deploy-Project | head -20
 ```
 
 ---
@@ -158,7 +158,7 @@ cat /tmp/gdrive-sync.log
 
 ```bash
 # If you need to sync immediately without waiting for commit
-/Users/damianseguin/coachvox_tools/bin/rclone sync . gdrive:WIMD-Railway-Deploy-Project \
+/Users/damianseguin/coachvox_tools/bin/rclone sync . gdrive:WIMD-Render-Deploy-Project \
   --exclude ".git/**" \
   --exclude "venv/**" \
   --exclude "node_modules/**" \
@@ -192,7 +192,7 @@ cat /tmp/gdrive-sync.log
          ↓
 ┌─────────────────────────────┐
 │  Google Drive Folder        │
-│  WIMD-Railway-Deploy-Project│
+│  WIMD-Render-Deploy-Project│
 └────────┬────────────────────┘
          │
          ↓

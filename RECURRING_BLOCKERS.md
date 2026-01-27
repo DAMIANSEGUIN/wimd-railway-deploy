@@ -11,39 +11,39 @@
 
 ### 1. ⚠️ DEPLOYMENT BLOCKERS (Highest Frequency)
 
-#### 1A: Railway Auto-Deploy Not Pulling New Code
+#### 1A: Render Auto-Deploy Not Pulling New Code
 
 **Frequency:** Multiple incidents (2025-11-09, 2025-12-04)
 **Pattern:**
 
-- Git push to `origin/main` triggers Railway restart
-- Railway restarts but serves OLD code
+- Git push to `origin/main` triggers Render restart
+- Render restarts but serves OLD code
 - New code not pulled from GitHub
 
 **Root Cause:**
 
-- GitHub webhook → Railway integration misconfigured or broken
-- Railway may be caching old Docker layers
-- Possible: Railway watching wrong branch
+- GitHub webhook → Render integration misconfigured or broken
+- Render may be caching old Docker layers
+- Possible: Render watching wrong branch
 
 **Evidence:**
 
-- 2025-12-04: Pushed be8b21c → Railway restarted → `/api/ps101/extract-context` returns 404
+- 2025-12-04: Pushed be8b21c → Render restarted → `/api/ps101/extract-context` returns 404
 - OpenAPI spec shows only old `/wimd/start-ps101`, not new endpoint
 
 **Workaround:**
 
 ```bash
-railway up --detach  # Manual CLI deployment works
+render up --detach  # Manual CLI deployment works
 ```
 
 **Prevention Strategy:**
 
 1. **Short-term:** Document manual deployment as canonical method
-2. **Long-term:** Investigate Railway GitHub integration settings:
-   - Check webhook status in Railway dashboard
+2. **Long-term:** Investigate Render GitHub integration settings:
+   - Check webhook status in Render dashboard
    - Verify branch configuration (should watch `main`)
-   - Test: Push empty commit, verify Railway pulls it
+   - Test: Push empty commit, verify Render pulls it
 3. **Add to pre-deployment checklist:** Verify deployed code matches git commit
 
 ---
@@ -73,7 +73,7 @@ railway up --detach  # Manual CLI deployment works
 
 - BUILD_ID injection should happen to COPY of files, not source
 - OR: Add BUILD_ID files to .gitignore and exclude from status check
-- OR: Inject at build time (Netlify/Railway environment), not in script
+- OR: Inject at build time (Netlify/Render environment), not in script
 
 ---
 
@@ -236,7 +236,7 @@ brew reinstall python@3.12 openssl@3
 
 #### 5A: Edge Cases Not Documented
 
-**Frequency:** 2025-12-04 (Python SSL issue, Railway auto-deploy)
+**Frequency:** 2025-12-04 (Python SSL issue, Render auto-deploy)
 **Pattern:**
 
 - Agent hits edge case not in canon
@@ -273,7 +273,7 @@ brew reinstall python@3.12 openssl@3
 
 **Top 3 Time Sinks:**
 
-1. Railway auto-deploy issues (estimated 2-3 hours per incident)
+1. Render auto-deploy issues (estimated 2-3 hours per incident)
 2. Python environment setup (1-2 hours per incident)
 3. BUILD_ID injection loop (1 hour per incident)
 
@@ -339,9 +339,9 @@ brew reinstall python@3.12 openssl@3
 
 **Severity Levels:**
 
-- **CRITICAL:** Blocks all work (e.g., Railway down)
+- **CRITICAL:** Blocks all work (e.g., Render down)
 - **HIGH:** Blocks current task (e.g., Python SSL missing)
-- **MEDIUM:** Workaround exists (e.g., manual Railway deploy)
+- **MEDIUM:** Workaround exists (e.g., manual Render deploy)
 - **LOW:** Annoying but not blocking (e.g., terminology confusion)
 
 **Escalation:**
@@ -356,7 +356,7 @@ brew reinstall python@3.12 openssl@3
 **Ideas:**
 
 - Pre-commit hook: Check Python version/SSL before allowing local dev
-- Pre-push hook: Verify Railway deployment pulls new code
+- Pre-push hook: Verify Render deployment pulls new code
 - Session start script: Run RECURRING_BLOCKERS.md top 3 check
 
 ---
@@ -365,7 +365,7 @@ brew reinstall python@3.12 openssl@3
 
 ### Active (Blocking Work Right Now)
 
-1. **Railway Auto-Deploy Not Pulling Code** - Workaround: Manual `railway up`
+1. **Render Auto-Deploy Not Pulling Code** - Workaround: Manual `render up`
    - Status: Manual deployment in progress (2025-12-04 15:45 UTC)
    - Next: Verify deployed code after build completes
 
@@ -388,7 +388,7 @@ brew reinstall python@3.12 openssl@3
 **Historical Blockers:**
 
 - `.ai-agents/DEPLOYMENT_LOOP_DIAGNOSIS_2025-11-09.md` - BUILD_ID loop
-- `.ai-agents/archive/RESOLVED_2025-11-01_Railway_Deployment_Fix.md`
+- `.ai-agents/archive/RESOLVED_2025-11-01_Render_Deployment_Fix.md`
 - `.ai-agents/archive/RESOLVED_2025-10-14_PostgreSQL_Connection_Issue.md`
 
 ---

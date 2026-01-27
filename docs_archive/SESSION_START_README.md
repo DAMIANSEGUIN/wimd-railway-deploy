@@ -158,7 +158,7 @@ Ask yourself:
 
 ```bash
 # Quick health check
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Check if local server needed
 # python3 -m uvicorn api.index:app --host 0.0.0.0 --port 8000
@@ -170,7 +170,7 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 
 ### Architecture
 
-- **Backend:** FastAPI on Railway (PostgreSQL database)
+- **Backend:** FastAPI on Render (PostgreSQL database)
 - **Frontend:** Vanilla JS (ES6+) on Netlify, single-file `frontend/index.html`
 - **LLM:** OpenAI (GPT-4, embeddings) + Anthropic (Claude)
 - **State:** localStorage (frontend) + PostgreSQL (backend)
@@ -178,13 +178,13 @@ curl https://what-is-my-delta-site-production.up.railway.app/health
 ### Production URLs
 
 - **Live Site:** <https://whatismydelta.com>
-- **Backend API:** <https://what-is-my-delta-site-production.up.railway.app>
+- **Backend API:** <https://what-is-my-delta-site-production.up.render.app>
 - **Health Check:** `curl $API_URL/health`
 
 ### Feature Flags (Check Before Debugging)
 
 ```python
-# In api/config.py or Railway env vars
+# In api/config.py or Render env vars
 RAG_BASELINE: ENABLED          # RAG-powered job search
 JOB_SOURCES_STUBBED_ENABLED: ENABLED  # All 12 job sources
 AI_FALLBACK_ENABLED: ENABLED   # CSV→AI fallback
@@ -194,11 +194,11 @@ EXPERIMENTS_ENABLED: DISABLED  # Experiment engine (gated)
 ### Common Commands
 
 ```bash
-# Deploy to Railway
-git push railway-origin main
+# Deploy to Render
+git push render-origin main
 
-# Check Railway logs
-railway logs
+# Check Render logs
+render logs
 
 # Run local backend
 python3 -m uvicorn api.index:app --reload
@@ -215,7 +215,7 @@ When debugging, classify errors:
 
 | Category | Examples | First Action |
 |----------|----------|--------------|
-| **INFRA** | Railway crash, PostgreSQL down | Check Railway dashboard |
+| **INFRA** | Render crash, PostgreSQL down | Check Render dashboard |
 | **DATA** | Session corrupt, migration failed | Check localStorage + DB |
 | **MODEL** | OpenAI timeout, rate limit | Check API keys + quota |
 | **PROMPT** | JSON parse error, CSV corrupt | Validate file syntax |

@@ -1,7 +1,7 @@
-# WIMD Railway Deploy Project - Operations Manual
+# WIMD Render Deploy Project - Operations Manual
 
 **Project**: WIMD (What Is My Delta) - Mosaic Platform
-**Infrastructure**: Railway (Backend) + Netlify (Frontend)
+**Infrastructure**: Render (Backend) + Netlify (Frontend)
 **Created**: 2025-09-29
 **Version**: 1.0
 
@@ -24,7 +24,7 @@
 
 ### **Infrastructure Overview**
 
-- **Backend API**: Railway service (`what-is-my-delta-site-production`)
+- **Backend API**: Render service (`what-is-my-delta-site-production`)
 - **Frontend UI**: Netlify deployment (`resonant-crostata-90b706`)
 - **Domain**: `https://whatismydelta.com` (apex + www)
 - **Repository**: `https://github.com/DAMIANSEGUIN/what-is-my-delta-site`
@@ -70,10 +70,10 @@ git push origin main
 #### **Issue**: API Endpoints Return 404
 
 **Symptoms**: `/config`, `/prompts/active` return `{"detail":"Not Found"}`
-**Cause**: Railway cache serving old code
-**Solution**: [Railway Cache Clearing](#railway-cache-clearing)
+**Cause**: Render cache serving old code
+**Solution**: [Render Cache Clearing](#render-cache-clearing)
 
-#### **Issue**: Railway Shows "Hello World" Instead of Full API
+#### **Issue**: Render Shows "Hello World" Instead of Full API
 
 **Symptoms**: Root endpoint returns basic message instead of Mosaic API
 **Cause**: Wrong Procfile or incomplete code deployment
@@ -81,14 +81,14 @@ git push origin main
 
 1. Verify Procfile points to `api.index:app`
 2. Check repository has complete 449-line `api/index.py`
-3. Clear Railway cache
+3. Clear Render cache
 
 #### **Issue**: Environment Variables Not Loading
 
 **Symptoms**: API key errors, startup failures
 **Solution**:
 
-1. Verify variables in Railway dashboard → Variables tab
+1. Verify variables in Render dashboard → Variables tab
 2. Ensure variables are marked "Available during deploy"
 3. Check local `.env` file matches production requirements
 
@@ -99,13 +99,13 @@ git push origin main
 ### **Required Environment Variables**
 
 ```bash
-# API Keys (Production - Railway Variables)
+# API Keys (Production - Render Variables)
 OPENAI_API_KEY=sk-proj-...
 CLAUDE_API_KEY=sk-ant-api03-...
 
 # Domain Configuration
 PUBLIC_SITE_ORIGIN=https://whatismydelta.com
-PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.railway.app
+PUBLIC_API_BASE=https://what-is-my-delta-site-production.up.render.app
 
 # Application Configuration
 APP_SCHEMA_VERSION=v1
@@ -124,15 +124,15 @@ pydantic-settings # Settings management
 
 ### **RESOLVED ISSUE (2025-09-29): Missing python-multipart**
 
-**Problem**: Railway showed successful build but served "Hello World" instead of complete API
+**Problem**: Render showed successful build but served "Hello World" instead of complete API
 **Root Cause**: Missing `python-multipart` dependency caused FastAPI startup failure
 **Solution**: Added `python-multipart` to requirements.txt
-**Result**: Railway now serves complete 449-line FastAPI implementation
+**Result**: Render now serves complete 449-line FastAPI implementation
 
 ### **API Key Rotation Procedure**
 
 1. **Generate new keys** in OpenAI/Anthropic dashboards
-2. **Update Railway variables** in Variables tab
+2. **Update Render variables** in Variables tab
 3. **Update local `.env` file**
 4. **Revoke old keys** in provider dashboards
 5. **Test deployment** with new keys
@@ -141,13 +141,13 @@ pydantic-settings # Settings management
 
 ## **CACHE MANAGEMENT**
 
-### **Railway Cache Clearing**
+### **Render Cache Clearing**
 
 **When to use**: API showing old code despite successful deployments
 
 #### **Method 1: Disable Build Cache (Recommended)**
 
-1. Go to Railway Dashboard → Service → Variables
+1. Go to Render Dashboard → Service → Variables
 2. Add new variable:
    - **Name**: `RAILWAY_DISABLE_BUILD_CACHE`
    - **Value**: `true`
@@ -157,13 +157,13 @@ pydantic-settings # Settings management
 
 **Option A - Command Palette:**
 
-1. Press `CMD + K` in Railway dashboard
+1. Press `CMD + K` in Render dashboard
 2. Type "Deploy Latest Commit"
 3. Execute command
 
 **Option B - Manual Redeploy:**
 
-1. Go to Railway → Deployments tab
+1. Go to Render → Deployments tab
 2. Find latest deployment
 3. Click three dots (...) → "Redeploy"
 
@@ -171,18 +171,18 @@ pydantic-settings # Settings management
 
 ```bash
 # Execute cache-busting script
-./clear_railway_cache.sh
+./clear_render_cache.sh
 ```
 
 ### **CDN Cache Issues**
 
-**Symptoms**: Domain shows old content despite Railway updates
+**Symptoms**: Domain shows old content despite Render updates
 **Solutions**:
 
 1. Hard refresh browser (Ctrl+Shift+R)
 2. Test in incognito mode
-3. Check Railway CDN status
-4. Contact Railway support for manual cache purge
+3. Check Render CDN status
+4. Contact Render support for manual cache purge
 
 ---
 
@@ -192,13 +192,13 @@ pydantic-settings # Settings management
 
 ```bash
 # Backend Health
-curl https://what-is-my-delta-site-production.up.railway.app/health
+curl https://what-is-my-delta-site-production.up.render.app/health
 
 # Configuration Check
-curl https://what-is-my-delta-site-production.up.railway.app/config
+curl https://what-is-my-delta-site-production.up.render.app/config
 
 # Prompts Status
-curl https://what-is-my-delta-site-production.up.railway.app/prompts/active
+curl https://what-is-my-delta-site-production.up.render.app/prompts/active
 
 # Domain Health (after Netlify rewrite)
 curl https://whatismydelta.com/health
@@ -230,24 +230,24 @@ curl https://whatismydelta.com/health
 
 ### **Service Down**
 
-1. **Check Railway status**: Railway dashboard → Service status
-2. **View logs**: Railway → Deployments → Click latest → View logs
-3. **Test direct Railway URL**: `https://what-is-my-delta-site-production.up.railway.app/health`
+1. **Check Render status**: Render dashboard → Service status
+2. **View logs**: Render → Deployments → Click latest → View logs
+3. **Test direct Render URL**: `https://what-is-my-delta-site-production.up.render.app/health`
 4. **Check environment variables**: Ensure all required vars are set
 5. **Force redeploy**: Use cache clearing procedures
 
 ### **Data Loss/Corruption**
 
-1. **Check SQLite database**: Railway → Run `ls -la data/`
+1. **Check SQLite database**: Render → Run `ls -la data/`
 2. **Verify session cleanup**: Ensure auto-cleanup is functioning
-3. **Check storage limits**: Railway storage usage
+3. **Check storage limits**: Render storage usage
 4. **Restore from backup**: If available
 5. **Reinitialize database**: Via startup checks
 
 ### **Security Breach**
 
 1. **Rotate API keys immediately**: Use API key rotation procedure
-2. **Check access logs**: Railway logs for suspicious activity
+2. **Check access logs**: Render logs for suspicious activity
 3. **Review environment variables**: Ensure no secrets exposed
 4. **Update documentation**: Record incident and response
 
@@ -257,7 +257,7 @@ curl https://whatismydelta.com/health
 
 ### **Weekly**
 
-- [ ] Check Railway storage usage
+- [ ] Check Render storage usage
 - [ ] Review deployment logs for errors
 - [ ] Test all API endpoints
 - [ ] Verify SSL certificates
@@ -292,7 +292,7 @@ curl https://whatismydelta.com/health
 ./force_redeploy.sh               # Force cache-busting deployment
 
 # Cache Management
-./clear_railway_cache.sh          # Railway cache clearing guide
+./clear_render_cache.sh          # Render cache clearing guide
 
 # Verification
 ./scripts/verify_deploy.sh        # Deployment verification
@@ -306,17 +306,17 @@ curl https://whatismydelta.com/health
 ```
 Deployment Issue?
 ├── API 404 Errors?
-│   ├── Check Railway cache → Clear cache
+│   ├── Check Render cache → Clear cache
 │   └── Verify complete code in repository
 ├── Environment Variable Issues?
-│   ├── Check Railway Variables tab
+│   ├── Check Render Variables tab
 │   └── Verify "Available during deploy" setting
 ├── Service Won't Start?
 │   ├── Check Procfile configuration
 │   ├── Review startup logs
 │   └── Verify requirements.txt
 └── Domain Issues?
-    ├── Test Railway direct URL
+    ├── Test Render direct URL
     ├── Check Netlify configuration
     └── Verify DNS settings
 ```
@@ -327,9 +327,9 @@ Deployment Issue?
 
 ### **Support Channels**
 
-- **Railway Support**: Railway dashboard → Help
+- **Render Support**: Render dashboard → Help
 - **GitHub Issues**: Repository issues tab
-- **Documentation**: Railway docs, FastAPI docs
+- **Documentation**: Render docs, FastAPI docs
 
 ### **Escalation Criteria**
 

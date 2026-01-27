@@ -11,7 +11,7 @@
 **Migration Status:**
 
 - ✅ Code migrated to PostgreSQL (committed: `2b9fbc1`)
-- ✅ Railway PostgreSQL service provisioned
+- ✅ Render PostgreSQL service provisioned
 - ✅ DATABASE_URL added to app service environment variables
 - ✅ App deployed successfully
 - ❌ **App still using SQLite fallback - PostgreSQL connection failing**
@@ -28,13 +28,13 @@
 
 ### Step 1: Verify DATABASE_URL Configuration
 
-**In Railway dashboard:**
+**In Render dashboard:**
 
 1. Click on **PostgreSQL service**
 2. Check **"Variables"** or **"Connect"** section
 3. Look for **TWO possible connection strings:**
-   - **Public URL:** `postgresql://...@something.railway.app:5432/railway`
-   - **Private URL:** `postgresql://...@postgres.railway.internal:5432/railway`
+   - **Public URL:** `postgresql://...@something.render.app:5432/render`
+   - **Private URL:** `postgresql://...@postgres.render.internal:5432/render`
 
 4. **Copy the PRIVATE/INTERNAL network URL** (if available)
 
@@ -75,7 +75,7 @@
 
 ---
 
-## Alternative: Check Railway PostgreSQL Status
+## Alternative: Check Render PostgreSQL Status
 
 If private URL doesn't exist or connection still fails:
 
@@ -99,7 +99,7 @@ If private URL doesn't exist or connection still fails:
 **Current DATABASE_URL format (confirmed by user):**
 
 - Starts with: `postgresql://`
-- Ends with: `railway.app:5432/railway`
+- Ends with: `render.app:5432/render`
 
 **Code Status:**
 
@@ -124,7 +124,7 @@ cp api/storage_sqlite_backup.py api/storage.py
 sed -i '' '/psycopg2-binary/d' requirements.txt
 git add api/storage.py requirements.txt
 git commit -m "Rollback: PostgreSQL connection failed, restore SQLite"
-git push railway-origin main
+git push render-origin main
 ```
 
 **Note:** This returns to the original problem (database wiped on every deploy).
@@ -135,19 +135,19 @@ git push railway-origin main
 
 **Session work (90 minutes):**
 
-1. ✅ Diagnosed root cause (Railway ephemeral SQLite storage)
+1. ✅ Diagnosed root cause (Render ephemeral SQLite storage)
 2. ✅ Migrated all SQL queries to PostgreSQL syntax
 3. ✅ Added connection pooling
 4. ✅ Deployed code changes
-5. ✅ Provisioned Railway PostgreSQL
+5. ✅ Provisioned Render PostgreSQL
 6. ✅ Added DATABASE_URL to app service
-7. ❌ **Connection not working - needs Railway dashboard troubleshooting**
+7. ❌ **Connection not working - needs Render dashboard troubleshooting**
 
 **Claude Code limitation:**
 
-- Cannot access Railway dashboard interactively
+- Cannot access Render dashboard interactively
 - Cannot view visual UI elements (tabs, panels, buttons)
-- Cannot switch between Railway services via CLI in non-TTY mode
+- Cannot switch between Render services via CLI in non-TTY mode
 - **Requires human with dashboard access to complete final configuration**
 
 ---
@@ -164,6 +164,6 @@ Once DATABASE_URL is correctly configured:
 
 ---
 
-**Status:** Awaiting NARs Railway dashboard configuration
+**Status:** Awaiting NARs Render dashboard configuration
 
 **Estimated Time to Resolution:** 10 minutes (if DATABASE_URL just needs updating)

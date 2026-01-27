@@ -13,7 +13,7 @@ This file points you to:
 **Quick access:**
 
 ```bash
-cd /Users/damianseguin/AI_Workspace/WIMD-Railway-Deploy-Project
+cd /Users/damianseguin/WIMD-Deploy-Project
 cat .ai-agents/NETLIFY_RUNNER_START_HERE_2025-11-06.md
 ```
 
