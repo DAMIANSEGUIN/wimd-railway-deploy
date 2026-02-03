@@ -3224,16 +3224,6 @@ async function askCoach(prompt) {
     }
   };
 
-  if (document.readyState === 'loading') {
-    console.log('[INIT SETUP] DOM still loading, adding listener');
-    document.addEventListener('DOMContentLoaded', safeInitApp, { once: true });
-  } else {
-    console.log('[INIT SETUP] DOM already ready, initializing immediately');
-    setTimeout(safeInitApp, 0);
-  }
-
-})();
-
   // Navigation scroll function
   function scrollToSection(sectionId) {
     const section = document.getElementById(sectionId);
@@ -3246,6 +3236,9 @@ async function askCoach(prompt) {
       }
     }
   }
+
+  // Make scrollToSection globally accessible
+  window.scrollToSection = scrollToSection;
 
   // Enhanced API error handling
   const originalFetch = window.fetch;
@@ -3262,6 +3255,16 @@ async function askCoach(prompt) {
         throw error;
       });
   };
+
+  if (document.readyState === 'loading') {
+    console.log('[INIT SETUP] DOM still loading, adding listener');
+    document.addEventListener('DOMContentLoaded', safeInitApp, { once: true });
+  } else {
+    console.log('[INIT SETUP] DOM already ready, initializing immediately');
+    setTimeout(safeInitApp, 0);
+  }
+
+})();
 
   // PS101 Implementation
   (function() {
