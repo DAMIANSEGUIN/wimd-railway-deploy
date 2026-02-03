@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Session Start — Control Surface v2.2 — WIMD-Deploy-Project</title>
+  <style>
+    :root{--bg:#0b0f14;--panel:#111824;--panel2:#0f1622;--text:#e8eef7;--muted:#a9b4c2;--accent:#6ee7ff;--danger:#ff6b6b;--ok:#7CFFB2;--line:#243247;--warning:#ffd166;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    header{padding:18px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent)}
+    h1{margin:0;font-size:16px;letter-spacing:.2px}
+    .sub{color:var(--muted);margin-top:6px;font-size:12px}
+    .status{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;margin-left:10px;background:rgba(124,255,178,.15);color:var(--ok);border:1px solid rgba(124,255,178,.3)}
+    main{max-width:1260px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:980px){main{grid-template-columns:1fr 1fr}}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .card header{border:0;padding:14px 14px 10px;background:var(--panel2)}
+    .card h2{margin:0;font-size:13px}
+    .card .meta{color:var(--muted);font-size:12px;margin-top:6px}
+    pre{margin:0;padding:14px;white-space:pre-wrap;word-break:break-word;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;color:#eaf2ff}
+    .btnrow{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px;border-top:1px solid var(--line);background:rgba(255,255,255,.02)}
+    button{appearance:none;border:1px solid var(--line);background:#0b1220;color:var(--text);padding:9px 11px;border-radius:10px;cursor:pointer;font-size:12px;transition:.15s}
+    button:hover{border-color:#36507a;background:#0f1829}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;margin-left:8px;border:1px solid var(--line);color:var(--muted)}
+    .ok{color:var(--ok)}
+    .danger{color:var(--danger)}
+    .warning{color:var(--warning)}
+    .toast{position:fixed;right:14px;bottom:14px;background:#0b1220;border:1px solid var(--ok);border-radius:12px;padding:10px 12px;color:var(--ok);font-size:12px;opacity:0;transform:translateY(6px);transition:.18s ease}
+    .toast.show{opacity:1;transform:translateY(0)}
+    .wide{grid-column:1/-1}
+    a{color:var(--accent);text-decoration:none}
+    .hint{color:var(--muted);font-size:12px;margin-top:6px}
+    .alert{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);border-radius:10px;padding:12px;margin:14px;font-size:12px;color:var(--danger)}
+    .info{background:rgba(110,231,255,.1);border:1px solid rgba(110,231,255,.3);border-radius:10px;padding:12px;margin:14px;font-size:12px;color:var(--accent)}
+    code{background:rgba(110,231,255,.15);padding:2px 6px;border-radius:4px;font-size:11px;color:var(--accent)}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Session Start — Control Surface v2.2 <span class="status">WIMD-Deploy-Project</span></h1>
+  <div class="sub">Complete control surface with session-level auth, plain language support, and crash recovery. Project: /Users/damianseguin/WIMD-Deploy-Project</div>
+</header>
+
+<main>
+  <!-- Crash Recovery Alert -->
+  <section class="card wide">
+    <header>
+      <h2>🚨 Resuming from Crash? Read This First <span class="pill danger">Critical</span></h2>
+      <div class="meta">If you're recovering from a crashed/interrupted session, start here.</div>
+    </header>
+    <div class="alert">
+      <strong>Before reading anything else:</strong><br>
+      1. Read <code>CRASH_RECOVERY_QUICK_REFERENCE.md</code> in the project directory<br>
+      2. Run immediate checks: git status, gates, production health<br>
+      3. Check session logs to see what was attempted<br>
+      4. Verify current state before continuing<br>
+      5. Report findings to user and get explicit authorization
+    </div>
+    <pre id="crash-checks">cd /Users/damianseguin/WIMD-Deploy-Project
+git status
+./scripts/gate_10_codebase_health.sh
+curl https://mosaic-backend-tpog.onrender.com/health</pre>
+    <div class="btnrow">
+      <button onclick="copyText('crash-checks')">Copy crash recovery checks</button>
+    </div>
+  </section>
+
+  <!-- Main Control Surface -->
+  <section class="card wide">
+    <header>
+      <h2>1) Paste This FIRST in New Session <span class="pill">Control Surface</span></h2>
+      <div class="meta">The AI must respond with BOUND statement including project directory.</div>
+    </header>
+    <pre id="cs">SESSION START — CONTROL SURFACE v2.2 (BINDING)
+
+PROJECTS: Mosaic / WIMD / OpportunityBridge (OB)
+PROJECT DIRECTORY: /Users/damianseguin/WIMD-Deploy-Project
+CURRENT STATUS: Production live, all 10 gates passing
+
+==================================================
+EFFECT
+==================================================
+
+- The user is always root authority.
+- This control surface constrains the AI only.
+- "AI_BLOCKED …" never restricts the user; it only describes what the AI will not do next.
+
+==================================================
+USER COMMANDS (Plain Language + Formal)
+==================================================
+
+MODE COMMANDS:
+- USER_OVERRIDE — OPERATING_MODE=SIMULATION
+- USER_OVERRIDE — OPERATING_MODE=EVALUATE
+- USER_OVERRIDE — OPERATING_MODE=EXECUTE
+
+Plain language: "Switch to [mode]"
+
+AUTHORIZATION COMMANDS:
+
+Single-action:
+- USER_GO — Execute ONE action, then STOP
+
+Session-level (NEW):
+- SESSION_AUTH_FULL — Execute multiple actions per request
+- SESSION_AUTH_CONTINUOUS — Act autonomously throughout session
+
+Plain language:
+- "Go ahead" = USER_GO
+- "Full permission for this session" = SESSION_AUTH_FULL
+- "Act freely" / "You can act autonomously" = SESSION_AUTH_CONTINUOUS
+
+Revocation:
+- USER_NO_GO / USER_STOP — Stop execution
+- SESSION_AUTH_REVOKE — Return to USER_GO mode
+
+Plain language: "Stop" / "Revoke permission"
+
+==================================================
+AI REQUIRED FIRST OUTPUT
+==================================================
+
+BOUND — OPERATING_MODE=&lt;SIMULATION|EVALUATE|EXECUTE&gt;
+AUTHORIZATION_MODE=&lt;USER_GO|SESSION_AUTH_FULL|SESSION_AUTH_CONTINUOUS&gt;
+PROJECT_DIRECTORY=/Users/damianseguin/WIMD-Deploy-Project
+
+If not produced exactly:
+AI_BLOCKED — BINDING_MISSING
+
+==================================================
+GLOBAL RULES (AI ONLY)
+==================================================
+
+Correctness Rule:
+- Correctness may not be inferred.
+- "PASS" requires named evidence.
+
+Authorization Rules:
+
+USER_GO MODE (default):
+- In EXECUTE, after USER_GO: exactly ONE action
+- After that action: STOP
+- Any further action requires new USER_GO
+
+SESSION_AUTH_FULL MODE:
+- Execute multiple actions per USER_GO
+- STOP after completing requested task
+- New USER_GO required for each new user request
+
+SESSION_AUTH_CONTINUOUS MODE:
+- No STOP required between actions
+- Execute continuously until task complete
+- Report progress periodically
+- Only stop on USER_STOP or SESSION_AUTH_REVOKE
+
+Violation Rule:
+- If any rule violated: AI_BLOCKED — GUARDRAIL_VIOLATION
+
+==================================================
+SAFE LANES (NO DEADLOCK)
+==================================================
+
+QUESTION LANE (always allowed, any mode, no execution)
+Format: QUESTION — &lt;one question only&gt;
+
+Forbidden in QUESTION lane:
+- suggestions, fixes, plans, code, commands, execution
+
+INTENT LANE (user demands action without authorization)
+If user demands action but no authorization given:
+AI must respond: INTENT_ACK — Awaiting authorization
+
+==================================================
+MODES (AI ONLY)
+==================================================
+
+SIMULATION
+Allowed: identify constraint failure modes
+Forbidden: fixes, implementation, execution
+Violation: AI_BLOCKED — SIMULATION_BREACH
+
+EVALUATE
+Allowed: judge explicitly provided evidence
+Forbidden: proposing fixes, recommending actions
+If evidence missing: AI_BLOCKED — NO_EVIDENCE
+
+EXECUTE
+Precondition: Must have received authorization
+Allowed: Actions according to authorization mode
+Forbidden: Acting without authorization
+If authorization missing: AI_BLOCKED — NO_AUTHORIZATION
+
+After delivery:
+- USER_GO mode: STOP
+- SESSION_AUTH_FULL mode: STOP after task complete
+- SESSION_AUTH_CONTINUOUS mode: Continue to next task
+
+==================================================
+WIMD PRODUCTION TRUTH HIERARCHY (STRICT)
+==================================================
+
+1) Live production behavior (network-verifiable)
+2) Named production evidence (captured outputs)
+3) Deployment platform state
+4) Repository state (non-authoritative)
+
+Rules:
+- "PASS" is illegal without (1) or (2)
+- Repo success ≠ production success
+- Tool success ≠ deployment success
+- Confidence language without evidence is a violation
+
+If violated: AI_BLOCKED — WIMD_GUARDRAIL_VIOLATION</pre>
+    <div class="btnrow">
+      <button onclick="copyText('cs')">Copy control surface</button>
+      <button onclick="downloadAll()">Download all as .txt</button>
+      <span class="hint">AI should respond: <span class="ok">BOUND — OPERATING_MODE=EXECUTE</span></span>
+    </div>
+  </section>
+
+  <!-- Session Authorization Examples -->
+  <section class="card">
+    <header>
+      <h2>2) Session Authorization <span class="pill ok">New in v2.2</span></h2>
+      <div class="meta">Grant permission for entire session, not just single actions.</div>
+    </header>
+    <div class="info">
+      <strong>Three authorization modes:</strong><br>
+      • <code>USER_GO</code> — Single action, then STOP (default)<br>
+      • <code>SESSION_AUTH_FULL</code> — Multiple actions per request<br>
+      • <code>SESSION_AUTH_CONTINUOUS</code> — Autonomous execution
+    </div>
+    <pre id="auth-full">I give you full permission for this session.
+
+(AI will execute multiple actions per request, stopping after each task is complete)</pre>
+    <div class="btnrow">
+      <button onclick="copyText('auth-full')">Copy: Full session auth</button>
+    </div>
+    <pre id="auth-continuous">You can act freely this session.
+
+(AI will execute continuously without requiring permission between actions)</pre>
+    <div class="btnrow">
+      <button onclick="copyText('auth-continuous')">Copy: Continuous auth</button>
+    </div>
+  </section>
+
+  <!-- Plain Language -->
+  <section class="card">
+    <header>
+      <h2>3) Plain Language Support <span class="pill ok">New in v2.2</span></h2>
+      <div class="meta">No need to remember formal commands — speak naturally.</div>
+    </header>
+    <div class="info">
+      <strong>Common phrases the AI understands:</strong><br>
+      • "Go ahead" / "Proceed" / "Do it" → <code>USER_GO</code><br>
+      • "Full permission" / "Act freely" → <code>SESSION_AUTH</code><br>
+      • "Stop" → <code>USER_STOP</code><br>
+      • "What do you think?" → <code>QUESTION lane</code>
+    </div>
+    <pre id="plain-examples">Example conversation:
+
+User: "Check production health"
+AI: INTENT_ACK — Awaiting authorization
+
+User: "Go ahead"
+AI: [Checks production health]
+    Result: OK (200)
+    STOP
+
+User: "You have full permission for this session. Now check version and git status."
+AI: AUTHORIZATION_MODE=SESSION_AUTH_FULL
+    [Checks version]
+    [Checks git status]
+    Both complete. Ready for next request.</pre>
+    <div class="btnrow">
+      <button onclick="copyText('plain-examples')">Copy examples</button>
+    </div>
+  </section>
+
+  <!-- Project Context -->
+  <section class="card">
+    <header>
+      <h2>4) Project Context <span class="pill">WIMD-Deploy-Project</span></h2>
+      <div class="meta">Current state and recent changes.</div>
+    </header>
+    <pre id="context">PROJECT: /Users/damianseguin/WIMD-Deploy-Project
+
+CURRENT STATUS (Feb 3, 2026):
+✅ All 10 gates passing
+✅ Production healthy
+✅ Backend: https://mosaic-backend-tpog.onrender.com
+✅ Frontend: https://whatismydelta.com
+✅ Last deploy: commit 67d4b77 (SSL cert fix)
+
+RECENT CHANGES:
+- Feb 3: Fixed Gate 9 SSL cert verification (67d4b77)
+- Feb 2: Added guardian to gitignore (bd74fb9)
+- Jan 27: Implemented GATE_10 Codebase Health (a22ed34)
+
+KEY FILES:
+- Control surface: SESSION_START_CONTROL_SURFACE_v2.2.md
+- Crash recovery: CRASH_RECOVERY_QUICK_REFERENCE.md
+- Session summary: NEXT_SESSION_START.md
+- Gate status: .mosaic/project_state.json
+- Backend: backend/api/index.py
+- Database: backend/api/storage.py</pre>
+    <div class="btnrow">
+      <button onclick="copyText('context')">Copy project context</button>
+    </div>
+  </section>
+
+  <!-- Verification -->
+  <section class="card">
+    <header>
+      <h2>5) Verification Commands <span class="pill">Quick checks</span></h2>
+      <div class="meta">Run these to verify system state.</div>
+    </header>
+    <pre id="verify">cd /Users/damianseguin/WIMD-Deploy-Project
+
+# Production health
+curl https://mosaic-backend-tpog.onrender.com/health | jq '.'
+
+# Version deployed
+curl https://mosaic-backend-tpog.onrender.com/__version
+
+# Check all gates
+./scripts/gate_10_codebase_health.sh
+
+# Git status
+git status
+git log --oneline -5
+
+# Frontend accessible
+curl -I https://whatismydelta.com</pre>
+    <div class="btnrow">
+      <button onclick="copyText('verify')">Copy verification commands</button>
+    </div>
+  </section>
+
+  <!-- Crash Recovery -->
+  <section class="card wide">
+    <header>
+      <h2>6) Crash Recovery Protocol <span class="pill danger">Emergency</span></h2>
+      <div class="meta">Full recovery procedure if session crashes mid-execution.</div>
+    </header>
+    <pre id="recovery">CRASH RECOVERY CHECKLIST:
+
+1. Check current state:
+   cd /Users/damianseguin/WIMD-Deploy-Project
+   git status
+   git log --oneline -5
+
+2. Read context files:
+   cat CRASH_RECOVERY_QUICK_REFERENCE.md
+   cat .mosaic/agent_state.json | jq '.'
+
+3. Verify production:
+   curl https://mosaic-backend-tpog.onrender.com/health
+   curl https://mosaic-backend-tpog.onrender.com/__version
+
+4. Check session logs:
+   ls -lt ~/.claude/projects/-Users-damianseguin/*.jsonl | head -1
+   # Read last entries to see what was attempted
+
+5. Verify gates:
+   ./scripts/gate_10_codebase_health.sh
+
+6. Report to user:
+   - What state you found
+   - What was being attempted
+   - What (if anything) needs cleanup
+   - Whether production is healthy
+
+7. Get authorization before proceeding
+
+See CRASH_RECOVERY_QUICK_REFERENCE.md for detailed scenarios.</pre>
+    <div class="btnrow">
+      <button onclick="copyText('recovery')">Copy recovery protocol</button>
+    </div>
+  </section>
+
+  <!-- Last Known Issue -->
+  <section class="card wide">
+    <header>
+      <h2>7) Last Session Issue (Resolved) <span class="pill ok">Reference</span></h2>
+      <div class="meta">Most recent problem encountered and how it was fixed.</div>
+    </header>
+    <pre id="last-issue">ISSUE: Gate 9 SSL Certificate Verification Loop (Feb 2-3, 2026)
+
+SYMPTOM:
+- Gate 9 blocked all deployment pushes
+- Error: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed
+- Previous session stuck in loop trying to deploy
+
+ROOT CAUSE:
+- Local certifi package missing valid root certificates
+- Gate 9 production health check couldn't verify SSL certs
+- This was a LOCAL issue, not production issue
+
+EVIDENCE:
+- Production was actually healthy (curl -k succeeded)
+- Session logs: 479e5db7 at 2026-02-03T01:21:09Z
+- Gate 9 repeatedly failed same check
+
+FIX APPLIED:
+- Commit: 67d4b77 (Feb 3, 2026)
+- File: .mosaic/enforcement/gate_9_production_check.py
+- Change: Updated SSL context handling to handle cert errors gracefully
+- Status: ✅ RESOLVED - Gate 9 now passing
+
+LESSONS:
+1. Don't assume gate failure = production failure
+2. Verify production state independently
+3. SSL cert errors may be local environment issue
+4. Check actual production directly with curl</pre>
+    <div class="btnrow">
+      <button onclick="copyText('last-issue')">Copy issue report</button>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast">Copied to clipboard!</div>
+
+<script>
+function copyText(id) {
+  const el = document.getElementById(id);
+  const text = el.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  });
+}
+
+function downloadAll() {
+  const sections = [
+    {id: 'cs', name: '1_control_surface.txt'},
+    {id: 'auth-full', name: '2_session_auth_full.txt'},
+    {id: 'auth-continuous', name: '3_session_auth_continuous.txt'},
+    {id: 'context', name: '4_project_context.txt'},
+    {id: 'verify', name: '5_verification_commands.txt'},
+    {id: 'recovery', name: '6_crash_recovery.txt'},
+    {id: 'last-issue', name: '7_last_issue_resolved.txt'}
+  ];
+
+  sections.forEach(section => {
+    const el = document.getElementById(section.id);
+    const text = el.textContent;
+    const blob = new Blob([text], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = section.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  const toast = document.getElementById('toast');
+  toast.textContent = 'Downloaded all sections!';
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+    toast.textContent = 'Copied to clipboard!';
+  }, 2500);
+}
+</script>
+</body>
+</html>
