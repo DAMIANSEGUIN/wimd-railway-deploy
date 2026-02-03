@@ -27,6 +27,93 @@
 
 ---
 
+## 🧪 TESTING & VERIFICATION CAPABILITIES
+
+**AI agents have access to browser testing tools and logs. USE THEM.**
+
+### Browser Testing Tools Available
+
+**Playwright (Headless Browser Testing):**
+- Install: `npx playwright install chromium`
+- Create test scripts to verify actual UI functionality
+- Test user interactions, not just code presence
+- Capture screenshots for verification: `/tmp/*.png`
+- Check for console errors in real browser environment
+
+**Example usage:**
+```javascript
+const { chromium } = require('playwright');
+// Test actual page load, UI elements, user interactions
+// Verify no JavaScript console errors
+```
+
+### Log Access Locations
+
+**Session Logs:**
+- Location: `~/.claude/projects/-Users-damianseguin/*.jsonl`
+- Most recent file: `ls -lt ~/.claude/projects/-Users-damianseguin/*.jsonl | head -1`
+- Check for: Last tool executions, errors before crash, loop detection
+
+**Debug Logs:**
+- Location: `~/.claude/debug/*.txt`
+- Useful for: Detailed error traces, API call logs
+
+**Deployment Logs:**
+- Render: https://dashboard.render.com → Deployment logs
+- Netlify: https://app.netlify.com → Build logs
+- Local verification: `.verification_audit.log`
+
+**Production Logs:**
+- Backend health: `curl https://mosaic-backend-tpog.onrender.com/health`
+- Comprehensive health: `/health/comprehensive` endpoint
+- Check: error rates, p95 latency, PostgreSQL status
+
+### When to Use Testing Tools
+
+**REQUIRED for UI changes:**
+- ✅ Any JavaScript modifications
+- ✅ HTML structure changes
+- ✅ Event handler updates
+- ✅ Frontend deployments
+
+**Don't just verify code exists - VERIFY IT WORKS:**
+- ❌ BAD: `grep -o "PS101"` → Just checks text presence
+- ✅ GOOD: Run Playwright test → Verifies actual browser behavior
+
+**Testing checklist:**
+```
+□ Browser test runs without JavaScript errors
+□ UI elements are visible and interactive
+□ Console logs show expected initialization
+□ User interactions trigger correct behavior
+□ Screenshot captures expected UI state
+```
+
+### Verification Commands Quick Reference
+
+```bash
+# Test UI with Playwright
+node test-ui.js  # Create test scripts for specific features
+
+# Check session logs for errors
+tail -100 ~/.claude/projects/-Users-damianseguin/*.jsonl | grep -i error
+
+# Verify deployment
+curl -I https://whatismydelta.com
+curl https://mosaic-backend-tpog.onrender.com/health
+
+# Check for uncommitted work
+git status
+git diff
+
+# Run gates
+./scripts/gate_10_codebase_health.sh
+```
+
+**IMPORTANT:** When user says "test the UI" or "verify it works", they expect ACTUAL browser testing with Playwright, not just static code analysis.
+
+---
+
 ## EFFECT
 
 - **The user is always root authority.**

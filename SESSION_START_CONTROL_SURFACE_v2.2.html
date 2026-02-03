@@ -79,6 +79,55 @@ PROJECT DIRECTORY: /Users/damianseguin/WIMD-Deploy-Project
 CURRENT STATUS: Production live, all 10 gates passing
 
 ==================================================
+🧪 TESTING & VERIFICATION CAPABILITIES
+==================================================
+
+AI agents have access to browser testing tools and logs. USE THEM.
+
+BROWSER TESTING TOOLS AVAILABLE:
+- Playwright (headless browser testing)
+- Install: npx playwright install chromium
+- Create test scripts to verify actual UI functionality
+- Test user interactions, not just code presence
+- Capture screenshots: /tmp/*.png
+- Check for console errors in real browser
+
+LOG ACCESS LOCATIONS:
+- Session logs: ~/.claude/projects/-Users-damianseguin/*.jsonl
+- Debug logs: ~/.claude/debug/*.txt
+- Render logs: https://dashboard.render.com
+- Netlify logs: https://app.netlify.com
+- Local audit: .verification_audit.log
+
+WHEN TO USE TESTING TOOLS (REQUIRED for UI changes):
+✅ Any JavaScript modifications
+✅ HTML structure changes
+✅ Event handler updates
+✅ Frontend deployments
+
+DON'T just verify code exists - VERIFY IT WORKS:
+❌ BAD: grep -o "PS101" → Just checks text presence
+✅ GOOD: Run Playwright test → Verifies actual browser behavior
+
+VERIFICATION QUICK REFERENCE:
+# Test UI with Playwright
+node test-ui.js
+
+# Check session logs for errors
+tail -100 ~/.claude/projects/-Users-damianseguin/*.jsonl | grep -i error
+
+# Verify deployment
+curl -I https://whatismydelta.com
+curl https://mosaic-backend-tpog.onrender.com/health
+
+# Run gates
+./scripts/gate_10_codebase_health.sh
+
+IMPORTANT: When user says "test the UI" or "verify it works",
+they expect ACTUAL browser testing with Playwright, not just
+static code analysis.
+
+==================================================
 EFFECT
 ==================================================
 

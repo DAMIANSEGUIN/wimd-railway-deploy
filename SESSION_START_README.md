@@ -167,6 +167,29 @@ AI: [Updates state files without waiting for new USER_GO]
 
 ---
 
+## Testing & Verification Tools
+
+**AI agents have browser testing capabilities:**
+
+- **Playwright**: Headless browser testing for actual UI verification
+- **Install**: `npx playwright install chromium`
+- **Test files**: Create `test-*.js` scripts for UI testing
+- **Screenshots**: Saved to `/tmp/*.png` for visual verification
+
+**Log access:**
+- Session logs: `~/.claude/projects/-Users-damianseguin/*.jsonl`
+- Debug logs: `~/.claude/debug/*.txt`
+- Deployment logs: Render/Netlify dashboards
+
+**When to use:**
+- ✅ Required for any UI changes, JavaScript modifications, or frontend deployments
+- ✅ User requests "test the UI" or "verify it works"
+- ❌ Don't just grep for text - run actual browser tests
+
+**See Control Surface v2.2 section "Testing & Verification Capabilities" for full details.**
+
+---
+
 ## Project Context (Current)
 
 ```
@@ -174,7 +197,7 @@ Directory: /Users/damianseguin/WIMD-Deploy-Project
 Status: ✅ All systems operational
 Production: https://mosaic-backend-tpog.onrender.com (healthy)
 Frontend: https://whatismydelta.com (live)
-Last Deploy: 67d4b77 (SSL cert fix, Feb 3)
+Last Deploy: dedf22f (Syntax fix in mosaic_ui, Feb 3)
 Gates: All 10 passing
 ```
 
