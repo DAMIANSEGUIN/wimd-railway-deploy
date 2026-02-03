@@ -38,3 +38,8 @@ mosaic_ui/src/
 .ai-agents/broker.pid
 session_backups/
 .claude-run/
+
+# Guardian infrastructure (local only)
+.guardian/
+.guardian_rebound/
+.guardian_root
