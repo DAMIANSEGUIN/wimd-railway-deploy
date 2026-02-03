@@ -21,6 +21,8 @@ Exit codes:
 
 import json
 import sys
+import ssl
+import certifi
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 import urllib.request
@@ -41,9 +43,10 @@ class ProductionHealthChecker:
         print("\n🧪 Test: Backend health endpoint responds")
 
         backend_url = "https://mosaic-backend-tpog.onrender.com/health"
+        ssl_context = ssl.create_default_context(cafile=certifi.where())
 
         try:
-            with urllib.request.urlopen(backend_url, timeout=10) as response:
+            with urllib.request.urlopen(backend_url, timeout=10, context=ssl_context) as response:
                 if response.status == 200:
                     data = json.loads(response.read().decode())
                     if data.get("ok"):
@@ -76,9 +79,10 @@ class ProductionHealthChecker:
         print("\n🧪 Test: Frontend loads")
 
         frontend_url = "https://whatismydelta.com"
+        ssl_context = ssl.create_default_context(cafile=certifi.where())
 
         try:
-            with urllib.request.urlopen(frontend_url, timeout=10) as response:
+            with urllib.request.urlopen(frontend_url, timeout=10, context=ssl_context) as response:
                 if response.status == 200:
                     print(f"  ✅ PASS: Frontend loads ({frontend_url})")
                     return True
@@ -168,9 +172,10 @@ class ProductionHealthChecker:
 
         frontend_url = "https://whatismydelta.com"
         expected_backend = "https://mosaic-backend-tpog.onrender.com"
+        ssl_context = ssl.create_default_context(cafile=certifi.where())
 
         try:
-            with urllib.request.urlopen(frontend_url, timeout=10) as response:
+            with urllib.request.urlopen(frontend_url, timeout=10, context=ssl_context) as response:
                 if response.status == 200:
                     html = response.read().decode()
 
