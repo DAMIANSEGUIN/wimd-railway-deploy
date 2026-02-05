@@ -2819,6 +2819,11 @@ async function askCoach(prompt) {
             addObstacleBtn.style.display = 'block';
 
             renderObstacleMapping(activeExp);
+
+            // Update validation to enable Next button
+            const step = PS101State.getCurrentStep();
+            const totalPrompts = step ? step.prompts.length : 1;
+            updateNavButtons(PS101State.currentStep, PS101State.currentPromptIndex, totalPrompts);
           }
         });
 
@@ -2923,6 +2928,11 @@ async function askCoach(prompt) {
             addActionBtn.style.display = 'block';
 
             renderActionPlan(activeExp);
+
+            // Update validation to enable Next button
+            const step = PS101State.getCurrentStep();
+            const totalPrompts = step ? step.prompts.length : 1;
+            updateNavButtons(PS101State.currentStep, PS101State.currentPromptIndex, totalPrompts);
           }
         });
 
