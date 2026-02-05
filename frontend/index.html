@@ -2537,7 +2537,27 @@ async function askCoach(prompt) {
       const totalPrompts = (step.prompts && step.prompts.length) ? step.prompts.length : 1;
       const isLastPrompt = promptIndex === totalPrompts - 1;
 
-      // Check minimum length
+      // For experiment steps (6-9) on last prompt, skip textarea validation
+      // These steps use experiment components instead of textarea
+      if (isLastPrompt && [6, 7, 8, 9].includes(step.step)) {
+        const activeExp = PS101State.getActiveExperiment();
+        if (step.step === 6 && activeExp) {
+          return activeExp.hypothesis && activeExp.successMetric &&
+                 (activeExp.duration?.start || activeExp.duration?.review);
+        } else if (step.step === 7 && activeExp) {
+          return activeExp.obstacles && activeExp.obstacles.length > 0 &&
+                 activeExp.obstacles.some(o => o.label && o.strategy);
+        } else if (step.step === 8 && activeExp) {
+          return activeExp.actions && activeExp.actions.length >= 3;
+        } else if (step.step === 9 && activeExp) {
+          return activeExp.reflection &&
+                 activeExp.reflection.outcome && activeExp.reflection.learning &&
+                 activeExp.reflection.confidence?.after;
+        }
+        return false;
+      }
+
+      // Check minimum length (for non-experiment steps)
       if (answer.length < step.minChars) {
         if (!isLastPrompt) {
           const proceed = confirm('This prompt is still under the recommended detail. Continue to the next prompt anyway?');
