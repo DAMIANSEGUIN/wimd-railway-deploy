@@ -2723,6 +2723,11 @@ async function askCoach(prompt) {
         status: 'draft'
       });
       showAutosaveIndicator('Experiment saved');
+
+      // Update validation to enable Next button
+      const step = PS101State.getCurrentStep();
+      const totalPrompts = step ? step.prompts.length : 1;
+      updateNavButtons(PS101State.currentStep, PS101State.currentPromptIndex, totalPrompts);
     }
 
     if (expHypothesis) expHypothesis.addEventListener('input', () => saveExperimentCanvas());
@@ -2990,6 +2995,11 @@ async function askCoach(prompt) {
         nextMove: reflectionNextMove?.value || 'Continue'
       });
       showAutosaveIndicator('Reflection saved');
+
+      // Update validation to enable Next button
+      const step = PS101State.getCurrentStep();
+      const totalPrompts = step ? step.prompts.length : 1;
+      updateNavButtons(PS101State.currentStep, PS101State.currentPromptIndex, totalPrompts);
     }
 
     if (reflectionOutcome) reflectionOutcome.addEventListener('input', () => saveReflection());
