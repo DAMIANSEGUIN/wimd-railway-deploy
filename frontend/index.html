@@ -3901,12 +3901,8 @@ async function askCoach(prompt) {
 
         let isValid = true;
         if (isLastPrompt) {
-          const currentAnswer = PS101State.getAnswer(currentStep, promptIndex);
-          const step = PS101_STEPS.find(s => s.step === currentStep);
-          isValid = currentAnswer.length >= (step ? step.minChars : 30);
-
-          // Additional validation for experiment steps (when on last prompt)
-          if (isValid && [6, 7, 8, 9].includes(currentStep)) {
+          // For experiment steps (6-9), validate experiment component instead of textarea
+          if ([6, 7, 8, 9].includes(currentStep)) {
             const activeExp = PS101State.getActiveExperiment();
             if (currentStep === 6 && activeExp) {
               isValid = activeExp.hypothesis && activeExp.successMetric &&
@@ -3921,6 +3917,11 @@ async function askCoach(prompt) {
                        activeExp.reflection.outcome && activeExp.reflection.learning &&
                        activeExp.reflection.confidence?.after;
             }
+          } else {
+            // For regular steps, validate textarea answer
+            const currentAnswer = PS101State.getAnswer(currentStep, promptIndex);
+            const step = PS101_STEPS.find(s => s.step === currentStep);
+            isValid = currentAnswer.length >= (step ? step.minChars : 30);
           }
     }
 
