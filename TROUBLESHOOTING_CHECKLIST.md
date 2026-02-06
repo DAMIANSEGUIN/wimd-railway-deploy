@@ -39,6 +39,7 @@ git tag -l "prod-*" --sort=-version:refname | head -5
 
 **Run this checklist BEFORE making any code changes:**
 
+### Backend Checklist
 ```
 □ Read recent Render deployment logs
 □ Check /health endpoint status
@@ -48,18 +49,38 @@ git tag -l "prod-*" --sort=-version:refname | head -5
 □ Check if error is in known taxonomy (see below)
 ```
 
+### Frontend Checklist (NEW - Added 2026-02-06)
+```
+□ Run frontend smoke test: ./scripts/test_frontend_smoke.sh
+□ Check browser console for JavaScript errors (Cmd+Option+J on Mac)
+□ Verify PS101 navigation works (Steps 1-10)
+□ Test with clean localStorage (clear browser data)
+□ Run Playwright E2E tests: npx playwright test test-ps101-complete-flow.js
+□ Verify live site matches local: curl https://whatismydelta.com | grep PS101State
+```
+
 ---
 
 ## Error Classification Dashboard
 
 ### 🔴 CRITICAL (Production Down)
 
+#### Backend Errors
 | Error Label | Symptom | Root Cause | First Action |
 |-------------|---------|------------|--------------|
 | `RAILWAY_RESTART_LOOP` | Container crashes repeatedly | Code bug, dependency missing | Check deploy logs for exception |
 | `PG_CONNECTION_FAILED` | App using SQLite fallback | Wrong DATABASE_URL, network issue | Verify DATABASE_URL contains `render.internal` |
 | `CONTEXT_MANAGER_BUG` | AttributeError: 'object has no attribute execute' | Using `conn = get_conn()` instead of `with get_conn() as conn:` | Search codebase for incorrect pattern |
 | `OPENAI_INVALID_KEY` | All AI features fail | API key revoked/wrong | Check OPENAI_API_KEY in Render variables |
+
+#### Frontend Errors (NEW - Added 2026-02-06)
+| Error Label | Symptom | Root Cause | First Action |
+|-------------|---------|------------|--------------|
+| `PS101_NAVIGATION_STUCK` | User stuck on same step/prompt | nextPrompt() or nextStep() broken | Check browser console for JS errors, verify navigation functions exist |
+| `PS101_STATE_CORRUPT` | Wrong step count, missing prompts | localStorage corrupted or wrong PS101_STEPS array | Clear localStorage, verify PS101_STEPS has 10 steps |
+| `FRONTEND_JS_ERROR` | White screen, features not working | JavaScript exception on page load | Open browser console (Cmd+Option+J), check for errors |
+| `FRONTEND_NOT_DEPLOYED` | Live site shows old code | Netlify deploy failed or cached | Check Netlify dashboard, hard refresh browser (Cmd+Shift+R) |
+| `LOCALSTORAGE_FULL` | User data not saving | Browser storage quota exceeded | Clear old session data, implement storage cleanup |
 
 ### 🟡 WARNING (Degraded)
 
@@ -306,7 +327,185 @@ while True:
 
 ---
 
-## Debugging Workflow
+## Frontend Debugging Workflow (NEW - Added 2026-02-06)
+
+### Quick Triage: Is It Frontend or Backend?
+
+```bash
+# Test 1: Can you reach the site?
+curl -I https://whatismydelta.com
+# → If 200: Frontend deployed
+# → If 4xx/5xx: Netlify issue
+
+# Test 2: Is JavaScript working?
+curl -s https://whatismydelta.com | grep "PS101State"
+# → If found: Code deployed
+# → If not found: Old version cached
+
+# Test 3: Is backend responding?
+curl https://mosaic-backend-tpog.onrender.com/health
+# → If {"ok":true}: Backend working
+# → If error: Backend down
+
+# Test 4: Open browser console
+open -a "Google Chrome" https://whatismydelta.com
+# Press Cmd+Option+J
+# → If no errors: Frontend working
+# → If errors: JavaScript broken
+```
+
+### Frontend-Specific Debugging Steps
+
+#### Step F1: Check Browser Console (ALWAYS DO THIS FIRST)
+
+```
+1. Open site: https://whatismydelta.com
+2. Open console: Cmd+Option+J (Mac) or F12 (Windows/Linux)
+3. Refresh page: Cmd+R
+4. Look for errors (red text)
+5. Screenshot ANY errors
+```
+
+**Common Errors:**
+- `ReferenceError: PS101State is not defined` → Code broken
+- `TypeError: Cannot read property 'length' of undefined` → Array missing
+- `localStorage quota exceeded` → Storage full
+- `Failed to fetch` → Backend API down
+
+#### Step F2: Test PS101 Flow Manually
+
+```bash
+# Open browser with clean state
+open -a "Google Chrome" --args --incognito https://whatismydelta.com
+
+# Manual test checklist:
+□ Click "Start with questions"
+□ Fill out Step 1, Prompt 1 (50+ characters)
+□ Click "Next Prompt" → Should advance to Prompt 2
+□ Fill out all 6 prompts in Step 1
+□ Click "Next Step" → Should advance to Step 2
+□ Check step label shows "Step 2 of 10"
+□ Check browser console for [PS101] debug logs
+```
+
+#### Step F3: Check localStorage State
+
+```javascript
+// Open browser console and run:
+JSON.parse(localStorage.getItem('ps101_v2_state'))
+
+// Expected output:
+{
+  currentStep: 1,          // Should be 1-10
+  currentPromptIndex: 0,   // Should be 0-based
+  steps: {...},            // User answers
+  startedAt: "2026-02-06..."
+}
+
+// If corrupted, clear it:
+localStorage.removeItem('ps101_v2_state')
+location.reload()
+```
+
+#### Step F4: Run Automated Tests
+
+```bash
+# Quick smoke test (30 seconds)
+./scripts/test_frontend_smoke.sh
+
+# Full E2E test (2-3 minutes)
+npx playwright test test-ps101-complete-flow.js --headed
+
+# Step 6 validation test
+npx playwright test test-ps101-step6-validation.js --headed
+```
+
+#### Step F5: Compare Local vs Production
+
+```bash
+# Check what's deployed
+curl -s https://whatismydelta.com | grep -o "console.log.*PS101.*nextPrompt" | head -1
+
+# Check local file
+grep -o "console.log.*PS101.*nextPrompt" frontend/index.html | head -1
+
+# If different: Need to redeploy
+netlify deploy --prod --dir=frontend
+```
+
+### Frontend Error Patterns
+
+**Pattern 1: Navigation Stuck**
+```
+Symptom: User clicks "Next" but stays on same step/prompt
+Root Cause: nextPrompt() or nextStep() broken, localStorage corrupted
+Debug:
+  1. Open console, look for [PS101] logs
+  2. Check localStorage state
+  3. Verify PS101_STEPS array has 10 steps
+Fix: Clear localStorage, verify navigation functions exist
+```
+
+**Pattern 2: Wrong Step Count**
+```
+Symptom: Shows "Step 1 of 7" instead of "Step 1 of 10"
+Root Cause: PS101_STEPS array truncated, hardcoded step count
+Debug:
+  1. Search for "of 10" in frontend/index.html
+  2. Count steps in PS101_STEPS array
+  3. Check updateProgressIndicator() function
+Fix: Ensure using PS101_STEPS.length dynamically
+```
+
+**Pattern 3: White Screen / JavaScript Error**
+```
+Symptom: Page loads but shows blank white screen
+Root Cause: JavaScript exception on page load
+Debug:
+  1. Open console, check for red errors
+  2. Look for uncaught exceptions
+  3. Check network tab for failed requests
+Fix: Fix JavaScript syntax error, redeploy
+```
+
+**Pattern 4: Old Code Deployed**
+```
+Symptom: Recent code changes not visible on live site
+Root Cause: Netlify cache, failed deployment
+Debug:
+  1. Check Netlify deployment dashboard
+  2. Hard refresh browser (Cmd+Shift+R)
+  3. Curl live site and check content
+Fix: Force redeploy, clear CDN cache
+```
+
+### Frontend Monitoring Tools
+
+```bash
+# Tool 1: Smoke Test (run before every deploy)
+./scripts/test_frontend_smoke.sh
+
+# Tool 2: E2E Tests (run after deploy)
+npx playwright test test-ps101-complete-flow.js
+
+# Tool 3: Live Site Check
+curl -s https://whatismydelta.com | grep "PS101State" && echo "✅ Deployed" || echo "❌ Not deployed"
+
+# Tool 4: Browser Console Logging
+# (Enabled in production with [PS101] prefix for debugging)
+open https://whatismydelta.com
+# Press Cmd+Option+J and look for [PS101] logs
+
+# Tool 5: Netlify Deploy Status
+netlify status
+
+# Tool 6: Visual Regression (future)
+# npx playwright test --update-snapshots
+```
+
+---
+
+## Backend Debugging Workflow
 
 ### Step 1: Classify the Issue
 

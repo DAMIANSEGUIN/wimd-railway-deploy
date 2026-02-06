@@ -3830,17 +3830,30 @@ async function askCoach(prompt) {
 
       // Next prompt within step, or next step if all prompts done
       nextPrompt() {
+        console.log('[PS101] nextPrompt called:', {
+          currentStep: this.currentStep,
+          currentPromptIndex: this.currentPromptIndex,
+          savedState: localStorage.getItem('ps101_v2_state')?.substring(0, 100)
+        });
+
         const step = this.getCurrentStep();
-        if (!step || !step.prompts) return;
+        if (!step || !step.prompts) {
+          console.error('[PS101] nextPrompt: No step or prompts found!');
+          return;
+        }
 
         const totalPrompts = step.prompts.length;
+        console.log('[PS101] Current position: Step', this.currentStep, 'Prompt', (this.currentPromptIndex + 1), 'of', totalPrompts);
+
         if (this.currentPromptIndex + 1 < totalPrompts) {
           // Move to next prompt in same step
           this.currentPromptIndex++;
+          console.log('[PS101] → Advancing to prompt', (this.currentPromptIndex + 1), 'of', totalPrompts);
           this.save();
           renderCurrentStep();
         } else {
           // All prompts done, move to next step
+          console.log('[PS101] → All prompts complete, calling nextStep()');
           this.nextStep();
         }
       },
@@ -3860,12 +3873,21 @@ async function askCoach(prompt) {
 
       // Next step (only called when all prompts in current step are complete)
       nextStep() {
+        console.log('[PS101] nextStep called:', {
+          currentStep: this.currentStep,
+          maxSteps: PS101_STEPS.length
+        });
+
         if (this.currentStep < PS101_STEPS.length) {
+          const oldStep = this.currentStep;
           this.currentStep++;
           this.currentPromptIndex = 0; // Reset to first prompt of new step
+          console.log('[PS101] → Advanced from Step', oldStep, 'to Step', this.currentStep);
           this.save();
+          console.log('[PS101] → State saved, calling renderCurrentStep()');
           renderCurrentStep();
         } else {
+          console.log('[PS101] → Flow complete! Showing completion screen');
           this.completed = true;
           this.save();
           renderCompletionScreen();
