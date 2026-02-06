@@ -5,7 +5,7 @@ const { chromium } = require('playwright');
 
 (async () => {
   console.log('🧪 PS101 COMPLETE FLOW TEST\n');
-  console.log('Testing full 1-10 step progression at: https://69855dabfb075d35e462f846--resonant-crostata-90b706.netlify.app');
+  console.log('Testing full 1-10 step progression at: https://whatismydelta.com');
   console.log('=' .repeat(70) + '\n');
 
   const browser = await chromium.launch({ headless: true });
@@ -49,7 +49,7 @@ const { chromium } = require('playwright');
   try {
     // SETUP: Navigate and clear localStorage
     console.log('📍 SETUP: Loading site and clearing state...\n');
-    await page.goto('https://69855dabfb075d35e462f846--resonant-crostata-90b706.netlify.app', {
+    await page.goto('https://whatismydelta.com', {
       waitUntil: 'networkidle',
       timeout: 30000
     });
