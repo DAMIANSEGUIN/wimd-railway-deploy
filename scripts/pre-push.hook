@@ -1,0 +1,93 @@
+#!/bin/bash
+# Pre-push hook - Production validation for Render deployment
+# This hook runs before pushing to origin (production repo)
+# Validates production health before deploying
+
+set -e
+
+remote="$1"
+url="$2"
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+cd "$REPO_ROOT"
+
+echo "======================================"
+echo "PRE-PUSH VALIDATION"
+echo "======================================"
+echo "Remote: $remote"
+echo "URL: $url"
+echo ""
+
+# Only validate for origin (production)
+if [[ "$remote" == "origin" ]]; then
+    echo "✅ Pushing to PRODUCTION (origin → Render deployment)"
+    echo ""
+    echo "Running Gate 9: Production health check..."
+    echo ""
+
+    # Run Gate 9 production validation
+    if python3 .mosaic/enforcement/gate_9_production_check.py; then
+        echo ""
+        echo "✅ Gate 9 passed - Production is healthy"
+        echo ""
+
+        # Run Frontend E2E Tests (BLOCKING)
+        echo "Running Frontend E2E Tests (BLOCKING)..."
+        echo ""
+        if [ -f "test-ps101-complete-flow.js" ]; then
+            if node test-ps101-complete-flow.js 2>&1 | tee /tmp/pre-push-test.log; then
+                echo ""
+                echo "✅ Frontend E2E tests passed"
+                echo ""
+            else
+                echo ""
+                echo "❌ FRONTEND E2E TESTS FAILED"
+                echo ""
+                echo "PS101 flow tests failed - fix before pushing:"
+                echo "  - Run locally: node test-ps101-complete-flow.js"
+                echo "  - Check logs: /tmp/pre-push-test.log"
+                echo "  - Fix failing tests before deployment"
+                echo ""
+                echo "To bypass (emergency only):"
+                echo "  git push --no-verify origin main"
+                echo ""
+                exit 1
+            fi
+        else
+            echo "⚠️  Frontend E2E tests not found (test-ps101-complete-flow.js)"
+            echo "   Skipping frontend validation"
+            echo ""
+        fi
+
+        echo ""
+        echo "This push will trigger:"
+        echo "  - Render backend rebuild (~2-5 min)"
+        echo "  - Backend URL: https://mosaic-backend-tpog.onrender.com"
+        echo ""
+        echo "After deployment:"
+        echo "  - Monitor: https://dashboard.render.com"
+        echo "  - Verify: curl https://mosaic-backend-tpog.onrender.com/health"
+        echo ""
+    else
+        echo ""
+        echo "❌ GATE 9 FAILED - Production has issues"
+        echo ""
+        echo "Fix production before pushing:"
+        echo "  - Backend: https://mosaic-backend-tpog.onrender.com/health"
+        echo "  - Frontend: https://whatismydelta.com"
+        echo ""
+        echo "To bypass (emergency only):"
+        echo "  git push --no-verify origin main"
+        echo ""
+        exit 1
+    fi
+fi
+
+# Allow other remotes without validation
+if [[ "$remote" != "origin" ]]; then
+    echo "ℹ️  Pushing to non-production remote: $remote"
+    echo "Skipping validation"
+    echo ""
+fi
+
+exit 0
