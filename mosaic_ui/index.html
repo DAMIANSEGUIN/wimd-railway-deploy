@@ -3945,18 +3945,27 @@ async function askCoach(prompt) {
           // For experiment steps (6-9), validate experiment component instead of textarea
           if ([6, 7, 8, 9].includes(currentStep)) {
             const activeExp = PS101State.getActiveExperiment();
+            console.log('[updateNavButtons] Step', currentStep, 'activeExp:', activeExp ? 'exists' : 'null', 'isLastPrompt:', isLastPrompt);
             if (currentStep === 6 && activeExp) {
               isValid = activeExp.hypothesis && activeExp.successMetric &&
                        (activeExp.duration?.start || activeExp.duration?.review);
+              console.log('[updateNavButtons] Step 6 validation:', isValid);
             } else if (currentStep === 7 && activeExp) {
-              isValid = activeExp.obstacles && activeExp.obstacles.length > 0 &&
-                       activeExp.obstacles.some(o => o.label && o.strategy);
+              const hasObstacles = activeExp.obstacles && activeExp.obstacles.length > 0;
+              const validObstacle = activeExp.obstacles ? activeExp.obstacles.some(o => o.label && o.strategy) : false;
+              isValid = hasObstacles && validObstacle;
+              console.log('[updateNavButtons] Step 7 validation: obstacles=', activeExp.obstacles?.length || 0, 'hasObstacles:', hasObstacles, 'validObstacle:', validObstacle, 'isValid:', isValid);
+              if (activeExp.obstacles && activeExp.obstacles.length > 0) {
+                console.log('[updateNavButtons] First obstacle:', {label: !!activeExp.obstacles[0].label, strategy: !!activeExp.obstacles[0].strategy});
+              }
             } else if (currentStep === 8 && activeExp) {
               isValid = activeExp.actions && activeExp.actions.length >= 3;
+              console.log('[updateNavButtons] Step 8 validation: actions=', activeExp.actions?.length || 0, 'isValid:', isValid);
             } else if (currentStep === 9 && activeExp) {
               isValid = activeExp.reflection &&
                        activeExp.reflection.outcome && activeExp.reflection.learning &&
                        activeExp.reflection.confidence?.after;
+              console.log('[updateNavButtons] Step 9 validation:', isValid);
             }
           } else {
             // For regular steps, validate textarea answer

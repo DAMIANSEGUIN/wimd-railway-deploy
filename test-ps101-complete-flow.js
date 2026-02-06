@@ -244,7 +244,7 @@ const { chromium } = require('playwright');
           } else if (step === 7) {
             // Obstacle Mapping: Add at least 1 obstacle with label and strategy
             await page.evaluate(() => {
-              const addObstacleBtn = document.getElementById('add-obstacle');
+              const addObstacleBtn = document.getElementById('add-obstacle-btn');
               if (addObstacleBtn) {
                 addObstacleBtn.click();
               }
@@ -254,7 +254,7 @@ const { chromium } = require('playwright');
             await page.evaluate(() => {
               const obstacleLabel = document.getElementById('obstacle-label');
               const obstacleStrategy = document.getElementById('obstacle-strategy');
-              const saveObstacleBtn = document.getElementById('save-obstacle');
+              const saveObstacleBtn = document.getElementById('save-obstacle-btn');
 
               if (obstacleLabel) {
                 obstacleLabel.value = 'Lack of time for daily check-ins';
@@ -274,7 +274,7 @@ const { chromium } = require('playwright');
             // Action Plan: Add at least 3 actions
             for (let i = 0; i < 3; i++) {
               await page.evaluate((actionNum) => {
-                const addActionBtn = document.getElementById('add-action');
+                const addActionBtn = document.getElementById('add-action-btn');
                 if (addActionBtn) {
                   addActionBtn.click();
                 }
@@ -284,7 +284,7 @@ const { chromium } = require('playwright');
               await page.evaluate((actionNum) => {
                 const actionLabel = document.getElementById('action-label');
                 const actionDeadline = document.getElementById('action-deadline');
-                const saveActionBtn = document.getElementById('save-action');
+                const saveActionBtn = document.getElementById('save-action-btn');
 
                 if (actionLabel) {
                   actionLabel.value = `Action ${actionNum + 1}: Complete career assessment task`;
@@ -343,24 +343,50 @@ const { chromium } = require('playwright');
           await page.waitForTimeout(500);
 
           // Click next button (should now be enabled)
-          const nextButtonEnabled = await page.evaluate(() => {
+          const nextButtonDebug = await page.evaluate(() => {
             const btn = document.getElementById('ps101-next');
-            if (!btn) return { found: false };
+            const activeExp = window.PS101State?.getActiveExperiment();
+            const currentStep = window.PS101State?.currentStep;
+            const currentPromptIndex = window.PS101State?.currentPromptIndex;
+
+            // Check obstacle details
+            let obstacleDetails = null;
+            if (activeExp?.obstacles && activeExp.obstacles.length > 0) {
+              const firstObstacle = activeExp.obstacles[0];
+              obstacleDetails = {
+                hasLabel: !!firstObstacle.label,
+                labelLength: firstObstacle.label?.length || 0,
+                hasStrategy: !!firstObstacle.strategy,
+                strategyLength: firstObstacle.strategy?.length || 0
+              };
+            }
+
             return {
-              found: true,
-              enabled: !btn.disabled,
-              text: btn.textContent.trim()
+              found: !!btn,
+              enabled: btn ? !btn.disabled : false,
+              text: btn ? btn.textContent.trim() : '',
+              currentStep,
+              currentPromptIndex,
+              expExists: !!activeExp,
+              expObstacles: activeExp?.obstacles?.length || 0,
+              expActions: activeExp?.actions?.length || 0,
+              expReflection: !!activeExp?.reflection,
+              obstacleDetails
             };
           });
 
-          if (nextButtonEnabled.enabled) {
-            console.log(`      → Clicking: "${nextButtonEnabled.text}"`);
+          if (nextButtonDebug.enabled) {
+            console.log(`      → Clicking: "${nextButtonDebug.text}"`);
             await page.evaluate(() => {
               document.getElementById('ps101-next').click();
             });
             await page.waitForTimeout(1500);
           } else {
             console.log(`      ⚠️  Next button still disabled after filling experiment component`);
+            console.log(`         Debug: step=${nextButtonDebug.currentStep}:${nextButtonDebug.currentPromptIndex}, exp=${nextButtonDebug.expExists}, obstacles=${nextButtonDebug.expObstacles}, actions=${nextButtonDebug.expActions}`);
+            if (nextButtonDebug.obstacleDetails) {
+              console.log(`         Obstacle[0]: label=${nextButtonDebug.obstacleDetails.hasLabel} (len=${nextButtonDebug.obstacleDetails.labelLength}), strategy=${nextButtonDebug.obstacleDetails.hasStrategy} (len=${nextButtonDebug.obstacleDetails.strategyLength})`);
+            }
           }
 
           continue;
