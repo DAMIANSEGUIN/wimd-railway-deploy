@@ -2800,55 +2800,70 @@ async function askCoach(prompt) {
 
       // Save button
       if (saveObstacleBtn) {
+        console.log('[saveObstacleBtn] Event listener attached to button');
         saveObstacleBtn.addEventListener('click', () => {
-          const label = obstacleLabelInput?.value.trim() || '';
-          const strategy = obstacleStrategyInput?.value.trim() || '';
-          const typeRadio = document.querySelector('input[name="obstacle-type"]:checked');
-          const type = typeRadio?.value || 'external';
+          console.log('[saveObstacleBtn] Click handler FIRED');
+          try {
+            const label = obstacleLabelInput?.value.trim() || '';
+            const strategy = obstacleStrategyInput?.value.trim() || '';
+            const typeRadio = document.querySelector('input[name="obstacle-type"]:checked');
+            const type = typeRadio?.value || 'external';
 
-          let isValid = true;
+            let isValid = true;
 
-          if (!label) {
-            obstacleLabelError.textContent = 'Please describe the obstacle.';
-            obstacleLabelError.classList.remove('hidden');
-            isValid = false;
-            obstacleLabelInput?.focus();
-          } else {
-            obstacleLabelError.classList.add('hidden');
-          }
+            if (!label) {
+              obstacleLabelError.textContent = 'Please describe the obstacle.';
+              obstacleLabelError.classList.remove('hidden');
+              isValid = false;
+              obstacleLabelInput?.focus();
+            } else {
+              obstacleLabelError.classList.add('hidden');
+            }
 
-          if (!strategy) {
-            obstacleStrategyError.textContent = 'Please add a strategy to overcome this obstacle.';
-            obstacleStrategyError.classList.remove('hidden');
-            isValid = false;
-            if (label) obstacleStrategyInput?.focus();
-          } else {
-            obstacleStrategyError.classList.add('hidden');
-          }
+            if (!strategy) {
+              obstacleStrategyError.textContent = 'Please add a strategy to overcome this obstacle.';
+              obstacleStrategyError.classList.remove('hidden');
+              isValid = false;
+              if (label) obstacleStrategyInput?.focus();
+            } else {
+              obstacleStrategyError.classList.add('hidden');
+            }
 
-          if (!isValid) return;
+            if (!isValid) {
+              console.log('[saveObstacleBtn] Validation failed, returning');
+              return;
+            }
 
-          const activeExp = PS101State.getActiveExperiment();
-          if (activeExp) {
-            PS101State.addObstacle(activeExp.id, {
-              type: type,
-              label: label,
-              strategy: strategy
-            });
+            const activeExp = PS101State.getActiveExperiment();
+            console.log('[saveObstacleBtn] Validation passed! activeExp:', activeExp ? 'exists' : 'null', 'label:', label, 'strategy:', strategy);
+            if (activeExp) {
+              PS101State.addObstacle(activeExp.id, {
+                type: type,
+                label: label,
+                strategy: strategy
+              });
+              console.log('[saveObstacleBtn] Obstacle added, obstacles count:', activeExp.obstacles?.length);
 
-            obstacleLabelInput.value = '';
-            obstacleStrategyInput.value = '';
-            const externalRadioReset = document.querySelector('input[name="obstacle-type"][value="external"]');
-            if (externalRadioReset) externalRadioReset.checked = true;
-            addObstacleForm.classList.add('hidden');
-            addObstacleBtn.style.display = 'block';
+              obstacleLabelInput.value = '';
+              obstacleStrategyInput.value = '';
+              const externalRadioReset = document.querySelector('input[name="obstacle-type"][value="external"]');
+              if (externalRadioReset) externalRadioReset.checked = true;
+              addObstacleForm.classList.add('hidden');
+              addObstacleBtn.style.display = 'block';
 
-            renderObstacleMapping(activeExp);
+              renderObstacleMapping(activeExp);
 
-            // Update validation to enable Next button
-            const step = PS101State.getCurrentStep();
-            const totalPrompts = step ? step.prompts.length : 1;
-            updateNavButtons(PS101State.currentStep, PS101State.currentPromptIndex, totalPrompts);
+              // Update validation to enable Next button
+              const step = PS101State.getCurrentStep();
+              const totalPrompts = step ? step.prompts.length : 1;
+              console.log('[saveObstacleBtn] Calling updateNavButtons with step:', PS101State.currentStep, 'promptIndex:', PS101State.currentPromptIndex, 'totalPrompts:', totalPrompts);
+              updateNavButtons(PS101State.currentStep, PS101State.currentPromptIndex, totalPrompts);
+              console.log('[saveObstacleBtn] updateNavButtons completed');
+            } else {
+              console.log('[saveObstacleBtn] ERROR: activeExp is null!');
+            }
+          } catch (error) {
+            console.error('[saveObstacleBtn] EXCEPTION:', error);
           }
         });
 

@@ -5,7 +5,7 @@ const { chromium } = require('playwright');
 
 (async () => {
   console.log('🧪 PS101 COMPLETE FLOW TEST\n');
-  console.log('Testing full 1-10 step progression at: https://whatismydelta.com');
+  console.log('Testing full 1-10 step progression at: https://69855dabfb075d35e462f846--resonant-crostata-90b706.netlify.app');
   console.log('=' .repeat(70) + '\n');
 
   const browser = await chromium.launch({ headless: true });
@@ -13,6 +13,13 @@ const { chromium } = require('playwright');
     viewport: { width: 1280, height: 720 }
   });
   const page = await context.newPage();
+
+  // Capture console logs from browser
+  page.on('console', msg => {
+    if (msg.text().includes('[updateNavButtons]') || msg.text().includes('[saveObstacleBtn]') || msg.text().includes('[saveActionBtn]')) {
+      console.log(`         [BROWSER] ${msg.text()}`);
+    }
+  });
 
   // Auto-accept any dialogs (alert/confirm) that appear
   page.on('dialog', async dialog => {
@@ -42,7 +49,7 @@ const { chromium } = require('playwright');
   try {
     // SETUP: Navigate and clear localStorage
     console.log('📍 SETUP: Loading site and clearing state...\n');
-    await page.goto('https://whatismydelta.com', {
+    await page.goto('https://69855dabfb075d35e462f846--resonant-crostata-90b706.netlify.app', {
       waitUntil: 'networkidle',
       timeout: 30000
     });
@@ -268,6 +275,7 @@ const { chromium } = require('playwright');
                 saveObstacleBtn.click();
               }
             });
+            await page.waitForTimeout(1000); // Wait for save handler to execute
             console.log(`      ✓ Added obstacle with mitigation strategy`);
 
           } else if (step === 8) {
@@ -300,7 +308,7 @@ const { chromium } = require('playwright');
                   saveActionBtn.click();
                 }
               }, i);
-              await page.waitForTimeout(300);
+              await page.waitForTimeout(1000); // Wait for save handler to execute
             }
             console.log(`      ✓ Added 3 action items`);
 
