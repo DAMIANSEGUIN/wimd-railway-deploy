@@ -117,6 +117,56 @@
 - `AUTH_USER_NOT_FOUND` - Email not in users table
 - `AUTH_SESSION_INVALID` - Session ID not found
 
+### 6. Testing Infrastructure Errors (Added 2026-02-06)
+
+**Test Execution Failures:**
+
+- `TESTS_EXIST_BUT_DONT_RUN` - Tests present in repo but not executed in CI/CD
+- `PRE_PUSH_HOOK_SILENT_FAIL` - Hook script fails but doesn't block push
+- `PLAYWRIGHT_ELEMENT_MISMATCH` - Test uses wrong element IDs (stale selectors)
+- `TIMEOUT_COMMAND_MISSING` - macOS missing `timeout` command used in Linux scripts
+- `TEST_PASSES_LOCALLY_FAILS_CI` - Environment differences between local and CI
+
+**Playbook for TESTS_EXIST_BUT_DONT_RUN:**
+```yaml
+- match:
+    label: "TESTS_EXIST_BUT_DONT_RUN"
+    stage: "deployment"
+  severity: "HIGH"
+
+  diagnose:
+    - check: "Pre-push hook exists"
+      command: "[ -f .git/hooks/pre-push ]"
+    - check: "Hook calls test scripts"
+      command: "grep -q 'test-ps101' .git/hooks/pre-push"
+    - check: "Tests can run manually"
+      command: "node test-ps101-complete-flow.js"
+
+  remediate:
+    - action: "Update pre-push hook to call test runner"
+      script: |
+        echo "Running frontend E2E tests..." >> .git/hooks/pre-push
+        echo "node test-ps101-complete-flow.js || exit 1" >> .git/hooks/pre-push
+
+    - action: "Add GitHub Actions CI workflow"
+      file: ".github/workflows/test.yml"
+      content: |
+        name: Run Tests
+        on: [push, pull_request]
+        jobs:
+          test:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: actions/checkout@v3
+              - uses: actions/setup-node@v3
+              - run: npm install -D @playwright/test
+              - run: npx playwright install chromium
+              - run: node test-ps101-complete-flow.js
+
+    - action: "Verify tests actually block bad deployments"
+      test: "Introduce intentional test failure, verify push is blocked"
+```
+
 ---
 
 ## Auto-Labeling Rules

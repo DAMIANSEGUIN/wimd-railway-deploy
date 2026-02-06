@@ -55,9 +55,41 @@ git tag -l "prod-*" --sort=-version:refname | head -5
 □ Check browser console for JavaScript errors (Cmd+Option+J on Mac)
 □ Verify PS101 navigation works (Steps 1-10)
 □ Test with clean localStorage (clear browser data)
-□ Run Playwright E2E tests: npx playwright test test-ps101-complete-flow.js
+□ Run Playwright E2E tests: node test-ps101-complete-flow.js
 □ Verify live site matches local: curl https://whatismydelta.com | grep PS101State
 ```
+
+### Testing Infrastructure Checklist (Added 2026-02-06)
+```
+CRITICAL: Verify tests are ACTUALLY RUNNING, not just existing
+
+□ Check pre-push hook: cat .git/hooks/pre-push
+□ Verify hook calls test scripts (not just validation scripts)
+□ Run tests manually: node test-ps101-complete-flow.js
+□ Check test exit codes (0 = pass, 1 = fail)
+□ Verify test failures BLOCK deployment
+□ Review test logs for "timeout: command not found" (macOS issue)
+□ Ensure test element IDs match production HTML
+```
+
+**Incident Report (2026-02-06): Tests Existed But Weren't Running**
+
+**Symptom**: PS101 navigation bug (Step 9→10) reached production despite E2E test coverage
+
+**Root Cause**:
+1. Playwright tests existed (`test-ps101-complete-flow.js`) but pre-push hook didn't run them
+2. Pre-push hook called `.mosaic/enforcement/gate_11_ui_validation.sh` which failed silently
+3. Gate 11 used `timeout` command (not available on macOS by default)
+4. Test also had bug: wrong element ID (`confidence-after` vs `reflection-confidence`)
+
+**Discovery**: Manual test execution revealed both infrastructure gap and actual bug
+
+**Fix**:
+- Frontend: Initialize reflection object in `renderReflectionLog()`
+- Test: Corrected element ID to match production HTML
+- Documentation: This section added to prevent future occurrences
+
+**Prevention**: Always run tests manually after code changes, verify they actually execute
 
 ---
 
