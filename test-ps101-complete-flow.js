@@ -317,7 +317,7 @@ const { chromium } = require('playwright');
             await page.evaluate(() => {
               const outcome = document.getElementById('reflection-outcome');
               const learning = document.getElementById('reflection-learning');
-              const confidenceAfter = document.getElementById('confidence-after');
+              const confidenceAfter = document.getElementById('reflection-confidence');
 
               if (outcome) {
                 outcome.value = 'Daily check-ins improved clarity by 60%, exceeded goal';

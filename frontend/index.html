@@ -2768,6 +2768,17 @@ async function askCoach(prompt) {
       if (actionPlan) actionPlan.classList.add('hidden');
       if (reflectionLog) reflectionLog.classList.remove('hidden');
 
+      // Initialize reflection object if it doesn't exist (FIX: Step 9 validation bug)
+      if (!experiment.reflection) {
+        console.log('[renderReflectionLog] Initializing reflection object for experiment', experiment.id);
+        PS101State.updateReflection(experiment.id, {
+          outcome: '',
+          learning: '',
+          confidence: { after: 5 },
+          nextMove: 'Continue'
+        });
+      }
+
       // Populate fields
       const outcome = document.getElementById('reflection-outcome');
       const learning = document.getElementById('reflection-learning');
