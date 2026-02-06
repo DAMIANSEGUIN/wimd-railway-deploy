@@ -2634,6 +2634,160 @@ async function askCoach(prompt) {
       updateNavButtons(PS101State.currentStep, promptIndex, totalPrompts);
     }
 
+    // Experiment Component Render Functions (Global Scope)
+    function renderObstacleMapping(experiment) {
+      if (!experiment) return;
+
+      const canvas = document.getElementById('experiment-canvas');
+      const obstacleMapping = document.getElementById('obstacle-mapping');
+      const actionPlan = document.getElementById('action-plan');
+      const reflectionLog = document.getElementById('reflection-log');
+
+      // Show obstacle mapping, hide others
+      if (canvas) canvas.classList.add('hidden');
+      if (obstacleMapping) obstacleMapping.classList.remove('hidden');
+      if (actionPlan) actionPlan.classList.add('hidden');
+      if (reflectionLog) reflectionLog.classList.add('hidden');
+
+      // Render obstacles list
+      const obstaclesList = document.getElementById('obstacles-list');
+      if (!obstaclesList) return;
+
+      obstaclesList.innerHTML = '';
+      const obstacles = experiment.obstacles || [];
+
+      obstacles.forEach((obs, idx) => {
+        const item = document.createElement('div');
+        item.className = 'obstacle-item';
+        item.innerHTML = `
+          <div class="obstacle-header">
+            <span class="obstacle-type ${obs.type}">${obs.type}</span>
+            <button class="btn-remove" data-obstacle-id="${obs.id}" aria-label="Remove obstacle">×</button>
+          </div>
+          <div><strong>${escapeHtml(obs.label)}</strong></div>
+          <div class="obstacle-strategy">Strategy: ${escapeHtml(obs.strategy)}</div>
+        `;
+        obstaclesList.appendChild(item);
+      });
+
+      // Attach remove handlers
+      obstaclesList.querySelectorAll('.btn-remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const obsId = e.target.dataset.obstacleId;
+          if (experiment.obstacles) {
+            experiment.obstacles = experiment.obstacles.filter(o => o.id !== obsId);
+            PS101State.updateExperiment(experiment.id, { obstacles: experiment.obstacles });
+            renderObstacleMapping(experiment);
+          }
+        });
+      });
+    }
+
+    function renderActionPlan(experiment) {
+      if (!experiment) return;
+
+      const canvas = document.getElementById('experiment-canvas');
+      const obstacleMapping = document.getElementById('obstacle-mapping');
+      const actionPlan = document.getElementById('action-plan');
+      const reflectionLog = document.getElementById('reflection-log');
+
+      // Show action plan, hide others
+      if (canvas) canvas.classList.add('hidden');
+      if (obstacleMapping) obstacleMapping.classList.add('hidden');
+      if (actionPlan) actionPlan.classList.remove('hidden');
+      if (reflectionLog) reflectionLog.classList.add('hidden');
+
+      // Render actions list
+      const actionsList = document.getElementById('actions-list');
+      if (!actionsList) return;
+
+      actionsList.innerHTML = '';
+      const actions = experiment.actions || [];
+
+      actions.forEach((action, idx) => {
+        const item = document.createElement('div');
+        item.className = 'action-item';
+        item.innerHTML = `
+          <div class="action-header">
+            <div class="action-checkbox">
+              <input type="checkbox" id="action-${action.id}" ${action.done ? 'checked' : ''} data-action-id="${action.id}">
+              <label for="action-${action.id}"><strong>${escapeHtml(action.label)}</strong></label>
+            </div>
+            <button class="btn-remove" data-action-id="${action.id}" aria-label="Remove action">×</button>
+          </div>
+          ${action.due ? `<div class="action-due">Due: ${escapeHtml(action.due)}</div>` : ''}
+          ${action.accountability ? `<div class="action-due">Accountability: ${escapeHtml(action.accountability)}</div>` : ''}
+        `;
+        actionsList.appendChild(item);
+
+        // Attach checkbox handler
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          checkbox.addEventListener('change', (e) => {
+            const actionId = e.target.dataset.actionId;
+            const action = experiment.actions.find(a => a.id === actionId);
+            if (action) {
+              action.done = e.target.checked;
+              PS101State.updateExperiment(experiment.id, { actions: experiment.actions });
+            }
+          });
+        }
+      });
+
+      // Attach remove handlers
+      actionsList.querySelectorAll('.btn-remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const actionId = e.target.dataset.actionId;
+          if (experiment.actions) {
+            experiment.actions = experiment.actions.filter(a => a.id !== actionId);
+            PS101State.updateExperiment(experiment.id, { actions: experiment.actions });
+            renderActionPlan(experiment);
+          }
+        });
+      });
+    }
+
+    function renderReflectionLog(experiment) {
+      if (!experiment) return;
+
+      const canvas = document.getElementById('experiment-canvas');
+      const obstacleMapping = document.getElementById('obstacle-mapping');
+      const actionPlan = document.getElementById('action-plan');
+      const reflectionLog = document.getElementById('reflection-log');
+
+      // Show reflection log, hide others
+      if (canvas) canvas.classList.add('hidden');
+      if (obstacleMapping) obstacleMapping.classList.add('hidden');
+      if (actionPlan) actionPlan.classList.add('hidden');
+      if (reflectionLog) reflectionLog.classList.remove('hidden');
+
+      // Populate fields
+      const outcome = document.getElementById('reflection-outcome');
+      const learning = document.getElementById('reflection-learning');
+      const confidence = document.getElementById('reflection-confidence');
+      const confidenceValue = document.getElementById('confidence-value');
+      const nextMove = document.getElementById('reflection-next-move');
+
+      const reflection = experiment.reflection || {};
+
+      if (outcome) outcome.value = reflection.outcome || '';
+      if (learning) learning.value = reflection.learning || '';
+      if (confidence) {
+        confidence.value = reflection.confidence?.after || 5;
+        if (confidenceValue) {
+          confidenceValue.textContent = reflection.confidence?.after || 5;
+        }
+      }
+      if (nextMove) nextMove.value = reflection.nextMove || 'Continue';
+
+      // Update confidence display when slider changes
+      if (confidence && confidenceValue) {
+        confidence.addEventListener('input', (e) => {
+          confidenceValue.textContent = e.target.value;
+        });
+      }
+    }
+
   // PS101 Event Listeners Setup (extracted for clarity)
   function initPS101EventListeners() {
     // Welcome screen buttons
@@ -4208,159 +4362,6 @@ async function askCoach(prompt) {
       if (startDate) startDate.value = experiment.duration?.start || '';
       if (reviewDate) reviewDate.value = experiment.duration?.review || '';
       if (resources) resources.value = experiment.resources || '';
-    }
-
-    function renderObstacleMapping(experiment) {
-      if (!experiment) return;
-
-      const canvas = document.getElementById('experiment-canvas');
-      const obstacleMapping = document.getElementById('obstacle-mapping');
-      const actionPlan = document.getElementById('action-plan');
-      const reflectionLog = document.getElementById('reflection-log');
-
-      // Show obstacle mapping, hide others
-      if (canvas) canvas.classList.add('hidden');
-      if (obstacleMapping) obstacleMapping.classList.remove('hidden');
-      if (actionPlan) actionPlan.classList.add('hidden');
-      if (reflectionLog) reflectionLog.classList.add('hidden');
-
-      // Render obstacles list
-      const obstaclesList = document.getElementById('obstacles-list');
-      if (!obstaclesList) return;
-
-      obstaclesList.innerHTML = '';
-      const obstacles = experiment.obstacles || [];
-
-      obstacles.forEach((obs, idx) => {
-        const item = document.createElement('div');
-        item.className = 'obstacle-item';
-        item.innerHTML = `
-          <div class="obstacle-header">
-            <span class="obstacle-type ${obs.type}">${obs.type}</span>
-            <button class="btn-remove" data-obstacle-id="${obs.id}" aria-label="Remove obstacle">×</button>
-          </div>
-          <div><strong>${escapeHtml(obs.label)}</strong></div>
-          <div class="obstacle-strategy">Strategy: ${escapeHtml(obs.strategy)}</div>
-        `;
-        obstaclesList.appendChild(item);
-      });
-
-      // Attach remove handlers
-      obstaclesList.querySelectorAll('.btn-remove').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const obsId = e.target.dataset.obstacleId;
-          if (experiment.obstacles) {
-            experiment.obstacles = experiment.obstacles.filter(o => o.id !== obsId);
-            PS101State.updateExperiment(experiment.id, { obstacles: experiment.obstacles });
-            renderObstacleMapping(experiment);
-          }
-        });
-      });
-    }
-
-    function renderActionPlan(experiment) {
-      if (!experiment) return;
-
-      const canvas = document.getElementById('experiment-canvas');
-      const obstacleMapping = document.getElementById('obstacle-mapping');
-      const actionPlan = document.getElementById('action-plan');
-      const reflectionLog = document.getElementById('reflection-log');
-
-      // Show action plan, hide others
-      if (canvas) canvas.classList.add('hidden');
-      if (obstacleMapping) obstacleMapping.classList.add('hidden');
-      if (actionPlan) actionPlan.classList.remove('hidden');
-      if (reflectionLog) reflectionLog.classList.add('hidden');
-
-      // Render actions list
-      const actionsList = document.getElementById('actions-list');
-      if (!actionsList) return;
-
-      actionsList.innerHTML = '';
-      const actions = experiment.actions || [];
-
-      actions.forEach((action, idx) => {
-        const item = document.createElement('div');
-        item.className = 'action-item';
-        item.innerHTML = `
-          <div class="action-header">
-            <div class="action-checkbox">
-              <input type="checkbox" id="action-${action.id}" ${action.done ? 'checked' : ''} data-action-id="${action.id}">
-              <label for="action-${action.id}"><strong>${escapeHtml(action.label)}</strong></label>
-            </div>
-            <button class="btn-remove" data-action-id="${action.id}" aria-label="Remove action">×</button>
-          </div>
-          ${action.due ? `<div class="action-due">Due: ${escapeHtml(action.due)}</div>` : ''}
-          ${action.accountability ? `<div class="action-due">Accountability: ${escapeHtml(action.accountability)}</div>` : ''}
-        `;
-        actionsList.appendChild(item);
-
-        // Attach checkbox handler
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        if (checkbox) {
-          checkbox.addEventListener('change', (e) => {
-            const actionId = e.target.dataset.actionId;
-            const action = experiment.actions.find(a => a.id === actionId);
-            if (action) {
-              action.done = e.target.checked;
-              PS101State.updateExperiment(experiment.id, { actions: experiment.actions });
-            }
-          });
-        }
-      });
-
-      // Attach remove handlers
-      actionsList.querySelectorAll('.btn-remove').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const actionId = e.target.dataset.actionId;
-          if (experiment.actions) {
-            experiment.actions = experiment.actions.filter(a => a.id !== actionId);
-            PS101State.updateExperiment(experiment.id, { actions: experiment.actions });
-            renderActionPlan(experiment);
-          }
-        });
-      });
-    }
-
-    function renderReflectionLog(experiment) {
-      if (!experiment) return;
-
-      const canvas = document.getElementById('experiment-canvas');
-      const obstacleMapping = document.getElementById('obstacle-mapping');
-      const actionPlan = document.getElementById('action-plan');
-      const reflectionLog = document.getElementById('reflection-log');
-
-      // Show reflection log, hide others
-      if (canvas) canvas.classList.add('hidden');
-      if (obstacleMapping) obstacleMapping.classList.add('hidden');
-      if (actionPlan) actionPlan.classList.add('hidden');
-      if (reflectionLog) reflectionLog.classList.remove('hidden');
-
-      // Populate fields
-      const outcome = document.getElementById('reflection-outcome');
-      const learning = document.getElementById('reflection-learning');
-      const confidence = document.getElementById('reflection-confidence');
-      const confidenceValue = document.getElementById('confidence-value');
-      const nextMove = document.getElementById('reflection-next-move');
-
-      const reflection = experiment.reflection || {};
-
-      if (outcome) outcome.value = reflection.outcome || '';
-      if (learning) learning.value = reflection.learning || '';
-      if (confidence) {
-        confidence.value = reflection.confidence?.after || 5;
-        if (confidenceValue) {
-          confidenceValue.textContent = reflection.confidence?.after || 5;
-        }
-      }
-      if (nextMove) nextMove.value = reflection.nextMove || 'Continue';
-
-      // Update confidence display when slider changes
-      if (confidence && confidenceValue) {
-        confidence.addEventListener('input', (e) => {
-          confidenceValue.textContent = e.target.value;
-        });
-      }
     }
 
     // Render welcome screen
