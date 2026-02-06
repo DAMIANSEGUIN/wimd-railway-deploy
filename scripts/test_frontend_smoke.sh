@@ -121,6 +121,24 @@ if command -v curl &> /dev/null; then
   echo ""
 fi
 
+# Test 7: Frontend Health Endpoint
+if command -v curl &> /dev/null; then
+  echo "Test 7: Frontend health endpoint..."
+
+  HEALTH_URL="${FRONTEND_URL}/health.html"
+  HEALTH_RESPONSE=$(curl -s "$HEALTH_URL" 2>&1)
+
+  if echo "$HEALTH_RESPONSE" | grep -q '"ok": true'; then
+    echo "  ✅ Frontend health endpoint responding"
+    echo "  ✅ Health status: OK"
+  elif echo "$HEALTH_RESPONSE" | grep -q '"ok":'; then
+    echo "  ⚠️  Frontend health endpoint responding but not healthy"
+  else
+    echo "  ⚠️  Frontend health endpoint not accessible"
+  fi
+  echo ""
+fi
+
 # Summary
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if [ $ERRORS -eq 0 ]; then

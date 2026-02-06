@@ -159,40 +159,40 @@ else
   echo "  Playwright version: $(npx playwright --version 2>&1 | head -1)" | tee -a "$LOG_FILE"
   echo "" | tee -a "$LOG_FILE"
 
-  # Run frontend test suites
+  # Run frontend test suites (standalone Node.js scripts using Playwright)
   run_test_suite \
     "Frontend: PS101 Complete Flow (E2E)" \
-    "npx playwright test test-ps101-complete-flow.js --reporter=list" \
+    "node test-ps101-complete-flow.js" \
     "test-ps101-complete-flow.js"
 
   run_test_suite \
     "Frontend: PS101 Step 6 Validation" \
-    "npx playwright test test-ps101-step6-validation.js --reporter=list" \
+    "node test-ps101-step6-validation.js" \
     "test-ps101-step6-validation.js"
 
   run_test_suite \
     "Frontend: PS101 Navigation Debug" \
-    "npx playwright test test-ps101-navigation-debug.js --reporter=list" \
+    "node test-ps101-navigation-debug.js" \
     "test-ps101-navigation-debug.js"
 
   run_test_suite \
     "Frontend: PS101 UI Components" \
-    "npx playwright test test-ps101-ui.js --reporter=list" \
+    "node test-ps101-ui.js" \
     "test-ps101-ui.js"
 
   run_test_suite \
     "Frontend: UI Flow Integration" \
-    "npx playwright test test-ui-flow.js --reporter=list" \
+    "node test-ui-flow.js" \
     "test-ui-flow.js"
 
   run_test_suite \
     "Frontend: UI Interactions" \
-    "npx playwright test test-ui-interactions.js --reporter=list" \
+    "node test-ui-interactions.js" \
     "test-ui-interactions.js"
 
   run_test_suite \
     "Frontend: Deployment Verification" \
-    "npx playwright test test-deployment.js --reporter=list" \
+    "node test-deployment.js" \
     "test-deployment.js"
 fi
 

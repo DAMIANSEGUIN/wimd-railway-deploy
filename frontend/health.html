@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Frontend Health Check</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<script>
+// Frontend Health Check Endpoint
+// Parallel to backend /health endpoint
+// Returns JSON-like status for monitoring systems
+
+(function() {
+  const healthStatus = {
+    ok: true,
+    timestamp: new Date().toISOString(),
+    frontend: {
+      loaded: true,
+      javascript: true
+    },
+    checks: {}
+  };
+
+  // Check 1: LocalStorage available
+  try {
+    localStorage.setItem('__health_check__', '1');
+    localStorage.removeItem('__health_check__');
+    healthStatus.checks.localStorage = true;
+  } catch (e) {
+    healthStatus.checks.localStorage = false;
+    healthStatus.ok = false;
+  }
+
+  // Check 2: Fetch API available
+  healthStatus.checks.fetchAPI = typeof fetch === 'function';
+  if (!healthStatus.checks.fetchAPI) {
+    healthStatus.ok = false;
+  }
+
+  // Check 3: PS101 code loaded (check if main site has it)
+  healthStatus.checks.ps101Available = false;
+  fetch('/index.html')
+    .then(res => res.text())
+    .then(html => {
+      healthStatus.checks.ps101Available = html.includes('PS101State');
+      displayHealth();
+    })
+    .catch(() => {
+      displayHealth();
+    });
+
+  // Check 4: Backend connectivity
+  const backendURL = 'https://mosaic-backend-tpog.onrender.com/health';
+  fetch(backendURL)
+    .then(res => res.json())
+    .then(data => {
+      healthStatus.checks.backend = {
+        available: true,
+        healthy: data.ok === true
+      };
+      displayHealth();
+    })
+    .catch(err => {
+      healthStatus.checks.backend = {
+        available: false,
+        error: err.message
+      };
+      healthStatus.ok = false;
+      displayHealth();
+    });
+
+  function displayHealth() {
+    // Display as JSON
+    document.body.innerHTML = '<pre style="font-family: monospace; margin: 20px;">' +
+      JSON.stringify(healthStatus, null, 2) +
+      '</pre>';
+
+    // Also log to console for programmatic access
+    console.log('[HEALTH]', healthStatus);
+
+    // Set page title based on status
+    document.title = healthStatus.ok ?
+      'Frontend Health: OK' :
+      'Frontend Health: DEGRADED';
+  }
+
+  // Initial display (before async checks complete)
+  displayHealth();
+})();
+</script>
+</body>
+</html>
