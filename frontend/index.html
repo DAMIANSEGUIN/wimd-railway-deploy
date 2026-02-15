@@ -3493,1021 +3493,298 @@ async function askCoach(prompt) {
 
 })();
 
-  // PS101 Implementation
-  (function() {
-    'use strict';
 
-    // PS101 Framework Definition (10-step canonical)
-    const PS101_STEPS = [
-      {
-        step: 1,
-        title: "Problem Identification and Delta Analysis",
-        prompts: [
-          "What specific challenge are you currently facing in your personal or professional life?",
-          "Why is it a problem?",
-          "Reduce this to a simple problem statement",
-          "If you were to wake up tomorrow and this problem was solved, what would be different? (Miracle Question)",
-          "What is the 'delta' or gap between your current situation and your desired state?",
-          "How would solving this problem align with your long-term goals or values?"
-        ],
-        minChars: 50,
-        maxChars: 1000
-      },
-      {
-        step: 2,
-        title: "Current Situation Analysis",
-        prompts: [
-          "Describe your current situation in detail. What factors are contributing to the problem?",
-          "What attempts have you made so far to address this issue? What were the outcomes?",
-          "Are there any patterns or recurring themes you've noticed related to this problem?",
-          "How is this problem affecting different areas of your life (e.g., career, relationships, personal growth)?"
-        ],
-        minChars: 30,
-        maxChars: 1000
-      },
-      {
-        step: 3,
-        title: "Root Cause Exploration",
-        prompts: [
-          "What do you believe are the underlying causes of this problem?",
-          "Are there any assumptions you're making about the problem or its causes?",
-          "How might your own beliefs, habits, or past experiences be contributing to the situation?"
-        ],
-        minChars: 30,
-        maxChars: 1000
-      },
-      {
-        step: 4,
-        title: "Self-Efficacy Assessment",
-        prompts: [
-          "On a scale of 1-10, how confident do you feel in your ability to solve this problem? Why?",
-          "What past experiences or skills can you draw upon to address this challenge?",
-          "How might your perception of your own capabilities be influencing your approach to this problem?",
-          "What small wins or successes have you had in the past that you can build upon?"
-        ],
-        minChars: 30,
-        maxChars: 1000
-      },
-      {
-        step: 5,
-        title: "Solution Brainstorming",
-        prompts: [
-          "List at least five potential solutions to your problem, no matter how unconventional they may seem.",
-          "For each solution, what are the potential benefits and drawbacks?",
-          "Which solution feels most aligned with your values and long-term goals?",
-          "How might you combine elements from different solutions to create a more comprehensive approach?"
-        ],
-        minChars: 100,
-        maxChars: 1000
-      },
-      {
-        step: 6,
-        title: "Experimental Design",
-        prompts: [
-          "Based on your chosen solution(s), what small, low-risk experiment could you conduct to test its effectiveness?",
-          "What specific, measurable outcome would indicate that your experiment was successful?",
-          "What resources or support might you need to carry out this experiment?"
-        ],
-        minChars: 30,
-        maxChars: 1000
-      },
-      {
-        step: 7,
-        title: "Obstacle Identification",
-        prompts: [
-          "What external factors (e.g., time, resources, other people) might hinder your progress?",
-          "What internal obstacles (e.g., self-doubt, fear, lack of knowledge) do you anticipate facing?"
-        ],
-        minChars: 30,
-        maxChars: 1000
-      },
-      {
-        step: 8,
-        title: "Action Planning",
-        prompts: [
-          "What specific steps will you take to implement your chosen experiment?",
-          "How will you measure and track your progress throughout the experiment?"
-        ],
-        minChars: 30,
-        maxChars: 1000
-      },
-      {
-        step: 9,
-        title: "Reflection and Iteration",
-        prompts: [
-          "After conducting your experiment, what were the results? What did you learn?",
-          "How has this experience affected your confidence in problem-solving?"
-        ],
-        minChars: 30,
-        maxChars: 1000
-      },
-      {
-        step: 10,
-        title: "Building Mastery and Self-Efficacy",
-        prompts: [
-          "Reflecting on this problem-solving process, what new skills or knowledge have you gained?",
-          "How can you apply what you've learned to future challenges or goals?",
-          "What strategies will you use to maintain momentum and continue building your problem-solving abilities?",
-          "How has this experience changed your perception of your own capabilities?"
-        ],
-        minChars: 30,
-        maxChars: 1000
-      }
-    ];
+// PS101 Simple Sequential Flow (8 Prompts)
+// Replaces complex 10-step multi-prompt architecture
 
-    const PROMPT_HINTS = {
-      1: [
-        'Aim for at least two sentences describing what feels stuck right now. Example: "I\'m trying to pivot into product roles but I feel lost about where to begin."',
-        'Describe why this matters to you. For instance: "It matters because I want more creative ownership."',
-        'Try a single-sentence problem statement such as: "I want to transition to product management within six months."',
-        'Paint a picture of success—one or two sentences about what life looks like when this is solved.',
-        'Spell out the gap between today and that desired state. Mention what\'s missing.',
-        'Add a quick note on how solving this ties to your bigger goals or values.'
-      ],
-      2: [
-        'Describe your current situation in detail—what factors are contributing to the problem?',
-        'Share what attempts you\'ve made so far. What were the outcomes?',
-        'Are there any patterns or recurring themes you\'ve noticed?',
-        'How is this problem affecting different areas of your life?'
-      ],
-      3: [
-        'What underlying beliefs or assumptions might be contributing to this problem?',
-        'Are there any systemic or environmental factors at play?',
-        'What would need to change for this problem to disappear?'
-      ],
-      4: [
-        'On a scale of 1-10, rate your confidence and explain why.',
-        'What past experiences or skills can you draw upon?',
-        'How might your perception of your capabilities be influencing your approach?',
-        'What small wins or successes can you build upon?'
-      ],
-      5: [
-        'What specific, measurable outcomes would indicate you\'ve solved this problem?',
-        'What resources or support would be most helpful?',
-        'What is a realistic timeline for making progress?',
-        'What potential obstacles might you face, and how could you address them?'
-      ],
-      6: [
-        'Define your experiment hypothesis—what do you want to test?',
-        'What success metrics will you track?',
-        'When will you start and review progress?'
-      ],
-      7: [
-        'What obstacles do you anticipate?',
-        'For each obstacle, what strategy could help overcome it?'
-      ],
-      8: [
-        'What are the first 3 concrete actions you\'ll take?',
-        'When will you complete each action?'
-      ],
-      9: [
-        'What was the outcome of your experiment?',
-        'What did you learn from this experience?'
-      ],
-      10: [
-        'What new skills or knowledge have you gained?',
-        'How can you apply what you\'ve learned to future challenges?',
-        'What strategies will you use to maintain momentum?',
-        'How has this experience changed your perception of your capabilities?'
-      ]
-    };
+(function() {
+  'use strict';
 
-    // State Object (v2 - multi-prompt + experiments)
-    const PS101State = {
-      currentStep: 1,
-      currentPromptIndex: 0,
-      steps: {}, // { "1": { prompts: [{ response: "...", completedAt: "..." }] } }
-      experiments: [], // Array of experiment objects
-      startedAt: null,
-      lastUpdated: null,
-      completed: false,
-      completionScores: {},
+  // State Management
+  const PS101State = {
+    currentPromptIndex: 0,
+    prompts: [],
+    answers: [],
+    startedAt: null,
+    completed: false,
 
-      // Initialize state
-      init() {
-        console.log('[PS101] Initializing state...');
-        console.log('[PS101] Canonical PS101_STEPS has', PS101_STEPS.length, 'steps');
+    async init() {
+      // Load prompts from JSON
+      try {
+        const response = await fetch('./data/prompts.ps101.json');
+        const data = await response.json();
+        this.prompts = data.prompts;
+        console.log('[PS101] Loaded', this.prompts.length, 'prompts');
 
-        // CRITICAL FIX: Validate any loaded state against canonical PS101_STEPS
-        const validateState = (state) => {
-          // Force currentStep to be within 1-10 range
-          if (state.currentStep < 1 || state.currentStep > PS101_STEPS.length) {
-            console.warn('[PS101] Invalid currentStep:', state.currentStep, '- resetting to 1');
-            state.currentStep = 1;
-          }
-
-          // Ensure currentPromptIndex is valid for the current step
-          const step = PS101_STEPS[state.currentStep - 1];
-          if (step && state.currentPromptIndex >= step.prompts.length) {
-            console.warn('[PS101] Invalid currentPromptIndex:', state.currentPromptIndex, '- resetting to 0');
-            state.currentPromptIndex = 0;
-          }
-
-          return state;
-        };
-
-        // Try v2 first, then fall back to v1 for migration
-        const savedState = localStorage.getItem('ps101_v2_state');
-        if (savedState) {
-          try {
-            const parsed = JSON.parse(savedState);
-            console.log('[PS101] Loaded v2 state - currentStep:', parsed.currentStep);
-            Object.assign(this, validateState(parsed));
-          } catch (e) {
-            console.error('[PS101] Failed to parse saved PS101 v2 state:', e);
-            // Clear corrupted state
-            localStorage.removeItem('ps101_v2_state');
-          }
-        } else {
-          // Migrate from v1 if exists
-          const v1State = localStorage.getItem('ps101_state');
-          if (v1State) {
-            try {
-              const parsed = JSON.parse(v1State);
-              console.log('[PS101] Migrating from v1 state - currentStep:', parsed.currentStep);
-              // Migrate old structure to new
-              if (parsed.answers) {
-                this.steps = {};
-                Object.keys(parsed.answers).forEach(stepNum => {
-                  // Only migrate steps that exist in canonical PS101_STEPS
-                  const stepInt = parseInt(stepNum);
-                  if (stepInt >= 1 && stepInt <= PS101_STEPS.length) {
-                    this.steps[stepNum] = {
-                      prompts: [{ response: parsed.answers[stepNum], completedAt: parsed.lastUpdated || new Date().toISOString() }]
-                    };
-                  }
-                });
-              }
-              this.currentStep = parsed.currentStep || 1;
-              this.currentPromptIndex = 0; // CRITICAL FIX: Reset promptIndex after migration
-              this.startedAt = parsed.startedAt;
-              this.completed = parsed.completed || false;
-              validateState(this);
-              this.save(); // Save in new format
-              localStorage.removeItem('ps101_state'); // Clean up old
-              console.log('[PS101] Migration complete - reset currentPromptIndex to 0');
-            } catch (e) {
-              console.error('[PS101] Failed to migrate PS101 v1 state:', e);
-              // Clear corrupted state
-              localStorage.removeItem('ps101_state');
-            }
-          }
+        // Load saved state from localStorage
+        const saved = localStorage.getItem('ps101_simple_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          this.currentPromptIndex = Math.max(0, Math.min(parsed.currentPromptIndex || 0, this.prompts.length - 1));
+          this.answers = parsed.answers || [];
+          this.startedAt = parsed.startedAt;
+          this.completed = parsed.completed || false;
         }
 
         if (!this.startedAt) {
           this.startedAt = new Date().toISOString();
         }
 
-        // Initialize steps structure if empty
-        if (!this.steps || Object.keys(this.steps).length === 0) {
-          this.steps = {};
+        // Ensure answers array is same length as prompts
+        while (this.answers.length < this.prompts.length) {
+          this.answers.push('');
         }
-
-        // Initialize experiments if empty
-        if (!this.experiments || !Array.isArray(this.experiments)) {
-          this.experiments = [];
-        }
-      },
-
-      // Save state
-      save() {
-        this.lastUpdated = new Date().toISOString();
-        localStorage.setItem('ps101_v2_state', JSON.stringify(this));
-      },
-
-      // Get current step data
-      getCurrentStep() {
-        return PS101_STEPS.find(s => s.step === this.currentStep);
-      },
-
-      // Get current prompt data
-      getCurrentPrompt() {
-        const step = this.getCurrentStep();
-        if (!step || !step.prompts) return null;
-        return step.prompts[this.currentPromptIndex] || step.prompts[0];
-      },
-
-      // Get answer for step/prompt
-      getAnswer(stepNumber, promptIndex = 0) {
-        if (this.steps[stepNumber] && this.steps[stepNumber].prompts && this.steps[stepNumber].prompts[promptIndex]) {
-          return this.steps[stepNumber].prompts[promptIndex].response || '';
-        }
-        return '';
-      },
-
-      // Set answer for step/prompt
-      setAnswer(stepNumber, promptIndex, answer) {
-        if (!this.steps[stepNumber]) {
-          this.steps[stepNumber] = { prompts: [] };
-        }
-        if (!this.steps[stepNumber].prompts) {
-          this.steps[stepNumber].prompts = [];
-        }
-        // Ensure array is large enough
-        while (this.steps[stepNumber].prompts.length <= promptIndex) {
-          this.steps[stepNumber].prompts.push({ response: '', completedAt: null });
-        }
-        this.steps[stepNumber].prompts[promptIndex] = {
-          response: answer,
-          completedAt: answer ? new Date().toISOString() : null
-        };
-        this.save();
-      },
-
-      // Get all answers for a step (for display)
-      getStepAnswers(stepNumber) {
-        if (this.steps[stepNumber] && this.steps[stepNumber].prompts) {
-          return this.steps[stepNumber].prompts.map(p => p.response || '');
-        }
-        return [];
-      },
-
-      // Check if step is complete (all prompts answered with min chars)
-      isStepComplete(stepNumber) {
-        const step = PS101_STEPS.find(s => s.step === stepNumber);
-        if (!step) return false;
-        const answers = this.getStepAnswers(stepNumber);
-        if (answers.length !== step.prompts.length) return false;
-        return answers.every((answer, idx) => answer.length >= step.minChars);
-      },
-
-      // Navigate to step
-      goToStep(stepNumber, promptIndex = 0) {
-        if (stepNumber >= 1 && stepNumber <= PS101_STEPS.length) {
-          this.currentStep = stepNumber;
-          this.currentPromptIndex = promptIndex;
-          this.save();
-          renderCurrentStep();
-        }
-      },
-
-      // Next prompt within step, or next step if all prompts done
-      nextPrompt() {
-        console.log('[PS101] nextPrompt called:', {
-          currentStep: this.currentStep,
-          currentPromptIndex: this.currentPromptIndex,
-          savedState: localStorage.getItem('ps101_v2_state')?.substring(0, 100)
-        });
-
-        const step = this.getCurrentStep();
-        if (!step || !step.prompts) {
-          console.error('[PS101] nextPrompt: No step or prompts found!');
-          return;
-        }
-
-        const totalPrompts = step.prompts.length;
-        console.log('[PS101] Current position: Step', this.currentStep, 'Prompt', (this.currentPromptIndex + 1), 'of', totalPrompts);
-
-        if (this.currentPromptIndex + 1 < totalPrompts) {
-          // Move to next prompt in same step
-          this.currentPromptIndex++;
-          console.log('[PS101] → Advancing to prompt', (this.currentPromptIndex + 1), 'of', totalPrompts);
-          this.save();
-          renderCurrentStep();
-        } else {
-          // All prompts done, move to next step
-          console.log('[PS101] → All prompts complete, calling nextStep()');
-          this.nextStep();
-        }
-      },
-
-      // Previous prompt within step, or previous step
-      prevPrompt() {
-        if (this.currentPromptIndex > 0) {
-          // Move to previous prompt in same step
-          this.currentPromptIndex--;
-          this.save();
-          renderCurrentStep();
-        } else {
-          // Move to previous step
-          this.prevStep();
-        }
-      },
-
-      // Next step (only called when all prompts in current step are complete)
-      nextStep() {
-        console.log('[PS101] nextStep called:', {
-          currentStep: this.currentStep,
-          maxSteps: PS101_STEPS.length
-        });
-
-        if (this.currentStep < PS101_STEPS.length) {
-          const oldStep = this.currentStep;
-          this.currentStep++;
-          this.currentPromptIndex = 0; // Reset to first prompt of new step
-          console.log('[PS101] → Advanced from Step', oldStep, 'to Step', this.currentStep);
-          this.save();
-          console.log('[PS101] → State saved, calling renderCurrentStep()');
-          renderCurrentStep();
-        } else {
-          console.log('[PS101] → Flow complete! Showing completion screen');
-          this.completed = true;
-          this.save();
-          renderCompletionScreen();
-        }
-      },
-
-      // Previous step
-      prevStep() {
-        if (this.currentStep > 1) {
-          this.currentStep--;
-          const step = this.getCurrentStep();
-          // Set to last prompt of previous step, or 0 if no prompts
-          this.currentPromptIndex = step && step.prompts ? Math.max(0, step.prompts.length - 1) : 0;
-          this.save();
-          renderCurrentStep();
-        }
-      },
-
-      // Reset
-      reset() {
-        this.currentStep = 1;
-        this.currentPromptIndex = 0;
-        this.steps = {};
-        this.experiments = [];
-        this.startedAt = new Date().toISOString();
-        this.lastUpdated = null;
-        this.completed = false;
-        this.completionScores = {};
-        this.save();
-        renderWelcomeScreen();
-      },
-
-      // Experiment Management Methods
-      createExperiment(title = null) {
-        const expId = `exp-${Date.now()}`;
-        const experiment = {
-          id: expId,
-          title: title || `Experiment ${this.experiments.length + 1}`,
-          hypothesis: '',
-          successMetric: '',
-          duration: { start: '', review: '' },
-          resources: '',
-          obstacles: [],
-          actions: [],
-          reflection: null,
-          status: 'draft',
-          createdAt: new Date().toISOString()
-        };
-        this.experiments.push(experiment);
-        this.save();
-        return experiment;
-      },
-
-      getActiveExperiment() {
-        return this.experiments.find(e => e.status === 'active') || this.experiments[this.experiments.length - 1];
-      },
-
-      updateExperiment(expId, updates) {
-        const exp = this.experiments.find(e => e.id === expId);
-        if (exp) {
-          Object.assign(exp, updates);
-          exp.lastUpdated = new Date().toISOString();
-          this.save();
-          return exp;
-        }
-        return null;
-      },
-
-      addObstacle(expId, obstacle) {
-        const exp = this.getActiveExperiment() || this.experiments.find(e => e.id === expId);
-        if (exp) {
-          if (!exp.obstacles) exp.obstacles = [];
-          exp.obstacles.push({
-            id: `obs-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            type: obstacle.type || 'external',
-            label: obstacle.label || '',
-            strategy: obstacle.strategy || '',
-            createdAt: new Date().toISOString()
-          });
-          this.save();
-          return exp;
-        }
-        return null;
-      },
-
-      addAction(expId, action) {
-        const exp = this.getActiveExperiment() || this.experiments.find(e => e.id === expId);
-        if (exp) {
-          if (!exp.actions) exp.actions = [];
-          exp.actions.push({
-            id: `act-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            label: action.label || '',
-            due: action.due || '',
-            done: false,
-            accountability: action.accountability || '',
-            createdAt: new Date().toISOString()
-          });
-          this.save();
-          return exp;
-        }
-        return null;
-      },
-
-      updateReflection(expId, reflection) {
-        const exp = this.getActiveExperiment() || this.experiments.find(e => e.id === expId);
-        if (exp) {
-          // Get confidence from Step 4 if available
-          const step4Answers = this.getStepAnswers(4);
-          const confidenceBefore = step4Answers[0] ? parseInt(step4Answers[0].match(/\d+/)?.[0] || '5') : null;
-
-          exp.reflection = {
-            outcome: reflection.outcome || '',
-            learning: reflection.learning || '',
-            confidence: {
-              before: confidenceBefore || reflection.confidence?.before || null,
-              after: reflection.confidence?.after || null
-            },
-            nextMove: reflection.nextMove || 'Continue',
-            completedAt: new Date().toISOString()
-          };
-          exp.status = 'reviewed';
-          this.save();
-          return exp;
-        }
-        return null;
+      } catch (error) {
+        console.error('[PS101] Failed to load prompts:', error);
+        // Fallback to hardcoded prompts
+        this.prompts = [
+          "What problem are you trying to solve, in one sentence?",
+          "What would 'success' look like in 4–6 weeks? Be specific.",
+          "What is the single biggest obstacle between you and that success?",
+          "What's one action you can take in the next 48 hours?",
+          "If you had to cut the plan to a third, what would you keep?",
+          "Who can you ask for help, and what exactly will you ask?",
+          "What data would convince you the plan is working?",
+          "What's the smallest test that would move this forward?"
+        ];
       }
-    };
+    },
 
-    // Initialize
-    PS101State.init();
+    save() {
+      localStorage.setItem('ps101_simple_state', JSON.stringify({
+        currentPromptIndex: this.currentPromptIndex,
+        answers: this.answers,
+        startedAt: this.startedAt,
+        completed: this.completed
+      }));
+    },
 
-    // Expose to global scope
-    window.PS101State = PS101State;
-    window.PS101_STEPS = PS101_STEPS;
-    window.renderWelcomeScreen = renderWelcomeScreen;
-    window.renderCurrentStep = renderCurrentStep;
-    window.updateNavButtons = updateNavButtons;
+    getAnswer(index) {
+      return this.answers[index] || '';
+    },
+
+    setAnswer(index, answer) {
+      this.answers[index] = answer;
+      this.save();
+    },
+
+    nextPrompt() {
+      if (this.currentPromptIndex < this.prompts.length - 1) {
+        this.currentPromptIndex++;
+        this.save();
+        renderCurrentPrompt();
+      } else {
+        // Flow complete
+        this.completed = true;
+        this.save();
+        renderCompletion();
+      }
+    },
+
+    prevPrompt() {
+      if (this.currentPromptIndex > 0) {
+        this.currentPromptIndex--;
+        this.save();
+        renderCurrentPrompt();
+      }
+    },
+
+    reset() {
+      this.currentPromptIndex = 0;
+      this.answers = new Array(this.prompts.length).fill('');
+      this.startedAt = new Date().toISOString();
+      this.completed = false;
+      this.save();
+      renderWelcome();
+    }
+  };
+
+  // Render Functions
+  function renderWelcome() {
+    const welcome = document.getElementById('ps101-welcome');
+    const flow = document.getElementById('ps101-flow');
+    const completion = document.getElementById('ps101-completion');
+
+    if (welcome) welcome.classList.remove('hidden');
+    if (flow) flow.classList.add('hidden');
+    if (completion) completion.classList.add('hidden');
+  }
+
+  function renderCurrentPrompt() {
+    const welcome = document.getElementById('ps101-welcome');
+    const flow = document.getElementById('ps101-flow');
+    const completion = document.getElementById('ps101-completion');
+
+    if (welcome) welcome.classList.add('hidden');
+    if (flow) flow.classList.remove('hidden');
+    if (completion) completion.classList.add('hidden');
+
+    const index = PS101State.currentPromptIndex;
+    const total = PS101State.prompts.length;
+    const prompt = PS101State.prompts[index];
 
     // Update progress indicator
-    function updateProgressIndicator(currentStep) {
-      // CRITICAL: Validate currentStep is within bounds
-      const validStep = Math.max(1, Math.min(currentStep, PS101_STEPS.length));
-      if (validStep !== currentStep) {
-        console.error('[PS101] Invalid currentStep:', currentStep, '- clamping to', validStep);
-        PS101State.currentStep = validStep;
-        PS101State.save();
-      }
-
-      const dots = document.querySelectorAll('.progress-dots .dot');
-      dots.forEach((dot, index) => {
-        const stepNumber = index + 1;
-        dot.classList.remove('completed', 'active');
-        if (stepNumber < validStep) {
-          dot.classList.add('completed');
-          dot.disabled = false;
-        } else if (stepNumber === validStep) {
-          dot.classList.add('active');
-          dot.setAttribute('aria-current', 'step');
-          dot.disabled = false;
-        } else {
-          dot.disabled = true;
-        }
-      });
-
-      const stepLabel = document.getElementById('step-label');
-      const step = PS101_STEPS[validStep - 1];
-      if (stepLabel && step) {
-        // ALWAYS show "of 10" using PS101_STEPS.length, never hardcode
-        const totalSteps = PS101_STEPS.length;
-        stepLabel.textContent = `Step ${validStep} of ${totalSteps}: ${step.title}`;
-        console.log('[PS101] Updated label: Step', validStep, 'of', totalSteps);
-      }
+    const progressLabel = document.getElementById('step-label');
+    if (progressLabel) {
+      progressLabel.textContent = `Question ${index + 1} of ${total}`;
     }
 
-    // Update character count
-    function updateCharCount(current, minRequired = 0, max = 0) {
-      const currentEl = document.getElementById('char-current');
-      const maxEl = document.getElementById('char-max');
-      const minEl = document.getElementById('char-min');
-      const charCount = document.getElementById('char-count');
-
-      if (currentEl) currentEl.textContent = current;
-      if (maxEl) maxEl.textContent = max;
-
-      if (minEl) {
-        if (minRequired) {
-          minEl.textContent = `(min ${minRequired})`;
-          minEl.style.display = '';
-        } else {
-          minEl.textContent = '';
-          minEl.style.display = 'none';
-        }
+    // Update progress dots
+    const dots = document.querySelectorAll('.progress-dots .dot');
+    dots.forEach((dot, i) => {
+      dot.classList.remove('active', 'completed');
+      if (i < index) {
+        dot.classList.add('completed');
+      } else if (i === index) {
+        dot.classList.add('active');
       }
+      dot.textContent = i + 1;
+    });
 
-      if (charCount) {
-        const needsDetail = minRequired > 0 && current < minRequired;
-        const nearLimit = !needsDetail && max > 0 && current > max * 0.9;
+    // Update question text
+    const questionText = document.getElementById('question-text');
+    if (questionText) {
+      questionText.textContent = prompt;
+    }
 
-        charCount.classList.toggle('needs-detail', needsDetail);
-        charCount.classList.toggle('near-limit', nearLimit);
-        if (!needsDetail && !nearLimit) {
-          charCount.style.color = '';
-        } else {
-          charCount.style.color = '';
-        }
-
-        let ariaStatus;
-        if (needsDetail) {
-          ariaStatus = `Need at least ${minRequired} characters. Currently at ${current}.`;
-        } else if (minRequired) {
-          ariaStatus = `Characters ${current} of ${max}. Minimum required ${minRequired}.`;
-        } else {
-          ariaStatus = `Characters ${current} of ${max}.`;
-        }
-        charCount.setAttribute('aria-label', ariaStatus);
-        charCount.setAttribute('title', ariaStatus);
-      }
+    // Update textarea
+    const textarea = document.getElementById('step-answer');
+    if (textarea) {
+      textarea.value = PS101State.getAnswer(index);
+      textarea.placeholder = `Type your response to: ${prompt}`;
     }
 
     // Update navigation buttons
-    function updateNavButtons(currentStep, promptIndex, totalPrompts) {
-      const backBtn = document.getElementById('ps101-back');
-      const nextBtn = document.getElementById('ps101-next');
+    const backBtn = document.getElementById('ps101-back');
+    const nextBtn = document.getElementById('ps101-next');
 
-      if (backBtn) {
-        // Disable back only if at first prompt of first step
-        backBtn.disabled = (currentStep === 1 && promptIndex === 0);
-        backBtn.textContent = '← Back';
-      }
-
-      if (nextBtn) {
-        const isLastStep = currentStep === 10;
-        const isLastPrompt = promptIndex === totalPrompts - 1;
-
-        // Button text based on position
-        if (isLastStep && isLastPrompt) {
-          nextBtn.textContent = 'Complete PS101 →';
-        } else if (!isLastPrompt) {
-          nextBtn.textContent = 'Next Prompt →';
-        } else {
-          nextBtn.textContent = 'Next Step →';
-        }
-
-        let isValid = true;
-        if (isLastPrompt) {
-          // For experiment steps (6-9), validate experiment component instead of textarea
-          if ([6, 7, 8, 9].includes(currentStep)) {
-            const activeExp = PS101State.getActiveExperiment();
-            console.log('[updateNavButtons] Step', currentStep, 'activeExp:', activeExp ? 'exists' : 'null', 'isLastPrompt:', isLastPrompt);
-            if (currentStep === 6 && activeExp) {
-              isValid = activeExp.hypothesis && activeExp.successMetric &&
-                       (activeExp.duration?.start || activeExp.duration?.review);
-              console.log('[updateNavButtons] Step 6 validation:', isValid);
-            } else if (currentStep === 7 && activeExp) {
-              const hasObstacles = activeExp.obstacles && activeExp.obstacles.length > 0;
-              const validObstacle = activeExp.obstacles ? activeExp.obstacles.some(o => o.label && o.strategy) : false;
-              isValid = hasObstacles && validObstacle;
-              console.log('[updateNavButtons] Step 7 validation: obstacles=', activeExp.obstacles?.length || 0, 'hasObstacles:', hasObstacles, 'validObstacle:', validObstacle, 'isValid:', isValid);
-              if (activeExp.obstacles && activeExp.obstacles.length > 0) {
-                console.log('[updateNavButtons] First obstacle:', {label: !!activeExp.obstacles[0].label, strategy: !!activeExp.obstacles[0].strategy});
-              }
-            } else if (currentStep === 8 && activeExp) {
-              isValid = activeExp.actions && activeExp.actions.length >= 3;
-              console.log('[updateNavButtons] Step 8 validation: actions=', activeExp.actions?.length || 0, 'isValid:', isValid);
-            } else if (currentStep === 9 && activeExp) {
-              isValid = activeExp.reflection &&
-                       activeExp.reflection.outcome && activeExp.reflection.learning &&
-                       activeExp.reflection.confidence?.after;
-              console.log('[updateNavButtons] Step 9 validation:', isValid);
-            }
-          } else {
-            // For regular steps, validate textarea answer
-            const currentAnswer = PS101State.getAnswer(currentStep, promptIndex);
-            const step = PS101_STEPS.find(s => s.step === currentStep);
-            isValid = currentAnswer.length >= (step ? step.minChars : 30);
-          }
+    if (backBtn) {
+      backBtn.disabled = index === 0;
     }
 
-    nextBtn.disabled = !isValid;
+    if (nextBtn) {
+      const answer = PS101State.getAnswer(index);
+      const isValid = answer.trim().length >= 10;
+      nextBtn.disabled = !isValid;
+      nextBtn.textContent = index === total - 1 ? 'Complete →' : 'Next →';
+    }
   }
-}
 
-    function handleStepAnswerInput(e) {
-      const step = PS101State.getCurrentStep();
-      if (!step) return;
-      updateCharCount(
-        e.target.value.length,
-        step?.minChars || 0,
-        step?.maxChars || 0
-      );
-      PS101State.setAnswer(PS101State.currentStep, PS101State.currentPromptIndex, e.target.value);
-      const promptIndex = PS101State.currentPromptIndex || 0;
-      const totalPrompts = step.prompts ? step.prompts.length : 1;
-      updateNavButtons(PS101State.currentStep, promptIndex, totalPrompts);
-    }
+  function renderCompletion() {
+    const welcome = document.getElementById('ps101-welcome');
+    const flow = document.getElementById('ps101-flow');
+    const completion = document.getElementById('ps101-completion');
 
-    // Render previous answers
-    function renderPreviousAnswers(currentStep) {
-      const previousSteps = currentStep - 1;
-      const previousAnswersEl = document.getElementById('previous-answers');
+    if (welcome) welcome.classList.add('hidden');
+    if (flow) flow.classList.add('hidden');
+    if (completion) completion.classList.remove('hidden');
 
-      if (!previousAnswersEl) return;
-
-      if (previousSteps === 0) {
-        previousAnswersEl.classList.add('hidden');
-        return;
-      }
-
-      previousAnswersEl.classList.remove('hidden');
-      const summaryText = previousAnswersEl.querySelector('.summary-text');
-      if (summaryText) {
-        summaryText.textContent = `▼ Previous Answers (${previousSteps} step${previousSteps > 1 ? 's' : ''} completed)`;
-      }
-
-      const answerList = previousAnswersEl.querySelector('.answer-list');
-      if (!answerList) return;
-
-      answerList.innerHTML = '';
-
-      for (let i = 1; i < currentStep; i++) {
-        const step = PS101_STEPS.find(s => s.step === i);
-        if (!step) continue;
-
-        const stepAnswers = PS101State.getStepAnswers(i);
-        const hasAnswers = stepAnswers.some(a => a && a.trim().length > 0);
-
-        if (!hasAnswers) continue;
-
+    // Display all answers
+    const answersContainer = document.getElementById('completion-answers');
+    if (answersContainer) {
+      answersContainer.innerHTML = '';
+      PS101State.prompts.forEach((prompt, i) => {
+        const answer = PS101State.getAnswer(i);
         const card = document.createElement('div');
         card.className = 'answer-card';
-        card.dataset.step = i;
-
-        // Show summary of all prompts if multiple, or single answer
-        let answerSummary = '';
-        if (step.prompts.length > 1) {
-          answerSummary = stepAnswers
-            .map((ans, idx) => ans && ans.trim() ? `<div class="prompt-summary"><strong>Prompt ${idx + 1}:</strong> ${escapeHtml(ans.substring(0, 200))}${ans.length > 200 ? '...' : ''}</div>` : '')
-            .filter(s => s)
-            .join('');
-        } else {
-          answerSummary = escapeHtml(stepAnswers[0] || '');
-        }
-
         card.innerHTML = `
           <div class="answer-header">
-            <span class="answer-step">Step ${i}: ${step.title}</span>
-            <button class="answer-edit" data-step="${i}" aria-label="Edit Step ${i}">Edit</button>
+            <span class="answer-step">Question ${i + 1}: ${prompt}</span>
           </div>
-          <div class="answer-content">${answerSummary || 'No answers yet'}</div>
+          <div class="answer-content">${escapeHtml(answer)}</div>
         `;
+        answersContainer.appendChild(card);
+      });
+    }
+  }
 
-        answerList.appendChild(card);
-      }
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
-      // Add click handlers for edit buttons
-      document.querySelectorAll('.answer-edit').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const stepNumber = parseInt(e.target.dataset.step);
-          PS101State.goToStep(stepNumber);
-        });
+  // Event Listeners
+  function initEventListeners() {
+    const startBtn = document.getElementById('start-ps101');
+    if (startBtn) {
+      startBtn.addEventListener('click', () => {
+        PS101State.currentPromptIndex = 0;
+        PS101State.save();
+        renderCurrentPrompt();
       });
     }
 
-    // Render current step
-    function renderCurrentStep() {
-      const state = PS101State;
-      const step = state.getCurrentStep();
+    const continueBtn = document.getElementById('continue-ps101');
+    if (continueBtn) {
+      continueBtn.addEventListener('click', () => {
+        renderCurrentPrompt();
+      });
+    }
 
-      if (!step || !step.prompts) {
-        console.error('Invalid step or prompts:', state.currentStep);
-        return;
-      }
+    const backBtn = document.getElementById('ps101-back');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        PS101State.prevPrompt();
+      });
+    }
 
-      // DEFENSIVE CHECK: Clamp promptIndex to valid range
-      const totalPrompts = step.prompts.length;
-      if (state.currentPromptIndex >= totalPrompts) {
-        console.error('[PS101] OUT OF BOUNDS promptIndex detected:', state.currentPromptIndex, 'max:', totalPrompts - 1);
-        console.error('[PS101] Clamping to 0 to prevent crash');
-        state.currentPromptIndex = 0;
-        state.save();
-      }
-
-      // Hide welcome/completion, show main flow
-      const welcome = document.getElementById('ps101-welcome');
-      const completion = document.getElementById('ps101-completion');
-      const flow = document.getElementById('ps101-flow');
-
-      if (welcome) welcome.classList.add('hidden');
-      if (completion) completion.classList.add('hidden');
-      if (flow) flow.classList.remove('hidden');
-
-      // Update progress indicator
-      updateProgressIndicator(state.currentStep);
-
-      // Get current prompt
-      const promptIndex = state.currentPromptIndex || 0;
-      const currentPrompt = step.prompts[promptIndex] || step.prompts[0];
-
-      // Update question text with prompt progress
-      const questionText = document.getElementById('question-text');
-      if (questionText) {
-        const promptProgress = totalPrompts > 1 ? ` (Prompt ${promptIndex + 1} of ${totalPrompts})` : '';
-        questionText.textContent = currentPrompt + promptProgress;
-        questionText.setAttribute('aria-label', `Step ${state.currentStep}${promptProgress}: ${currentPrompt}`);
-      }
-
-      // Update hint (optional, hide if no hint available)
-      const hintText = document.getElementById('hint-text');
-      const coachingHint = document.getElementById('coaching-hint');
-      if (hintText) {
-        const stepHints = PROMPT_HINTS[state.currentStep] || [];
-        const specificHint = stepHints[promptIndex];
-        const minimumDetail = step.minChars || 30;
-        hintText.textContent = specificHint
-          ? `${specificHint} Aim for about ${minimumDetail} characters so the Next Prompt button can unlock.`
-          : `Take your time to reflect on this question. Aim for about ${minimumDetail} characters so the Next Prompt button can unlock.`;
-      }
-      if (coachingHint) {
-        coachingHint.style.display = 'block'; // Keep visible for now
-      }
-
-      // Update textarea
-      const textarea = document.getElementById('step-answer');
-      if (textarea) {
-        const answer = state.getAnswer(state.currentStep, promptIndex);
-        textarea.value = answer;
-        textarea.placeholder = `Type your response to: ${currentPrompt.substring(0, 50)}...`;
-        textarea.setAttribute('maxlength', step.maxChars);
-        updateCharCount(
-          answer.length,
-          step?.minChars || 0,
-          step?.maxChars || 0
-        );
-        textarea.removeEventListener('input', handleStepAnswerInput);
-        textarea.addEventListener('input', handleStepAnswerInput);
-        textarea.focus();
-      }
-
-      // Show/hide experiment components for Steps 6-9
-      const expComponents = document.getElementById('experiment-components');
-      const ps101Input = document.getElementById('ps101-input');
-
-      if ([6, 7, 8, 9].includes(state.currentStep) && promptIndex === totalPrompts - 1) {
-        // Show experiment component for this step, hide regular input
-        if (expComponents) {
-          expComponents.classList.remove('hidden');
-          // Ensure active experiment exists
-          let activeExp = PS101State.getActiveExperiment();
-          if (!activeExp && state.currentStep === 6) {
-            activeExp = PS101State.createExperiment();
-          }
-
-          // Show relevant component
-          if (state.currentStep === 6) {
-            renderExperimentCanvas(activeExp);
-          } else if (state.currentStep === 7) {
-            renderObstacleMapping(activeExp);
-          } else if (state.currentStep === 8) {
-            renderActionPlan(activeExp);
-          } else if (state.currentStep === 9) {
-            renderReflectionLog(activeExp);
-          }
+    const nextBtn = document.getElementById('ps101-next');
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        const textarea = document.getElementById('step-answer');
+        if (textarea) {
+          PS101State.setAnswer(PS101State.currentPromptIndex, textarea.value);
+          PS101State.nextPrompt();
         }
-        if (ps101Input) ps101Input.classList.add('hidden');
-      } else {
-        // Hide experiment components, show regular input
-        if (expComponents) expComponents.classList.add('hidden');
-        if (ps101Input) ps101Input.classList.remove('hidden');
-      }
-
-      // Update navigation buttons
-      updateNavButtons(state.currentStep, promptIndex, totalPrompts);
-
-      // Update previous answers
-      renderPreviousAnswers(state.currentStep);
+      });
     }
 
-    // Experiment Component Rendering Functions
-    function renderExperimentCanvas(experiment) {
-      if (!experiment) return;
+    const textarea = document.getElementById('step-answer');
+    if (textarea) {
+      textarea.addEventListener('input', (e) => {
+        PS101State.setAnswer(PS101State.currentPromptIndex, e.target.value);
 
-      const canvas = document.getElementById('experiment-canvas');
-      const obstacleMapping = document.getElementById('obstacle-mapping');
-      const actionPlan = document.getElementById('action-plan');
-      const reflectionLog = document.getElementById('reflection-log');
-
-      // Show canvas, hide others
-      if (canvas) canvas.classList.remove('hidden');
-      if (obstacleMapping) obstacleMapping.classList.add('hidden');
-      if (actionPlan) actionPlan.classList.add('hidden');
-      if (reflectionLog) reflectionLog.classList.add('hidden');
-
-      // Populate fields
-      const hypothesis = document.getElementById('exp-hypothesis');
-      const successMetric = document.getElementById('exp-success-metric');
-      const startDate = document.getElementById('exp-start-date');
-      const reviewDate = document.getElementById('exp-review-date');
-      const resources = document.getElementById('exp-resources');
-
-      if (hypothesis) hypothesis.value = experiment.hypothesis || '';
-      if (successMetric) successMetric.value = experiment.successMetric || '';
-      if (startDate) startDate.value = experiment.duration?.start || '';
-      if (reviewDate) reviewDate.value = experiment.duration?.review || '';
-      if (resources) resources.value = experiment.resources || '';
-    }
-
-    // Render welcome screen
-    function renderWelcomeScreen() {
-      const state = PS101State;
-      const welcome = document.getElementById('ps101-welcome');
-      const flow = document.getElementById('ps101-flow');
-      const completion = document.getElementById('ps101-completion');
-
-      if (welcome) welcome.classList.remove('hidden');
-      if (flow) flow.classList.add('hidden');
-      if (completion) completion.classList.add('hidden');
-
-      // Check if user has progress
-      const hasProgress = state.steps && Object.keys(state.steps).length > 0;
-      const resumeSection = document.getElementById('welcome-resume');
-
-      if (resumeSection) {
-        if (hasProgress && !state.completed) {
-          resumeSection.classList.remove('hidden');
-        } else {
-          resumeSection.classList.add('hidden');
+        // Update next button state
+        const nextBtn = document.getElementById('ps101-next');
+        if (nextBtn) {
+          const isValid = e.target.value.trim().length >= 10;
+          nextBtn.disabled = !isValid;
         }
-      }
+      });
     }
+  }
 
-    // Render completion screen
-    function renderCompletionScreen() {
-      const state = PS101State;
-      const completion = document.getElementById('ps101-completion');
-      const flow = document.getElementById('ps101-flow');
-      const welcome = document.getElementById('ps101-welcome');
+  // Initialize
+  async function initialize() {
+    await PS101State.init();
+    initEventListeners();
 
-      if (completion) completion.classList.remove('hidden');
-      if (flow) flow.classList.add('hidden');
-      if (welcome) welcome.classList.add('hidden');
-
-      // Render commitment highlight
-      const commitmentText = document.getElementById('commitment-text');
-      if (commitmentText) {
-        commitmentText.textContent = state.getAnswer(7);
-      }
-
-      // Render all answers
-      const completionAnswers = document.getElementById('completion-answers');
-      if (completionAnswers) {
-        completionAnswers.innerHTML = '';
-        PS101_STEPS.forEach(step => {
-          const answer = state.getAnswer(step.number);
-          const card = document.createElement('div');
-          card.className = 'answer-card';
-          card.innerHTML = `
-            <div class="answer-header">
-              <span class="answer-step">Step ${step.number}: ${step.title}</span>
-            </div>
-            <div class="answer-content">${escapeHtml(answer)}</div>
-          `;
-          completionAnswers.appendChild(card);
-        });
-      }
+    // Decide what to show
+    if (PS101State.completed) {
+      renderCompletion();
+    } else if (PS101State.answers.some(a => a.trim().length > 0)) {
+      renderCurrentPrompt();
+    } else {
+      renderWelcome();
     }
+  }
 
-    // Event listeners setup - now handled by consolidated initApp() via initPS101EventListeners()
-    // Removed duplicate DOMContentLoaded handler - all logic consolidated into initPS101EventListeners()
+  // Export to global scope
+  window.PS101State = PS101State;
+  window.renderCurrentPrompt = renderCurrentPrompt;
+  window.renderWelcome = renderWelcome;
+  window.renderCompletion = renderCompletion;
 
-    // Add link to PS101 module to start flow
-    const ps101Module = document.getElementById('ps101');
-    if (ps101Module) {
-      const moduleLink = ps101Module.querySelector('a');
-      if (moduleLink) {
-        moduleLink.addEventListener('click', (e) => {
-          e.preventDefault();
-          // Check if user has progress
-          if (PS101State.steps && Object.keys(PS101State.steps).length > 0 && !PS101State.completed) {
-            renderCurrentStep();
-            document.getElementById('ps101-flow')?.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            renderWelcomeScreen();
-            document.getElementById('ps101-welcome')?.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      }
-
-      // Also link the "start here" action in the module
-      const startHereLink = ps101Module.querySelector('[data-prompt]');
-      if (startHereLink) {
-        startHereLink.addEventListener('click', (e) => {
-          // Don't prevent default - let it also trigger chat
-          // But also show PS101 flow if user wants
-          setTimeout(() => {
-            if (PS101State.steps && Object.keys(PS101State.steps).length > 0 && !PS101State.completed) {
-              renderCurrentStep();
-              document.getElementById('ps101-flow')?.scrollIntoView({ behavior: 'smooth' });
-            } else {
-              renderWelcomeScreen();
-              document.getElementById('ps101-welcome')?.scrollIntoView({ behavior: 'smooth' });
-            }
-          }, 500);
-        });
-      }
-    }
+  // Auto-initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialize);
+  } else {
+    initialize();
+  }
 
 })();
+
 
 </script>
 <!-- BUILD_ID:5cf9088cd271e2ae767620496b2d3802aa10eb2a|SHA:7795ae25 -->
