@@ -1,7 +1,7 @@
 [build]
   base = "."
   publish = "frontend"
-  command = "node -e \"const fs=require('fs');const p='frontend/index.html';const s=fs.readFileSync(p,'utf8');const must=[/PS101/i,/Step.*1.*of.*10/i];const ok=must.every(r=>r.test(s));if(!ok){console.error('ENFORCEMENT_FAIL: PS101 authority missing in frontend/index.html');process.exit(1);}console.log('ENFORCEMENT_OK: PS101 authority present');\""
+  command = "node -e \"const fs=require('fs');const p='frontend/index.html';const s=fs.readFileSync(p,'utf8');const must=[/PS101/i,/Question.*1.*of.*8/i,/ps101_simple\\.js/i];const ok=must.every(r=>r.test(s));if(!ok){console.error('ENFORCEMENT_FAIL: PS101 v3 (8-prompt simple architecture) missing in frontend/index.html');process.exit(1);}console.log('ENFORCEMENT_OK: PS101 v3 simple architecture present');\""
 
 [[redirects]]
   from = "/health"
