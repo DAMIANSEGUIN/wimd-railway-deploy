@@ -3739,11 +3739,13 @@ async function askCoach(prompt) {
                 });
               }
               this.currentStep = parsed.currentStep || 1;
+              this.currentPromptIndex = 0; // CRITICAL FIX: Reset promptIndex after migration
               this.startedAt = parsed.startedAt;
               this.completed = parsed.completed || false;
               validateState(this);
               this.save(); // Save in new format
               localStorage.removeItem('ps101_state'); // Clean up old
+              console.log('[PS101] Migration complete - reset currentPromptIndex to 0');
             } catch (e) {
               console.error('[PS101] Failed to migrate PS101 v1 state:', e);
               // Clear corrupted state
@@ -4272,6 +4274,15 @@ async function askCoach(prompt) {
         return;
       }
 
+      // DEFENSIVE CHECK: Clamp promptIndex to valid range
+      const totalPrompts = step.prompts.length;
+      if (state.currentPromptIndex >= totalPrompts) {
+        console.error('[PS101] OUT OF BOUNDS promptIndex detected:', state.currentPromptIndex, 'max:', totalPrompts - 1);
+        console.error('[PS101] Clamping to 0 to prevent crash');
+        state.currentPromptIndex = 0;
+        state.save();
+      }
+
       // Hide welcome/completion, show main flow
       const welcome = document.getElementById('ps101-welcome');
       const completion = document.getElementById('ps101-completion');
@@ -4287,7 +4298,6 @@ async function askCoach(prompt) {
       // Get current prompt
       const promptIndex = state.currentPromptIndex || 0;
       const currentPrompt = step.prompts[promptIndex] || step.prompts[0];
-      const totalPrompts = step.prompts.length;
 
       // Update question text with prompt progress
       const questionText = document.getElementById('question-text');
