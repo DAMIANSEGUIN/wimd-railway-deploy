@@ -91,6 +91,44 @@ Current task: [description]
 - **Approval required:** EnterPlanMode, major architecture change
 - **New request:** User just gave new task (summarize and confirm understanding)
 
+## ⚡ CHECK BEFORE ACT PROTOCOL
+
+**MANDATORY: Always verify current state before taking action**
+
+**Examples of protocol violations:**
+```bash
+# ❌ WRONG: Installing without checking if already installed
+npx playwright install chromium
+
+# ✅ CORRECT: Check first
+npx playwright --version || npx playwright install chromium
+
+# ❌ WRONG: Creating file without checking if exists
+echo "content" > file.txt
+
+# ✅ CORRECT: Check first
+[ -f file.txt ] && echo "File exists" || echo "content" > file.txt
+
+# ❌ WRONG: Running migration without checking if applied
+python migrate.py
+
+# ✅ CORRECT: Check first
+python -c "from db import check_migration; exit(0 if check_migration() else 1)" || python migrate.py
+```
+
+**This applies to:**
+- Installing tools/dependencies (check if already installed)
+- Creating files (check if file exists)
+- Starting services (check if already running)
+- Running migrations (check if already applied)
+- Making API calls (check if result already cached)
+
+**Why this matters:**
+- Wastes time on unnecessary operations
+- Shows lack of awareness of system state
+- Can cause issues (reinstalling, duplicates, conflicts)
+- Indicates failure to follow "verify state before acting" pattern
+
 **Full protocol details:** `.mosaic/SESSION_INIT.md`
 
 ---
