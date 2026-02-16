@@ -108,6 +108,28 @@ System operational. What would you like to work on?
 
 Before saying ANYTHING to the user, complete these steps:
 
+### Step 0: Complete Verification Checklist (MANDATORY)
+```bash
+# Read and complete the new session verification checklist
+cat .mosaic/NEW_SESSION_VERIFICATION_CHECKLIST.md
+
+# Execute ALL 8 verification steps
+# Fill out the checklist
+# Include completed report in your first response
+```
+
+**This checklist verifies:**
+- State files are current and readable
+- Project identity is understood
+- Recent work is known
+- Enforcement tools work
+- Frontend status is correct
+- Verification suite passes
+- Work queue is assessed
+- Protocols are understood
+
+**MANDATORY:** First response must include completed verification report showing 8/8 steps passed.
+
 ### Step 1: Read State Files (Silent)
 ```bash
 cat .mosaic/agent_state.json
