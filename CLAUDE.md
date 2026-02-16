@@ -91,11 +91,11 @@ Current task: [description]
 - **Approval required:** EnterPlanMode, major architecture change
 - **New request:** User just gave new task (summarize and confirm understanding)
 
-## ⚡ CHECK BEFORE ACT PROTOCOL
+## ⚡ CHECK BEFORE ACT + AVOID CODE BLOAT PROTOCOL
 
-**MANDATORY: Always verify current state before taking action**
+**MANDATORY: Always verify current state AND check for existing solutions before creating/installing**
 
-**Examples of protocol violations:**
+### Rule 1: Check if Already Present
 ```bash
 # ❌ WRONG: Installing without checking if already installed
 npx playwright install chromium
@@ -108,26 +108,77 @@ echo "content" > file.txt
 
 # ✅ CORRECT: Check first
 [ -f file.txt ] && echo "File exists" || echo "content" > file.txt
+```
 
-# ❌ WRONG: Running migration without checking if applied
-python migrate.py
+### Rule 2: Check for Similar Existing Solutions (AVOID CODE BLOAT)
+```bash
+# ❌ WRONG: Creating new validation script without checking for existing ones
+cat > validate_ps101.sh << 'EOF'
+#!/bin/bash
+# Validate PS101 architecture
+EOF
 
-# ✅ CORRECT: Check first
-python -c "from db import check_migration; exit(0 if check_migration() else 1)" || python migrate.py
+# ✅ CORRECT: Search for existing validators first
+find . -name "*validate*.sh" -o -name "*verify*.sh"
+# Found: verifiers/verify_no_ps101_regression.sh
+# → Extend existing file instead of creating new one
+
+# ❌ WRONG: Creating new test file for similar functionality
+cat > test-ps101-new-feature.js
+
+# ✅ CORRECT: Check if existing test can be extended
+ls test-ps101*.js
+# Found: test-ps101-simple-flow.js
+# → Add new test cases to existing file instead
+
+# ❌ WRONG: Adding new protocol document
+cat > .mosaic/PS101_RULES.md
+
+# ✅ CORRECT: Check if existing doc covers this
+ls .mosaic/*PS101*.md
+# Found: .mosaic/SESSION_START_PS101.md
+# → Update existing doc instead of creating duplicate
+```
+
+### Rule 3: Prefer Upgrade/Extend Over Create New
+**Before creating anything new, ask:**
+1. Does this already exist?
+2. Is there something similar that can be reused?
+3. Can I extend an existing solution instead?
+4. Will this create code bloat or duplication?
+
+**Decision tree:**
+```
+Need to add functionality?
+  ↓
+  Does exact solution exist? → Use it (no changes)
+  ↓
+  Does similar solution exist? → Extend/upgrade it
+  ↓
+  No existing solution? → Create new (document why)
 ```
 
 **This applies to:**
-- Installing tools/dependencies (check if already installed)
-- Creating files (check if file exists)
+- Installing tools/dependencies (check if already installed, check for alternatives)
+- Creating files (check if exists, check for similar files to extend)
+- Writing functions (check if similar function exists to reuse)
+- Creating documentation (check for existing docs to update)
+- Adding tests (check if existing test file can be extended)
 - Starting services (check if already running)
 - Running migrations (check if already applied)
-- Making API calls (check if result already cached)
 
 **Why this matters:**
-- Wastes time on unnecessary operations
-- Shows lack of awareness of system state
-- Can cause issues (reinstalling, duplicates, conflicts)
-- Indicates failure to follow "verify state before acting" pattern
+- **Avoids code bloat** - Prevents duplicate implementations
+- **Reduces maintenance burden** - One place to update, not many
+- **Improves discoverability** - Easier to find existing solutions
+- **Prevents conflicts** - No competing implementations
+- **Shows awareness** - Demonstrates understanding of codebase
+
+**Examples of code bloat violations:**
+- Creating `test-ps101-v3.js` when `test-ps101-simple-flow.js` exists
+- Creating `.mosaic/PS101_ARCHITECTURE.md` when `.mosaic/SESSION_START_PS101.md` exists
+- Creating `validate_deployment.sh` when `scripts/verify_deploy.sh` exists
+- Installing `jest` when `playwright` is already installed for testing
 
 **Full protocol details:** `.mosaic/SESSION_INIT.md`
 

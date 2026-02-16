@@ -15,35 +15,66 @@ If you say "deployment complete" or "all work done" without running these checks
 
 ---
 
-## CHECK BEFORE ACT PROTOCOL (MANDATORY)
+## CHECK BEFORE ACT + AVOID CODE BLOAT PROTOCOL (MANDATORY)
 
-**Before running ANY command, check if the action is needed:**
+**Before running ANY command or creating ANY file:**
 
+### Step 1: Check if action is needed
 ```bash
 # ❌ WRONG: Act without checking
 npm install
-pip install -r requirements.txt
 npx playwright install chromium
 
 # ✅ CORRECT: Check first
 npm list || npm install
-pip show requests || pip install -r requirements.txt
 npx playwright --version || npx playwright install chromium
 ```
 
-**Examples:**
+### Step 2: Check for existing similar solutions (AVOID BLOAT)
+```bash
+# ❌ WRONG: Create new file without checking for similar
+cat > validate_new_feature.sh
 
-- **Installing tools:** Check if already installed first
-- **Creating files:** Check if file exists first
-- **Running migrations:** Check if already applied first
-- **Starting services:** Check if already running first
+# ✅ CORRECT: Search for existing validators
+find . -name "*validate*.sh" -o -name "*verify*.sh"
+# If found: Extend existing file instead
+
+# ❌ WRONG: Create new test file
+cat > test-feature-v2.js
+
+# ✅ CORRECT: Check existing tests
+ls test-*.js
+# If similar exists: Add to existing test file
+
+# ❌ WRONG: Create new protocol doc
+cat > .mosaic/NEW_PROTOCOL.md
+
+# ✅ CORRECT: Check existing docs
+ls .mosaic/*.md | grep -i protocol
+# If similar exists: Update existing doc instead
+```
+
+### Step 3: Decision Tree
+```
+About to create/install something?
+  ↓
+  Does it already exist exactly? → Use it (no action)
+  ↓
+  Does something similar exist? → Extend/upgrade it
+  ↓
+  Will this duplicate functionality? → Don't create
+  ↓
+  No existing solution? → Create new + document why
+```
 
 **Why this matters:**
 
-- Wastes time on unnecessary operations
-- Shows lack of awareness of current state
-- Can cause issues (reinstalling, duplicate operations)
-- Indicates not following "verify state before acting" pattern
+- **Avoids code bloat:** Prevents duplicate implementations
+- **Reduces maintenance:** One place to update vs many
+- **Improves discoverability:** Easier to find existing solutions
+- **Prevents conflicts:** No competing implementations
+- **Shows awareness:** Demonstrates understanding of codebase
+- **Saves time:** Reusing is faster than creating new
 
 ---
 
