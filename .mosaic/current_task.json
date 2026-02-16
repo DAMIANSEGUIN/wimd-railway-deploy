@@ -1,41 +1,63 @@
 {
   "version": 1,
-  "task_id": "production-hardening-2026-01-08",
-  "objective": "Complete production hardening and validation system",
+  "task_id": "ps101-ghost-code-removal-2026-02-15",
+  "objective": "Remove PS101 ghost code and implement regression prevention",
   "status": "complete",
-  "priority": "high",
+  "priority": "critical",
   "assigned_agent": "claude_code_sonnet_4_5",
-  "created_at": "2026-01-08T16:00:00Z",
-  "updated_at": "2026-01-08T22:00:00Z",
-  "completed_at": "2026-01-09T01:30:00Z",
+  "created_at": "2026-02-15T19:00:00Z",
+  "updated_at": "2026-02-15T20:30:00Z",
+  "completed_at": "2026-02-15T20:30:00Z",
   "details": {
-    "description": "Complete Railway cleanup, implement Gate 9 production validation, fix SESSION_INIT protocol for autonomous execution, and validate production is fully operational.",
+    "description": "User concern: 'how can you test to make sure there is no chance of regression with old files or commands that have not been deleted or terminated?' Discovered TWO PS101State implementations in frontend/index.html (old 10-step + new 8-prompt). Removed ghost code and implemented 3-layer defense against regression.",
     "success_criteria": [
-      "Railway completely removed (project deleted, all references gone)",
-      "Gate 9 validates production connectivity (backend live, frontend working, URLs correct)",
-      "SESSION_INIT protocol enables autonomous execution (no permission-seeking)",
-      "All 9 gates pass on deployment",
-      "Production features verified working (auth, chat, file upload, job search)",
-      "State files accurate and up-to-date"
+      "Ghost code removed from frontend/index.html (old 10-step architecture)",
+      "Gate 13 enforcement created and integrated into pre-push hook",
+      "SESSION_START_PS101.md created as mandatory reading for future agents",
+      "Frontend E2E tests pass (38/38)",
+      "Live site verified: 'Question 1 of 8' present, 'Step 1 of 10' removed",
+      "COMPLETION_PROTOCOL.md created (mandatory checklist before claiming complete)",
+      "CLAUDE.md updated with check-before-act and anti-bloat protocols"
     ],
     "completed_tasks": [
-      "Railway project deleted by user",
-      "Railway cleanup complete (docs, config, scripts)",
-      "Gate 6 false positive fixed (HTML password fields)",
-      "Gate 9 created and tested (5/5 production checks pass)",
-      "Production verified: Render backend live, frontend accessible",
-      "State files updated to reflect current reality",
-      "SESSION_INIT protocol rewritten for autonomous execution",
-      "Gate 9 integrated into pre-push hook (.mosaic/enforcement/pre-push)"
+      "Removed 699 lines of ghost code (lines 2527-3221 in frontend/index.html)",
+      "Removed old PS101 methods: getActiveExperiment(), getCurrentStep(), goToStep()",
+      "Removed old nested prompt structure (step.prompts arrays)",
+      "Removed experiment components (Step 6-9 from old architecture)",
+      "Created .mosaic/enforcement/gate_13_no_ps101_ghosts.sh",
+      "Integrated Gate 13 into .git/hooks/pre-push (BLOCKING)",
+      "Created .mosaic/SESSION_START_PS101.md (mandatory agent reading)",
+      "Created verifiers/verify_no_ps101_regression.sh (12-point check)",
+      "Created .mosaic/COMPLETION_PROTOCOL.md (completion checklist)",
+      "Updated CLAUDE.md with check-before-act protocol",
+      "Updated CLAUDE.md with anti-bloat protocol (avoid code duplication)",
+      "Verified frontend: node test-ps101-simple-flow.js (38/38 PASSED)",
+      "Verified live site: curl confirms 'Question 1 of 8', 8 dots, no 'Step 1 of 10'",
+      "Verified Gate 13: No ghost code violations detected",
+      "Committed all changes (commits: 00a86f6, f6f75b3, e6b6998)",
+      "Pushed to production successfully"
     ],
     "in_progress": [],
     "dependencies": [],
     "user_decisions": {
-      "D1_relative_paths_only": "YES",
-      "D2_archive_old_docs": "YES",
-      "D3_mosaic_json_canonical": "YES",
-      "D4_deployment_strategy": "Render",
-      "D5_railway_project_delete": "YES - COMPLETED"
+      "D9_frontend_testing_mandatory": "YES - E2E tests required before claiming completion",
+      "D10_check_before_act": "YES - Always verify state before action, avoid code bloat"
+    },
+    "artifacts_created": [
+      ".mosaic/enforcement/gate_13_no_ps101_ghosts.sh",
+      ".mosaic/SESSION_START_PS101.md",
+      ".mosaic/COMPLETION_PROTOCOL.md",
+      "verifiers/verify_no_ps101_regression.sh",
+      ".receipts/architectural_correction_complete_2026-02-15.receipt",
+      "docs/GATE_12_CORRECTION_NOTE.md"
+    ],
+    "verification_results": {
+      "frontend_e2e": "38/38 PASSED (100%)",
+      "gate_13": "PASSED (0 violations)",
+      "live_site_curl": "VERIFIED (Question 1 of 8 present)",
+      "old_pattern_removed": "VERIFIED (Step 1 of 10 not found)",
+      "progress_dots": "VERIFIED (8 dots counted)",
+      "code_reduction": "3788 → 3089 lines (-699 lines)"
     }
   }
 }
