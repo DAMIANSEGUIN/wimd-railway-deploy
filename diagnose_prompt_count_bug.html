@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PS101 State Diagnostic</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+    .section { margin: 20px 0; border: 1px solid #444; padding: 15px; }
+    .error { color: #f48771; }
+    .warning { color: #dcdcaa; }
+    .success { color: #4ec9b0; }
+    button { padding: 10px; margin: 5px; background: #0e639c; color: white; border: none; cursor: pointer; }
+    button:hover { background: #1177bb; }
+    pre { background: #252526; padding: 10px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>PS101 State Diagnostic Tool</h1>
+
+  <div class="section">
+    <h2>Current localStorage State</h2>
+    <button onclick="showState()">Show Current State</button>
+    <button onclick="clearState()">Clear All State</button>
+    <pre id="current-state">Click "Show Current State"</pre>
+  </div>
+
+  <div class="section">
+    <h2>Inject Corrupted State (Test Scenarios)</h2>
+    <button onclick="injectV1State()">Inject Old V1 State (4 steps)</button>
+    <button onclick="injectInvalidPromptIndex()">Inject Out-of-Bounds promptIndex</button>
+    <button onclick="injectMismatchedSteps()">Inject Mismatched Step Structure</button>
+  </div>
+
+  <div class="section">
+    <h2>Validation Results</h2>
+    <button onclick="runValidation()">Run Validation</button>
+    <pre id="validation-results">Click "Run Validation"</pre>
+  </div>
+
+  <div class="section">
+    <h2>Expected vs Actual</h2>
+    <pre id="comparison">
+Expected PS101_STEPS structure:
+- Step 1: 6 prompts
+- Step 2: 4 prompts
+- Step 3: 3 prompts
+- Step 4: 4 prompts
+- Step 5: 4 prompts
+- Step 6: 3 prompts
+- Step 7: 2 prompts
+- Step 8: 2 prompts
+- Step 9: 2 prompts
+- Step 10: 4 prompts
+    </pre>
+  </div>
+
+  <script>
+    function showState() {
+      const v2 = localStorage.getItem('ps101_v2_state');
+      const v1 = localStorage.getItem('ps101_state');
+
+      let output = '';
+
+      if (v2) {
+        try {
+          const parsed = JSON.parse(v2);
+          output += 'PS101 v2 State:\n';
+          output += JSON.stringify(parsed, null, 2);
+          output += '\n\n';
+
+          // Check for issues
+          output += 'VALIDATION:\n';
+          output += `- currentStep: ${parsed.currentStep} (valid: 1-10)\n`;
+          output += `- currentPromptIndex: ${parsed.currentPromptIndex}\n`;
+
+          // Check if promptIndex is valid for current step
+          const stepPromptCounts = [6, 4, 3, 4, 4, 3, 2, 2, 2, 4];
+          const expectedPrompts = stepPromptCounts[parsed.currentStep - 1];
+          output += `- Expected prompts for Step ${parsed.currentStep}: ${expectedPrompts}\n`;
+
+          if (parsed.currentPromptIndex >= expectedPrompts) {
+            output += `<span class="error">❌ ERROR: currentPromptIndex (${parsed.currentPromptIndex}) >= expected prompts (${expectedPrompts})</span>\n`;
+          } else {
+            output += `<span class="success">✓ currentPromptIndex is valid</span>\n`;
+          }
+
+        } catch (e) {
+          output += '<span class="error">ERROR parsing v2 state: ' + e.message + '</span>\n';
+        }
+      } else {
+        output += 'No v2 state found.\n\n';
+      }
+
+      if (v1) {
+        output += 'Old PS101 v1 State (should be migrated):\n';
+        output += v1;
+      }
+
+      if (!v2 && !v1) {
+        output = '<span class="warning">No localStorage state found. User has not started PS101.</span>';
+      }
+
+      document.getElementById('current-state').innerHTML = output;
+    }
+
+    function clearState() {
+      localStorage.removeItem('ps101_v2_state');
+      localStorage.removeItem('ps101_state');
+      document.getElementById('current-state').innerHTML = '<span class="success">✓ All state cleared</span>';
+    }
+
+    function injectV1State() {
+      const v1State = {
+        currentStep: 2,
+        currentPromptIndex: 3, // This would be valid for old 4-step structure
+        answers: {
+          "1": "Old answer to step 1",
+          "2": "Old answer to step 2"
+        },
+        startedAt: new Date().toISOString(),
+        completed: false
+      };
+
+      localStorage.setItem('ps101_state', JSON.stringify(v1State));
+      document.getElementById('current-state').innerHTML = '<span class="warning">✓ Injected v1 state. Reload page to trigger migration.</span>';
+    }
+
+    function injectInvalidPromptIndex() {
+      const invalidState = {
+        currentStep: 1,
+        currentPromptIndex: 10, // Step 1 only has 6 prompts!
+        steps: {
+          "1": {
+            prompts: [
+              { response: "Test answer", completedAt: new Date().toISOString() }
+            ]
+          }
+        },
+        experiments: [],
+        startedAt: new Date().toISOString(),
+        completed: false
+      };
+
+      localStorage.setItem('ps101_v2_state', JSON.stringify(invalidState));
+      document.getElementById('current-state').innerHTML = '<span class="error">✓ Injected INVALID state (promptIndex out of bounds). Check behavior.</span>';
+    }
+
+    function injectMismatchedSteps() {
+      const mismatchedState = {
+        currentStep: 3,
+        currentPromptIndex: 0,
+        steps: {
+          "1": {
+            prompts: [
+              { response: "Answer 1", completedAt: new Date().toISOString() },
+              { response: "Answer 2", completedAt: new Date().toISOString() },
+              { response: "Answer 3", completedAt: new Date().toISOString() },
+              { response: "Answer 4", completedAt: new Date().toISOString() },
+              { response: "Answer 5", completedAt: new Date().toISOString() },
+              { response: "Answer 6", completedAt: new Date().toISOString() },
+              { response: "Answer 7", completedAt: new Date().toISOString() }, // Extra prompt!
+              { response: "Answer 8", completedAt: new Date().toISOString() }  // Extra prompt!
+            ]
+          }
+        },
+        experiments: [],
+        startedAt: new Date().toISOString(),
+        completed: false
+      };
+
+      localStorage.setItem('ps101_v2_state', JSON.stringify(mismatchedState));
+      document.getElementById('current-state').innerHTML = '<span class="error">✓ Injected MISMATCHED state (Step 1 has 8 answers but should have 6). Check behavior.</span>';
+    }
+
+    function runValidation() {
+      showState(); // Show current state first
+
+      const v2 = localStorage.getItem('ps101_v2_state');
+      if (!v2) {
+        document.getElementById('validation-results').innerHTML = '<span class="warning">No state to validate</span>';
+        return;
+      }
+
+      try {
+        const state = JSON.parse(v2);
+        const stepPromptCounts = [6, 4, 3, 4, 4, 3, 2, 2, 2, 4];
+
+        let results = 'VALIDATION REPORT:\n\n';
+
+        // Check currentStep
+        if (state.currentStep < 1 || state.currentStep > 10) {
+          results += `<span class="error">❌ Invalid currentStep: ${state.currentStep}</span>\n`;
+        } else {
+          results += `<span class="success">✓ currentStep valid: ${state.currentStep}</span>\n`;
+        }
+
+        // Check currentPromptIndex
+        const expectedPrompts = stepPromptCounts[state.currentStep - 1];
+        if (state.currentPromptIndex >= expectedPrompts) {
+          results += `<span class="error">❌ Invalid currentPromptIndex: ${state.currentPromptIndex} (max: ${expectedPrompts - 1})</span>\n`;
+        } else {
+          results += `<span class="success">✓ currentPromptIndex valid: ${state.currentPromptIndex}</span>\n`;
+        }
+
+        // Check steps structure
+        results += '\nSTEP DATA VALIDATION:\n';
+        Object.keys(state.steps || {}).forEach(stepNum => {
+          const stepInt = parseInt(stepNum);
+          const stepData = state.steps[stepNum];
+          const expectedCount = stepPromptCounts[stepInt - 1];
+          const actualCount = stepData.prompts ? stepData.prompts.length : 0;
+
+          if (actualCount > expectedCount) {
+            results += `<span class="warning">⚠️  Step ${stepNum}: ${actualCount} answers (expected ${expectedCount}) - EXTRA ANSWERS</span>\n`;
+          } else if (actualCount < expectedCount) {
+            results += `<span class="warning">⚠️  Step ${stepNum}: ${actualCount} answers (expected ${expectedCount}) - INCOMPLETE</span>\n`;
+          } else {
+            results += `<span class="success">✓ Step ${stepNum}: ${actualCount} answers (correct)</span>\n`;
+          }
+        });
+
+        document.getElementById('validation-results').innerHTML = results;
+
+      } catch (e) {
+        document.getElementById('validation-results').innerHTML = '<span class="error">ERROR: ' + e.message + '</span>';
+      }
+    }
+
+    // Auto-run on load
+    window.addEventListener('load', () => {
+      showState();
+    });
+  </script>
+</body>
+</html>

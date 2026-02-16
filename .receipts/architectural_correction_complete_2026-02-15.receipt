@@ -1,0 +1,206 @@
+ARCHITECTURAL CORRECTION DEPLOYMENT RECEIPT
+============================================
+
+Date: 2026-02-15
+Session: Continuation from previous context
+Operator: Claude Sonnet 4.5
+
+==================================================
+CRITICAL ISSUE: 2-MONTH ARCHITECTURAL ERROR
+==================================================
+
+SYMPTOM:
+- User reported PS101 flow showing "Step 1 of 10" → "Prompt 3 of 6"
+- User stated: "this is definitely NOT correct"
+- User: "I have been saying this for at least 2 months"
+
+ROOT CAUSE IDENTIFIED:
+- Documentation (PS101_CANONICAL_SPEC_V2.md) specified 10 steps with nested prompts
+- User intent: 8 sequential prompts (simple linear flow)
+- Documentation was authoritative but WRONG for 2+ months
+- Source of truth should have been frontend/data/prompts.ps101.json (8 prompts)
+
+PREVIOUS WORK (from earlier session):
+✅ Created PS101_CANONICAL_SPEC_V3_CORRECTED.md (new canonical spec)
+✅ Deprecated PS101_CANONICAL_SPEC_V2.md
+✅ Created frontend/ps101_simple.js (new implementation)
+✅ Modified frontend/index.html (embedded new code inline)
+✅ Committed as ad6edb8: "ARCHITECTURAL CORRECTION"
+
+==================================================
+DEPLOYMENT BLOCKER DISCOVERED (this session)
+==================================================
+
+LIVE SITE VERIFICATION FAILURE:
+- Commit ad6edb8 was pushed to origin/main
+- BUT production site still showed OLD 10-step architecture
+- Verification: curl https://whatismydelta.com showed "Step 1 of 10"
+
+INVESTIGATION:
+1. Checked if commit was pushed → YES (ad6edb8 on origin/main)
+2. Checked Netlify status → configured correctly
+3. Attempted manual deployment → BUILD FAILED
+
+BLOCKER IDENTIFIED:
+- netlify.toml build command had enforcement gate
+- Enforcement checked for: /Step.*1.*of.*10/i pattern
+- Commit ad6edb8 removed this pattern (changed to "Question 1 of 8")
+- BUT hardcoded HTML template still had "Step 1 of 10"
+- Result: Deployment blocked by enforcement gate
+
+ROOT CAUSE OF BLOCKER:
+- Commit ad6edb8 embedded new JavaScript inline
+- BUT didn't update the hardcoded HTML template:
+  - Step label: Still said "Step 1 of 10: Problem Identification..."
+  - Progress dots: Still showed 10 dots with old step titles
+- Netlify enforcement correctly blocked incomplete migration
+
+==================================================
+RESOLUTION (this session)
+==================================================
+
+COMMIT 1: d04cc66 (Fix enforcement gate)
+- Updated netlify.toml enforcement patterns:
+  - Old: /Step.*1.*of.*10/i
+  - New: /Question.*1.*of.*8/i
+  - Also: /ps101_simple\.js/i → /ps101_simple_state/i (check for localStorage key)
+- Attempted deployment → STILL FAILED (HTML template not updated)
+
+COMMIT 2: 7d7d012 (Fix HTML template)
+- Updated hardcoded step label:
+  - Before: "Step 1 of 10: Problem Identification and Delta Analysis"
+  - After: "Question 1 of 8"
+- Updated progress dots:
+  - Removed 2 dots (10 → 8)
+  - Simplified labels (removed old step titles)
+  - Result: 8 clean dots labeled 1-8
+- Updated netlify.toml enforcement to match actual file content
+
+DEPLOYMENT:
+- Command: netlify deploy --prod --dir=frontend
+- Build: SUCCESS (enforcement gate passed)
+- Deploy: SUCCESS
+- URL: https://whatismydelta.com
+- Unique deploy: https://699249de4cfd8891d776a077--resonant-crostata-90b706.netlify.app
+
+==================================================
+VERIFICATION
+==================================================
+
+✅ Production site verification:
+   curl https://whatismydelta.com | grep "Question 1 of 8"
+   Result: ✅ Found
+
+✅ Old code removed:
+   curl https://whatismydelta.com | grep -c "Step 1 of 10"
+   Result: 0 (removed)
+
+✅ New state structure:
+   curl https://whatismydelta.com | grep "ps101_simple_state"
+   Result: ✅ Found
+
+✅ Progress dots:
+   curl https://whatismydelta.com | grep progress-dots | grep -c "dot"
+   Result: 8 dots present
+
+✅ No PS101_STEPS array:
+   curl https://whatismydelta.com | grep -c "PS101_STEPS"
+   Result: 0 (old complex structure removed)
+
+==================================================
+USER EXPERIENCE CHANGE
+==================================================
+
+BEFORE (incorrect - 2+ months):
+- UI: "Step 1 of 10" → "Prompt 3 of 6" (confusing nested navigation)
+- Total questions: 30+ (10 steps × 3-6 prompts each)
+- Progress: 10 dots
+- Codebase: 1000+ lines of complex PS101 code
+- localStorage: ps101_v2_state with nested structure
+
+AFTER (corrected):
+- UI: "Question 1 of 8" → "Question 2 of 8" (simple linear progression)
+- Total questions: 8 (exactly)
+- Progress: 8 dots
+- Codebase: ~300 lines of simple PS101 code
+- localStorage: ps101_simple_state with flat structure
+
+==================================================
+FILES CHANGED (cumulative)
+==================================================
+
+Created:
+- docs/PS101_CANONICAL_SPEC_V3_CORRECTED.md (new canonical spec)
+- docs/ARCHITECTURE_CORRECTION_2026_02_15.md (correction documentation)
+- frontend/ps101_simple.js (new implementation, embedded inline)
+- .mosaic/enforcement/GATE_12_CORRECTION_NOTE.md (gate update note)
+- .receipts/architectural_correction_complete_2026-02-15.receipt (this file)
+
+Modified:
+- frontend/index.html (embedded new JS, updated HTML template, -723 lines)
+- netlify.toml (updated enforcement gate patterns)
+
+Deprecated:
+- docs/PS101_CANONICAL_SPEC_V2.md → docs/DEPRECATED_PS101_CANONICAL_SPEC_V2.md
+
+==================================================
+GIT COMMITS
+==================================================
+
+ad6edb8: "ARCHITECTURAL CORRECTION: Replace complex 10-step PS101 with simple 8-prompt flow"
+- Created new architecture files
+- Embedded ps101_simple.js code inline in index.html
+- BUT missed updating hardcoded HTML template
+
+d04cc66: "FIX: Update Netlify enforcement gate for PS101 v3 (8-prompt architecture)"
+- Updated netlify.toml enforcement patterns
+- Attempted to unblock deployment
+- BUT HTML template still not updated
+
+7d7d012: "CRITICAL FIX: Update HTML template for PS101 v3 8-prompt architecture"
+- Updated hardcoded step label to "Question 1 of 8"
+- Updated progress dots (10 → 8)
+- Fixed netlify.toml enforcement to match actual patterns
+- ✅ DEPLOYMENT SUCCESSFUL
+
+==================================================
+LESSONS LEARNED
+==================================================
+
+1. **Listen to user feedback**
+   - User reported this wrong for 2+ months
+   - Should have questioned documentation sooner
+
+2. **Verify deployment, not just push**
+   - Commit pushed ≠ deployment succeeded
+   - Always curl live site to verify
+
+3. **Test enforcement gates**
+   - Enforcement blocked deployment silently
+   - Should have tested build locally first
+
+4. **Complete all template updates**
+   - JavaScript change without HTML update = incomplete migration
+   - Hardcoded labels must match dynamic behavior
+
+5. **Simple is better**
+   - 300 lines vs 1000+ lines
+   - 8 questions vs 30+ questions
+   - User explicitly said 10-step nested structure was "crazy making"
+
+==================================================
+STATUS
+==================================================
+
+✅ COMPLETE - PS101 v3 (8-prompt simple architecture) deployed to production
+✅ User intent finally implemented after 2+ months
+✅ All verification checks pass
+✅ Deployment blocker resolved
+✅ Session documented
+
+Runtime authority maintained:
+- All deployments verified by curl checks
+- Exit codes verified
+- No AI narrative accepted without verification
+
+END OF RECEIPT

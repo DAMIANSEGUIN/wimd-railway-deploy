@@ -2512,6 +2512,10 @@ async function askCoach(prompt) {
       window.__updateAuthCTAVisibility = updateAuthCTAVisibility;
       console.log('[INIT] Phase 4 complete');
 
+      // Phase 5: PS101 Event Listeners (deferred to end of function)
+      console.log('[INIT] Phase 5: Setting up PS101 event listeners...');
+      initPS101EventListeners();
+      console.log('[INIT] Phase 5 complete');
 
       console.log('[INIT] Application initialization complete');
     } catch(error) {
@@ -2542,15 +2546,15 @@ async function askCoach(prompt) {
 
     // Wait for PS101 to initialize
     setTimeout(() => {
-      if (window.PS101State && window.PS101State.answers && window.PS101State.answers.some(a => a.trim().length > 0)) {
-        // User has progress - show current prompt
-        if (window.renderCurrentPrompt) {
-          window.renderCurrentPrompt();
+      if (window.PS101State && window.PS101State.steps && Object.keys(window.PS101State.steps).length > 0 && !window.PS101State.completed) {
+        // User has progress - show current step
+        if (window.renderCurrentStep) {
+          window.renderCurrentStep();
           if (flow) flow.scrollIntoView({ behavior: 'smooth' });
         }
-      } else if (window.renderWelcome) {
+      } else if (window.renderWelcomeScreen) {
         // New user - show welcome screen
-        window.renderWelcome();
+        window.renderWelcomeScreen();
         if (welcomeScreen) welcomeScreen.scrollIntoView({ behavior: 'smooth' });
       } else {
         // Fallback: scroll to PS101 module

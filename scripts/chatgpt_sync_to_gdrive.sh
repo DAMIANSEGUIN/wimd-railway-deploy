@@ -3,11 +3,13 @@ set -euo pipefail
 
 export ZSH_DISABLE_COMPFIX=true
 
-LOCAL_ROOT="$HOME/AI_Workspace/WIMD-Deploy-Project"
+LOCAL_ROOT="$HOME/WIMD-Deploy-Project"
 REMOTE_ROOT="gdrive:WIMD-Deploy-Project"
 
-if ! command -v rclone >/dev/null 2>&1; then
-  echo "ERROR: rclone is not installed or not on PATH."
+RCLONE_BIN="/Users/damianseguin/coachvox_tools/bin/rclone"
+
+if [ ! -f "$RCLONE_BIN" ]; then
+  echo "ERROR: rclone not found at $RCLONE_BIN"
   exit 1
 fi
 
@@ -21,12 +23,15 @@ echo "  From: $LOCAL_ROOT"
 echo "  To:   $REMOTE_ROOT"
 echo
 
-rclone sync "$LOCAL_ROOT" "$REMOTE_ROOT" \
+"$RCLONE_BIN" sync "$LOCAL_ROOT" "$REMOTE_ROOT" \
   --verbose \
   --copy-links \
   --checksum \
   --exclude "node_modules/**" \
-  --exclude ".git/**"
+  --exclude ".git/**" \
+  --exclude ".venv/**" \
+  --exclude "__pycache__/**" \
+  --exclude "*.pyc"
 
 echo
 echo "Sync complete. All Mosaic files should now be present in:"

@@ -1,0 +1,32 @@
+DEPRECATION DELETION RECEIPT
+============================
+
+Timestamp: 2026-02-15T15:30:00Z
+Operator: Claude Sonnet 4.5
+Task: Remove WIMD-Railway-Deploy-Project deprecated artifacts
+
+VERIFICATION COMMAND:
+  /Users/damianseguin/WIMD-Deploy-Project/verifiers/verify_deprecation_deletion.sh
+
+EXIT CODE: 0
+STATUS: PASS
+
+ARTIFACTS DELETED (8):
+  1. /Users/damianseguin/Downloads/AI_Workspace/WIMD-Railway-Deploy-Project
+  2. /Users/damianseguin/Backups/WIMD-Railway-Deploy-Project_2025-11-11
+  3. /Users/damianseguin/Backups/WIMD-Railway-Deploy-Project_2025-11-12_ps101_nav
+  4. /Users/damianseguin/Backups/WIMD-Railway-Deploy-Project_2025-11-12_113700
+  5. /Users/damianseguin/Backups/WIMD-Railway-Deploy-Project_2025-11-12_chat_session
+  6. /Users/damianseguin/.cursor/projects/Users-damianseguin-AI-Workspace-WIMD-Railway-Deploy-Project
+  7. /Users/damianseguin/.claude/projects/-Users-damianseguin-AI-Workspace-WIMD-Railway-Deploy-Project
+  8. /Users/damianseguin/.claude_backup_20260127/projects/-Users-damianseguin-AI-Workspace-WIMD-Railway-Deploy-Project
+
+PRESERVED:
+  /Users/damianseguin/WIMD-Deploy-Project (active project)
+
+DISK SPACE RECLAIMED: ~8KB (artifacts were mostly empty)
+
+RUNTIME EVIDENCE:
+  All paths verified non-existent after deletion
+  Verifier script returned exit code 0
+  No errors during removal operations
