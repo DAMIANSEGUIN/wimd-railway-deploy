@@ -54,10 +54,16 @@ ls .mosaic/*.md | grep -i protocol
 # If similar exists: Update existing doc instead
 ```
 
-### Step 3: Decision Tree
+### Step 3: Decision Tree with Mandatory Verification
 ```
-About to create/install something?
+About to claim something is missing?
   ↓
+  RUN: ./.mosaic/enforcement/pre_response_check.sh "entity_name"
+  ↓
+  Exit code 1 (entity exists)? → Check filesystem, update claim
+  ↓
+  Exit code 0 (truly missing)? → Proceed with decision tree ↓
+
   Does it already exist exactly? → Use it (no action)
   ↓
   Does something similar exist? → Extend/upgrade it
@@ -66,6 +72,12 @@ About to create/install something?
   ↓
   No existing solution? → Create new + document why
 ```
+
+**Enforcement:** Before claiming "X is missing", agent MUST:
+1. Run: `./.mosaic/enforcement/pre_response_check.sh "X"`
+2. Show the output in response
+3. If exit 1 (exists): Read the found file, update claim
+4. If exit 0 (missing): Proceed with gap analysis
 
 **Why this matters:**
 

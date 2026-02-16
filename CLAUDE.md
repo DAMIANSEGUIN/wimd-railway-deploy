@@ -111,6 +111,22 @@ echo "content" > file.txt
 ```
 
 ### Rule 2: Check for Similar Existing Solutions (AVOID CODE BLOAT)
+
+**MANDATORY BEFORE CLAIMING GAPS:**
+```bash
+# Before saying "X is missing" or "we need to create X", run:
+./.mosaic/enforcement/pre_response_check.sh "entity_name"
+
+# If exit code 1: Entity exists - check filesystem and update claim
+# If exit code 0: Entity truly missing - proceed with claim
+
+# Example:
+./.mosaic/enforcement/pre_response_check.sh "master_verifier"
+# → Checks for verify_all.sh, verify.sh in filesystem
+# → Blocks response if found, allows if missing
+```
+
+**Pattern matching example:**
 ```bash
 # ❌ WRONG: Creating new validation script without checking for existing ones
 cat > validate_ps101.sh << 'EOF'
@@ -118,8 +134,8 @@ cat > validate_ps101.sh << 'EOF'
 # Validate PS101 architecture
 EOF
 
-# ✅ CORRECT: Search for existing validators first
-find . -name "*validate*.sh" -o -name "*verify*.sh"
+# ✅ CORRECT: Run pre-response check first
+./.mosaic/enforcement/pre_response_check.sh "validation" "validate" "verify"
 # Found: verifiers/verify_no_ps101_regression.sh
 # → Extend existing file instead of creating new one
 
