@@ -286,6 +286,16 @@ const { chromium } = require('playwright');
       process.exit(1);
     } else {
       console.log('✅ ALL TESTS PASSED\n');
+      const receipt = {
+        timestamp_utc: Math.floor(Date.now() / 1000),
+        test_name: 'ps101-simple-flow-v3',
+        target_url: 'https://whatismydelta.com',
+        tests_passed: testsPassed,
+        tests_failed: testsFailed,
+        exit_code: 0
+      };
+      require('fs').writeFileSync('/tmp/e2e_receipt.json', JSON.stringify(receipt, null, 2));
+      console.log('📋 E2E receipt written: /tmp/e2e_receipt.json\n');
       process.exit(0);
     }
   }
