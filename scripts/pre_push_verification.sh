@@ -159,45 +159,40 @@ echo ""
 
 PLAYWRIGHT_ERRORS=0
 
-# Test 1: PS101 Complete Flow
-if [ -f "test-ps101-complete-flow.js" ]; then
-  echo "  🧪 Test 1: PS101 Complete Flow (Steps 1-10)"
+# Use system Chrome if Playwright bundled browsers are not installed
+CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+if [ -f "$CHROME_PATH" ]; then
+  export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="$CHROME_PATH"
+fi
+
+# Test 1: PS101 Simple Flow (8-prompt architecture — canonical per SESSION_START_PS101.md)
+if [ -f "test-ps101-simple-flow.js" ]; then
+  echo "  🧪 Test 1: PS101 Simple Flow (8 prompts)"
   echo "  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   # Run test with node (tests use raw playwright API, not @playwright/test format)
-  if node test-ps101-complete-flow.js 2>&1 | tee /tmp/ps101-flow-test.log; then
+  if node test-ps101-simple-flow.js 2>&1 | tee /tmp/ps101-flow-test.log; then
     echo ""
-    echo "  ✅ PS101 Complete Flow: PASSED"
+    echo "  ✅ PS101 Simple Flow: PASSED"
   else
     echo ""
-    echo "  ❌ PS101 Complete Flow: FAILED"
+    echo "  ❌ PS101 Simple Flow: FAILED"
     echo "  📋 Details in: /tmp/ps101-flow-test.log"
     PLAYWRIGHT_ERRORS=$((PLAYWRIGHT_ERRORS + 1))
     ERRORS=$((ERRORS + 1))
   fi
 else
-  echo "  ❌ test-ps101-complete-flow.js not found"
+  echo "  ❌ test-ps101-simple-flow.js not found"
   echo "  🚨 CRITICAL: Core E2E test missing!"
   ERRORS=$((ERRORS + 1))
 fi
 
 echo ""
 
-# Test 2: PS101 Step 6 Validation
+# Test 2: PS101 Step 6 Validation (deprecated — Step 6 was part of old 10-step architecture)
 if [ -f "test-ps101-step6-validation.js" ]; then
-  echo "  🧪 Test 2: PS101 Step 6 Validation (Experiment Design)"
-  echo "  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-  if node test-ps101-step6-validation.js 2>&1 | tee /tmp/ps101-step6-test.log; then
-    echo ""
-    echo "  ✅ Step 6 Validation: PASSED"
-  else
-    echo ""
-    echo "  ❌ Step 6 Validation: FAILED"
-    echo "  📋 Details in: /tmp/ps101-step6-test.log"
-    PLAYWRIGHT_ERRORS=$((PLAYWRIGHT_ERRORS + 1))
-    ERRORS=$((ERRORS + 1))
-  fi
+  echo "  ℹ️  Test 2: PS101 Step 6 (old 10-step test — skipped, deprecated architecture)"
+  echo ""
 else
   echo "  ⚠️  test-ps101-step6-validation.js not found (optional test)"
   WARNINGS=$((WARNINGS + 1))

@@ -31,7 +31,7 @@ echo "📤 Force pushing to origin..."
 git push --force origin HEAD:main
 
 echo "🌐 Redeploying to Netlify..."
-netlify deploy --prod --site bb594f69-4d23-4817-b7de-dadb8b4db874 --dir mosaic_ui
+netlify deploy --prod --site bb594f69-4d23-4817-b7de-dadb8b4db874 --dir frontend
 
 echo ""
 echo "✅ Rollback complete!"

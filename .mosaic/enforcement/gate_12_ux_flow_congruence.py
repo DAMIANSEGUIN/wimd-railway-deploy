@@ -52,8 +52,8 @@ class UXFlowAnalyzer:
         }
 
         # 1. Find ALL PS101_STEPS definitions in frontend
+        # mosaic_ui/ moved to deprecated/ on 2026-02-17 — not scanned
         frontend_files = [
-            self.repo_root / 'mosaic_ui' / 'index.html',
             self.repo_root / 'frontend' / 'index.html'
         ]
 
@@ -123,6 +123,14 @@ class UXFlowAnalyzer:
         definitions = flow_data['frontend_definitions']
 
         if len(definitions) == 0:
+            # 8-prompt architecture (v3, canonical per SESSION_START_PS101.md 2026-02-15)
+            # does not use PS101_STEPS. Check for v3 pattern instead.
+            frontend_file = self.repo_root / 'frontend' / 'index.html'
+            if frontend_file.exists():
+                content = frontend_file.read_text()
+                if 'ps101_simple_state' in content and 'Question 1 of 8' in content:
+                    print("  ✅ PS101: 8-prompt v3 architecture detected (no PS101_STEPS — correct)")
+                    return
             self.violations.append(
                 "❌ PS101: No PS101_STEPS definitions found in frontend files"
             )
