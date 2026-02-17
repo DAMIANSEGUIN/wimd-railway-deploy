@@ -164,8 +164,8 @@ if [ -f "test-ps101-complete-flow.js" ]; then
   echo "  🧪 Test 1: PS101 Complete Flow (Steps 1-10)"
   echo "  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-  # Run test with detailed output
-  if npx playwright test test-ps101-complete-flow.js --reporter=list --workers=1 2>&1 | tee /tmp/ps101-flow-test.log; then
+  # Run test with node (tests use raw playwright API, not @playwright/test format)
+  if node test-ps101-complete-flow.js 2>&1 | tee /tmp/ps101-flow-test.log; then
     echo ""
     echo "  ✅ PS101 Complete Flow: PASSED"
   else
@@ -188,7 +188,7 @@ if [ -f "test-ps101-step6-validation.js" ]; then
   echo "  🧪 Test 2: PS101 Step 6 Validation (Experiment Design)"
   echo "  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-  if npx playwright test test-ps101-step6-validation.js --reporter=list --workers=1 2>&1 | tee /tmp/ps101-step6-test.log; then
+  if node test-ps101-step6-validation.js 2>&1 | tee /tmp/ps101-step6-test.log; then
     echo ""
     echo "  ✅ Step 6 Validation: PASSED"
   else
