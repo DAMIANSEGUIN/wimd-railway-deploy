@@ -1474,19 +1474,26 @@ async def register_user(payload: UserRegister):
             )
             conn.commit()
 
-    # Create new user with subscription info
-    user_id = create_user(
-        payload.email, payload.password, subscription_tier, subscription_status, discount_code_used
-    )
+    # Hash password before storing
+    try:
+        import bcrypt
+        password_hash = bcrypt.hashpw(payload.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    except ImportError:
+        password_hash = payload.password  # fallback (not secure, logged)
+        print("⚠️ bcrypt not available - storing plaintext password")
+
+    # Create new user (storage.py create_user only accepts email + password_hash)
+    user_id = create_user(payload.email, password_hash)
+    if not user_id:
+        raise HTTPException(status_code=400, detail="User already exists")
     user = get_user_by_id(user_id)
 
     return UserResponse(
-        user_id=user["user_id"],
+        user_id=user["id"],
         email=user["email"],
-        created_at=user["created_at"],
-        last_login=user["last_login"],
-        subscription_tier=user.get("subscription_tier"),
-        subscription_status=user.get("subscription_status"),
+        created_at=str(user["created_at"]),
+        last_login=None,
+        subscription_tier=subscription_tier,
     )
 
 
@@ -1494,16 +1501,18 @@ async def register_user(payload: UserRegister):
 async def login_user(payload: UserLogin):
     """Login user and return user data"""
     payload.email = payload.email.strip()
-    user_id = authenticate_user(payload.email, payload.password)
-    if not user_id:
+    # authenticate_user returns a dict {user_id, email, created_at} or None
+    auth_result = authenticate_user(payload.email, payload.password)
+    if not auth_result:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
+    user_id = auth_result["user_id"]
     user = get_user_by_id(user_id)
     return UserResponse(
-        user_id=user["user_id"],
+        user_id=user["id"],
         email=user["email"],
-        created_at=user["created_at"],
-        last_login=user["last_login"],
+        created_at=str(user["created_at"]),
+        last_login=None,
     )
 
 
@@ -1515,10 +1524,10 @@ async def get_current_user(user_id: str = Header(..., alias="X-User-ID")):
         raise HTTPException(status_code=404, detail="User not found")
 
     return UserResponse(
-        user_id=user["user_id"],
+        user_id=user["id"],
         email=user["email"],
-        created_at=user["created_at"],
-        last_login=user["last_login"],
+        created_at=str(user["created_at"]),
+        last_login=None,
     )
 
 
