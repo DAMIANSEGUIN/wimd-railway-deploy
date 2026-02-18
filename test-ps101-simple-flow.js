@@ -8,7 +8,11 @@ const { chromium } = require('playwright');
   console.log('Testing 8-prompt linear progression at: https://whatismydelta.com');
   console.log('=' .repeat(70) + '\n');
 
-  const browser = await chromium.launch({ headless: false });
+  const launchOptions = { headless: false };
+  if (process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH) {
+    launchOptions.executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+  }
+  const browser = await chromium.launch(launchOptions);
   const context = await browser.newContext({
     viewport: { width: 1280, height: 720 }
   });
