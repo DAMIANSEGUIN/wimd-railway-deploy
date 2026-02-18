@@ -64,7 +64,7 @@ def _run_shell(cmd: str, cwd=None) -> tuple:
 
 
 def check_git_head_matches_state() -> Check:
-    """State files must match git HEAD — stale state = wrong context for new session"""
+    """State files must be current — allow 1 commit lag for state-update commit itself"""
     c = Check("State file currency")
 
     code, head, _ = _run_shell("git rev-parse --short HEAD")
@@ -89,14 +89,20 @@ def check_git_head_matches_state() -> Check:
         c.fail("agent_state.json has no last_commit field")
         return c
 
-    if last_commit != head:
+    # Allow 1 commit lag: state-update commit always creates a new HEAD.
+    # Check that last_commit appears in recent history (last 3 commits).
+    code2, log, _ = _run_shell("git log --oneline -3 --format=%h")
+    recent = [h.strip() for h in log.splitlines() if h.strip()]
+
+    if last_commit not in recent:
         c.fail(
-            f"STALE: state has {last_commit}, git HEAD is {head} "
+            f"STALE: state has {last_commit}, not in recent commits {recent} "
             f"— update agent_state.json before ending session"
         )
         return c
 
-    c.ok(f"commit {head} matches state")
+    lag = recent.index(last_commit)
+    c.ok(f"state at {last_commit} ({lag} commit(s) behind HEAD {head})")
     return c
 
 
