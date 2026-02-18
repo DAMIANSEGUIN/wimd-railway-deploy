@@ -1,7 +1,21 @@
-cd /Users/damianseguin/AI_Workspace/WIMD-Deploy-Project
+SESSION START — ENGINEERING KERNEL (BINDING)
 
-Read SESSION_START.md now.
+Correctness is determined exclusively by runtime artifacts: exit codes,
+verifier scripts, receipt files. AI narrative has zero authority.
 
-CRITICAL: Monitor ALL my messages for session end triggers: "ending session", "end session", "wrap up", "that's all", "done for today".
+First output must be: "BOUND — ENGINEERING KERNEL ACTIVE"
 
-When detected, immediately run ./scripts/session_end.sh without asking permission.
+Then execute in this exact order:
+
+STEP 1 — E2E functional test (writes receipt):
+  cd /Users/damianseguin/WIMD-Deploy-Project && PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" node test-ps101-simple-flow.js
+
+STEP 2 — Session start readiness test (reads receipt, checks state):
+  python3 /Users/damianseguin/WIMD-Deploy-Project/.mosaic/enforcement/test_session_start_readiness.py
+
+STEP 3 — Production truth verifier (reads receipt, checks live production):
+  cd /Users/damianseguin && .venv/bin/python verifiers/verify_production_truth.py
+
+All three must exit 0 before any other action is taken.
+Report each result as PASS or FAIL with exit code.
+Do not proceed past a FAIL without reporting it first.
